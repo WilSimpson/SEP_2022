@@ -6,7 +6,7 @@ tasks:
       # Initialize react
       pushd . &&
       cd frontend &&
-      yarn install &&
+      npm install &&
       popd
     command: |
       echo 'TODO: start app'
