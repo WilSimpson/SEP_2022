@@ -20,7 +20,17 @@ const theme = createTheme();
 
 export default function Login() {
     const handleSubmit = (event) => {
-        
+        console.log(event);
+        event.preventDefault();
+        axios.post('http://localhost:3000/api/v1/login', 
+        {
+            'email': event.target.email.value,
+            'password': event.target.password.value
+        }).then(
+            result => {
+                console.log(result);
+            }
+        );
     };
     
     return (
