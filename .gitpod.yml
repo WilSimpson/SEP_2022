@@ -1,3 +1,6 @@
+image:
+  file: .gitpod.Dockerfile
+
 tasks:
   - init: |
       # Initialize Django
@@ -10,3 +13,5 @@ tasks:
       popd
     command: |
       echo 'TODO: start app'
+  - name: Set k8s context
+    command: echo $K8S_CTX | base64 -d > ~/.kube/config
