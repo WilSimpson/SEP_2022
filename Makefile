@@ -12,9 +12,17 @@
 # ---------------
 # Makefile for building, running, and testing the frontend and backend services
 
-# Import dotenv file
+# Import dotenv files
+ifneq (,$(wildcard ./backend/.env))
+	include ./backend/.env
+	export
+endif
+ifneq (,$(wildcard ./frontend/.env))
+	include ./backend/.env
+	export
+endif
 ifneq (,$(wildcard ./.env))
-	include .env
+	include ./backend/.env
 	export
 endif
 
@@ -77,7 +85,7 @@ build-%:
 	@echo Building $*
 	docker build -t ea-$* -f $(ROOT_DIR)/$*/Dockerfile $(ROOT_DIR)/$*
 
-push: build-frontend build-backend docker-login push-frontend push-backend
+push: build-frontend push-frontend build-backend push-backend
 
 push-%:
 	@echo Pushing $*
@@ -87,3 +95,12 @@ push-%:
 	docker push $(EA_REGISTRY)/$*:$(BASE_VERSION_$(UC))-$(time)
 	docker push $(EA_REGISTRY)/$*:latest
 	docker push $(EA_REGISTRY)/$*:$(BASE_VERSION_$(UC))
+
+test: install-frontend test-frontend install-backend test-backend
+
+test-frontend:
+	cd $(BASE_DIR_FE) && npm test
+
+test-backend:
+	python $(BASE_DIR_BE)/manage.py test
+	python $(BASE_DIR_BE)/manage.py test backend
