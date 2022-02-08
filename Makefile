@@ -18,11 +18,11 @@ ifneq (,$(wildcard ./backend/.env))
 	export
 endif
 ifneq (,$(wildcard ./frontend/.env))
-	include ./backend/.env
+	include ./frontend/.env
 	export
 endif
 ifneq (,$(wildcard ./.env))
-	include ./backend/.env
+	include .env
 	export
 endif
 
@@ -85,9 +85,9 @@ build-%:
 	@echo Building $*
 	docker build -t ea-$* -f $(ROOT_DIR)/$*/Dockerfile $(ROOT_DIR)/$*
 
-push: build-frontend push-frontend build-backend push-backend
+push: push-frontend push-backend
 
-push-%:
+push-%: build-%
 	@echo Pushing $*
 	docker tag ea-$* $(EA_REGISTRY)/$*:latest
 	docker tag ea-$* $(EA_REGISTRY)/$*:$(BASE_VERSION_$(UC))
