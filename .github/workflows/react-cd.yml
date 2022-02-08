@@ -1,4 +1,4 @@
-name: Django cd
+name: React CD
 
 on:
   pull_request:
