@@ -37,10 +37,10 @@ UC = $(shell echo '$*' | tr '[:lower:]' '[:upper:]')
 #     \/ \__,_|_|  |___/
 
 # Base version of the frontend
-BASE_VERSION_FRONTEND := 0.1.0
+BASE_VERSION_FRONTEND ?= 0.1.0
 
 # Base version of the backend
-BASE_VERSION_BACKEND := 0.1.0
+BASE_VERSION_BACKEND ?= 0.1.0
 
 # Root directory
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -99,7 +99,7 @@ push-%:
 test: install-frontend test-frontend install-backend test-backend
 
 test-frontend:
-	cd $(BASE_DIR_FE) && npm test
+	cd $(BASE_DIR_FE) && npm test -- --watchAll=false
 
 test-backend:
 	python $(BASE_DIR_BE)/manage.py test
