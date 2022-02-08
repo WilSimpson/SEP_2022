@@ -96,11 +96,11 @@ push-%:
 	docker push $(EA_REGISTRY)/$*:latest
 	docker push $(EA_REGISTRY)/$*:$(BASE_VERSION_$(UC))
 
-test: install-frontend test-frontend install-backend test-backend
+test: test-frontend test-backend
 
-test-frontend:
+test-frontend: install-frontend
 	cd $(BASE_DIR_FE) && npm test -- --watchAll=false
 
-test-backend:
+test-backend: install-backend
 	python $(BASE_DIR_BE)/manage.py test
 	python $(BASE_DIR_BE)/manage.py test backend
