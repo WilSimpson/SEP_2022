@@ -1,5 +1,12 @@
 tasks:
   - init: |
-      echo 'TODO: build project'
+      # Initialize Django
+      python3 -m pip install -r ./backend/requirements.txt &&
+      python3 ./backend/manage.py migrate
+      # Initialize react
+      pushd . &&
+      cd frontend &&
+      npm install &&
+      popd
     command: |
       echo 'TODO: start app'
