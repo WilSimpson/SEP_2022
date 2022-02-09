@@ -1,0 +1,29 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.8, 3.9]
+    env:
+      EA_BACKEND_SECRET: 'ci-secret-Qn0fWgYDE1c0J0suhr7rLqfQe7nMC5aG'
+      EA_MODE: 'dev'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Run Tests
+      run: make test-backend

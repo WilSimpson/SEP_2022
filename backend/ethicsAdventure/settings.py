@@ -10,23 +10,41 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
+
 from pathlib import Path
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
+
+def get_env(var):
+    try:
+        return os.environ[var]
+    except KeyError:
+        raise ImproperlyConfigured('Environment variable {} not configured'.format(var))
+
+
+def should_debug():
+    return os.environ['EA_MODE'] == 'dev'
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_DIR = Path(__file__).resolve().parent
+dotenv_path = BASE_DIR.cwd() / '.env'
+load_dotenv(dotenv_path=dotenv_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hroi49qxmj#+&hl!c+x@1m=ta98+$o51oxq35)a5i+0420n8a3'
+SECRET_KEY = get_env('EA_BACKEND_SECRET')
+
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = should_debug()
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -71,17 +89,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ethicsAdventure.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {}
 
+if should_debug():
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': get_env('EA_DB_NAME'),
+            'USER': get_env('EA_DB_USER'),
+            'PASSWORD': get_env('EA_DB_PASSWORD'),
+            'HOST': get_env('EA_DB_HOST'),
+            'PORT': get_env('EA_DB_PORT')
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -101,7 +131,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -112,7 +141,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
