@@ -1,42 +1,66 @@
-import * as React from 'react';
+import React from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import LockOutlinedIcon from '@mui/icons-material/AccountCircle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
+    Alert,
     Avatar,
     Box,
     Button, 
-    Checkbox,
     Container,
     CssBaseline,
-    FormControlLabel,
-    Grid,
-    Link,
     TextField,
     Typography
 } from '@mui/material'
-import axios from 'axios';
+import { LoadingButton } from '@mui/lab'
+import AuthService from '../services/auth.service';
 
 const theme = createTheme();
 
+
 export default function Login() {
+    const userRef = useRef();
+    const errRef = useRef();
+
+    // State elements
+    const [email, setEmail] = useState('');
+    const [pwd, setPwd] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+    const[loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        userRef.current.focus();
+    }, [])  
+
+    useEffect(() => {
+        setErrMsg('');
+    }, [email, pwd])
+
+
     const handleSubmit = (event) => {
-        console.log(event);
         event.preventDefault();
-        axios.post('http://localhost:3000/api/v1/login', 
-        {
-            'email': event.target.email.value,
-            'password': event.target.password.value
-        }).then(
-            result => {
-                console.log(result);
+        setErrMsg('');
+        setLoading(true);
+        AuthService.login(email, pwd).then(
+            () => {
+                
+            },
+            error => {
+                const message =
+                    (error.response &&
+                        error.response.data && 
+                        error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                setLoading(false);
+                setErrMsg(message);        
             }
         );
-    };
+    }
     
     return (
         <ThemeProvider theme={theme}>
             <Container component='main' maxWidth='xs'>
-                {/* Look up CssBaseline */}
                 <CssBaseline/>
                 <Box
                     sx={{
@@ -45,7 +69,6 @@ export default function Login() {
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}>
-                        {/* Look up what Avatar is */}
                     <Avatar sx={{ m:1, bgcolor:'blue' }}>
                         <LockOutlinedIcon/>
                     </Avatar>
@@ -53,6 +76,7 @@ export default function Login() {
                         Sign in
                     </Typography>
                     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        { errMsg && <Alert severity="error" ref={errRef}>{errMsg}</Alert> }
                         <TextField 
                             margin='normal'
                             required
@@ -60,8 +84,11 @@ export default function Login() {
                             id='email'
                             label='Email Address'
                             name='email'
+                            value={email}
                             autoComplete='email'
                             autoFocus
+                            ref={userRef}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <TextField 
                             margin='normal'
@@ -71,17 +98,23 @@ export default function Login() {
                             label='Password'
                             type='password'
                             id='password'
-                            autoComplete='current-password'    
+                            value={pwd}
+                            autoComplete='current-password'
+                            onChange={(e) => setPwd(e.target.value)}    
                         />
-                        <Button
-                            type='submit'
-                            fullWidth
-                            variant='contained'
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Sign In
-                        </Button>
-
+                        {loading ? 
+                            (<LoadingButton loading>
+                                Submit
+                            </LoadingButton>) 
+                            : (<Button
+                                type='submit'
+                                fullWidth
+                                variant='contained'
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Sign In
+                            </Button>)
+                        }
                     </Box>
                 </Box>
             </Container>
