@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import AuthService from '../services/auth.service';
+import validator from 'validator';
 
 const theme = createTheme();
 
@@ -26,7 +27,8 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const[loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [disableSubmit, setDisableSubmit] = useState(true);
 
     useEffect(() => {
         userRef.current.focus();
@@ -34,8 +36,12 @@ export default function Login() {
 
     useEffect(() => {
         setErrMsg('');
+        if (validator.isEmail(email) && pwd.length >= 6) {
+            setDisableSubmit(false);
+        } else {
+            setDisableSubmit(true);
+        }
     }, [email, pwd])
-
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -111,6 +117,7 @@ export default function Login() {
                                 fullWidth
                                 variant='contained'
                                 sx={{ mt: 3, mb: 2 }}
+                                disabled={disableSubmit}
                             >
                                 Sign In
                             </Button>)
