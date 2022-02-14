@@ -21,10 +21,22 @@ const styles = {
         };
         this.handleChange = this.handleChange.bind(this);
     }
+
     handleChange(e) {
         const re = /^[0-9\b]+$/;
         if (e.target.value === '' || re.test(e.target.value)) {
             this.setState({value: e.target.value})
+         }
+     }
+
+    submitCode(code) {
+        const re = /^[0-9\b]{6}$/;
+         if (re.test(code)) {
+            //Do the thing with auth service
+            console.log(`Hello, ${code}`);
+         } else {
+            //There is a problem; display an error message
+            console.log("There do be a problem");
          }
      }
 
@@ -44,7 +56,7 @@ const styles = {
             onChange={this.handleChange} /><br />
             </Box>
             <ButtonGroup variant="contained" size='large'>
-            <Button color='primary' href={this.state.value} onClick={() => console.log(this.state.value)}>Join Game</Button>
+            <Button color='primary' onClick={() => this.submitCode(this.state.value)}>Join Game</Button>
             </ButtonGroup>
         </Container>
         );
