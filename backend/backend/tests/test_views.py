@@ -114,3 +114,32 @@ class UserViewSetTestCase(TestCase):
         }
         resp = self.client.post(reverse('user-list'), data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+class UserViewSetTestCase(TestCase):
+    def test_wrong_password(self):
+        data = {
+            'email': 'test@example.com',
+            'password': 'wrong'
+        }
+        resp = self.client.post(reverse('user-list'), data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_Unauthorized)
+     def test_wrong_email(self):
+        data = {
+            'email': 'wrong',
+            'password': 'test'
+        }
+        resp = self.client.post(reverse('user-list'), data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_Unauthorized)
+    def test_wrong_both(self):
+        data = {
+            'email': 'wrong',
+            'password': 'wrong'
+        }
+        resp = self.client.post(reverse('user-list'), data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_Unauthorized)
+    def test_correct_login(self):
+        data = {
+            'email': 'test@example.com',
+            'password': 'test'
+        }
+        resp = self.client.post(reverse('user-list'), data=data)
+        self.assertEqual(resp.status_code, status.HTTP_200_Ok)
