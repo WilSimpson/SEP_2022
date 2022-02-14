@@ -20,10 +20,13 @@ from django.urls import path, re_path, include
 from backend.views import UserViewSet
 from django.contrib.auth.models import User
 
+from django.contrib.auth import views as auth_views
+
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 
 urlpatterns = [
     re_path('^', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='myapp/login.html'))
 ]
