@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 import { ButtonGroup } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
+import Alert from '@material-ui/lab/Alert';
 
 const styles = {
     input: {
@@ -13,13 +14,16 @@ const styles = {
   };
 
   class GameCode extends React.Component {
+
     constructor(props) {
         super(props);
 
         this.state = {
             value: '',
+            errMsg: '',
         };
         this.handleChange = this.handleChange.bind(this);
+        this.submitCode = this.submitCode.bind(this);
     }
 
     handleChange(e) {
@@ -29,14 +33,22 @@ const styles = {
          }
      }
 
-    submitCode(code) {
+    submitCode() {
         const re = /^[0-9\b]{6}$/;
+        const code = this.state.value;
+        console.log(code);
          if (re.test(code)) {
             //Do the thing with auth service
-            console.log(`Hello, ${code}`);
+            console.log(`Code: ${code} is correct`);
          } else {
             //There is a problem; display an error message
-            console.log("There do be a problem");
+            if (code.length < 6) {
+                this.setState({errMsg: "This Gamecode is not valid. Gamecodes must be six digits long."});
+                console.log(this.state.errMsg)
+            } else {
+                this.setState({errMsg: "This Gamecode is not valid. Gamecodes must contain only number values."});
+                console.log(this.state.errMsg)
+            }
          }
      }
 
@@ -45,6 +57,7 @@ const styles = {
         return (
         <Container>
         <Box sx={{pb:2}}>
+            { this.state.errMsg && <Alert severity="error">{this.state.errMsg}</Alert> }
             <TextField 
             label="Game Code"
             id="gameCode"
@@ -56,7 +69,7 @@ const styles = {
             onChange={this.handleChange} /><br />
             </Box>
             <ButtonGroup variant="contained" size='large'>
-            <Button color='primary' onClick={() => this.submitCode(this.state.value)}>Join Game</Button>
+            <Button color='primary' onClick={this.submitCode}>Join Game</Button>
             </ButtonGroup>
         </Container>
         );
