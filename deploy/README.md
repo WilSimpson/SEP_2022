@@ -25,7 +25,7 @@ kubectl create -n istio-system secret generic tls-secret \
 --from-file=cert=certs/cert.pem
 ```
 3. Apply the `istio-gateway.yaml`, `istio-services.yaml`, and `istio-entry.yaml` configs to kubernetes and substitue the environment variables.
-4. Configure an ingress for istios. An example ingress is given in `example-aws-alb-ingress.yaml`. Be sure to replace the cert arn for a valid arn registered to the EA_HOST environment variable and substitue the environment variables.
+4. Configure an ingress for istios. An example ingress is given in `example-aws-alb-ingress.yaml`. Be sure to replace the cert arn for a valid arn registered to the EA_HOST environment variable and substitue the environment variables. Ensure your load balancer controller is configured correctly for your cloud provider.
 5. Get the IP address for the new ingress and setup an A record for EA_HOST pointint to this IP address\
 You can get the ip address with `echo $(kubectl get ingress gw-ingress -n istio-system \
 -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")` 
