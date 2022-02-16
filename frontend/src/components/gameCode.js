@@ -39,15 +39,13 @@ const styles = {
         console.log(code);
          if (re.test(code)) {
             //Do the thing with auth service
-            console.log(`Code: ${code} is correct`);
+            this.setState({errMsg: ""});
          } else {
             //There is a problem; display an error message
             if (code.length < 6) {
                 this.setState({errMsg: "This Gamecode is not valid. Gamecodes must be six digits long."});
-                console.log(this.state.errMsg)
             } else {
                 this.setState({errMsg: "This Gamecode is not valid. Gamecodes must contain only number values."});
-                console.log(this.state.errMsg)
             }
          }
      }
@@ -57,7 +55,9 @@ const styles = {
         return (
         <Container>
         <Box sx={{pb:2}}>
+            <Box sx={{pb:2}}>
             { this.state.errMsg && <Alert severity="error">{this.state.errMsg}</Alert> }
+            </Box>
             <TextField 
             label="Game Code"
             id="gameCode"
