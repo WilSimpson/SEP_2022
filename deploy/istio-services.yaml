@@ -16,7 +16,6 @@ spec:
       match:
         - uri:
             prefix: /api
-
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
