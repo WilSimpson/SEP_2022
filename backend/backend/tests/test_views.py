@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate
 
 from .factories import UserFactory
 
+from django.conf import settings
+
 # TODO: Refactor tests to be DRY
 class UserViewSetTestCase(TestCase):
     def test_create_faculty(self):
@@ -114,32 +116,35 @@ class UserViewSetTestCase(TestCase):
         }
         resp = self.client.post(reverse('user-list'), data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
-class UserViewSetTestCase(TestCase):
+class LoginViewTestCase(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects
+        self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
     def test_wrong_password(self):
         data = {
-            'email': 'test@example.com',
+            'email': 'test@test.com',
             'password': 'wrong'
         }
-        resp = self.client.post(reverse('user-list'), data=data)
-        self.assertEqual(resp.status_code, status.HTTP_401_Unauthorized)
-     def test_wrong_email(self):
+        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        self.assertEqual(resp.status_code, 401)
+    def test_wrong_email(self):
         data = {
             'email': 'wrong',
-            'password': 'test'
+            'password': 'testadmin'
         }
-        resp = self.client.post(reverse('user-list'), data=data)
-        self.assertEqual(resp.status_code, status.HTTP_401_Unauthorized)
+        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        self.assertEqual(resp.status_code, 401)
     def test_wrong_both(self):
         data = {
             'email': 'wrong',
             'password': 'wrong'
         }
-        resp = self.client.post(reverse('user-list'), data=data)
-        self.assertEqual(resp.status_code, status.HTTP_401_Unauthorized)
+        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        self.assertEqual(resp.status_code, 401)
     def test_correct_login(self):
         data = {
-            'email': 'test@example.com',
-            'password': 'test'
+            'email': 'test@test.com',
+            'password': 'testadmin'
         }
-        resp = self.client.post(reverse('user-list'), data=data)
-        self.assertEqual(resp.status_code, status.HTTP_200_Ok)
+        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        self.assertEqual(resp.status_code, 200)
