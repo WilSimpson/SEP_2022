@@ -1,6 +1,6 @@
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils"
-import Home from "../components/home"
+import GameCode from "../components/gameCode"
 
 let container = null;
 
@@ -15,11 +15,11 @@ afterEach(() => {
     container = null;
 });
 
-describe("<Home />", () => {
+describe("<GameCode />", () => {
     it("Should have correct text content", () => {
         act(() => {
-            render(<Home />, container);
+            render(<GameCode />, container);
         });
-        expect(container.textContent).toBe("Get StartedAboutHelpTo join a game, enter your 6-digit game code:Game CodeGame CodeJoin GameCopyright © Ethics Adventure 2022.");
+        expect(container.textContent).toBe("Game CodeGame CodeJoin Game");
     });
 });
