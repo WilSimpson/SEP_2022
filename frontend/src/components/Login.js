@@ -95,6 +95,7 @@ export default function Login() {
                             autoFocus
                             ref={userRef}
                             onChange={(e) => setEmail(e.target.value)}
+                            inputProps={{ 'data-testid': 'email-input' }}
                         />
                         <TextField 
                             margin='normal'
