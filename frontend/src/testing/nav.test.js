@@ -22,4 +22,11 @@ describe("<ResponsiveAppBar />", () => {
         });
         expect(container.textContent).toBe("Get StartedAboutHelp");
     });
+
+    it("Should have some children nodes", () => {
+        act(() => {
+            render(<ResponsiveAppBar />, container);
+        });
+        expect(container.childNodes).not.toBeNull();
+    });
 });
