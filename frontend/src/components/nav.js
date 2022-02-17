@@ -94,33 +94,46 @@ const ResponsiveAppBar = () => {
             </ButtonGroup>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Account Menu">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar src={accountIcon} alt="User" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {/* Replace with isLoggedIn */}
+          {true ? (
+        <div>
+        <Tooltip title="Account Menu">
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <Avatar src={accountIcon} alt="User" />
+        </IconButton>
+      </Tooltip>
+      <Menu
+        sx={{ mt: '45px' }}
+        id="menu-appbar"
+        anchorEl={anchorElUser}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorElUser)}
+        onClose={handleCloseUserMenu}
+      >
+        {settings.map((setting) => (
+          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+            <Typography textAlign="center">{setting}</Typography>
+          </MenuItem>
+        ))}
+      </Menu>
+      </div>
+      ) : (
+        <Button
+              key="Login"
+              href='#'
+              sx={{ my: 2, color: 'primary', display: 'block' }}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+              Login
+            </Button>
+      )}
           </Box>
         </Toolbar>
       </Container>
