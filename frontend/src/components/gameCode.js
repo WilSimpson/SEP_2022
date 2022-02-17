@@ -61,6 +61,7 @@ const styles = {
             <TextField 
             label="Game Code"
             id="gameCode"
+            autoComplete='off'
             value={this.state.value}
             ref="gameCode"
             variant="outlined"
