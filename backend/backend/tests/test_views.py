@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate
 from .factories import UserFactory
 
 from django.conf import settings
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # TODO: Refactor tests to be DRY
 class UserViewSetTestCase(TestCase):
@@ -148,3 +149,26 @@ class LoginViewTestCase(TestCase):
         }
         resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
         self.assertEqual(resp.status_code, 200)
+class RefreshViewTestCase(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects
+        self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
+        data = {
+            'email': 'test@test.com',
+            'password': 'testadmin'
+        }
+        self.resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        self.refresh = self.resp.data['refresh']
+        self.access = self.resp.data['access']
+    def test_token_refresh(self):
+        data = {
+            'refresh': self.refresh
+        }
+        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/refresh/', data=data)
+        self.assertEqual(resp.status_code, 200)
+    def test_token_refresh_fail(self):
+        data = {
+            'refresh': 'eguehfuhiueh'
+            }
+        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/refresh/', data=data)
+        self.assertEqual(resp.status_code, 401)
