@@ -1,56 +1,80 @@
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
-import GameCode from "../components/gameCode";
-import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
-import "@testing-library/jest-dom/extend-expect"
-
-let container = null;
-
-beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-});
-
-afterEach(() => {
-    unmountComponentAtNode(container);
-    container.remove();
-    container = null;
-});
+import React from 'react';
+import { mount, shallow } from 'enzyme';
+import GameCode from '../components/gameCode';
+import '../setupTests';
+import '@testing-library/jest-dom/extend-expect';
+import { render, fireEvent } from '@testing-library/react';
 
 describe("<GameCode />", () => {
-    it("Should have correct text content", () => {
-        act(() => {
-            render(<GameCode />, container);
-        });
-        expect(container.textContent).toBe("Game CodeGame CodeJoin Game");
+    let wrapper;
+    it ("should render the GameCode component", () => {
+        wrapper = shallow(<GameCode />);
     });
 
-    it("Should correctly catch a gamecode that is too short", () => {
-        act(() => {
-            render(<GameCode />, container);
-        });
-        const submitButton = document.querySelector("[data-testid=submitButton]");
-        const codeBox = document.querySelector("[data-testid=codeBox]");
+
+    it ('should accept a valid gamecode', () => {
+        const { getByTestId } = render(<GameCode />);
+        const codeBox =  getByTestId('codeBox');
+
         expect(codeBox).toBeInTheDocument();
-        console.log(codeBox);
-        expect(codeBox.value).toBe("");
-        act(() => {
-            userEvent.type(codeBox, "123");
-            submitButton.dispatchEvent(new MouseEvent("click", {bubbles:true}));
-        });
-        //expect(codeBox).toHaveValue("123456");
-        expect(container.textContent).toBe("This Gamecode is not valid. Gamecodes must be six digits long.Game CodeGame CodeJoin Game");
+        expect(codeBox.value).toBe('');
+        fireEvent.change(codeBox, { target: { value: "123456" } });
+        expect(codeBox.value).toBe('123456');
     });
 
-    it("Should correctly catch an empty gamecode", () => {
-        act(() => {
-            render(<GameCode />, container);
-        });
-        const submitButton = document.querySelector("[data-testid=submitButton]");
-        act(() => {
-            submitButton.dispatchEvent(new MouseEvent("click", {bubbles:true}));
-        });
-        expect(container.textContent).toBe("This Gamecode is not valid. Gamecodes must be six digits long.Game CodeGame CodeJoin Game");
+    it ('should have a disabled button', () => {
+        const { getByTestId } = render(<GameCode />);
+        const submit = document.querySelector("[data-testid=submit]");
+
+        expect(submit).toBeInTheDocument();
+        expect(submit.disabled).toBe(true);
+    });
+
+    it ('should enable button with valid code', () => {
+        const { getByTestId } = render(<GameCode />);
+        const codeBox =  getByTestId('codeBox');
+        const submit = document.querySelector("[data-testid=submit]");
+
+        expect(submit).toBeInTheDocument();
+        expect(submit.disabled).toBe(true);
+
+        fireEvent.change(codeBox, { target: { value: "123456" } });
+        expect(submit.disabled).toBe(false);
+    });
+
+    it ('should not enable with no input', () => {
+        const { getByTestId } = render(<GameCode />);
+        const codeBox =  getByTestId('codeBox');
+        const submit = document.querySelector("[data-testid=submit]");
+
+        expect(submit).toBeInTheDocument();
+        expect(submit.disabled).toBe(true);
+
+        fireEvent.change(codeBox, { target: { value: "" } });
+        expect(submit.disabled).toBe(true);
+    });
+
+    it ('should not enable non-numerical input', () => {
+        const { getByTestId } = render(<GameCode />);
+        const codeBox =  getByTestId('codeBox');
+        const submit = document.querySelector("[data-testid=submit]");
+
+        expect(submit).toBeInTheDocument();
+        expect(submit.disabled).toBe(true);
+
+        fireEvent.change(codeBox, { target: { value: "Hello" } });
+        expect(submit.disabled).toBe(true);
+    });
+
+    it ('should not enable with input shorter than 6', () => {
+        const { getByTestId } = render(<GameCode />);
+        const codeBox =  getByTestId('codeBox');
+        const submit = document.querySelector("[data-testid=submit]");
+
+        expect(submit).toBeInTheDocument();
+        expect(submit.disabled).toBe(true);
+
+        fireEvent.change(codeBox, { target: { value: "12345" } });
+        expect(submit.disabled).toBe(true);
     });
 });

@@ -68,14 +68,13 @@ const styles = {
             value={this.state.value}
             ref="gameCode"
             variant="outlined"
-            inputProps={{ maxLength: 6, "data-testid": "codeBox"}}
+            inputProps={{ maxLength: 6, 'data-testid': 'codeBox'}}
             InputProps={{className: classes.input}}
             onChange={this.handleChange}
-            data-testid="codeBox"
              /><br />
             </Box>
             <ButtonGroup variant="contained" size='large'>
-            <Button color='primary' onClick={this.submitCode} data-testid="submitButton" disabled={this.state.submitDisabled}>Join Game</Button>
+            <Button color='primary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
             </ButtonGroup>
         </Container>
         );
