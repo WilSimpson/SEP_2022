@@ -21,6 +21,7 @@ const styles = {
         this.state = {
             value: '',
             errMsg: '',
+            submitDisabled: true,
         };
         this.handleChange = this.handleChange.bind(this);
         this.submitCode = this.submitCode.bind(this);
@@ -29,7 +30,9 @@ const styles = {
     handleChange(e) {
         const re = /^[0-9\b]+$/;
         if (e.target.value === '' || re.test(e.target.value)) {
-            this.setState({value: e.target.value})
+            this.setState({value: e.target.value});
+            console.log(e.target.value)
+            e.target.value.length === 6 ? this.setState({submitDisabled: false}) : this.setState({submitDisabled: true})
          }
      }
 
@@ -65,13 +68,14 @@ const styles = {
             value={this.state.value}
             ref="gameCode"
             variant="outlined"
-            inputProps={{ maxLength: 6}}
+            inputProps={{ maxLength: 6, "data-testid": "codeBox"}}
             InputProps={{className: classes.input}}
             onChange={this.handleChange}
-            data-testid="codeBox" /><br />
+            data-testid="codeBox"
+             /><br />
             </Box>
             <ButtonGroup variant="contained" size='large'>
-            <Button color='primary' onClick={this.submitCode} data-testid="submitButton">Join Game</Button>
+            <Button color='primary' onClick={this.submitCode} data-testid="submitButton" disabled={this.state.submitDisabled}>Join Game</Button>
             </ButtonGroup>
         </Container>
         );

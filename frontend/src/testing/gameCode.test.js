@@ -3,6 +3,7 @@ import { act } from "react-dom/test-utils";
 import GameCode from "../components/gameCode";
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
+import "@testing-library/jest-dom/extend-expect"
 
 let container = null;
 
@@ -30,8 +31,10 @@ describe("<GameCode />", () => {
             render(<GameCode />, container);
         });
         const submitButton = document.querySelector("[data-testid=submitButton]");
-        const codeBox = screen.getByTestId("codeBox");
+        const codeBox = document.querySelector("[data-testid=codeBox]");
         expect(codeBox).toBeInTheDocument();
+        console.log(codeBox);
+        expect(codeBox.value).toBe("");
         act(() => {
             userEvent.type(codeBox, "123");
             submitButton.dispatchEvent(new MouseEvent("click", {bubbles:true}));
