@@ -31,7 +31,6 @@ const styles = {
         const re = /^[0-9\b]+$/;
         if (e.target.value === '' || re.test(e.target.value)) {
             this.setState({value: e.target.value});
-            console.log(e.target.value)
             e.target.value.length === 6 ? this.setState({submitDisabled: false}) : this.setState({submitDisabled: true})
          }
      }
