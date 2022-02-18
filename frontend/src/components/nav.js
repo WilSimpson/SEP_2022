@@ -52,6 +52,7 @@ const ResponsiveAppBar = () => {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              data-testid="profileButton"
             >
               <MenuIcon />
             </IconButton>

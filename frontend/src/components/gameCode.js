@@ -67,10 +67,11 @@ const styles = {
             variant="outlined"
             inputProps={{ maxLength: 6}}
             InputProps={{className: classes.input}}
-            onChange={this.handleChange} /><br />
+            onChange={this.handleChange}
+            data-testid="codeBox" /><br />
             </Box>
             <ButtonGroup variant="contained" size='large'>
-            <Button color='primary' onClick={this.submitCode}>Join Game</Button>
+            <Button color='primary' onClick={this.submitCode} data-testid="submitButton">Join Game</Button>
             </ButtonGroup>
         </Container>
         );

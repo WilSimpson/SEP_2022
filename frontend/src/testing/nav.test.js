@@ -29,4 +29,15 @@ describe("<ResponsiveAppBar />", () => {
         });
         expect(container.childNodes).not.toBeNull();
     });
+
+    it("Should have a clickable avatar button", () => {
+        act(() => {
+            render(<ResponsiveAppBar />, container);
+        });
+        const profileButton = document.querySelector("[data-testid=profileButton]");
+        act(() => {
+            profileButton.dispatchEvent(new MouseEvent("click", {bubbles:true}));
+        });
+        expect(container.textContent).toBe("Get StartedAboutHelp");
+    });
 });
