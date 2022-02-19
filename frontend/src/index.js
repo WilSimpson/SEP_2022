@@ -3,17 +3,34 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route, Redirect,} from "react-router-dom";
+import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
 import Login from './components/Login';
+import AdminDash from './components/AdminDash';
+import ProtectedRoute from './ProtectedRoute';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 ReactDOM.render(
   <React.StrictMode>
     {/* <App /> */}
-    <Router>
+    
+      <Router>
+        <Provider store={store}>
         <Routes>
           <Route exact path='/' element={<App />} />
           <Route exact path='/login' element={<Login />} />
+          <Route 
+            exact
+            path='/admin' 
+            element={
+            <ProtectedRoute>
+              <AdminDash />
+            </ProtectedRoute>
+            }
+          />
+         
         </Routes>
+        </Provider>
       </Router>
   </React.StrictMode>,
   document.getElementById('root')

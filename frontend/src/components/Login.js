@@ -15,6 +15,7 @@ import {
 import { LoadingButton } from '@mui/lab'
 import AuthService from '../services/auth.service';
 import validator from 'validator';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -22,6 +23,7 @@ const theme = createTheme();
 export default function Login() {
     const userRef = useRef();
     const errRef = useRef();
+    let navigate = useNavigate();
 
     // State elements
     const [email, setEmail] = useState('');
@@ -50,7 +52,7 @@ export default function Login() {
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-
+                    navigate('/admin');
                 }
             },
             (error) => {
