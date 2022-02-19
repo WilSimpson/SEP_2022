@@ -48,18 +48,17 @@ export default function Login() {
         setErrMsg('');
         setLoading(true);
         AuthService.login(email, pwd).then(
-            () => {
-                
+            (response) => {
+                if (response.status === 200) {
+
+                }
             },
-            error => {
-                const message =
-                    (error.response &&
-                        error.response.data && 
-                        error.response.data.message) ||
-                        error.message ||
-                        error.toString();
+            (error) => {
+                console.log(error.response);
+                if (error.response.status === 401) {
+                    setErrMsg(error.response.data.detail);
+                }
                 setLoading(false);
-                setErrMsg(message);        
             }
         );
     }
