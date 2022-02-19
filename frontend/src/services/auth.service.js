@@ -6,6 +6,8 @@ import { LOGIN_USER, LOGOUT_USER } from '../store/types';
 const API_URL = 'http://localhost:8000/'
 
 const {persistor, store} = configureStore();
+let isLoggedIn = store.authenticated;
+
 class AuthService {
     login(email, password) {
         return axios.post(API_URL + 'api/token/', {
@@ -40,3 +42,4 @@ class AuthService {
 }
 
 export default new AuthService();
+export {isLoggedIn};
