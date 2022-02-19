@@ -8,7 +8,10 @@ import Login from './components/Login';
 import AdminDash from './components/AdminDash';
 import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
-import store from './store/store';
+import configureStore from './store/store';
+import { PersistGate } from 'redux-persist/integration/react';
+
+const { persistor, store } = configureStore();
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,22 +19,23 @@ ReactDOM.render(
     
       <Router>
         <Provider store={store}>
-        <Routes>
-          <Route exact path='/' element={<App />} />
-          <Route exact path='/login' element={<Login />} />
-          <Route 
-            exact
-            path='/admin' 
-            element={
-            <ProtectedRoute>
-              <AdminDash />
-            </ProtectedRoute>
-            }
-          />
-         
-        </Routes>
-        </Provider>
-      </Router>
+          <PersistGate loading={null} persistor={persistor}>
+            <Routes>
+            <Route exact path='/' element={<App />} />
+            <Route exact path='/login' element={<Login />} />
+            <Route 
+              exact
+              path='/admin' 
+              element={
+              <ProtectedRoute>
+                <AdminDash />
+              </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </PersistGate>
+      </Provider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

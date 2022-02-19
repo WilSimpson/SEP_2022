@@ -1,10 +1,11 @@
 import axios from 'axios';
-import store from '../store/store';
-import { LOGIN_USER } from '../store/types';
+import configureStore from '../store/store';
+import { LOGIN_USER, LOGOUT_USER } from '../store/types';
 
 // does this have to be the port the backend runs on?
 const API_URL = 'http://localhost:8000/'
 
+const {persistor, store} = configureStore();
 class AuthService {
     login(email, password) {
         return axios.post(API_URL + 'api/token/', {
@@ -27,6 +28,10 @@ class AuthService {
 
     logout() {
         localStorage.removeItem('user');
+        store.dispatch({
+            type: LOGOUT_USER,
+            authenticated: false
+        });
     }
 
     getCurrentUser() {
