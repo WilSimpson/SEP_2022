@@ -23,6 +23,8 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "react-validation": "^3.0.7",
+    "redux": "^4.1.2",
+    "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.3",
     "validator": "^13.7.0",
     "web-vitals": "^2.1.4"
@@ -56,6 +58,7 @@
     "babel-jest": "^27.5.1",
     "jest": "^27.5.1",
     "jsdom": "19.0.0",
-    "jsdom-global": "3.0.2"
+    "jsdom-global": "3.0.2",
+    "redux-devtools-extension": "^2.13.9"
   }
 }
