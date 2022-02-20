@@ -40,14 +40,17 @@ const styles = {
     submitCode() {
         const re = /^[0-9\b]{6}$/;
         const code = this.state.value;
-        console.log(code);
          if (re.test(code)) {
             //Do the thing with auth service
             this.setState({errMsg: ""});
             if (true) {
                 //Code is valid
                 let path = `gameSession`; 
-                this.props.navigate(path);
+                this.props.navigate(path, {
+                    state: {
+                      code: this.state.value,
+                    }
+                  });;
             } else {
                 //Code is invalid
             }

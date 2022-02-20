@@ -3,10 +3,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import GameCode from './gameCode';
-import logoLarge from '../images/logoLarge.png'
+import { useLocation } from 'react-router-dom';
 
 export default function GameSession() {
+    const { state } = useLocation();
   return (
       <div className='container'>
       <CssBaseline />
@@ -23,11 +23,7 @@ export default function GameSession() {
           }}
         >
           <Container maxWidth="sm">
-              <img src={logoLarge} alt="Ethics Adventure" style={{flex: 1, width: '100%', height: undefined}}/>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              To join a game, enter your 6-digit game code:
-            </Typography>
-            <GameCode />
+              <Typography>Render Game Here. Game Code: {state.code} </Typography>
           </Container>
         </Box>
     </Container>
