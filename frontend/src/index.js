@@ -7,6 +7,7 @@ import { createTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from '@material-ui/core';
 import Home from './components/home';
 import Layout from './components/layout';
+import GameSession from './components/gameSession';
 
 export default function App() {
   return (
