@@ -82,10 +82,10 @@ const styles = {
             direction="column"
             alignItems="center"
             justifyContent="center"
-          >
+            >
         <Box sx={{pb:2}}>
             <Box sx={{pb:2}}>
-            { this.state.errMsg && <Alert severity="error">{this.state.errMsg}</Alert> }
+                { this.state.errMsg && <Alert severity="error">{this.state.errMsg}</Alert> }
             </Box>
             <TextField 
             label="Game Code"
@@ -94,13 +94,13 @@ const styles = {
             value={this.state.value}
             ref="gameCode"
             variant="outlined"
-            inputProps={{ maxLength: 6, 'data-testid': 'codeBox'}}
+            inputProps={{ maxLength: 6, 'data-testid': 'codeBox', style: { textAlign: 'center' }}}
             onChange={this.handleChange}/>
             <br />
-            </Box>
-            <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
+        </Box>
+        <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
             <Button color='primary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
-            </ButtonGroup>
+        </ButtonGroup>
         </Grid>
         );
     }
