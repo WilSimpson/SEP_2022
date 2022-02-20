@@ -7,6 +7,7 @@ import { TextField } from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
 import Alert from '@material-ui/lab/Alert';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { useNavigate } from "react-router-dom";
 
 const styles = {
     input: {
@@ -45,6 +46,8 @@ const styles = {
             this.setState({errMsg: ""});
             if (true) {
                 //Code is valid
+                let path = `gameSession`; 
+                this.props.navigate(path);
             } else {
                 //Code is invalid
             }
@@ -59,7 +62,6 @@ const styles = {
      }
 
     render () {
-        const { classes } = this.props;
         return (
         <Grid container alignItems="center" justifyContent="center">
         <CssBaseline />
@@ -75,7 +77,6 @@ const styles = {
             ref="gameCode"
             variant="outlined"
             inputProps={{ maxLength: 6, 'data-testid': 'codeBox'}}
-            InputProps={{className: classes.input}}
             onChange={this.handleChange}
              /><br />
             </Box>
@@ -87,4 +88,9 @@ const styles = {
     }
 }
 
-export default withStyles(styles)(GameCode);
+function WithNavigate(props) {
+    let navigate = useNavigate();
+    return <GameCode navigate={navigate} />
+}
+
+export default withStyles(styles)(WithNavigate);
