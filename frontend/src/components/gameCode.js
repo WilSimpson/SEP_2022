@@ -1,11 +1,12 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Container';
 import { ButtonGroup } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { withStyles } from "@material-ui/core/styles";
 import Alert from '@material-ui/lab/Alert';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const styles = {
     input: {
@@ -42,6 +43,11 @@ const styles = {
          if (re.test(code)) {
             //Do the thing with auth service
             this.setState({errMsg: ""});
+            if (true) {
+                //Code is valid
+            } else {
+                //Code is invalid
+            }
          } else {
             //There is a problem; display an error message
             if (code.length < 6) {
@@ -55,8 +61,9 @@ const styles = {
     render () {
         const { classes } = this.props;
         return (
-        <Container>
-        <Box sx={{pb:2}}>
+        <Grid container alignItems="center" justifyContent="center">
+        <CssBaseline />
+        <Box sx={{pb:2}}   alignItems="center" justifyContent="center">
             <Box sx={{pb:2}}>
             { this.state.errMsg && <Alert severity="error">{this.state.errMsg}</Alert> }
             </Box>
@@ -75,7 +82,7 @@ const styles = {
             <ButtonGroup variant="contained" size='large'>
             <Button color='primary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
             </ButtonGroup>
-        </Container>
+        </Grid>
         );
     }
 }
