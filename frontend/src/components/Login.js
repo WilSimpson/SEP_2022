@@ -12,10 +12,8 @@ import {
     TextField,
     Typography
 } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
 import AuthService from '../services/auth.service';
 import validator from 'validator';
-import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -23,13 +21,11 @@ const theme = createTheme();
 export default function Login() {
     const userRef = useRef();
     const errRef = useRef();
-    let navigate = useNavigate();
 
     // State elements
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [loading, setLoading] = useState(false);
     const [disableSubmit, setDisableSubmit] = useState(true);
 
     useEffect(() => {
@@ -48,19 +44,16 @@ export default function Login() {
     const handleSubmit = (event) => {
         event.preventDefault();
         setErrMsg('');
-        setLoading(true);
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-                    navigate('/admin');
+                    window.location.href = "/admin";
                 }
             },
             (error) => {
-                console.log(error.response);
                 if (error.response.status === 401) {
                     setErrMsg(error.response.data.detail);
                 }
-                setLoading(false);
             }
         );
     }
@@ -83,7 +76,7 @@ export default function Login() {
                         Sign in
                     </Typography>
                     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        { errMsg && <Alert severity="error" ref={errRef}>{errMsg}</Alert> }
+                        { errMsg && <Alert severity="error" ref={errRef} data-testid='err-msg'>{errMsg}</Alert> }
                         <TextField 
                             margin='normal'
                             required
@@ -108,22 +101,20 @@ export default function Login() {
                             id='password'
                             value={pwd}
                             autoComplete='current-password'
-                            onChange={(e) => setPwd(e.target.value)}    
+                            onChange={(e) => setPwd(e.target.value)}  
+                            inputProps={{ 'data-testid': 'pass-input' }}  
                         />
-                        {loading ? 
-                            (<LoadingButton loading>
-                                Submit
-                            </LoadingButton>) 
-                            : (<Button
-                                type='submit'
-                                fullWidth
-                                variant='contained'
-                                sx={{ mt: 3, mb: 2 }}
-                                disabled={disableSubmit}
-                            >
-                                Sign In
-                            </Button>)
-                        }
+                        <Button
+                            type='submit'
+                            id='submit-button'
+                            fullWidth
+                            variant='contained'
+                            sx={{ mt: 3, mb: 2 }}
+                            disabled={disableSubmit}
+                            data-testid='submit-button'
+                        >
+                            Sign In
+                        </Button>
                     </Box>
                 </Box>
             </Container>

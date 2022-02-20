@@ -5,8 +5,6 @@ import Login from '../components/Login';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import AuthService from '../services/auth.service';
 
 jest.mock('../services/auth.service');

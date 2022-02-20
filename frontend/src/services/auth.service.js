@@ -3,9 +3,9 @@ import configureStore from '../store/store';
 import { LOGIN_USER, LOGOUT_USER } from '../store/types';
 
 // does this have to be the port the backend runs on?
-const API_URL = 'http://localhost:8000/'
+// const API_URL = 'http://localhost:8000/'
 
-const {persistor, store} = configureStore();
+const {persistor, store, API_URL} = configureStore();
 let isLoggedIn = store.authenticated;
 
 class AuthService {
@@ -15,7 +15,6 @@ class AuthService {
             'password': password
         })
         .then(response => {
-            console.log(response.status);
             if (response.status === 200) {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 store.dispatch({
