@@ -58,6 +58,10 @@ const styles = {
                 (error) => {
                     if (error.response.status === 401) {
                         this.setState({errMsg: error.response.data.detail});
+                    } else if (error.response.status === 404) {
+                        this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
+                    } else {
+                        this.setState({errMsg: error.response.data.detail});
                     }
                 }
             );
