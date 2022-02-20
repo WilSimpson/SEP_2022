@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container';
 import GameCode from './gameCode';
 import logoLarge from '../images/logoLarge.png'
 
-export default function Home() {
+export default function GameSession() {
   return (
       <div className='container'>
       <CssBaseline />
