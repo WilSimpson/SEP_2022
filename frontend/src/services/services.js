@@ -31,7 +31,6 @@ class AuthService {
         })
         .then(response => {
             if (response.data.accessToken) {
-                //Reroute to the game?
                 localStorage.setItem('gameCode', JSON.stringify(response.data)); 
             }
             return response.data;

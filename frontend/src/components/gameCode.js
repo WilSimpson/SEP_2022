@@ -8,6 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Alert from '@material-ui/lab/Alert';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { useNavigate } from "react-router-dom";
+import AuthService from '../services/services';
 
 const styles = {
     input: {
@@ -43,17 +44,23 @@ const styles = {
          if (re.test(code)) {
             //Do the thing with auth service
             this.setState({errMsg: ""});
-            if (true) {
-                //Code is valid
-                let path = `gameSession`; 
-                this.props.navigate(path, {
-                    state: {
-                      code: this.state.value,
+            AuthService.joinGame(code).then(
+                (response) => {
+                    if (response.status === 200) {
+                        let path = `gameSession`; 
+                        this.props.navigate(path, {
+                            state: {
+                                code: this.state.value,
+                            }
+                        });
                     }
-                  });;
-            } else {
-                //Code is invalid
-            }
+                },
+                (error) => {
+                    if (error.response.status === 401) {
+                        this.setState({errMsg: error.response.data.detail});
+                    }
+                }
+            );
          } else {
             //There is a problem; display an error message
             if (code.length < 6) {
