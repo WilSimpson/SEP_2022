@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { createTheme } from '@material-ui/core/styles'
-import { ThemeProvider } from '@material-ui/core';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material';
 import Home from './components/home';
 import Layout from './components/layout';
 import GameSession from './components/gameSession';
@@ -22,7 +22,7 @@ export default function App() {
   );
 }
 
-const theme = createTheme({
+const theme = createTheme(adaptV4Theme({
   palette: {
      primary: {
         main: '#AFD0BF'
@@ -32,13 +32,15 @@ const theme = createTheme({
                 }
            },
 fontFamily: "Roboto"
-});
+}));
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-    <App />
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+      <App />
+      </ThemeProvider>
+    </StyledEngineProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
