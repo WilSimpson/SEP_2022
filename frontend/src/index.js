@@ -3,10 +3,26 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core';
+
+const theme = createTheme({
+  palette: {
+     primary: {
+        main: '#AFD0BF'
+               },
+     secondary: {
+        main: '#e2efde'
+                }
+           },
+fontFamily: "Roboto"
+});
 
 ReactDOM.render(
   <React.StrictMode>
+    <ThemeProvider theme={theme}>
     <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
