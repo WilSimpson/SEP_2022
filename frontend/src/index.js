@@ -10,14 +10,30 @@ import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
 import configureStore from './store/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core';
 
 const { persistor, store } = configureStore();
 
+
+const theme = createTheme({
+  palette: {
+     primary: {
+        main: '#AFD0BF'
+               },
+     secondary: {
+        main: '#e2efde'
+                }
+           },
+fontFamily: "Roboto"
+});
+
 ReactDOM.render(
   <React.StrictMode>
-    {/* <App /> */}
-    
-      <Router>
+    <ThemeProvider theme={theme}>
+    <App />
+    </ThemeProvider>
+    <Router>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Routes>
