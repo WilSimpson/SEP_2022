@@ -126,28 +126,28 @@ class LoginViewTestCase(TestCase):
             'email': 'test@test.com',
             'password': 'wrong'
         }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        resp = self.client.post('/api/token/', data=data)
         self.assertEqual(resp.status_code, 401)
     def test_wrong_email(self):
         data = {
             'email': 'wrong',
             'password': 'testadmin'
         }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        resp = self.client.post('/api/token/', data=data)
         self.assertEqual(resp.status_code, 401)
     def test_wrong_both(self):
         data = {
             'email': 'wrong',
             'password': 'wrong'
         }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        resp = self.client.post('/api/token/', data=data)
         self.assertEqual(resp.status_code, 401)
     def test_correct_login(self):
         data = {
             'email': 'test@test.com',
             'password': 'testadmin'
         }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        resp = self.client.post('/api/token/', data=data)
         self.assertEqual(resp.status_code, 200)
 class RefreshViewTestCase(TestCase):
     def setUp(self):
@@ -157,20 +157,20 @@ class RefreshViewTestCase(TestCase):
             'email': 'test@test.com',
             'password': 'testadmin'
         }
-        self.resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        self.resp = self.client.post('/api/token/', data=data)
         self.refresh = self.resp.data['refresh']
         self.access = self.resp.data['access']
     def test_token_refresh(self):
         data = {
             'refresh': self.refresh
         }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/refresh/', data=data)
+        resp = self.client.post('/api/token/refresh/', data=data)
         self.assertEqual(resp.status_code, 200)
     def test_token_refresh_bad_token(self):
         data = {
             'refresh': 'eguehfuhiueh'
             }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/refresh/', data=data)
+        resp = self.client.post('/api/token/refresh/', data=data)
         self.assertEqual(resp.status_code, 401)
 class VerifyViewTestCase(TestCase):
     def setUp(self):
@@ -180,18 +180,18 @@ class VerifyViewTestCase(TestCase):
             'email': 'test@test.com',
             'password': 'testadmin'
         }
-        self.resp = self.client.post('https://8000-uiowajohnsonhj-team002-xid30g90dqe.ws-us32.gitpod.io/api/token/', data=data)
+        self.resp = self.client.post('/api/token/', data=data)
         self.refresh = self.resp.data['refresh']
         self.access = self.resp.data['access']
     def test_token_verify(self):
         data = {
             'token': self.access
         }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-80gmu9nk1vz.ws-us32.gitpod.io/api/token/verify', data=data)
+        resp = self.client.post('/api/token/verify', data=data)
         self.assertEqual(resp.status_code, 200)
     def test_token_verify_bad_token(self):
         data = {
             'token': 'efeuhueufh'
         }
-        resp = self.client.post('https://8000-uiowajohnsonhj-team002-80gmu9nk1vz.ws-us32.gitpod.io/api/token/verify', data=data)
+        resp = self.client.post('/api/token/verify', data=data)
         self.assertEqual(resp.status_code, 401)
