@@ -40,7 +40,7 @@ const styles = {
         const code = this.state.value;
         console.log(code);
          if (re.test(code)) {
-            //Do the thing with auth service
+            //Do the thing with game service
             this.setState({errMsg: ""});
          } else {
             //There is a problem; display an error message
