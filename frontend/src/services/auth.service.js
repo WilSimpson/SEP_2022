@@ -1,9 +1,8 @@
 import axios from 'axios';
 import configureStore from '../store/store';
 import { LOGIN_USER, LOGOUT_USER } from '../store/types';
+import { User } from '../models';
 
-// does this have to be the port the backend runs on?
-// const API_URL = 'http://localhost:8000/'
 
 const {persistor, store, API_URL} = configureStore();
 let isLoggedIn = store.authenticated;
@@ -16,13 +15,12 @@ class AuthService {
         })
         .then(response => {
             if (response.status === 200) {
-                localStorage.setItem('user', JSON.stringify(response.data));
+                let user = new User('','', '' ,'', response.data);
+                localStorage.setItem('user', JSON.stringify(user));
                 store.dispatch({
-                    type: LOGIN_USER,
-                    authenticated: true
+                    type: LOGIN_USER
                 });
             }
-            
             return response;
         });
     }
@@ -30,8 +28,7 @@ class AuthService {
     logout() {
         localStorage.removeItem('user');
         store.dispatch({
-            type: LOGOUT_USER,
-            authenticated: false
+            type: LOGOUT_USER
         });
     }
 
