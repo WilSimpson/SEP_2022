@@ -30,6 +30,7 @@ class AuthService {
         store.dispatch({
             type: LOGOUT_USER
         });
+        window.location.href = "/login";
     }
 
     getCurrentUser() {

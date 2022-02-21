@@ -7,7 +7,6 @@ export default function AdminDash () {
 
   const handleLogout = (event) => {
     AuthService.logout();
-    window.location.href = "/login";
   };
 
   return (
