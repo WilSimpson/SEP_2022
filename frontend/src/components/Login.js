@@ -48,11 +48,15 @@ export default function Login() {
             (response) => {
                 if (response.status === 200) {
                     window.location.href = "/admin";
+                } else {
+                    setErrMsg('There was an issue handling your login. Please try again later.');
                 }
             },
             (error) => {
                 if (error.response.status === 401) {
                     setErrMsg(error.response.data.detail);
+                } else {
+                    setErrMsg('There was an unexpected error. Please try again later.');
                 }
             }
         );
