@@ -3,3 +3,4 @@ djangorestframework==3.13.1
 factory-boy==3.2.1
 Faker==12.1.0
 python-dotenv==0.19.2
+djangorestframework-simplejwt==5.0.0
