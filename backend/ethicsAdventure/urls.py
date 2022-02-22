@@ -20,8 +20,6 @@ from django.urls import path, re_path, include
 from backend.views import UserViewSet
 from django.contrib.auth.models import User
 
-from django.contrib.auth import views as auth_views
-from rest_framework.authtoken import views as token_views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
