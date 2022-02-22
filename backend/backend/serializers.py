@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer, CharField
 from django.contrib.auth import get_user_model
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 class UserSerializer(ModelSerializer):
     password = CharField(write_only=True)
 
@@ -17,3 +19,13 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [ 'id', 'email', 'first_name', 'last_name', 'password', 'role' ]
+
+class RoleTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['email'] = user.email
+        token['role'] = user.role
+
+        return token

@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password, role='FACULTY'):
         if not email:
@@ -85,13 +83,3 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-class RoleTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['email'] = user.email
-        token['role'] = user.role
-
-        return token
