@@ -41,7 +41,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -69,11 +69,5 @@
     "jsdom": "19.0.0",
     "jsdom-global": "3.0.2",
     "redux-devtools-extension": "^2.13.9"
-  },
-  "jest": {
-    "verbose": true,
-    "testURL": "http://localhost:3000/",
-    "jsdom": "19.0.0",
-    "jsdom-global": "3.0.2"
   }
 }

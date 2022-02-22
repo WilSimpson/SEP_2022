@@ -1,4 +1,3 @@
-import 'jsdom-global/register';
 import '../setupTests';
 import AuthService from '../services/auth.service';
 import axios from 'axios';

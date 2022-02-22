@@ -1,4 +1,3 @@
-import 'jsdom-global/register';     
 import React from 'react';
 import { configure, mount, shallow } from 'enzyme';
 import Login from '../components/Login';
