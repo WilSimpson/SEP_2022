@@ -16,7 +16,6 @@ import { ThemeProvider } from '@material-ui/core';
 
 const { persistor, store } = configureStore();
 
-
 const theme = createTheme({
   palette: {
      primary: {
