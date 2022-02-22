@@ -149,6 +149,8 @@ class LoginViewTestCase(TestCase):
         }
         resp = self.client.post('/api/token/', data=data)
         self.assertEqual(resp.status_code, 200)
+        self.assertTrue('access' in resp.data)
+        self.assertTrue('refresh' in resp.data)
 class RefreshViewTestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects
@@ -166,6 +168,8 @@ class RefreshViewTestCase(TestCase):
         }
         resp = self.client.post('/api/token/refresh/', data=data)
         self.assertEqual(resp.status_code, 200)
+        self.assertTrue('access' in resp.data)
+        self.assertTrue('refresh' in resp.data)
     def test_token_refresh_bad_token(self):
         data = {
             'refresh': 'eguehfuhiueh'
