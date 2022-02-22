@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
 import Login from './components/Login';
+import Home from './components/home';
 import AdminDash from './components/AdminDash';
 import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
@@ -37,7 +38,7 @@ ReactDOM.render(
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Routes>
-            <Route exact path='/' element={<App />} />
+            <Route exact path='/' element={<Home />} />
             <Route exact path='/login' element={<Login />} />
             <Route 
               exact
