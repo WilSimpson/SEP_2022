@@ -43,6 +43,7 @@ export default function StartingSurvey() {
           disableSubmit = true;
         }
       setSubmitDisabled(disableSubmit);
+      return true;
     })
     };
 
@@ -98,21 +99,6 @@ export default function StartingSurvey() {
         >
     <form onSubmit={handleSubmit}>
       <Grid container alignItems="center" justify="center" direction="column">
-        <Grid item>
-        <Box sx={{pb:2}}>
-          <TextField
-            id="team-name"
-            name="name"
-            label="Team Name"
-            type="text"
-            value={formValues.name}
-            onChange={handleInputChange}
-            data-testid='name'
-            inputProps={{ "data-testid": "name" }}
-            required
-          />
-          </Box>
-        </Grid>
         <Grid item>
         <Box sx={{pb:2}}>
           <TextField
@@ -176,6 +162,22 @@ export default function StartingSurvey() {
               </MenuItem>
             </Select>
           </FormControl>
+          </Box>
+        </Grid>
+        <Grid item>
+        <Box sx={{pb:2}}>
+          <TextField
+            id="team-name"
+            name="name"
+            label="Team Name"
+            type="text"
+            autoComplete='off'
+            value={formValues.name}
+            onChange={handleInputChange}
+            data-testid='name'
+            inputProps={{ "data-testid": "name" }}
+            required
+          />
           </Box>
         </Grid>
         <Button variant="contained" color="primary" type="submit" data-testid='submit' disabled={submitDisabled}>
