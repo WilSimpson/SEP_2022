@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { createTheme, adaptV4Theme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material';
 import Home from './components/home';
 import Layout from './components/layout';
@@ -24,7 +24,7 @@ export default function App() {
   );
 }
 
-const theme = createTheme(adaptV4Theme({
+const theme = createTheme({
   palette: {
      primary: {
         main: '#AFD0BF'
@@ -34,7 +34,7 @@ const theme = createTheme(adaptV4Theme({
                 }
            },
 fontFamily: "Roboto"
-}));
+});
 
 ReactDOM.render(
   <React.StrictMode>
