@@ -43,13 +43,13 @@ export default function StartingSurvey() {
     const handleSubmit = (event) => {
       event.preventDefault();
       console.log(formValues);
-      let path = `gameSession`; 
+      let path = `../gameSession`; 
       navigate(path, {
           state: {
               //Carries the gameCode with the state
-              code: state.code,
+              code: state ? state.code : null,
               //Initialize state with the response parsed as an array of questions
-              game: state.game,
+              game: state ? state.game : [],
               //Carry the form data forward
               formData: formValues,
           }
@@ -82,6 +82,7 @@ export default function StartingSurvey() {
             type="text"
             value={formValues.name}
             onChange={handleInputChange}
+            required
           />
           </Box>
         </Grid>
@@ -94,6 +95,7 @@ export default function StartingSurvey() {
             type="number"
             value={formValues.size}
             onChange={handleInputChange}
+            required
           />
           </Box>
         </Grid>
@@ -112,6 +114,7 @@ export default function StartingSurvey() {
                 value="yes"
                 control={<Radio size="small" />}
                 label="Yes"
+                selected
               />
               <FormControlLabel
                 key="no"
@@ -131,6 +134,7 @@ export default function StartingSurvey() {
               name="type"
               value={formValues.type}
               onChange={handleInputChange}
+              required
             >
               <MenuItem key="walk" value="walk">
                 Walking
@@ -145,7 +149,7 @@ export default function StartingSurvey() {
           </FormControl>
           </Box>
         </Grid>
-        <Button variant="contained" color="primary" type="submit">
+        <Button variant="contained" color="primary" type="submit" inputProps={{'data-testid': 'submit'}}>
           Submit
         </Button>
       </Grid>

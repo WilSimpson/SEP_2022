@@ -1,22 +1,22 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import GameCode from '../components/gameCode';
+import StartingSurvey from '../components/startingSurvey';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-describe("<GameCode />", () => {
+describe("<StartingSurvey />", () => {
     let wrapper;
-    it ("should render the GameCode component", () => {
-        wrapper = shallow(<GameCode />);
+    it ("should render the StartingSurvey component", () => {
+        wrapper = shallow(<StartingSurvey />);
     });
 
 
-    it ('should accept a valid gamecode', () => {
+    it ('should require a team name', () => {
         const { getByTestId } = render(<BrowserRouter>
             <Routes>   
-                <Route path="*" element= {<GameCode />}/>
+                <Route path="*" element= {<StartingSurvey />}/>
             </Routes>
         </BrowserRouter>);
         const codeBox =  getByTestId('codeBox');

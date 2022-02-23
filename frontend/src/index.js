@@ -1,28 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createTheme } from '@mui/material/styles';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material';
-import Home from './components/home';
-import Layout from './components/layout';
-import StartingSurvey from './components/startingSurvey'
-import GameSession from './components/gameSession';
+import { createTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core';
+import {BrowserRouter} from 'react-router-dom';
 
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="startingSurvey" element={<StartingSurvey />} />
-          <Route path="gameSession" element={<GameSession />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
-}
 
 const theme = createTheme({
   palette: {
@@ -38,11 +22,11 @@ fontFamily: "Roboto"
 
 ReactDOM.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-      <App />
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

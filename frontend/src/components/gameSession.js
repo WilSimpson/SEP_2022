@@ -71,7 +71,7 @@ export default function GameSession() {
             <Typography>Question: {currentQuestion ? currentQuestion.text : "Game not found"}</Typography>
             {/* Question options or chance game goes here */}
             <ButtonGroup variant="contained"  alignItems="center" justify="center">
-                <Button color='primary' onClick={nextQuestion} inputProps={{ 'data-testid': 'continue'}} data-testid='continue' disabled={false}>Join Game</Button>
+                <Button color='primary' onClick={nextQuestion} inputProps={{ 'data-testid': 'continue'}} data-testid='continue' disabled={false}>Continue</Button>
             </ButtonGroup>
           </Container>
         </Box>
