@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { createTheme } from '@material-ui/core/styles'
 import { ThemeProvider } from '@material-ui/core';
 
+
 const theme = createTheme({
   palette: {
      primary: {
@@ -21,7 +22,7 @@ fontFamily: "Roboto"
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-    <App />
+      <App />
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
