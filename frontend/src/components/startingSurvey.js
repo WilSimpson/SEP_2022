@@ -15,6 +15,7 @@ import Radio from "@material-ui/core/Radio";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
+import { useNavigate } from "react-router-dom";
 
 export default function StartingSurvey() {
 
@@ -38,9 +39,22 @@ export default function StartingSurvey() {
       });
     };
 
+    let navigate = useNavigate();
+
     const handleSubmit = (event) => {
       event.preventDefault();
       console.log(formValues);
+      let path = `gameSession`; 
+      navigate(path, {
+          state: {
+              //Carries the gameCode with the state
+              code: state.code,
+              //Initialize state with the response parsed as an array of questions
+              game: state.game,
+              //Carry the form data forward
+              formData: formValues,
+          }
+      });
     };
 
   return (
@@ -116,6 +130,7 @@ export default function StartingSurvey() {
         <Grid item>
         <Box sx={{pb:2}}>
           <FormControl>
+          <FormLabel>Which version of the game would you like to play?</FormLabel>
             <Select
               name="type"
               value={formValues.type}

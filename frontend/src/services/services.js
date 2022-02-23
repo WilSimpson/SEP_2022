@@ -32,6 +32,7 @@ class GameService {
     clearGame() {
         localStorage.removeItem('gameCode');
     }
+
 }
 
 export default new GameService();
