@@ -28,7 +28,8 @@ export default function StartingSurvey() {
     //a null gamecode will not allow page to load
     const { state } = useLocation();
 
-    const [formValues, setFormValues] = useState(defaultValues)
+    const [formValues, setFormValues] = useState(defaultValues);
+    const [submitDisabled, setSubmitDisabled] = useState(true);
 
     const handleInputChange = (e) => {
       const { name, value } = e.target;
@@ -36,6 +37,13 @@ export default function StartingSurvey() {
         ...formValues,
         [name]: value,
       });
+      let disableSubmit = false;
+      Object.entries(formValues).map(([key, value]) => {
+        if (value === defaultValues[key] && key !== 'size') {
+          disableSubmit = true;
+        }
+      setSubmitDisabled(disableSubmit);
+    })
     };
 
     let navigate = useNavigate();
@@ -112,6 +120,7 @@ export default function StartingSurvey() {
             name="size"
             label="size"
             type="number"
+            InputProps={{ inputProps: { min: 1 } }}
             value={formValues.size}
             onChange={handleInputChange}
             data-testid='size'
@@ -169,7 +178,7 @@ export default function StartingSurvey() {
           </FormControl>
           </Box>
         </Grid>
-        <Button variant="contained" color="primary" type="submit" data-testid='submit'>
+        <Button variant="contained" color="primary" type="submit" data-testid='submit' disabled={submitDisabled}>
           Submit
         </Button>
       </Grid>
