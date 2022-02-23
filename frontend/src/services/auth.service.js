@@ -36,6 +36,26 @@ class AuthService {
     getCurrentUser() {
         return JSON.parse(localStorage.getItem('user'));
     }
+
+    register(data){
+        return axios.post(API_URL + 'register', {
+            'email': email,
+            'password': password,
+            'first': first_name,
+            'last': last_name,
+            'role': role
+        )}
+        .then(response => {
+            if (response.status === 200 {
+                let user = new User('', '', '', '', response.data);
+                localStorage.setItem('user', JSON.stringify(user));
+                store.dispatch({
+                    type: REGISTER_USER
+                });
+            }
+            return response;
+        });
+    }
 }
 
 export default new AuthService();
