@@ -17,7 +17,7 @@ describe("<StartingSurvey />", () => {
     });
 
 
-    it ('should require a team name', () => {
+    it ('should route towards the game session', () => {
         const { getByTestId } = render(<BrowserRouter>
             <Routes>   
                 <Route path="*" element= {<StartingSurvey />}/>
@@ -27,23 +27,6 @@ describe("<StartingSurvey />", () => {
 
         expect(submit).toBeInTheDocument();
         fireEvent.click(submit);
-        expect(submit).toBeInTheDocument();
-    });
-
-    it ('should require a team size', () => {
-        const { getByTestId } = render(<BrowserRouter>
-            <Routes>   
-                <Route path="*" element= {<StartingSurvey />}/>
-            </Routes>
-        </BrowserRouter>);
-        const submit =  document.querySelector("[data-testid=submit]");
-        const teamBox = getByTestId("name")
-
-        expect(submit).toBeInTheDocument();
-        expect(teamBox).toBeInTheDocument();
-        fireEvent.change(teamBox, { target: { value: "Team Name" } })
-        fireEvent.click(submit);
-        expect(teamBox.value).toBe("Team Name");
         expect(submit).toBeInTheDocument();
     });
 });
