@@ -8,7 +8,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material';
 import Home from './components/home';
 import Layout from './components/layout';
 import StartingSurvey from './components/startingSurvey'
-//import GameSession from './components/gameSession';
+import GameSession from './components/gameSession';
 
 export default function App() {
   return (
@@ -17,7 +17,7 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="startingSurvey" element={<StartingSurvey />} />
-          {/* <Route path="gameSession" element={<GameSession />} /> */}
+          <Route path="gameSession" element={<GameSession />} />
         </Route>
       </Routes>
     </BrowserRouter>

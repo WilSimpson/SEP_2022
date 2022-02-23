@@ -1,7 +1,6 @@
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useLocation } from 'react-router-dom';
 import { useState } from "react";
@@ -72,9 +71,6 @@ export default function StartingSurvey() {
             mb: 3,
           }}
         >
-          <Container maxWidth="sm">
-              <Typography>Render Game Here. Game Code: { state ? state.code : "No Game Code" } </Typography>
-          </Container>
     <form onSubmit={handleSubmit}>
       <Grid container alignItems="center" justify="center" direction="column">
         <Grid item>
