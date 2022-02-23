@@ -49,7 +49,9 @@ const styles = {
                         let path = `gameSession`; 
                         this.props.navigate(path, {
                             state: {
+                                //Carries the gameCode with the state
                                 code: this.state.value,
+                                //Initialize state with the response parsed as an array of questions
                                 game: response.data,
                             }
                         });
