@@ -1,0 +1,44 @@
+version: "0.1.0"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - /ea/data/db:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  backend:
+    restart: unless-stopped
+    image: ${EA_REGISTRY}/backend:0.1.0
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    entrypoint: /app/wsgi-entrypoint.sh
+    ports:
+      - 8000:8000
+    volumes:
+      - static_volume:/app/server/django_static
+    env_file:
+      - .env
+    depends_on:
+      - db
+  
+  frontend:
+    restart: unless-stopped
+    image: ${EA_REGISTRY}/frontend:0.1.0
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/app/server/django_static
+      - ./nginx.dev.conf:/etc/nginx/conf.d
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+volumes:
+  static_volume: {}
