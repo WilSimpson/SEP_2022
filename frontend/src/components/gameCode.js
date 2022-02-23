@@ -46,7 +46,7 @@ const styles = {
             GameService.joinGame(code).then(
                 (response) => {
                     if (response.status === 200) {
-                        let path = `gameSession`; 
+                        let path = `startingSurvey`; 
                         this.props.navigate(path, {
                             state: {
                                 //Carries the gameCode with the state
