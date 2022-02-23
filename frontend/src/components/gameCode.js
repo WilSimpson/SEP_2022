@@ -7,7 +7,7 @@ import { TextField } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from "react-router-dom";
-import AuthService from '../services/services';
+import GameService from '../services/services';
 
 const styles = {
     input: {
@@ -43,21 +43,20 @@ const styles = {
          if (re.test(code)) {
             //Do the thing with auth service
             this.setState({errMsg: ""});
-            AuthService.joinGame(code).then(
+            GameService.joinGame(code).then(
                 (response) => {
                     if (response.status === 200) {
                         let path = `gameSession`; 
                         this.props.navigate(path, {
                             state: {
                                 code: this.state.value,
+                                game: response.data,
                             }
                         });
                     }
                 },
                 (error) => {
-                    if (error.response.status === 401) {
-                        this.setState({errMsg: error.response.data.detail});
-                    } else if (error.response.status === 404) {
+                    if (error.response.status === 404) {
                         this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
                     } else {
                         this.setState({errMsg: error.response.data.detail});

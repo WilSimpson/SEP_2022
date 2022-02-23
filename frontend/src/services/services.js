@@ -3,35 +3,15 @@ import axios from 'axios';
 // does this have to be the port the backend runs on?
 const API_URL = 'http://localhost:3000/api/auth'
 
-class AuthService {
-    login(email, password) {
-        return axios.post(API_URL + 'signin', {
-            email,
-            password
-        })
-        .then(response => {
-            if (response.data.accessToken) {
-                localStorage.setItem('user', JSON.stringify(response.data));
-            }
-            return response.data;
-        });
-    }
-
-    logout() {
-        localStorage.removeItem('user');
-    }
-
-    getCurrentUser() {
-        return JSON.parse(localStorage.getItem('user'));
-    }
+class GameService {
 
     joinGame(gameCode) {
-        return axios.post(API_URL + 'gameCode', {
+        return axios.post(API_URL + 'joinGame', {
             gameCode
         })
         .then(response => {
-            if (response.data.accessToken) {
-                localStorage.setItem('gameCode', JSON.stringify(response.data)); 
+            if (response.data) {
+                localStorage.setItem('gameObject', JSON.stringify(response.data)); 
             }
             return response.data;
         });
@@ -44,4 +24,4 @@ class AuthService {
     }
 }
 
-export default new AuthService();
+export default new GameService();
