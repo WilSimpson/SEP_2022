@@ -47,9 +47,26 @@ export default function StartingSurvey() {
       navigate(path, {
           state: {
               //Carries the gameCode with the state
-              code: state ? state.code : null,
+              code: state ? state.code : 'DEV###',
               //Initialize state with the response parsed as an array of questions
-              game: state ? state.game : [],
+              game: state ? state.game : [
+                    {
+                      "id": '1',
+                      'text': "This is an example question for development",
+                      "password": "psw",
+                      "onlyChance": false,
+                      "options": [
+                          {
+                          "text": "Option 1",
+                          "link": "1a"
+                            },
+                            {
+                                "text": "Option 2",
+                                "link": "1b"
+                            }
+                        ],
+                    }
+                ],
               //Carry the form data forward
               formData: formValues,
           }
