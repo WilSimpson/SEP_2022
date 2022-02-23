@@ -9,7 +9,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 describe("<StartingSurvey />", () => {
     let wrapper;
     it ("should render the StartingSurvey component", () => {
-        wrapper = shallow(<StartingSurvey />);
+        wrapper = shallow(<BrowserRouter>
+            <Routes>   
+                <Route path="*" element= {<StartingSurvey />}/>
+            </Routes>
+        </BrowserRouter>);
     });
 
 
@@ -19,87 +23,27 @@ describe("<StartingSurvey />", () => {
                 <Route path="*" element= {<StartingSurvey />}/>
             </Routes>
         </BrowserRouter>);
-        const codeBox =  getByTestId('codeBox');
-
-        expect(codeBox).toBeInTheDocument();
-        expect(codeBox.value).toBe('');
-        fireEvent.change(codeBox, { target: { value: "123456" } });
-        expect(codeBox.value).toBe('123456');
-    });
-
-    it ('should have a disabled button', () => {
-        const { getByTestId } = render(<BrowserRouter>
-            <Routes>   
-                <Route path="*" element= {<GameCode />}/>
-            </Routes>
-        </BrowserRouter>);
-        const submit = document.querySelector("[data-testid=submit]");
+        const submit =  document.querySelector("[data-testid=submit]");
 
         expect(submit).toBeInTheDocument();
-        expect(submit.disabled).toBe(true);
+        fireEvent.click(submit);
+        expect(submit).toBeInTheDocument();
     });
 
-    it ('should enable button with valid code', () => {
+    it ('should require a team size', () => {
         const { getByTestId } = render(<BrowserRouter>
             <Routes>   
-                <Route path="*" element= {<GameCode />}/>
+                <Route path="*" element= {<StartingSurvey />}/>
             </Routes>
         </BrowserRouter>);
-        const codeBox =  getByTestId('codeBox');
-        const submit = document.querySelector("[data-testid=submit]");
+        const submit =  document.querySelector("[data-testid=submit]");
+        const teamBox = getByTestId("name")
 
         expect(submit).toBeInTheDocument();
-        expect(submit.disabled).toBe(true);
-
-        fireEvent.change(codeBox, { target: { value: "123456" } });
-        expect(submit.disabled).toBe(false);
-    });
-
-    it ('should not enable with no input', () => {
-        const { getByTestId } = render(<BrowserRouter>
-            <Routes>   
-                <Route path="*" element= {<GameCode />}/>
-            </Routes>
-        </BrowserRouter>);
-        const codeBox =  getByTestId('codeBox');
-        const submit = document.querySelector("[data-testid=submit]");
-
+        expect(teamBox).toBeInTheDocument();
+        fireEvent.change(teamBox, { target: { value: "Team Name" } })
+        fireEvent.click(submit);
+        expect(teamBox.value).toBe("Team Name");
         expect(submit).toBeInTheDocument();
-        expect(submit.disabled).toBe(true);
-
-        fireEvent.change(codeBox, { target: { value: "" } });
-        expect(submit.disabled).toBe(true);
-    });
-
-    it ('should not enable non-numerical input', () => {
-        const { getByTestId } = render(<BrowserRouter>
-            <Routes>   
-                <Route path="*" element= {<GameCode />}/>
-            </Routes>
-        </BrowserRouter>);
-        const codeBox =  getByTestId('codeBox');
-        const submit = document.querySelector("[data-testid=submit]");
-
-        expect(submit).toBeInTheDocument();
-        expect(submit.disabled).toBe(true);
-
-        fireEvent.change(codeBox, { target: { value: "Hello" } });
-        expect(submit.disabled).toBe(true);
-    });
-
-    it ('should not enable with input shorter than 6', () => {
-        const { getByTestId } = render(<BrowserRouter>
-            <Routes>   
-                <Route path="*" element= {<GameCode />}/>
-            </Routes>
-        </BrowserRouter>);
-        const codeBox =  getByTestId('codeBox');
-        const submit = document.querySelector("[data-testid=submit]");
-
-        expect(submit).toBeInTheDocument();
-        expect(submit.disabled).toBe(true);
-
-        fireEvent.change(codeBox, { target: { value: "12345" } });
-        expect(submit.disabled).toBe(true);
     });
 });

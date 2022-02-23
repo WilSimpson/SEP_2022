@@ -82,6 +82,8 @@ export default function StartingSurvey() {
             type="text"
             value={formValues.name}
             onChange={handleInputChange}
+            data-testid='name'
+            inputProps={{ "data-testid": "name" }}
             required
           />
           </Box>
@@ -95,6 +97,7 @@ export default function StartingSurvey() {
             type="number"
             value={formValues.size}
             onChange={handleInputChange}
+            data-testid='size'
             required
           />
           </Box>
@@ -149,7 +152,7 @@ export default function StartingSurvey() {
           </FormControl>
           </Box>
         </Grid>
-        <Button variant="contained" color="primary" type="submit" inputProps={{'data-testid': 'submit'}}>
+        <Button variant="contained" color="primary" type="submit" data-testid='submit'>
           Submit
         </Button>
       </Grid>
