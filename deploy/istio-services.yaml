@@ -1,0 +1,38 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ea-backend
+  namespace: ea
+spec:
+  hosts:
+    - "$(EA_HOST)"
+  http:
+    - route:
+        - destination:
+            host: ea-backend
+            port:
+              number: 80
+          weight: 100
+      match:
+        - uri:
+            prefix: /api
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ea-frontend
+  namespace: ea
+spec:
+  hosts:
+    - "$(EA_HOST)"
+  gateways:
+    - ea-gateway
+  http:
+    - route:
+        - destination:
+            host: ea-frontend
+            port:
+              number: 80
+      match:
+        - uri:
+            prefix: /

@@ -41,7 +41,7 @@ const styles = {
         const re = /^[0-9\b]{6}$/;
         const code = this.state.value;
          if (re.test(code)) {
-            //Do the thing with auth service
+            //Do the thing with game service
             this.setState({errMsg: ""});
             GameService.joinGame(code).then(
                 (response) => {

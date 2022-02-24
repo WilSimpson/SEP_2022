@@ -66,6 +66,10 @@ time := $(shell date +%s)
 #                  __/ |             
 #                 |___/              
 
+#
+# Setup Targets
+#
+
 install: install-frontend install-backend
 
 install-frontend:
@@ -78,6 +82,10 @@ install-backend:
 
 	@echo Migrating backend database
 	python $(BASE_DIR_BE)/manage.py migrate
+
+#
+# Docker Targets
+#
 
 build: build-frontend build-backend
 
@@ -95,6 +103,10 @@ push-%: build-%
 	docker push $(EA_REGISTRY)/$*:$(BASE_VERSION_$(UC))-$(time)
 	docker push $(EA_REGISTRY)/$*:latest
 	docker push $(EA_REGISTRY)/$*:$(BASE_VERSION_$(UC))
+
+#
+# Testing Targets
+#
 
 test: test-frontend test-backend
 

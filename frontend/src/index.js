@@ -8,6 +8,7 @@ import { ThemeProvider } from '@material-ui/core';
 import {BrowserRouter} from 'react-router-dom';
 
 
+
 const theme = createTheme({
   palette: {
      primary: {
@@ -23,9 +24,7 @@ fontFamily: "Roboto"
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <App />
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
