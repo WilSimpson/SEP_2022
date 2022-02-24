@@ -5,8 +5,14 @@ from rest_framework import permissions
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import RoleTokenObtainPairSerializer
+
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
     model = get_user_model()
     permission_classes = [ permissions.AllowAny ]
     serializer_class = UserSerializer
+
+class RoleTokenObtainPairView(TokenObtainPairView):
+    serializer_class = RoleTokenObtainPairSerializer

@@ -4,6 +4,7 @@ import GameCode from '../components/gameCode';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 describe("<GameCode />", () => {
     let wrapper;
@@ -13,7 +14,11 @@ describe("<GameCode />", () => {
 
 
     it ('should accept a valid gamecode', () => {
-        const { getByTestId } = render(<GameCode />);
+        const { getByTestId } = render(<BrowserRouter>
+            <Routes>   
+                <Route path="*" element= {<GameCode />}/>
+            </Routes>
+        </BrowserRouter>);
         const codeBox =  getByTestId('codeBox');
 
         expect(codeBox).toBeInTheDocument();
@@ -23,7 +28,11 @@ describe("<GameCode />", () => {
     });
 
     it ('should have a disabled button', () => {
-        const { getByTestId } = render(<GameCode />);
+        const { getByTestId } = render(<BrowserRouter>
+            <Routes>   
+                <Route path="*" element= {<GameCode />}/>
+            </Routes>
+        </BrowserRouter>);
         const submit = document.querySelector("[data-testid=submit]");
 
         expect(submit).toBeInTheDocument();
@@ -31,7 +40,11 @@ describe("<GameCode />", () => {
     });
 
     it ('should enable button with valid code', () => {
-        const { getByTestId } = render(<GameCode />);
+        const { getByTestId } = render(<BrowserRouter>
+            <Routes>   
+                <Route path="*" element= {<GameCode />}/>
+            </Routes>
+        </BrowserRouter>);
         const codeBox =  getByTestId('codeBox');
         const submit = document.querySelector("[data-testid=submit]");
 
@@ -43,7 +56,11 @@ describe("<GameCode />", () => {
     });
 
     it ('should not enable with no input', () => {
-        const { getByTestId } = render(<GameCode />);
+        const { getByTestId } = render(<BrowserRouter>
+            <Routes>   
+                <Route path="*" element= {<GameCode />}/>
+            </Routes>
+        </BrowserRouter>);
         const codeBox =  getByTestId('codeBox');
         const submit = document.querySelector("[data-testid=submit]");
 
@@ -55,7 +72,11 @@ describe("<GameCode />", () => {
     });
 
     it ('should not enable non-numerical input', () => {
-        const { getByTestId } = render(<GameCode />);
+        const { getByTestId } = render(<BrowserRouter>
+            <Routes>   
+                <Route path="*" element= {<GameCode />}/>
+            </Routes>
+        </BrowserRouter>);
         const codeBox =  getByTestId('codeBox');
         const submit = document.querySelector("[data-testid=submit]");
 
@@ -67,7 +88,11 @@ describe("<GameCode />", () => {
     });
 
     it ('should not enable with input shorter than 6', () => {
-        const { getByTestId } = render(<GameCode />);
+        const { getByTestId } = render(<BrowserRouter>
+            <Routes>   
+                <Route path="*" element= {<GameCode />}/>
+            </Routes>
+        </BrowserRouter>);
         const codeBox =  getByTestId('codeBox');
         const submit = document.querySelector("[data-testid=submit]");
 

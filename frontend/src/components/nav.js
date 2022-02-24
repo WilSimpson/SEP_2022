@@ -1,19 +1,19 @@
 import * as React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import Container from '@material-ui/core/Container';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import MenuItem from '@material-ui/core/MenuItem';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
 import accountIcon from '../images/accountIcon.png';
 import logoSmall from '../images/logoSmall.png'
-import { ButtonGroup } from '@material-ui/core';
+import { ButtonGroup } from '@mui/material';
 
 const pages = ['Get Started', 'About', 'Help'];
 const settings = ['Dashboard', 'Games', 'Account Settings', 'Logout'];
@@ -41,19 +41,18 @@ const ResponsiveAppBar = () => {
     <AppBar position="static" color='primary'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <IconButton href='/' sx={{ p: 0 }}>
+        <IconButton href='/' sx={{ p: 0 }} size="large">
             <Avatar alt="EA" src={logoSmall} variant='square' />
         </IconButton>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
-              size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
               data-testid="profileButton"
-            >
+              size="large">
               <MenuIcon />
             </IconButton>
             <Menu
@@ -81,13 +80,13 @@ const ResponsiveAppBar = () => {
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl:3 }}>
-            <ButtonGroup variant='contained' color='secondary'>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl:3 }}>
+            <ButtonGroup disableElevation variant='contained' color='secondary'>
             {pages.map((page) => (
               <Button
               key={page}
               onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'primary', display: 'block' }}
+              sx={{ my: 2 }}
             >
               {page}
             </Button>
@@ -99,7 +98,7 @@ const ResponsiveAppBar = () => {
           {true ? (
         <div>
         <Tooltip title="Account Menu">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} size="large">
           <Avatar src={accountIcon} alt="User" />
         </IconButton>
       </Tooltip>

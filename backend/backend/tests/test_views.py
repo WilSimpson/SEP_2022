@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -8,6 +8,9 @@ from .factories import UserFactory
 
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
+import jwt
+import os
 
 # TODO: Refactor tests to be DRY
 class UserViewSetTestCase(TestCase):
@@ -121,6 +124,7 @@ class LoginViewTestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects
         self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
+        self.factory = RequestFactory()
     def test_wrong_password(self):
         data = {
             'email': 'test@test.com',
@@ -149,6 +153,20 @@ class LoginViewTestCase(TestCase):
         }
         resp = self.client.post('/api/token/', data=data)
         self.assertEqual(resp.status_code, 200)
+        self.assertTrue('access' in resp.data)
+        self.assertTrue('refresh' in resp.data)
+    def test_correct_claims(self):
+        data = {
+            'email': 'test@test.com',
+            'password': 'testadmin'
+        }
+        auth = JWTAuthentication()
+        resp = self.client.post('/api/token/', data=data)
+        token = resp.data['access']
+        decoded = jwt.decode(token, os.environ['EA_BACKEND_SECRET'], algorithms=["HS256"])
+        self.assertEqual(decoded['email'], 'test@test.com')
+        self.assertEqual(decoded['role'], 'FACULTY')
+
 class RefreshViewTestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects
@@ -166,6 +184,8 @@ class RefreshViewTestCase(TestCase):
         }
         resp = self.client.post('/api/token/refresh/', data=data)
         self.assertEqual(resp.status_code, 200)
+        self.assertTrue('access' in resp.data)
+        self.assertTrue('refresh' in resp.data)
     def test_token_refresh_bad_token(self):
         data = {
             'refresh': 'eguehfuhiueh'
