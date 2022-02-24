@@ -57,11 +57,6 @@ BASH = bash -c
 # Current time for versioning
 time := $(shell date +%s)
 
-CERT_DATA_DIR := $(ROOT_DIR)/deploy/nginx/certbot
-CERT_RSA_SIZE := 4096
-STAGING := 1
-CERT_EMAIL := william-simpson@uiowa.edu
-
 #  _______                   _       
 # |__   __|                 | |      
 #    | | __ _ _ __ __ _  ___| |_ ___ 
@@ -121,35 +116,3 @@ test-frontend: install-frontend
 test-backend: install-backend
 	python $(BASE_DIR_BE)/manage.py test
 	python $(BASE_DIR_BE)/manage.py test backend
-
-#
-# SSL Certificates
-#
-
-ifeq (, $(shell which docker-compose))
-$(error "docker-compose not in PATH")
-endif
-
-cert: cert-download-rec request-cert
-
-cert-download-rec:
-	echo "Getting recommending TLS parameters"
-	@mkdir -p $(CERT_DATA_DIR)/conf
-	@curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf -o $(CERT_DATA_DIR)/conf/options-ssl-nginx.conf
-	@curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem -o $(CERT_DATA_DIR)/conf/ssl-dhparams.pem
-
-request-cert: has-docker-compose
-	echo "Requesting cert"
-	@docker-compose run --rm --entrypoint "\
-		certbot certonly --webroot -w /var/www/certbot \
-		--staging \
-		--email $(CERT_EMAIL) \
-		-d sep22.forever.dev \
-		--rsa-key-size $(CERT_RSA_SIZE) \
-		--agree-tos \
-		--force-renewal" certbot
-
-has-docker-compose:
-	ifeq (, $(shell which docker-compose))
-	$(error "docker-compose not in PATH")
-	endif
