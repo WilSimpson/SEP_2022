@@ -101,7 +101,6 @@ export default function AdminDash () {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
                   elevation={7}
@@ -115,7 +114,6 @@ export default function AdminDash () {
                   <GameTable />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                 elevation={7}
@@ -133,9 +131,6 @@ export default function AdminDash () {
                     <Typography component="p" variant="h4">
                       2
                     </Typography>
-                    {/* <Typography color="text.secondary" sx={{ flex: 1 }}>
-                      on 15 March, 2019
-                    </Typography> */}
                     <div>
                       <Link color="primary" href="#">
                         View Games
@@ -144,7 +139,6 @@ export default function AdminDash () {
                   </React.Fragment>
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper elevation={7} sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <GameSessionTable />

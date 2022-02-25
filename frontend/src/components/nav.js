@@ -21,6 +21,7 @@ const settings = ['Dashboard', 'Games', 'Account Settings', 'Logout'];
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  let isLoggedIn = (localStorage.getItem('user') !== null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,9 +38,18 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
-  return (
-    <AppBar position="static" color='primary'>
+  const LoggedInNav = (
+    <div>
       <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <Avatar alt="EA" src={logoSmall} variant='square' />
+        </Toolbar>
+      </Container>
+    </div>
+  );
+
+  const LoggedOutNav = (
+    <Container maxWidth="xl">
         <Toolbar disableGutters>
         <IconButton href='/' sx={{ p: 0 }} size="large">
             <Avatar alt="EA" src={logoSmall} variant='square' />
@@ -137,7 +147,12 @@ const ResponsiveAppBar = () => {
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+  );
+
+  return (
+      <AppBar position="static" color='primary'>
+        {isLoggedIn ? LoggedInNav : LoggedOutNav}
+      </AppBar>    
   );
 };
 export default ResponsiveAppBar;
