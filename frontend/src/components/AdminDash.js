@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SideMenu } from './SideMenu';
+import { AdminSideMenu } from './AdminSideMenu';
 import { Box, Button, ThemeProvider, Tooltip } from '@material-ui/core';
 import { Toolbar } from '@material-ui/core';
 import { Container } from '@material-ui/core';
@@ -19,7 +19,7 @@ function GameSessionTable() {
     <Typography component="h2" variant="h6" gutterBottom>
         Active Game Sessions
     </Typography>
-    <Table size="small">
+    <Table size="small"  data-testid='active-game-sessions'>
       <TableHead>
         <TableRow>
           <TableCell></TableCell>
@@ -58,7 +58,7 @@ function GameTable() {
     <Typography component="h2" variant="h6" gutterBottom>
         All Games
     </Typography>
-    <Table size="small">
+    <Table size="small" data-testid='all-games'>
       <TableHead>
         <TableRow>
           <TableCell>Name</TableCell>
@@ -85,7 +85,7 @@ export default function AdminDash () {
   return (
     <ThemeProvider>
       <Box sx={{ display: 'flex' }}>
-        <SideMenu />
+        <AdminSideMenu />
         <Box
           component="main"
           sx={{
@@ -117,6 +117,7 @@ export default function AdminDash () {
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                 elevation={7}
+                data-testid='total-games'
                   sx={{
                     p: 2,
                     display: 'flex',
