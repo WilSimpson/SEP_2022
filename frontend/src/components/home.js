@@ -12,7 +12,6 @@ export default function Home() {
   return (
       <div className='container'>
       <CssBaseline />
-      <ResponsiveAppBar />
       <main>
         {/* Hero unit */}
     <Container maxWidth='xl'>

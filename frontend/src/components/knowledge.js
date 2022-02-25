@@ -10,7 +10,6 @@ export default function Knowledge() {
   return (
       <div className='container'>
       <CssBaseline />
-      <ResponsiveAppBar />
       <main>
         {/* Hero unit */}
     <Container maxWidth='xl'>
