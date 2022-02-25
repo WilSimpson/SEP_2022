@@ -100,7 +100,7 @@ const styles = {
             <br />
         </Box>
         <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
-            <Button color='primary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
+            <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
         </ButtonGroup>
         </Grid>
         );
