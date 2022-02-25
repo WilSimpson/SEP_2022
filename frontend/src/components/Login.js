@@ -47,7 +47,7 @@ export default function Login() {
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-                    window.location.href = "/admin";
+                    window.location.href = "/admin-dashboard";
                 } else {
                     setErrMsg('There was an issue handling your login. Please try again later.');
                 }
