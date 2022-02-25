@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Box } from "@material-ui/core";
-import { Divider } from '@material-ui/core';
+import { Box } from "@mui/material";
+import { Divider } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import { AccountBox, AccountTree, Help } from '@material-ui/icons';
+import { AccountBox, AccountTree, Help } from '@mui/icons-material';
 import List from '@mui/material/List';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -210,7 +210,7 @@ export function AdminSideMenu () {
                             px: [1],
                             }}
                         >
-                            <IconButton onClick={toggleDrawer} data-testid='drawer-toggle'>
+                            <IconButton onClick={toggleDrawer} data-testid='drawer-toggle' size="large">
                             <ChevronLeftIcon />
                             </IconButton>
                         </Toolbar>
