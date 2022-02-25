@@ -48,7 +48,7 @@ const drawerWidth = 240;
   );
 
 
-export function SideMenu () {   
+export function AdminSideMenu () {   
     
     const [open, setOpen] = React.useState(true);
     const [gameManageOpen, setGameManageOpen] = React.useState(false);
@@ -77,7 +77,10 @@ export function SideMenu () {
       }
 
     const dashboardItem = (
-        <ListItemButton disabled={!open}>
+        <ListItemButton 
+        disabled={!open} 
+        data-testid='dashboard-item'
+        href='/admin'>
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
@@ -90,6 +93,7 @@ export function SideMenu () {
             <ListItemButton 
             onClick={handleGameManagement} 
             disabled={!open}
+            data-testid='game-manage-item'
             >
                 <ListItemIcon>
                 <AccountTree />
@@ -99,13 +103,13 @@ export function SideMenu () {
             </ListItemButton>
             <Collapse in={gameManageOpen && open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton sx={{ pl: 4 }} data-testid='game-develop-item'>
                         <ListItemText primary="Develop Game" />
                     </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton sx={{ pl: 4 }} data-testid='game-edit-item'>
                         <ListItemText primary="Edit Game" />
                     </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton sx={{ pl: 4 }} data-testid='game-view-item'>
                         <ListItemText primary="View Games" />
                     </ListItemButton>
                 </List>
@@ -118,6 +122,7 @@ export function SideMenu () {
           <ListItemButton 
           onClick={handleUserManagement} 
           disabled={!open}
+          data-testid='user-manage-item'
           >
             <ListItemIcon>
               <PeopleIcon />
@@ -127,13 +132,13 @@ export function SideMenu () {
           </ListItemButton>
           <Collapse in={userManageOpen && open} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>  
+              <ListItemButton sx={{ pl: 4 }} data-testid='user-create-item'>  
                 <ListItemText primary="Create Users" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }}>
+              <ListItemButton sx={{ pl: 4 }} data-testid='user-edit-item'>
                 <ListItemText primary="Edit Users" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }}>
+              <ListItemButton sx={{ pl: 4 }} data-testid='user-view-item'>
                 <ListItemText primary="View Users" />
               </ListItemButton>
             </List>
@@ -145,6 +150,7 @@ export function SideMenu () {
         <ListItemButton 
           onClick={handleReports} 
           disabled={!open}
+          data-testid='reports-item'
           >
             <ListItemIcon>
               <BarChartIcon />
@@ -156,7 +162,9 @@ export function SideMenu () {
     const logoutItem = (
         <ListItemButton 
         disabled={!open}
-        onClick={AuthService.logout}>
+        onClick={AuthService.logout}
+        data-testid='logout-item'
+        >
           <ListItemIcon>
             <AccountBox />
           </ListItemIcon>
@@ -166,7 +174,10 @@ export function SideMenu () {
 
     const helpItem = (
         <div>
-            <ListItemButton onClick={handleHelp} disabled={!open}>
+            <ListItemButton 
+            onClick={handleHelp} 
+            disabled={!open}  
+            data-testid='help-item'>
                 <ListItemIcon>
                     <Help />
                 </ListItemIcon>
@@ -175,10 +186,10 @@ export function SideMenu () {
             </ListItemButton>
             <Collapse in={helpOpen && open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>  
+                    <ListItemButton sx={{ pl: 4 }} data-testid='getting-started-item'>  
                         <ListItemText primary="Getting Started" />
                     </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemButton sx={{ pl: 4 }} data-testid='about-item'>
                         <ListItemText primary="About" />
                     </ListItemButton>
                 </List>
@@ -199,7 +210,7 @@ export function SideMenu () {
                             px: [1],
                             }}
                         >
-                            <IconButton onClick={toggleDrawer}>
+                            <IconButton onClick={toggleDrawer} data-testid='drawer-toggle'>
                             <ChevronLeftIcon />
                             </IconButton>
                         </Toolbar>
