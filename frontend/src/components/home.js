@@ -1,10 +1,10 @@
 import * as React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
+
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import GameCode from './gameCode';
-import StickyFooter from './stickyFooter';
 import logoLarge from '../images/logoLarge.png'
 
 export default function Home() {
@@ -23,9 +23,9 @@ export default function Home() {
             mb: 3,
           }}
         >
-          <Container maxWidth="sm">
+          <Container maxWidth="sm" justify="center" alignItems="center">
               <img src={logoLarge} alt="Ethics Adventure" style={{flex: 1, width: '100%', height: undefined}}/>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography variant="h5" align="center" paragraph>
               To join a game, enter your 6-digit game code:
             </Typography>
             <GameCode />
@@ -33,7 +33,6 @@ export default function Home() {
         </Box>
     </Container>
       </main>
-      <StickyFooter />
       </div>
   );
 }

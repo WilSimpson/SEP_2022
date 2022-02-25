@@ -1,11 +1,13 @@
 import * as React from 'react';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
-import { ButtonGroup } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
-import { withStyles } from "@material-ui/core/styles";
-import Alert from '@material-ui/lab/Alert';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Container';
+import { ButtonGroup } from '@mui/material';
+import { TextField } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import Alert from '@mui/material/Alert';
+import { useNavigate } from "react-router-dom";
+import GameService from '../services/services';
 
 const styles = {
     input: {
@@ -38,10 +40,31 @@ const styles = {
     submitCode() {
         const re = /^[0-9\b]{6}$/;
         const code = this.state.value;
-        console.log(code);
          if (re.test(code)) {
             //Do the thing with game service
             this.setState({errMsg: ""});
+            GameService.joinGame(code).then(
+                (response) => {
+                    if (response.status === 200) {
+                        let path = `startingSurvey`; 
+                        this.props.navigate(path, {
+                            state: {
+                                //Carries the gameCode with the state
+                                code: this.state.value,
+                                //Initialize state with the response parsed as an array of questions
+                                game: response.data,
+                            }
+                        });
+                    }
+                },
+                (error) => {
+                    if (error.response.status === 404) {
+                        this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
+                    } else {
+                        this.setState({errMsg: error.response.data.detail});
+                    }
+                }
+            );
          } else {
             //There is a problem; display an error message
             if (code.length < 6) {
@@ -53,12 +76,17 @@ const styles = {
      }
 
     render () {
-        const { classes } = this.props;
         return (
-        <Container>
+            <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            >
         <Box sx={{pb:2}}>
             <Box sx={{pb:2}}>
-            { this.state.errMsg && <Alert severity="error">{this.state.errMsg}</Alert> }
+                { this.state.errMsg && <Alert severity="error">{this.state.errMsg}</Alert> }
             </Box>
             <TextField 
             label="Game Code"
@@ -67,17 +95,21 @@ const styles = {
             value={this.state.value}
             ref="gameCode"
             variant="outlined"
-            inputProps={{ maxLength: 6, 'data-testid': 'codeBox'}}
-            InputProps={{className: classes.input}}
-            onChange={this.handleChange}
-             /><br />
-            </Box>
-            <ButtonGroup variant="contained" size='large'>
-            <Button color='primary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
-            </ButtonGroup>
-        </Container>
+            inputProps={{ maxLength: 6, 'data-testid': 'codeBox', style: { textAlign: 'center' }}}
+            onChange={this.handleChange}/>
+            <br />
+        </Box>
+        <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
+            <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
+        </ButtonGroup>
+        </Grid>
         );
     }
 }
 
-export default withStyles(styles)(GameCode);
+function WithNavigate(props) {
+    let navigate = useNavigate();
+    return <GameCode navigate={navigate} />
+}
+
+export default withStyles(styles)(WithNavigate);

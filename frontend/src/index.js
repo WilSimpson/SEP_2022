@@ -3,27 +3,38 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createTheme } from '@material-ui/core/styles'
-import { ThemeProvider } from '@material-ui/core';
+import { adaptV4Theme } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
 
 
-const theme = createTheme({
+
+const theme = createTheme(adaptV4Theme({
   palette: {
-     primary: {
-        main: '#AFD0BF'
-               },
-     secondary: {
-        main: '#e2efde'
-                }
-           },
-fontFamily: "Roboto"
-});
+    primary: {
+      main: '#537A5A'
+    },
+    secondary: {
+      main: '#2A2A72'
+    },
+    tertiary: {
+      default: "#F6AE2D"
+    },
+    background: {
+      default: "#e4f0e2"
+    },
+    contrastThreshold: 3,
+    tonalOffset: 0.2,
+    fontFamily: 'Roboto'
+  },
+}));
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </StyledEngineProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
