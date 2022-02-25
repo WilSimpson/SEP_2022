@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import { AccountBox, AccountTree, Help } from '@mui/icons-material';
+import { AccountBox, AccountTree, Help } from '@material-ui/icons';
 import List from '@mui/material/List';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -210,7 +210,7 @@ export function AdminSideMenu () {
                             px: [1],
                             }}
                         >
-                            <IconButton onClick={toggleDrawer} data-testid='drawer-toggle' size="large">
+                            <IconButton onClick={toggleDrawer} data-testid='drawer-toggle'>
                             <ChevronLeftIcon />
                             </IconButton>
                         </Toolbar>

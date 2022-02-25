@@ -85,7 +85,7 @@ export default function AdminDash () {
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider>
+      <div>
         <Box sx={{ display: 'flex' }}>
           <AdminSideMenu />
           <Box
@@ -151,7 +151,7 @@ export default function AdminDash () {
             </Container>
           </Box>
         </Box>
-      </ThemeProvider>
+      </div>
     </StyledEngineProvider>
   );
 }
