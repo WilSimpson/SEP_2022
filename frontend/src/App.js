@@ -30,7 +30,7 @@ function App() {
                 <Route exact path='/login' element={<Login />} />
                 <Route 
                   exact
-                  path='/admin' 
+                  path='/admin-dashboard' 
                   element={
                   <ProtectedRoute>
                     <AdminDash />

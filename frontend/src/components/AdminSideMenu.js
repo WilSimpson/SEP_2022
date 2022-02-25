@@ -80,7 +80,7 @@ export function AdminSideMenu () {
         <ListItemButton 
         disabled={!open} 
         data-testid='dashboard-item'
-        href='/admin'>
+        href='/admin-dashboard'>
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
