@@ -1,0 +1,56 @@
+version: "0.1.0"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./ea/data/db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - 5423:5432
+    networks:
+      - local
+
+  backend:
+    restart: unless-stopped
+    build:
+      context: ./backend/
+      dockerfile: ./Dockerfile
+    entrypoint: /app/wsgi-entrypoint.sh
+    ports:
+      - 8000:8000
+    volumes:
+      - static_volume:/app/ethicsAdventure/django-static
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - local
+  
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./frontend/
+      dockerfile: ./Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/app/ethicsAdventure/django-static
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - local
+      - default
+
+volumes:
+  static_volume: {}
+
+
+networks:
+  local:
+    internal: true
+    name: internal-network
