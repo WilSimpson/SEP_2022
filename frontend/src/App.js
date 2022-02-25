@@ -4,6 +4,7 @@ import Nav from './components/nav';
 import Footer from './components/stickyFooter';
 import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
 import Login from './components/Login';
+import Register from './components/Register';
 import AdminDash from './components/AdminDash';
 import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
@@ -23,6 +24,7 @@ function App() {
               <Routes>
                 <Route exact path='/' element={<Home />} />
                 <Route exact path='/login' element={<Login />} />
+                <Route exact path='/register' element={<Register />} />
                 <Route 
                   exact
                   path='/admin' 

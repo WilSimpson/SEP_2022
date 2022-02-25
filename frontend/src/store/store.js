@@ -1,7 +1,7 @@
 import { createStore } from "redux";
 import { persistStore, persistReducer } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
-import { LOGIN_USER, LOGOUT_USER REGISTER_USER } from "./types";
+import { LOGIN_USER, LOGOUT_USER, REGISTER_USER } from "./types";
 
 const initialState = {
   authenticated: false

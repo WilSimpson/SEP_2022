@@ -1,6 +1,6 @@
 import axios from 'axios';
 import configureStore from '../store/store';
-import { LOGIN_USER, LOGOUT_USER } from '../store/types';
+import { LOGIN_USER, LOGOUT_USER, REGISTER_USER } from '../store/types';
 import { User } from '../models';
 
 
@@ -37,16 +37,16 @@ class AuthService {
         return JSON.parse(localStorage.getItem('user'));
     }
 
-    register(data){
+    register(email, password, firstname, lastname, role){
         return axios.post(API_URL + 'register', {
             'email': email,
             'password': password,
-            'first': first_name,
-            'last': last_name,
+            'first': firstname,
+            'last': lastname,
             'role': role
-        )}
+        })
         .then(response => {
-            if (response.status === 200 {
+            if (response.status === 200) {
                 let user = new User('', '', '', '', response.data);
                 localStorage.setItem('user', JSON.stringify(user));
                 store.dispatch({

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
@@ -13,9 +13,6 @@ import {
 } from '@mui/material'
 import AuthService from '../services/auth.service';
 import validator from 'validator';
-import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
@@ -41,9 +38,7 @@ export default function Register() {
     const [errMsg, setErrMsg] = useState('');
     const [disableSubmit, setDisableSubmit] = useState(true);
 
-    useEffect(() => {
-        userRef.current.focus();
-    }, [])
+
 
     useEffect(() => {
         setErrMsg('');
@@ -53,6 +48,10 @@ export default function Register() {
             setDisableSubmit(true);
         }
     }, [email, password])
+
+    const handleChange = (event) => {
+        setRole(event.target.value);
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -103,6 +102,8 @@ export default function Register() {
                   fullWidth
                   id="first"
                   label="First Name"
+                  ref={userRef}
+                  onChange={(e) => setFirst(e.target.value)}
                   inputProps={{ 'data-testid': 'first-input'}}
                   autoFocus
                 />
@@ -114,6 +115,8 @@ export default function Register() {
                   id="last"
                   label="Last Name"
                   name="last"
+                  ref={userRef}
+                  onChange={(e) => setLast(e.target.value)}
                   inputProps={{ 'data-testid': 'last-input'}}
                   autoComplete="family-name"
                 />
@@ -126,6 +129,8 @@ export default function Register() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  ref={userRef}
+                  onChange={(e) => setEmail(e.target.value)}
                   inputProps={{ 'data-testid': 'email-input'}}
                 />
               </Grid>
@@ -138,6 +143,7 @@ export default function Register() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
                   inputProps={{ 'data-testid': 'pass-input'}}
                 />
               </Grid>
@@ -163,6 +169,8 @@ export default function Register() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={disableSubmit}
+              data-testid='submit-button'
             >
               Register Account
             </Button>
