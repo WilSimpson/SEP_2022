@@ -3,22 +3,29 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createTheme, adaptV4Theme } from '@mui/material/styles';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material';
-import {BrowserRouter} from 'react-router-dom';
+import { adaptV4Theme } from '@mui/material/styles';
+import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
 
 
 
 const theme = createTheme(adaptV4Theme({
   palette: {
-     primary: {
-        main: '#AFD0BF'
-               },
-     secondary: {
-        main: '#e2efde'
-                }
-           },
-fontFamily: "Roboto"
+    primary: {
+      main: '#537A5A'
+    },
+    secondary: {
+      main: '#2A2A72'
+    },
+    tertiary: {
+      default: "#F6AE2D"
+    },
+    background: {
+      default: "#e4f0e2"
+    },
+    contrastThreshold: 3,
+    tonalOffset: 0.2,
+    fontFamily: 'Roboto'
+  },
 }));
 
 ReactDOM.render(

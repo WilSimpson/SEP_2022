@@ -120,6 +120,7 @@ export default function StartingSurvey() {
           <FormLabel>Is this your first time playing this game?</FormLabel>
           <RadioGroup
             name="first"
+            defaultValue="yes"
             value={formValues.first}
             onChange={handleInputChange}
             row

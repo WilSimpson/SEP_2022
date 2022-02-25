@@ -1,0 +1,55 @@
+version: "0.1.0"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/:/var/lib/postgresql/data
+      - ./frontend/nginx.prod.conf:/etc/nginx/conf.d/default.conf
+    env_file:
+      - .env
+      - prod.env
+    ports:
+      - 5423:5432
+    networks:
+      - local
+
+  backend:
+    restart: unless-stopped
+    image: ${EA_REGISTRY}/backend:0.1.0
+    entrypoint: /app/wsgi-entrypoint.sh
+    ports:
+      - 8000:8000
+    volumes:
+      - static_volume:/app/ethicsAdventure/django-static
+    env_file:
+      - .env
+      - prod.env
+    depends_on:
+      - db
+    networks:
+      - local
+  
+  frontend:
+    restart: unless-stopped
+    image: ${EA_REGISTRY}/frontend:0.1.0
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/app/ethicsAdventure/django-static
+    env_file:
+      - .env
+      - prod.env
+    depends_on:
+      - backend
+    networks:
+      - local
+      - default
+
+volumes:
+  static_volume: {}
+
+networks:
+  local:
+    internal: true
+    name: internal-network
