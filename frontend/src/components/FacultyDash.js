@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AdminSideMenu } from './AdminSideMenu';
+import { FacultySideMenu } from './FacultySideMenu';
 import { Box, Button, ThemeProvider, StyledEngineProvider, Tooltip } from '@mui/material';
 import { Toolbar } from '@mui/material';
 import { Container } from '@mui/material';
@@ -44,15 +44,16 @@ function GameSessionTable() {
 
   return (
     <React.Fragment>
-    <SearchBar
+
+      <Typography component="h2" variant="h6" gutterBottom>
+          Active Game Sessions
+
+      </Typography>
+<SearchBar
           value={searched}
           onChange={(searchVal) => requestSearch(searchVal)}
           onCancelSearch={() => cancelSearch()}
     />
-      <Typography component="h2" variant="h6" gutterBottom>
-          Active Game Sessions
-      </Typography>
-
       <Table size="small"  data-testid='active-game-sessions'>
         <TableHead>
           <TableRow>
@@ -121,7 +122,7 @@ export default function FacultyDash () {
     <StyledEngineProvider injectFirst>
       <div>
         <Box sx={{ display: 'flex' }}>
-          <AdminSideMenu />
+          <FacultySideMenu />
           <Box
             component="main"
             sx={{
