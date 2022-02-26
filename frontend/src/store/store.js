@@ -1,7 +1,7 @@
 import { createStore } from "redux";
 import { persistStore, persistReducer } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
-import { LOGIN_USER, LOGOUT_USER, REGISTER_USER } from "./types";
+import { LOGIN_USER, LOGOUT_USER } from "./types";
 
 const initialState = {
   authenticated: false
@@ -37,9 +37,6 @@ const reducer = (state = initialState, action) => {
 
     case LOGOUT_USER:
       return { ...state, authenticated: false};
-
-    case REGISTER_USER:
-      return { ...state, authenticated: true};
 
     default:
       return state;

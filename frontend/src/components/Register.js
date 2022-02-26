@@ -49,9 +49,7 @@ export default function Register() {
         }
     }, [email, password])
 
-    const handleChange = (event) => {
-        setRole(event.target.value);
-    };
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -157,7 +155,7 @@ export default function Register() {
                   id="role"
                   value={role}
                   inputProps={{ 'data-testid': 'role-select'}}
-                  onChange={handleChange}
+                  onChange={(e) => setRole(e.target.value)}
                 >
                   <MenuItem value={'Administrator'}>Administrator</MenuItem>
                   <MenuItem value={'Faculty'}>Faculty</MenuItem>
@@ -174,13 +172,6 @@ export default function Register() {
             >
               Register Account
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
