@@ -8,6 +8,7 @@ import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
 import Login from './components/Login';
 import Knowledge from './components/knowledge';
 import AdminDash from './components/AdminDash';
+import FacultyDash from './components/FacultyDash';
 import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -37,6 +38,15 @@ function App() {
                   <ProtectedRoute>
                     <AdminDash />
                   </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path='/faculty-dashboard'
+                  element={
+                  //<ProtectedRoute>
+                    <FacultyDash />
+                  //</ProtectedRoute>
                   }
                 />
               </Routes>
