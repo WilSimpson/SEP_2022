@@ -5,26 +5,34 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
 
-
-
 const theme = createTheme({
   palette: {
+    type: 'light',
     primary: {
-      main: '#537A5A'
+      main: '#6A8EAE',
     },
     secondary: {
-      main: '#2A2A72'
-    },
-    tertiary: {
-      default: "#F6AE2D"
+      main: '#57A773',
+      contrastText: '#ffffff',
     },
     background: {
-      default: "#e4f0e2"
+      default: '#ECF8F8',
+      paper: '#fff',
     },
-    contrastThreshold: 3,
-    tonalOffset: 0.2,
-    fontFamily: 'Roboto'
   },
+  // components: {
+  //   MuiButton: {
+  //     styleOverrides: {
+  //       root: {
+  //         borderRadius: 28,
+  //       },
+  //     }, 
+  //   }, 
+  // },
+  spacing: 8,
+  // shape: {
+  //   borderRadius: 6,
+  // },
 });
 
 ReactDOM.render(

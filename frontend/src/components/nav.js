@@ -15,7 +15,8 @@ import accountIcon from '../images/accountIcon.png';
 import logoSmall from '../images/logoSmall.png'
 import { ButtonGroup } from '@mui/material';
 
-const pages = ['Get Started', 'About', 'Help'];
+//const pages = ['Get Started', 'About', 'Help'];
+const pages = {'Get Started': '#', 'About':'#', 'Help':'#'};
 const settings = ['Dashboard', 'Games', 'Account Settings', 'Logout'];
 
 const ResponsiveAppBar = () => {
@@ -73,22 +74,24 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {Object.entries(pages).map(([key, value]) => (
+                <MenuItem key={key} href={value} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{key}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl:3 }}>
-            <ButtonGroup disableElevation variant='contained' color='secondary'>
-            {pages.map((page) => (
+            <ButtonGroup disableElevation variant='contained' color='primary'>
+            {Object.entries(pages).map(([key, value]) => (
               <Button
-              key={page}
+              key={key}
+              href={value}
               onClick={handleCloseNavMenu}
-              sx={{ my: 2 }}
+              sx={{ my: 2,
+                borderRadius: 0 }}
             >
-              {page}
+              {key}
             </Button>
             ))}
             </ButtonGroup>
