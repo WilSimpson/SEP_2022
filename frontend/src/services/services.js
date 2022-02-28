@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // does this have to be the port the backend runs on?
-const API_URL = 'http://localhost:3000/api/auth'
+const API_URL = 'http://localhost:3000/api/'
 
 class GameService {
 

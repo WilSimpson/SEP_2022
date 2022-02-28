@@ -17,7 +17,6 @@ from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 from datetime import timedelta
 
-
 def get_env(var):
     try:
         return os.environ[var]
