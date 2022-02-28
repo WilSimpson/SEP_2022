@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import RoleTokenObtainPairSerializer
+from .serializers import RoleTokenObtainPairSerializer, JoinGameSerializer
 
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
@@ -16,3 +16,9 @@ class UserViewSet(GenericViewSet,
 
 class RoleTokenObtainPairView(TokenObtainPairView):
     serializer_class = RoleTokenObtainPairSerializer
+
+
+class JoinGame(GenericViewSet,
+                CreateAPIView):
+    print("here")
+    serializer_class = JoinGameSerializer

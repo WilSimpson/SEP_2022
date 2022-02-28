@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 // does this have to be the port the backend runs on?
-const API_URL = 'http://localhost:3000/api/'
+const API_URL = 'http://localhost:8000/api/'
 
 class GameService {
 
     joinGame(gameCode) {
         return axios.post(API_URL + 'joinGame', {
-            gameCode
+            'code': gameCode
         })
         .then(response => {
             if (response.data) {

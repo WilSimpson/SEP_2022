@@ -29,3 +29,10 @@ class RoleTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['role'] = user.role
 
         return token
+
+
+class JoinGameSerializer(ModelSerializer):
+    #do some stuff here
+    
+    def get_game(code):
+        return {}
