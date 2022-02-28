@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { adaptV4Theme } from '@mui/material/styles';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
 
 
 
-const theme = createTheme(adaptV4Theme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#537A5A'
@@ -26,7 +25,7 @@ const theme = createTheme(adaptV4Theme({
     tonalOffset: 0.2,
     fontFamily: 'Roboto'
   },
-}));
+});
 
 ReactDOM.render(
   <React.StrictMode>
