@@ -4,6 +4,7 @@ import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 import { SideMenu } from '../components/SideMenu';
+import { User } from '../models';
 
 
 
@@ -23,14 +24,19 @@ describe("<SideMenu />", () => {
     });
 
     describe("Game Management Button", () => {
-        it("should have clickable game management button", () => {
+        it("should have clickable game management button as an admin", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let gameManageLink =  getByTestId('game-manage-item');
             expect(gameManageLink).toBeInTheDocument();
             expect(gameManageLink).not.toBeDisabled();
+            localStorage.removeItem('user');
         });
 
-        it ("should reveal 3 new buttons when clicked", () => {
+        it ("should reveal 3 new buttons when clicked as an admin", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let gameManageLink =  getByTestId('game-manage-item');
             try {
@@ -50,18 +56,24 @@ describe("<SideMenu />", () => {
             expect(editGame).not.toBeDisabled();
             expect(viewGame).toBeInTheDocument();
             expect(viewGame).not.toBeDisabled();
+            localStorage.removeItem('user');
         });
     });
 
     describe("User Management Button", () => {
-        it("should have clickable user management button", () => {
+        it("should have clickable user management button as an admin", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let userManageLink =  getByTestId('user-manage-item');
             expect(userManageLink).toBeInTheDocument();
             expect(userManageLink).not.toBeDisabled();
+            localStorage.removeItem('user');
         });
 
-        it ("should reveal 3 new buttons when clicked", () => {
+        it ("should reveal 3 new buttons when clicked as an admin", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let userManageLink =  getByTestId('user-manage-item');
             try {
@@ -81,15 +93,19 @@ describe("<SideMenu />", () => {
             expect(editUser).not.toBeDisabled();
             expect(viewUser).toBeInTheDocument();
             expect(viewUser).not.toBeDisabled();
+            localStorage.removeItem('user');
         });
     });
     
     describe("Reports Button", () => {
-        it("should have clickable reports button", () => {
+        it("should have clickable reports button as an admin", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let reportsLink =  getByTestId('reports-item');
             expect(reportsLink).toBeInTheDocument();
             expect(reportsLink).not.toBeDisabled();
+            localStorage.removeItem('user');
         });
     });
     
