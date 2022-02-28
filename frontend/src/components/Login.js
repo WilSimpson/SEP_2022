@@ -14,10 +14,9 @@ import {
 } from '@mui/material'
 import AuthService from '../services/auth.service';
 import validator from 'validator';
+import { isAdmin } from '../models';
 
 const theme = createTheme();
-const ADMIN = "ADMIN";
-const FACULTY = "FACULTY";
 
 export default function Login() {
     const userRef = useRef();
@@ -48,7 +47,7 @@ export default function Login() {
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-                    if (AuthService.getCurrentUser().role == ADMIN) { 
+                    if (isAdmin()) { 
                         window.location.href = "/admin-dashboard";
                     } else {
                         window.location.href = "/faculty-dashboard";

@@ -1,3 +1,8 @@
+import authService from "./services/auth.service";
+
+const ADMIN = "ADMIN";
+const FACULTY = "FACULTY";
+
 class User {
     constructor(email, firstname, lastname, role, token){
         this.email = email;
@@ -8,6 +13,14 @@ class User {
     }
 }
 
+function isAdmin() {
+    return (authService.getCurrentUser().role === ADMIN);
+}
+
+function isFaculty() {
+    return (authService.getCurrentUser().role === FACULTY);
+}
+
 export {
-    User
+    User, isAdmin, isFaculty
 }

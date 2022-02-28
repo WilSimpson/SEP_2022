@@ -18,6 +18,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import AuthService from '../services/auth.service';
+import { isAdmin } from '../models';
 
 const drawerWidth = 240;
 const ADMIN = "ADMIN";
@@ -58,14 +59,7 @@ export function SideMenu () {
     const [reportsOpen, setReportsOpen] = React.useState(false);
     const [helpOpen, setHelpOpen] = React.useState(false);
 
-    let isLoggedIn = (localStorage.getItem('user') !== null);
-    let currUser = "";
-    let isAdmin = false;
-    if (isLoggedIn) {
-      currUser = AuthService.getCurrentUser();
-      isAdmin = (currUser.role === ADMIN);
-    } 
-    
+    let isLoggedIn = (localStorage.getItem('user') !== null);    
 
     const toggleDrawer = () => {
         setOpen(!open);
