@@ -29,12 +29,12 @@ from backend.views import RoleTokenObtainPairView, JoinGame
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
+router.register(r'joinGame', JoinGame, basename="Game")
 
 urlpatterns = [
     path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
-    path('api/joinGame', JoinGame.as_view({'get': 'list'}), name = 'join_game'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls)
 ]

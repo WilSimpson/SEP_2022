@@ -37,6 +37,6 @@ class JoinGameSerializer(ModelSerializer):
     def get_game(code):
         return {}
 
-    class Meta():
-        #model = Game
-        fields = []
+    class Meta:
+        model = None
+        fields = '__all__'
