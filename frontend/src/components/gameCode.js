@@ -8,6 +8,7 @@ import withStyles from '@mui/styles/withStyles';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from "react-router-dom";
 import GameService from '../services/services';
+import { LinearProgress } from '@mui/material';
 
 const styles = {
     input: {
@@ -24,9 +25,15 @@ const styles = {
             value: '',
             errMsg: '',
             submitDisabled: true,
+            loading: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.submitCode = this.submitCode.bind(this);
+        this.toggleLoading = this.toggleLoading.bind(this);
+    }
+
+    toggleLoading() {
+        this.setState({loading: true});
     }
 
     handleChange(e) {
@@ -38,6 +45,7 @@ const styles = {
      }
 
     submitCode() {
+        this.toggleLoading()
         const re = /^[0-9\b]{6}$/;
         const code = this.state.value;
          if (re.test(code)) {
@@ -58,10 +66,14 @@ const styles = {
                     }
                 },
                 (error) => {
-                    if (error.response.status === 404) {
+                    if (error.resonse && error.response.status === 404) {
                         this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
                     } else {
-                        this.setState({errMsg: error.response.data.detail});
+                        if (error.response) {
+                            this.setState({errMsg: error.response.data.detail});
+                        } else {
+                            this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
+                        }
                     }
                 }
             );
@@ -73,6 +85,8 @@ const styles = {
                 this.setState({errMsg: "This Gamecode is not valid. Gamecodes must contain only number values."});
             }
          }
+         this.toggleLoading()
+         //this.setState({loading: false});
      }
 
     render () {
@@ -98,6 +112,9 @@ const styles = {
             inputProps={{ maxLength: 6, 'data-testid': 'codeBox', style: { textAlign: 'center' }}}
             onChange={this.handleChange}/>
             <br />
+        </Box>
+        <Box sx={{pb:2}}>
+                { !this.state.errMsg && this.state.loading && <LinearProgress /> }
         </Box>
         <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
             <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
