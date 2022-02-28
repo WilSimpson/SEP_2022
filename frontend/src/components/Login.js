@@ -16,7 +16,8 @@ import AuthService from '../services/auth.service';
 import validator from 'validator';
 
 const theme = createTheme();
-
+const ADMIN = "ADMIN";
+const FACULTY = "FACULTY";
 
 export default function Login() {
     const userRef = useRef();
@@ -47,7 +48,11 @@ export default function Login() {
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-                    window.location.href = "/admin-dashboard";
+                    if (AuthService.getCurrentUser().role == ADMIN) { 
+                        window.location.href = "/admin-dashboard";
+                    } else {
+                        window.location.href = "/faculty-dashboard";
+                    }
                 } else {
                     setErrMsg('There was an issue handling your login. Please try again later.');
                 }
