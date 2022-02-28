@@ -48,7 +48,7 @@ const drawerWidth = 240;
   );
 
 
-export function AdminSideMenu () {   
+export function SideMenu () {   
     
     const [open, setOpen] = React.useState(true);
     const [gameManageOpen, setGameManageOpen] = React.useState(false);
