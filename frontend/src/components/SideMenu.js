@@ -20,6 +20,8 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import AuthService from '../services/auth.service';
 
 const drawerWidth = 240;
+const ADMIN = "ADMIN";
+const FACULTY = "FACULTY";
 
   const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -55,6 +57,15 @@ export function SideMenu () {
     const [userManageOpen, setUserManageOpen] = React.useState(false);
     const [reportsOpen, setReportsOpen] = React.useState(false);
     const [helpOpen, setHelpOpen] = React.useState(false);
+
+    let isLoggedIn = (localStorage.getItem('user') !== null);
+    let currUser = "";
+    let isAdmin = false;
+    if (isLoggedIn) {
+      currUser = AuthService.getCurrentUser();
+      isAdmin = (currUser.role === ADMIN);
+    } 
+    
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -217,10 +228,18 @@ export function SideMenu () {
                         <Divider />
                         <List component="nav">
                             <div>
+                              {isAdmin ? 
+                              <React.Fragment>
                                 {dashboardItem}
                                 {gameManagementItem}
                                 {userManagementItem}
-                                {reportsItem}
+                                {reportsItem} 
+                              </React.Fragment>
+                                :
+                                <React.Fragment>
+                                  {dashboardItem}
+                                </React.Fragment>
+                              }
                             </div>
                             <Divider sx={{ my: 1 }} />
                             <div>
