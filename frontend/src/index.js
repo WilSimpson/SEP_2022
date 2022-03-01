@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { adaptV4Theme } from '@mui/material/styles';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
+
 
 const theme = createTheme({
   palette: {
@@ -20,20 +22,7 @@ const theme = createTheme({
       paper: '#fff',
     },
   },
-  // components: {
-  //   MuiButton: {
-  //     styleOverrides: {
-  //       root: {
-  //         borderRadius: 28,
-  //       },
-  //     }, 
-  //   }, 
-  // },
-  spacing: 8,
-  // shape: {
-  //   borderRadius: 6,
-  // },
-});
+}));
 
 ReactDOM.render(
   <React.StrictMode>
