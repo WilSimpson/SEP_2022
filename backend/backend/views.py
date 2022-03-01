@@ -2,7 +2,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import permissions
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -26,10 +26,14 @@ class RoleTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 def joinGame(request):
-    print(request.get.POST('code'))
-    game = Game.objects.get(code=0)
-    serializer = JoinGameSerializer(game)
-    return Response(serializer.data)
+    try:
+        game = Game.objects.get(code=int(request.data['code']))
+        if not game.active:
+            return HttpResponse(status=502)
+        serializer = JoinGameSerializer(game)
+        return Response(serializer.data)
+    except Exception as e:
+        return HttpResponse(status=501)
 
 @api_view(['GET'])
 def getGames(request):

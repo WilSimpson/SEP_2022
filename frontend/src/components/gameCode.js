@@ -66,14 +66,17 @@ const styles = {
 
                 },
                 (error) => {
-                    console.log(error);
+                    console.log(error.response.status);
                     if (error.resonse && error.response.status === 404) {
                         this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
                     } else {
-                        if (error.response) {
-                            this.setState({errMsg: error.response.data.detail});
+                        if (error.response.status === 501) {
+                            this.setState({errMsg: "This game does not exist"});
+                        }
+                        else if (error.response.status === 502) {
+                            this.setState({errMsg: "This game is not currently active"});
                         } else {
-                            this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
+                            this.setState({errMsg: "There was a problem loading this game. Please try again later."});
                         }
                     }
                 }
