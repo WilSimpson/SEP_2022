@@ -57,8 +57,6 @@ export function SideMenu () {
     const [reportsOpen, setReportsOpen] = React.useState(false);
     const [helpOpen, setHelpOpen] = React.useState(false);
 
-    let isLoggedIn = (localStorage.getItem('user') !== null);    
-
     const toggleDrawer = () => {
         setOpen(!open);
       };

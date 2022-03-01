@@ -13,11 +13,11 @@ export class User {
     }
 
     isAdmin() {
-        return (authService.getCurrentUser().role === ADMIN);
+        return (authService.currentUser().role === ADMIN);
     }
 
     isFaculty() {
-        return (authService.getCurrentUser().role === FACULTY);
+        return (authService.currentUser().role === FACULTY);
     }
 }
 
