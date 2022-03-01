@@ -53,17 +53,17 @@ const styles = {
             this.setState({errMsg: ""});
             GameService.joinGame(code).then(
                 (response) => {
-                    if (response.status === 200) {
-                        let path = `startingSurvey`; 
-                        this.props.navigate(path, {
-                            state: {
-                                //Carries the gameCode with the state
-                                code: this.state.value,
-                                //Initialize state with the response parsed as an array of questions
-                                game: response.data,
-                            }
-                        });
-                    }
+                    console.log(response)
+                    let path = `startingSurvey`; 
+                    this.props.navigate(path, {
+                        state: {
+                            //Carries the gameCode with the state
+                            code: this.state.value,
+                            //Initialize state with the response parsed as an array of questions
+                            game: response,
+                        }
+                    });
+
                 },
                 (error) => {
                     console.log(error);

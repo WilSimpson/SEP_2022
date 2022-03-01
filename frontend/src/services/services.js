@@ -21,7 +21,7 @@ class GameService {
     //             {'text': "Email CEO", 'link': "3A"}],
     //              'password': "psw",
     //              'only_chance': false}}
-                localStorage.setItem('gameObject', JSON.parse(response.data)); 
+                localStorage.setItem('gameObject', response.data); 
             }
             return response.data;
         });
