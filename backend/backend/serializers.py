@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer, CharField
 from django.contrib.auth import get_user_model
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import Game
 
 class UserSerializer(ModelSerializer):
     password = CharField(write_only=True)
@@ -38,5 +39,5 @@ class JoinGameSerializer(ModelSerializer):
         return {}
 
     class Meta:
-        model = None
+        model = Game
         fields = '__all__'

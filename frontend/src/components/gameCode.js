@@ -66,6 +66,7 @@ const styles = {
                     }
                 },
                 (error) => {
+                    console.log(error);
                     if (error.resonse && error.response.status === 404) {
                         this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
                     } else {
@@ -86,7 +87,6 @@ const styles = {
             }
          }
          this.toggleLoading()
-         //this.setState({loading: false});
      }
 
     render () {

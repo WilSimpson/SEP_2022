@@ -8,6 +8,8 @@ from .serializers import UserSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import RoleTokenObtainPairSerializer, JoinGameSerializer
 
+from .models import Game
+
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
     model = get_user_model()
@@ -20,5 +22,5 @@ class RoleTokenObtainPairView(TokenObtainPairView):
 
 class JoinGame(GenericViewSet,
                 CreateAPIView):
-    print("here")
+    queryset = Game.objects.all()
     serializer_class = JoinGameSerializer

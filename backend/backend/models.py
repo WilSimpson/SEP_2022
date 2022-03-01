@@ -83,3 +83,9 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
+class Game(models.Model):
+    title = models.CharField(max_length=255)
+    creator_id = models.IntegerField()
+    active = models.BooleanField()
+    content = models.JSONField()
+
