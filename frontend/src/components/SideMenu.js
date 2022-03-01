@@ -18,11 +18,9 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import AuthService from '../services/auth.service';
-import { isAdmin } from '../models';
+import { User } from '../models/user.model';
 
 const drawerWidth = 240;
-const ADMIN = "ADMIN";
-const FACULTY = "FACULTY";
 
   const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -222,7 +220,7 @@ export function SideMenu () {
                         <Divider />
                         <List component="nav">
                             <div>
-                              {isAdmin ? 
+                              {User.prototype.isAdmin ? 
                               <React.Fragment>
                                 {dashboardItem}
                                 {gameManagementItem}

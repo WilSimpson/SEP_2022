@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import AuthService from '../services/auth.service';
 import validator from 'validator';
-import { isAdmin } from '../models';
+import {User} from '../models/user.model';
 
 const theme = createTheme();
 
@@ -47,7 +47,7 @@ export default function Login() {
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-                    if (isAdmin()) { 
+                    if (User.prototype.isAdmin) { 
                         window.location.href = "/admin-dashboard";
                     } else {
                         window.location.href = "/faculty-dashboard";
@@ -57,6 +57,7 @@ export default function Login() {
                 }
             },
             (error) => {
+                console.log('reached');
                 if (error.response.status === 401) {
                     setErrMsg(error.response.data.detail);
                 } else {

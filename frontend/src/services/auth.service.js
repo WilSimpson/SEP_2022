@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import configureStore from '../store/store';
 import { LOGIN_USER, LOGOUT_USER } from '../store/types';
-import { User } from '../models';
+import {User} from '../models/user.model';
 
 
 const {persistor, store, API_URL} = configureStore();
@@ -18,7 +18,7 @@ class AuthService {
             if (response.status === 200) {
                 var token = response.data;
                 var decoded = jwt_decode(token.access);
-                let user = new User(decoded.email,'', '' , decoded.role, response.data);
+                const user = new User(decoded.email,'', '' , decoded.role, response.data);
                 localStorage.setItem('user', JSON.stringify(user));
                 store.dispatch({
                     type: LOGIN_USER
