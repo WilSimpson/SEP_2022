@@ -24,8 +24,15 @@ class RoleTokenObtainPairView(TokenObtainPairView):
     serializer_class = RoleTokenObtainPairSerializer
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def joinGame(request):
+    key = 567654
+    game = Game.objects.get(code=0)
+    serializer = JoinGameSerializer(game)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getGames(request):
     games = Game.objects.all()
     serializer = JoinGameSerializer(games, many=True)
     return Response(serializer.data)
