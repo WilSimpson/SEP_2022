@@ -15,6 +15,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { Typography } from '@mui/material';
 
 export default function StartingSurvey() {
 
@@ -97,6 +98,7 @@ export default function StartingSurvey() {
           mb: 3,
         }}
       >
+  <Typography> {`Game Title: ${state.game.title}`} </Typography>
   <form onSubmit={handleSubmit}>
     <Grid container alignItems="center" justifyContent="center" direction="column">
       <Grid item>
