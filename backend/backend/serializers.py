@@ -33,11 +33,6 @@ class RoleTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class JoinGameSerializer(ModelSerializer):
-    #do some stuff here
-
-    def get_game(code):
-        return {}
-
     class Meta:
         model = Game
         fields = '__all__'

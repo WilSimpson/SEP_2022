@@ -2,6 +2,10 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import permissions
 
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 
@@ -20,7 +24,8 @@ class RoleTokenObtainPairView(TokenObtainPairView):
     serializer_class = RoleTokenObtainPairSerializer
 
 
-class JoinGame(GenericViewSet,
-                CreateAPIView):
-    queryset = Game.objects.all()
-    serializer_class = JoinGameSerializer
+@api_view(['GET'])
+def joinGame(request):
+    games = Game.objects.all()
+    serializer = JoinGameSerializer(games, many=True)
+    return Response(serializer.data)
