@@ -4,8 +4,7 @@ import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 import { SideMenu } from '../components/SideMenu';
-import { User } from '../models';
-
+import { User } from '../models/user.model';
 
 
 describe("<SideMenu />", () => {
