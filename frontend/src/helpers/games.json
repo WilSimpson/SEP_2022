@@ -2,43 +2,43 @@
     {
         "id": "1",
         "name": "Engineering Ethics Adventure",
-        "creator": "1",
+        "creatorID": "1",
         "active": true,
-        "startQuestionId": "1"
+        "startQuestionID": "1"
     },
     {
         "id": "2",
         "name": "Business Ethics Adventure",
-        "creator": "2",
+        "creatorID": "2",
         "active": true,
-        "startQuestionId": "1"
+        "startQuestionID": "1"
     },
     {
         "id": "3",
         "name": "Public Ethics Adventure",
-        "creator": "1",
+        "creatorID": "1",
         "active": true,
-        "startQuestionId": "1"
+        "startQuestionID": "1"
     },
     {
         "id": "4",
         "name": "Psychology Ethics Adventure",
-        "creator": "1",
+        "creatorID": "1",
         "active": true,
-        "startQuestionId": "1"
+        "startQuestionID": "1"
     },
     {
         "id": "5",
         "name": "Law Ethics Adventuer",
-        "creator": "2",
+        "creatorID": "2",
         "active": true,
-        "startQuestionId": "1"
+        "startQuestionID": "1"
     },
     {
         "id": "6",
         "name": "Test Game",
-        "creator": "3",
+        "creatorID": "3",
         "active": false,
-        "startQuestionId": "1"
+        "startQuestionID": "1"
     }
 ]

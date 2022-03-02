@@ -3,12 +3,11 @@ import { Box, Chip, Container, Grid, Paper, Table, TableBody, TableCell, TableCo
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 import { Games } from '../../helpers/DummyData';
 
-export default function GamesTable() {
+export default function GamesTable(props) {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(5);
-  const data = Games;
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * pageSize - data.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * pageSize - props.data.length) : 0;
 
   const handleChangePageSize = (event) => {
     setPageSize(event.target.value);
@@ -33,8 +32,8 @@ export default function GamesTable() {
         </TableHead>
         <TableBody>
           {(pageSize > 0
-            ? data.slice(page * pageSize, page * pageSize + pageSize)
-            : data)
+            ? props.data.slice(page * pageSize, page * pageSize + pageSize)
+            : props.data)
             .map((row) => (
               <TableRow key={row.id}>
                 <TableCell component="th" scope="row">
@@ -64,7 +63,7 @@ export default function GamesTable() {
             <TablePagination
               rowsPerPageOptions={[5, 15, 30, { label: 'All', value: -1 }]}
               colSpan={3}
-              count={data.length}
+              count={props.data.length}
               rowsPerPage={pageSize}
               page={page}
               // SelectProps={{
