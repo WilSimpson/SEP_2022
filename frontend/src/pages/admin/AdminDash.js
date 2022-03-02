@@ -78,7 +78,7 @@ export default function AdminDash () {
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={8} lg={9}>
+                <Grid item xs={12} md={8} lg={9} >
                   <Paper
                     elevation={7}
                     sx={{

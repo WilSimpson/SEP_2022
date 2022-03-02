@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, StyledEngineProvider } from "@mui/material"
+import { Box, Container, Grid, StyledEngineProvider, Paper } from "@mui/material"
 import GamesTable from '../../../components/admin/GamesTable';
 import { AdminSideMenu } from '../../../components/layout/AdminSideMenu';
 import gameService from '../../../services/game.service';
@@ -24,7 +24,7 @@ export default function ViewGamesPage() {
             >
               <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Grid container spacing={3}>
-                  <Grid item xs={12} md={12} lg={12}>
+                  <Grid item xs={12} md={12} lg={12}  component={Paper}>
                     <GamesTable data={gameService.getGames()}/>
                   </Grid>
                 </Grid>

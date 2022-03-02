@@ -20,7 +20,7 @@ export default function GamesTable(props) {
 
 
   return (
-    <Grid container justifyContent="center" spacing={2} component={Paper}>
+    <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={2}>
         <h2>All Games</h2>
       </Grid>
