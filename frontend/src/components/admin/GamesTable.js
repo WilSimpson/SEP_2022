@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Chip, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from '@mui/material';
+import { Autocomplete, Box, Button, ButtonGroup, Chip, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 import { Games } from '../../helpers/DummyData';
+import { Delete, Edit } from '@material-ui/icons';
 
 export default function GamesTable(props) {
   const [page, setPage] = React.useState(0);
@@ -21,62 +22,93 @@ export default function GamesTable(props) {
 
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="games pagination table">
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(pageSize > 0
-            ? props.data.slice(page * pageSize, page * pageSize + pageSize)
-            : props.data)
-            .map((row) => (
-              <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
-                  {row.id}
-                </TableCell>
-                <TableCell>
-                  {row.name}
-                </TableCell>
-                <TableCell>
-                  <Chip 
-                    label={row.active ? "ACTIVE" : "INACTIVE"}
-                    color={row.active ? "primary" : "warning"}
-                    size="small"
-                  />
-                </TableCell>
+    <Grid container justifyContent="center" spacing={2}>
+      <Grid item xs={12}>
+        <h1>All Games</h1>
+      </Grid>
+      <Grid item xs={12}>
+        <Autocomplete
+          disablePortal
+          freeSolo
+          id="game-search"
+          options={props.data.map((game) => game.asOption())}
+          renderInput={(params) => <TextField {...params} label="Find Game" />}
+      />
+      </Grid>
+      <Grid item xs={12}>
+        <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 500 }} aria-label="games pagination table">
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Created</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell></TableCell>
               </TableRow>
-            ))}
+            </TableHead>
+            <TableBody>
+              {(pageSize > 0
+                ? props.data.slice(page * pageSize, page * pageSize + pageSize)
+                : props.data)
+                .map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell component="th" scope="row">
+                      {row.id}
+                    </TableCell>
+                    <TableCell>
+                      {row.name}
+                    </TableCell>
+                    <TableCell>
+                      {row.formatCreatedAt()}
+                    </TableCell>
+                    <TableCell>
+                      <Chip 
+                        label={row.active ? "ACTIVE" : "INACTIVE"}
+                        color={row.active ? "primary" : "warning"}
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <ButtonGroup variant="outlined" aria-label="edit delete game button group">
+                        <IconButton aria-label="edit">
+                          <Edit />
+                        </IconButton>
+                        <IconButton aria-label="delete">
+                          <Delete />
+                        </IconButton>
+                      </ButtonGroup>
+                    </TableCell>
+                  </TableRow>
+                ))}
 
-          {emptyRows > 0 && (
-            <TableRow>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 15, 30, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={props.data.length}
-              rowsPerPage={pageSize}
-              page={page}
-              // SelectProps={{
-              //   inputProps: {
-              //     'aria-label': 'rows per page',
-              //   },
-              //   native: true
-              // }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangePageSize} />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+              {emptyRows > 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 15, 30, { label: 'All', value: -1 }]}
+                  colSpan={3}
+                  count={props.data.length}
+                  rowsPerPage={pageSize}
+                  page={page}
+                  // SelectProps={{
+                  //   inputProps: {
+                  //     'aria-label': 'rows per page',
+                  //   },
+                  //   native: true
+                  // }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangePageSize} />
+                </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   );
 };
