@@ -20,21 +20,20 @@ from django.urls import path, re_path, include
 from backend.views import UserViewSet
 from django.contrib.auth.models import User
 
-from django.contrib.auth import views as auth_views
-from rest_framework.authtoken import views as token_views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView
 )
+from backend.views import RoleTokenObtainPairView
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 
 urlpatterns = [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
-    re_path('^', include(router.urls)),
+    re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls)
 ]
