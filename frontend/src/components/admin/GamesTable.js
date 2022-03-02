@@ -31,6 +31,7 @@ export default function GamesTable(props) {
           id="game-search"
           options={props.data.map((game) => game.asOption())}
           renderInput={(params) => <TextField {...params} label="Find Game" />}
+          onChange={(event, selected) => {window.location.href = `/admin-dashboard/games/${selected.id}`}}
       />
       </Grid>
       <Grid item xs={12}>

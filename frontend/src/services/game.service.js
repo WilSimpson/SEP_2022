@@ -1,5 +1,8 @@
 import { Games } from "../helpers/DummyData";
 import Game from "../models/game";
+import authService from "./auth.service";
+
+
 
 class GameService {
 
@@ -20,7 +23,15 @@ class GameService {
         if (id >= this.games.length) {
             return null
         }
-        return this.Games[id]
+        return this.games[id]
+    }
+
+    createGame(name, json) {
+        console.log('game created')
+    }
+
+    updateGame(id, name, json, active) {
+        console.log('game updated')
     }
 }
 
