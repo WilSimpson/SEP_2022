@@ -16,7 +16,6 @@ import AuthService from '../services/auth.service';
 import validator from 'validator';
 import {User} from '../models/user.model';
 
-const theme = createTheme();
 
 export default function Login() {
     const userRef = useRef();
@@ -69,7 +68,6 @@ export default function Login() {
     
     return (
         <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
                 <Container component='main' maxWidth='xs'>
                     <CssBaseline/>
                     <Box
@@ -122,13 +120,13 @@ export default function Login() {
                                 sx={{ mt: 3, mb: 2 }}
                                 disabled={disableSubmit}
                                 data-testid='submit-button'
+                                color='secondary'
                             >
                                 Sign In
                             </Button>
                         </Box>
                     </Box>
                 </Container>
-            </ThemeProvider>
         </StyledEngineProvider>
     );
 }
