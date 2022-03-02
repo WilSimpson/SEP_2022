@@ -57,7 +57,7 @@ export default function Register() {
         AuthService.register(email, password, first, last, role).then(
             (response) => {
                 if (response.status === 200) {
-                    window.location.href = "/user";
+                    window.location.href = "/users";
                 } else {
                     setErrMsg('There was an issue handling your account registration. Please try again later.');
                 }
