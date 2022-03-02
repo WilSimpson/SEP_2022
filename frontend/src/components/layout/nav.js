@@ -16,7 +16,9 @@ import logoSmall from '../../images/logoSmall.png'
 import { ButtonGroup } from '@mui/material';
 
 //const pages = ['Get Started', 'About', 'Help'];
+
 const pages = {'Get Started':'started', 'About':'####', 'Help':'####'};
+
 const settings = ['Dashboard', 'Games', 'Account Settings', 'Logout'];
 
 const ResponsiveAppBar = () => {
@@ -85,6 +87,7 @@ const ResponsiveAppBar = () => {
               }}
             >
               {Object.entries(pages).map(([key,value]) => (
+
                 <MenuItem key={key} href={value} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{key}</Typography>
                 </MenuItem>
@@ -92,14 +95,15 @@ const ResponsiveAppBar = () => {
             </Menu>
           </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl:3 }}>
-            <ButtonGroup variant='contained' color='secondary'>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl:3 }}>
+            <ButtonGroup disableElevation variant='contained' color='primary'>
             {Object.entries(pages).map(([key,value]) => (
               <Button
               key={key}
               href={value}
               onClick={handleCloseNavMenu}
-              sx={{ my: 2 }}
+              sx={{ my: 2,
+                borderRadius: 0 }}
             >
               {key}
             </Button>
