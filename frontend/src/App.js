@@ -1,17 +1,18 @@
 import './App.css';
-import Home from './components/home';
-import Nav from './components/nav';
-import Footer from './components/stickyFooter';
-import StartingSurvey from './components/startingSurvey';
-import GameSession from './components/gameSession';
+import Home from './pages/public/home';
+import Nav from './components/layout/nav';
+import Footer from './components/layout/stickyFooter';
+import StartingSurvey from './components/game/startingSurvey';
+import GameSession from './components/game/gameSession';
 import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
-import Login from './components/Login';
-import Knowledge from './components/knowledge';
-import AdminDash from './components/AdminDash';
+import Login from './pages/public/Login';
+import Knowledge from './pages/public/Knowledge';
+import AdminDash from './pages/admin/AdminDash';
 import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './store/store';
+import GamesTable from './components/admin/GamesTable';
 
 const { persistor, store } = configureStore();
 
@@ -39,6 +40,7 @@ function App() {
                   </ProtectedRoute>
                   }
                 />
+                <Route exact path='/test' element={<GamesTable />} />
               </Routes>
               </PersistGate>
           </Provider>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AdminSideMenu } from './AdminSideMenu';
+import { AdminSideMenu } from '../../components/layout/AdminSideMenu';
 import { Box, Button, ThemeProvider, StyledEngineProvider, Tooltip } from '@mui/material';
 import { Toolbar } from '@mui/material';
 import { Container } from '@mui/material';
@@ -11,7 +11,7 @@ import { Table } from '@mui/material';
 import { IconButton } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { TableHead, TableRow, TableCell, TableBody,  } from '@mui/material';
-import { gameSessions, games } from './temp-dummyData';
+import { gameSessions, games } from '../../helpers/DummyData';
 
 function GameSessionTable() {
   return (

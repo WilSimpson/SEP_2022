@@ -12,7 +12,7 @@ import {
     TextField,
     Typography
 } from '@mui/material'
-import AuthService from '../services/auth.service';
+import AuthService from '../../services/auth.service';
 import validator from 'validator';
 
 const theme = createTheme();
@@ -30,7 +30,7 @@ export default function Login() {
 
     useEffect(() => {
         userRef.current.focus();
-    }, [])  
+    }, [])
 
     useEffect(() => {
         setErrMsg('');

@@ -11,8 +11,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import accountIcon from '../images/accountIcon.png';
-import logoSmall from '../images/logoSmall.png'
+import accountIcon from '../../images/accountIcon.png';
+import logoSmall from '../../images/logoSmall.png'
 import { ButtonGroup } from '@mui/material';
 
 //const pages = ['Get Started', 'About', 'Help'];

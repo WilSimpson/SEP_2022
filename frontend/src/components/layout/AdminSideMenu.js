@@ -17,7 +17,7 @@ import List from '@mui/material/List';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import AuthService from '../services/auth.service';
+import AuthService from '../../services/auth.service';
 
 const drawerWidth = 240;
 
