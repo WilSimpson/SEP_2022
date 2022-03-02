@@ -1,7 +1,5 @@
 import React from 'react';
-import { Autocomplete, Box, Button, ButtonGroup, Chip, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
-import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
-import { Games } from '../../helpers/DummyData';
+import { Autocomplete, ButtonGroup, Chip, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 import { Delete, Edit } from '@material-ui/icons';
 
 export default function GamesTable(props) {
@@ -23,10 +21,10 @@ export default function GamesTable(props) {
 
   return (
     <Grid container justifyContent="center" spacing={2} component={Paper}>
-      <Grid item xs={12}>
+      <Grid item xs={2}>
         <h2>All Games</h2>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={10}>
         <Autocomplete
           disablePortal
           freeSolo
@@ -36,7 +34,7 @@ export default function GamesTable(props) {
       />
       </Grid>
       <Grid item xs={12}>
-        <TableContainer >
+        <TableContainer data-testid="games-table">
         <Table sx={{ minWidth: 500 }} aria-label="games pagination table">
             <TableHead>
               <TableRow>

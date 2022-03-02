@@ -13,7 +13,7 @@ describe("<AdminDash />", () => {
 
     it ("should have an All Games table", () => {
         const { getByTestId } = render(<AdminDash />);
-        let gamesTable =  getByTestId('all-games');
+        let gamesTable =  getByTestId('games-table');
         expect(gamesTable).toBeInTheDocument();
     });
 
