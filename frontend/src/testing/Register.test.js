@@ -13,7 +13,7 @@ describe("<Register />", () => {
     let passwordField;
     let firstField;
     let lastField;
-    let RoleDropDown;
+    let roleSelect;
     let submitButton;
 
     it ("should render the Register component", () => {
