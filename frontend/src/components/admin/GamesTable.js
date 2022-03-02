@@ -22,9 +22,9 @@ export default function GamesTable(props) {
 
 
   return (
-    <Grid container justifyContent="center" spacing={2}>
+    <Grid container justifyContent="center" spacing={2} component={Paper}>
       <Grid item xs={12}>
-        <h1>All Games</h1>
+        <h2>All Games</h2>
       </Grid>
       <Grid item xs={12}>
         <Autocomplete
@@ -36,7 +36,7 @@ export default function GamesTable(props) {
       />
       </Grid>
       <Grid item xs={12}>
-        <TableContainer component={Paper}>
+        <TableContainer >
         <Table sx={{ minWidth: 500 }} aria-label="games pagination table">
             <TableHead>
               <TableRow>
@@ -84,7 +84,7 @@ export default function GamesTable(props) {
 
               {emptyRows > 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={5} />
                 </TableRow>
               )}
             </TableBody>

@@ -13,6 +13,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { TableHead, TableRow, TableCell, TableBody,  } from '@mui/material';
 import { gameSessions, Games } from '../../helpers/DummyData';
 import gameService from '../../services/game.service'
+import GamesTable from '../../components/admin/GamesTable';
 
 function GameSessionTable() {
   return (
@@ -54,33 +55,6 @@ function GameSessionTable() {
   );
 }
 
-function GameTable() {
-  return (
-  <React.Fragment>
-    <Typography component="h2" variant="h6" gutterBottom>
-        All Games
-    </Typography>
-    <Table size="small" data-testid='all-games'>
-      <TableHead>
-        <TableRow>
-          <TableCell>Name</TableCell>
-          <TableCell>Status</TableCell>
-          <TableCell>Creator</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {Games.map((game) => (
-          <TableRow key={game.id}>
-            <TableCell>{game.name}</TableCell>
-            <TableCell>{game.active}</TableCell>
-            <TableCell>{game.creatorIDFU}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </React.Fragment>);
-}
-
 
 export default function AdminDash () {
 
@@ -113,7 +87,7 @@ export default function AdminDash () {
                       flexDirection: 'column',
                     }}
                   >
-                    <GameTable />
+                    <GamesTable data={gameService.getGames()}/>
                   </Paper>
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
