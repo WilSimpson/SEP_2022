@@ -183,7 +183,7 @@ export default function StartingSurvey() {
         />
         </Box>
       </Grid>
-      <Button variant="contained" color="primary" type="submit" data-testid='submit' disabled={submitDisabled}>
+      <Button variant="contained" color="secondary" type="submit" data-testid='submit' disabled={submitDisabled}>
         Submit
       </Button>
     </Grid>
