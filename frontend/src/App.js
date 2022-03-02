@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import configureStore from './store/store';
 import GamesTable from './components/admin/GamesTable';
+import ViewGamesPage from './pages/admin/games/ViewGames';
 
 const { persistor, store } = configureStore();
 
@@ -40,7 +41,11 @@ function App() {
                   </ProtectedRoute>
                   }
                 />
-                <Route exact path='/test' element={<GamesTable />} />
+                <Route exact path='/admin-dashboard/games' element={
+                  <ProtectedRoute>
+                    <ViewGamesPage />
+                  </ProtectedRoute>
+                } />
               </Routes>
               </PersistGate>
           </Provider>

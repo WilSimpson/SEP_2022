@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import { Divider } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
@@ -78,7 +78,8 @@ export function AdminSideMenu () {
 
     const dashboardItem = (
         <ListItemButton 
-        disabled={!open} 
+        disabled={!open}
+        component={Link}
         data-testid='dashboard-item'
         href='/admin-dashboard'>
             <ListItemIcon>
@@ -109,7 +110,7 @@ export function AdminSideMenu () {
                     <ListItemButton sx={{ pl: 4 }} data-testid='game-edit-item'>
                         <ListItemText primary="Edit Game" />
                     </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }} data-testid='game-view-item'>
+                    <ListItemButton sx={{ pl: 4 }} data-testid='game-view-item' component={Link} href="/admin-dashboard/games">
                         <ListItemText primary="View Games" />
                     </ListItemButton>
                 </List>
@@ -122,6 +123,7 @@ export function AdminSideMenu () {
           <ListItemButton 
           onClick={handleUserManagement} 
           disabled={!open}
+          component={Link}
           data-testid='user-manage-item'
           >
             <ListItemIcon>
@@ -150,6 +152,7 @@ export function AdminSideMenu () {
         <ListItemButton 
           onClick={handleReports} 
           disabled={!open}
+          component={Link}
           data-testid='reports-item'
           >
             <ListItemIcon>
@@ -241,6 +244,7 @@ export function AdminSideMenu () {
                         overflow: 'auto',
                     }}
                     >
+
                     </Box>
                 </Box>  
             </div>
