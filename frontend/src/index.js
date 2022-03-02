@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { adaptV4Theme } from '@mui/material/styles';
 import { ThemeProvider, StyledEngineProvider, createTheme } from '@mui/material/styles';
 
 
@@ -22,7 +21,7 @@ const theme = createTheme({
       paper: '#fff',
     },
   },
-}));
+});
 
 ReactDOM.render(
   <React.StrictMode>
