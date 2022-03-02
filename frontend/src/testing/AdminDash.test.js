@@ -3,7 +3,7 @@ import { configure, mount, shallow } from 'enzyme';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
-import AdminDash from '../components/AdminDash';
+import AdminDash from '../pages/admin/AdminDash';
 
 describe("<AdminDash />", () => {
     it ("should render the AdminDash component", () => {

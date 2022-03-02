@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import StartingSurvey from '../components/startingSurvey';
+import StartingSurvey from '../components/game/startingSurvey';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';

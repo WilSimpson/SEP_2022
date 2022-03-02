@@ -1,6 +1,6 @@
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils"
-import StickyFooter from "../components/stickyFooter"
+import StickyFooter from "../components/layout/stickyFooter"
 
 let container = null;
 

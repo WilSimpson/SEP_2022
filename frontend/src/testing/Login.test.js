@@ -1,6 +1,6 @@
 import React from 'react';
 import { configure, mount, shallow } from 'enzyme';
-import Login from '../components/Login';
+import Login from '../pages/public/Login';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';

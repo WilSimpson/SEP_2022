@@ -3,7 +3,7 @@ import { configure, mount, shallow } from 'enzyme';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
-import { AdminSideMenu } from '../components/AdminSideMenu';
+import { AdminSideMenu } from '../components/layout/AdminSideMenu';
 
 
 
@@ -30,24 +30,20 @@ describe("<AdminSideMenu />", () => {
             expect(gameManageLink).not.toBeDisabled();
         });
 
-        it ("should reveal 3 new buttons when clicked", () => {
+        it ("should reveal 2 new buttons when clicked", () => {
             const { getByTestId } = render(<AdminSideMenu />);
             let gameManageLink =  getByTestId('game-manage-item');
             try {
                 let createGame = getByTestId('game-develop-item');
-                let editGame = getByTestId('game-edit-item');
                 let viewGame = getByTestId('game-view-item');
             } catch (error) {
                 expect(error);                 
             }
             fireEvent.click(gameManageLink);
             let createGame = getByTestId('game-develop-item');
-            let editGame = getByTestId('game-edit-item');
             let viewGame = getByTestId('game-view-item');
             expect(createGame).toBeInTheDocument();
             expect(createGame).not.toBeDisabled();
-            expect(editGame).toBeInTheDocument();
-            expect(editGame).not.toBeDisabled();
             expect(viewGame).toBeInTheDocument();
             expect(viewGame).not.toBeDisabled();
         });

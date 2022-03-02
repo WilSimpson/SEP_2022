@@ -1,5 +1,5 @@
 import React from "react"
-import GameSession from "../components/gameSession"
+import GameSession from "../components/game/gameSession"
 import { shallow } from "enzyme"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { render, unmountComponentAtNode } from "react-dom";

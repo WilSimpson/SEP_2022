@@ -105,10 +105,7 @@ export function AdminSideMenu () {
             <Collapse in={gameManageOpen && open} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4 }} data-testid='game-develop-item'>
-                        <ListItemText primary="Develop Game" />
-                    </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }} data-testid='game-edit-item'>
-                        <ListItemText primary="Edit Game" />
+                        <ListItemText primary="Create Game" />
                     </ListItemButton>
                     <ListItemButton sx={{ pl: 4 }} data-testid='game-view-item' component={Link} href="/admin-dashboard/games">
                         <ListItemText primary="View Games" />
