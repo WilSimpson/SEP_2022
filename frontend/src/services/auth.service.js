@@ -1,7 +1,7 @@
 import axios from 'axios';
 import configureStore from '../store/store';
 import { LOGIN_USER, LOGOUT_USER } from '../store/types';
-import { User } from '../models';
+import User from '../models/user';
 
 
 const {persistor, store, API_URL} = configureStore();

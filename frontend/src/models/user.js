@@ -1,4 +1,4 @@
-class User {
+export default class User {
     constructor(email, firstname, lastname, role, token){
         this.email = email;
         this.firstname = firstname;
@@ -6,8 +6,4 @@ class User {
         this.role = role;
         this.token = token;
     }
-}
-
-export {
-    User
 }

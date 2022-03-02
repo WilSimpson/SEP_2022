@@ -11,7 +11,8 @@ import { Table } from '@mui/material';
 import { IconButton } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { TableHead, TableRow, TableCell, TableBody,  } from '@mui/material';
-import { gameSessions, games } from '../../helpers/DummyData';
+import { gameSessions, Games } from '../../helpers/DummyData';
+import gameService from '../../services/game.service'
 
 function GameSessionTable() {
   return (
@@ -63,16 +64,16 @@ function GameTable() {
       <TableHead>
         <TableRow>
           <TableCell>Name</TableCell>
-          <TableCell>Active?</TableCell>
+          <TableCell>Status</TableCell>
           <TableCell>Creator</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {games.map((grow) => (
-          <TableRow key={grow.id}>
-            <TableCell>{grow.name}</TableCell>
-            <TableCell>{grow.active}</TableCell>
-            <TableCell>{grow.creator}</TableCell>
+        {Games.map((game) => (
+          <TableRow key={game.id}>
+            <TableCell>{game.name}</TableCell>
+            <TableCell>{game.active}</TableCell>
+            <TableCell>{game.creatorIDFU}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -110,7 +111,6 @@ export default function AdminDash () {
                       p: 2,
                       display: 'flex',
                       flexDirection: 'column',
-                      height: 240,
                     }}
                   >
                     <GameTable />
@@ -132,7 +132,7 @@ export default function AdminDash () {
                         Total Games
                       </Typography>
                       <Typography component="p" variant="h4">
-                        2
+                        { gameService.getGames().length }
                       </Typography>
                       <div>
                         <Link color="primary" href="#">

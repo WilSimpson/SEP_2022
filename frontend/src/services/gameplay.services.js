@@ -3,7 +3,7 @@ import axios from 'axios';
 // does this have to be the port the backend runs on?
 const API_URL = 'http://localhost:3000/api/auth'
 
-class GameService {
+class GamePlayService {
 
     joinGame(gameCode) {
         return axios.post(API_URL + 'joinGame', {
@@ -35,4 +35,4 @@ class GameService {
 
 }
 
-export default new GameService();
+export default new GamePlayService();

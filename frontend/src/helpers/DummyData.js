@@ -48,22 +48,3 @@ export const gameSessions = [
         '651756',
       ),
   ];
-
-  function createGameTable(id, name, active, creator) {
-    return { id, name, active, creator};
-  }
-
-export const games = [
-    createGameTable(
-      0,
-      'Biomedical',
-      'Active',
-      'Jane Doe',
-    ),
-    createGameTable(
-        1,
-        'Automotive',
-        'Inactive',
-        'John Doe',
-      )
-  ];
