@@ -1,6 +1,3 @@
-from multiprocessing.sharedctypes import Value
-from tkinter import CASCADE
-from turtle import window_height
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -93,18 +90,16 @@ class Game(models.Model):
     code        = models.IntegerField(validators=[MinValueValidator(0),
                                                    MaxValueValidator(999999)], default=0)
     active      = models.BooleanField()
-    content     = models.JSONField()
-    
+
 class Question(models.Model):
     value       = models.TextField()
-    game_id     = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game_id     = models.ForeignKey(Game, on_delete= models.CASCADE)
     passcode    = models.CharField(max_length=255)
     chance      = models.BooleanField()
-    chance_game = models.CharField()    #should we have set options for this?
-
+    chance_game = models.CharField(max_length=50)
+    
 class Option(models.Model):
     value           = models.TextField()
     weight          = models.IntegerField()
-    source_question = models.ForeignKey(Question, on_delete=CASCADE)
-    dest_question   = models.ForeignKey(Question, on_delete=CASCADE)
-    
+    source_question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='source')
+    dest_question   = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='destination')
