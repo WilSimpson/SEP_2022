@@ -1,11 +1,11 @@
+import axios from "axios";
 import { Games } from "../helpers/DummyData";
 import Game from "../models/game";
-import authService from "./auth.service";
+import configureStore from "../store/store";
 
-
+const {persistor, store, API_URL} = configureStore();
 
 class GameService {
-
     constructor() {
         this.games = []
         for (let i=0; i<Games.length; i++) {
@@ -13,9 +13,19 @@ class GameService {
         }
     }
 
-    // @TODO(Wil): Replace with API call
     getGames() {
-        return this.games
+        const games = []
+        axios.get(API_URL + '/api/games')
+            .then((response) => {
+                if (response.status == 200) {
+                    games = response.data
+                } else if(response.status == 404) {
+                    games = this.games
+                } else {
+                    
+                }
+            })
+        return games
     }
 
     // @TODO(Wil): Replace with API call

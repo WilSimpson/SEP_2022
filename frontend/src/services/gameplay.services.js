@@ -25,8 +25,6 @@ class GamePlayService {
             }
             return response.data;
         });
-
-    
     }
     
     clearGame() {

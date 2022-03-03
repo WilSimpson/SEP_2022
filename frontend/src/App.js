@@ -15,14 +15,18 @@ import configureStore from './store/store';
 import CreateGamePage from './pages/admin/games/CreateGame';
 import ViewGamesPage from './pages/admin/games/ViewGames';
 import EditGamePage from './pages/admin/games/EditGame'
+import { createBrowserHistory } from 'history'
+import { PageAlert } from './components/layout/alert';
 
+const history = createBrowserHistory();
 const { persistor, store } = configureStore();
 
 function App() {
   return (
     <div className="App">
       <Nav />
-        <Router>
+      <PageAlert />
+        <Router history={history}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
               <Routes>
