@@ -26,7 +26,7 @@ class RoleTokenObtainPairView(TokenObtainPairView):
 
 
 @api_view(['POST'])
-def joinGame(request):
+def start_session(request):
     '''Expects an ID of the game from the frontend
         returns -- an HTTP status:
                                     200 -- The game was activated
