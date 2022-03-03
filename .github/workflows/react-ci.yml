@@ -17,6 +17,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Install Node.js, NPM and Yarn
+      uses: actions/setup-node@v1
+      with:
+          node-version: 16
+
     - name: NPM Cache
       uses: actions/cache@v2
       with:
