@@ -35,11 +35,11 @@ class GameService {
 
     checkPasscode(pcd){
         //need axios once a backend exists
-        if (pcd == "correct"){
+        if (pcd === "correct"){
             return {response: {status:200}}
         }
         else {
-            return {error:{response: {status:200, data:{detail:"wrong passcode"}}}}
+            return {error:{response: {status:401, data:{detail:"wrong passcode"}}}}
         }
     }
 
