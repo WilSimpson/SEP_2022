@@ -13,7 +13,7 @@ import {
     Typography
 } from '@mui/material'
 import AuthService from '../services/auth.service';
-import gameServices from '../services/services';
+import gameServices from '../services/gameServices';
 
 const theme = createTheme();
 
@@ -30,22 +30,21 @@ export default function Passcode(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         setErrMsg('');
-        gameServices.checkPasscode(pcd).then(
-            (response) => {
-                if (response.status === 200) {
+        var answer = gameServices.checkPasscode(pcd)
+            if (answer.response) {
+                if (answer.response.status === 200) {
                     window.location.href = props.data.question;
                 } else {
                     setErrMsg('There was an issue handling your login. Please try again later.');
                 }
-            },
-            (error) => {
-                if (error.response.status === 401) {
-                    setErrMsg(error.response.data.detail);
+            }
+            else if (answer.error) {
+                if (answer.error.response.status === 401) {
+                    setErrMsg(answer.error.response.data.detail);
                 } else {
                     setErrMsg('There was an unexpected error. Please try again later.');
                 }
             }
-        );
     }
     
     return (
@@ -59,9 +58,6 @@ export default function Passcode(props) {
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}>
-                    <Avatar sx={{ m:1, bgcolor:'blue' }}>
-                        <LockOutlinedIcon/>
-                    </Avatar>
                     <Typography component='h1' variant='h5'>
                         Go to The Location Below and Enter the Passcode
                     </Typography>
