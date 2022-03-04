@@ -5,14 +5,12 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import StickyFooter from '../../components/layout/stickyFooter';
+import DefaultLayout from '../../components/layout/default.layout';
 
 export default function Knowledge() {
   return (
-      <div className='container'>
-      <CssBaseline />
-      <main>
-        {/* Hero unit */}
-    <Container maxWidth='xl'>
+    <DefaultLayout>
+      <Container maxWidth='xl'>
         <Box
           sx={{
             pt: 0,
@@ -46,9 +44,7 @@ export default function Knowledge() {
             </Typography>
           </Container>
         </Box>
-    </Container>
-      </main>
-      <StickyFooter />
-      </div>
+      </Container>
+    </DefaultLayout>
   );
 }

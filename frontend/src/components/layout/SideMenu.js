@@ -18,7 +18,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import AuthService from '../../services/auth.service';
-import { User } from '../models/user.model';
+import { User } from '../../models/user.model';
 
 const drawerWidth = 240;
 
@@ -49,7 +49,7 @@ const drawerWidth = 240;
   );
 
 
-export function SideMenu () {   
+export function SideMenu (props) {   
     
     const [open, setOpen] = React.useState(true);
     const [gameManageOpen, setGameManageOpen] = React.useState(false);
@@ -200,59 +200,44 @@ export function SideMenu () {
 
 
         return (
-            <div>
-                <Box sx={{ display: 'flex' }}>
-                    <Drawer variant="permanent" open={open}>
-                        <Toolbar
-                            sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            px: [1],
-                            }}
-                        >
-                            <IconButton onClick={toggleDrawer} data-testid='drawer-toggle'>
-                            <ChevronLeftIcon />
-                            </IconButton>
-                        </Toolbar>
-                        <Divider />
-                        <List component="nav">
-                            <div>
-                              {User.prototype.isAdmin ? 
-                              <React.Fragment>
-                                {dashboardItem}
-                                {gameManagementItem}
-                                {userManagementItem}
-                                {reportsItem} 
-                              </React.Fragment>
-                                :
-                                <React.Fragment>
-                                  {dashboardItem}
-                                </React.Fragment>
-                              }
-                            </div>
-                            <Divider sx={{ my: 1 }} />
-                            <div>
-                                {logoutItem}
-                                {helpItem}
-                            </div>
-                        </List>
-                    </Drawer>
-                    <Box
-                    component="main"
-                    sx={{
-                        backgroundColor: (theme) =>
-                        theme.palette.mode === 'light'
-                            ? theme.palette.grey[100]
-                            : theme.palette.grey[900],
-                        flexGrow: 1,
-                        height: '100vh',
-                        overflow: 'auto',
-                    }}
+            <Box sx={{ display: 'flex' }}>
+                <Drawer variant="permanent" open={open}>
+                    <Toolbar
+                        sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        px: [1],
+                        }}
                     >
-
-                    </Box>
-                </Box>  
-            </div>
+                        <IconButton onClick={toggleDrawer} data-testid='drawer-toggle'>
+                        <ChevronLeftIcon />
+                        </IconButton>
+                    </Toolbar>
+                    <Divider />
+                    <List component="nav">
+                        <div>
+                          {User.prototype.isAdmin ? 
+                          <React.Fragment>
+                            {dashboardItem}
+                            {gameManagementItem}
+                            {userManagementItem}
+                            {reportsItem} 
+                          </React.Fragment>
+                            :
+                            <React.Fragment>
+                              {dashboardItem}
+                            </React.Fragment>
+                          }
+                        </div>
+                        <Divider sx={{ my: 1 }} />
+                        <div>
+                            {logoutItem}
+                            {helpItem}
+                        </div>
+                    </List>
+                </Drawer>
+                {props.children}
+            </Box>  
         );
     }

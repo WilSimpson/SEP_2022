@@ -1,7 +1,5 @@
 import './App.css';
 import Home from './pages/public/home';
-import Nav from './components/layout/nav';
-import Footer from './components/layout/stickyFooter';
 import StartingSurvey from './components/game/startingSurvey';
 import GameSession from './components/game/gameSession';
 import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
@@ -16,61 +14,65 @@ import CreateGamePage from './pages/admin/games/CreateGame';
 import ViewGamesPage from './pages/admin/games/ViewGames';
 import EditGamePage from './pages/admin/games/EditGame'
 import { createBrowserHistory } from 'history'
-import { PageAlert } from './components/layout/alert';
+import { alertService, alertSeverity } from './services/alert.service';
+import authService from './services/auth.service';
+import AuthenticatedLayout from './components/layout/authenticated.layout';
+import DefaultLayout from './components/layout/default.layout';
+import Logout from './pages/public/logout';
 
 const history = createBrowserHistory();
 const { persistor, store } = configureStore();
 
 function App() {
+  alertService.alert({severity: alertSeverity.info, message: "Hello"})
+
   return (
     <div className="App">
-      <Nav />
-      <PageAlert />
-        <Router history={history}>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <Routes>
-                <Route exact path='/' element={<Home />} />
-                <Route exact path='startingSurvey' element={<StartingSurvey />} />
-                <Route exact path='gameSession' element={<GameSession />} />
-                <Route exact path='/login' element={<Login />} />
-                <Route exact path='/started' element={<Knowledge />} />
-                <Route 
-                  exact
-                  path='/admin-dashboard' 
-                  element={
+      <Router history={history}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Routes>
+              <Route exact path='/' element={<Home />} />
+              <Route exact path='startingSurvey' element={<StartingSurvey />} />
+              <Route exact path='gameSession' element={<GameSession />} />
+              <Route exact path='/login' element={<Login />} />
+              <Route exact path='/started' element={<Knowledge />} />
+              <Route exact path='/logout' element={<Logout />} />
+              <Route 
+                exact
+                path='/admin-dashboard' 
+                element={
+                <ProtectedRoute>
+                  <AdminDash />
+                </ProtectedRoute>
+                }
+              />
+              <Route exact path='/admin-dashboard/games' 
+                element={
                   <ProtectedRoute>
-                    <AdminDash />
+                    <ViewGamesPage />
                   </ProtectedRoute>
-                  }
-                />
-                <Route exact path='/admin-dashboard/games' 
-                  element={
-                    <ProtectedRoute>
-                      <ViewGamesPage />
-                    </ProtectedRoute>
-                  }
-                />
+                }
+              />
 
-                <Route exact path='/admin-dashboard/games/new' 
-                  element={
-                    <ProtectedRoute>
-                      <CreateGamePage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path='/admin-dashboard/games/:id' 
-                  element={
-                    <ProtectedRoute>
-                      <EditGamePage />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-              </PersistGate>
-          </Provider>
-        </Router>
-      <Footer />
+              <Route exact path='/admin-dashboard/games/new' 
+                element={
+                  <ProtectedRoute>
+                    <CreateGamePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path='/admin-dashboard/games/:id' 
+                element={
+                  <ProtectedRoute>
+                    <EditGamePage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </PersistGate>
+        </Provider>
+      </Router>
     </div>
   );
 }

@@ -4,38 +4,48 @@ import { filter } from 'rxjs/operators';
 const subject = new Subject();
 export const defaultID = 'default-alert'
 
-export const severity = {
+export const alertService = {
+    onAlert,
+    success,
+    error,
+    warning,
+    info,
+    alert,
+    clear
+}
+
+export const alertSeverity = {
     success: 'success',
     error: 'error',
     warning: 'warning',
     info: 'info'
 }
 
-export function onAlert(id = defaultID) {
+function onAlert(id = defaultID) {
     return subject.asObservable().pipe(filter(alert => alert && alert.id === id));
 }
 
-export function success(message, options) {
-    alert({...options, type: severity.success, message})
+function success(message, options) {
+    alert({...options, type: alertSeverity.success, message})
 }
 
-export function error(message, options) {
-    alert({...options, type: severity.error, message})
+function error(message, options) {
+    alert({...options, type: alertSeverity.error, message})
 }
 
-export function warning(message, options) {
-    alert({...options, type: severity.warning, message})
+function warning(message, options) {
+    alert({...options, type: alertSeverity.warning, message})
 }
 
-export function info(message, options) {
-    alert({...options, type: severity.info, message})
+function info(message, options) {
+    alert({...options, type: alertSeverity.info, message})
 }
 
-export function alert(alert) {
+function alert(alert) {
     alert.id = alert.id || defaultID
     subject.next(alert)
 }
 
-export function clear(id = defaultID) {
+function clear(id = defaultID) {
     subject.next({id})
 }

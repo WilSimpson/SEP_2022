@@ -14,17 +14,17 @@ import MenuItem from '@mui/material/MenuItem';
 import accountIcon from '../../images/accountIcon.png';
 import logoSmall from '../../images/logoSmall.png'
 import { ButtonGroup } from '@mui/material';
+import authService from '../../services/auth.service';
 
 //const pages = ['Get Started', 'About', 'Help'];
 
-const pages = {'Get Started':'started', 'About':'####', 'Help':'####'};
+const pages = { 'Get Started': 'started', 'About': '####', 'Help': '####' };
 
-const settings = ['Dashboard', 'Games', 'Account Settings', 'Logout'];
+const settings = {'Dashboard': "/admin-dashboard", 'Games': "/admin-dashboard/games", 'Account Settings': "#", 'Logout': "/logout" };
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  let isLoggedIn = (localStorage.getItem('user') !== null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,22 +41,18 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
-  const LoggedInNav = (
-    <div>
+  function handleChooseUserOption(event, link) {
+    setAnchorElUser(null);
+    console.log('chose', link)
+  }
+
+  return (
+    <AppBar position="static" color='primary'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Avatar alt="EA" src={logoSmall} variant='square' />
-        </Toolbar>
-      </Container>
-    </div>
-  );
-
-  const LoggedOutNav = (
-    <Container maxWidth="xl">
-        <Toolbar disableGutters>
-        <IconButton href='/' sx={{ p: 0 }} size="large">
+          <IconButton href='/' sx={{ p: 0 }} size="large">
             <Avatar alt="EA" src={logoSmall} variant='square' />
-        </IconButton>
+          </IconButton>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               aria-label="account of current user"
@@ -86,7 +82,7 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {Object.entries(pages).map(([key,value]) => (
+              {Object.entries(pages).map(([key, value]) => (
 
                 <MenuItem key={key} href={value} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{key}</Typography>
@@ -95,71 +91,67 @@ const ResponsiveAppBar = () => {
             </Menu>
           </Box>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl:3 }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl: 3 }}>
             <ButtonGroup disableElevation variant='contained' color='primary'>
-            {Object.entries(pages).map(([key,value]) => (
-              <Button
-              key={key}
-              href={value}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2,
-                borderRadius: 0 }}
-            >
-              {key}
-            </Button>
-            ))}
+              {Object.entries(pages).map(([key, value]) => (
+                <Button
+                  key={key}
+                  href={value}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 2,
+                    borderRadius: 0
+                  }}
+                >
+                  {key}
+                </Button>
+              ))}
             </ButtonGroup>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-          {/* Replace with isLoggedIn */}
-          {true ? (
-        <div>
-        <Tooltip title="Account Menu">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} size="large">
-          <Avatar src={accountIcon} alt="User" />
-        </IconButton>
-      </Tooltip>
-      <Menu
-        sx={{ mt: '45px' }}
-        id="menu-appbar"
-        anchorEl={anchorElUser}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}
-      >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{setting}</Typography>
-          </MenuItem>
-        ))}
-      </Menu>
-      </div>
-      ) : (
-        <Button
-              key="Login"
-              href='#'
-              sx={{ my: 2, color: 'primary', display: 'block' }}
-            >
-              Login
-            </Button>
-      )}
+            {authService.isLoggedIn() ? (
+              <div>
+                <Tooltip title="Account Menu">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} size="large">
+                    <Avatar src={accountIcon} alt="User" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {Object.entries(settings).map(([name, link]) => (
+                    <MenuItem key={name} onClick={e => handleChooseUserOption(e, link)}>
+                      <Typography textAlign="center">{name}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </div>
+            ) : (
+              <Button
+                key="Login"
+                href='/login'
+                sx={{ my: 2, color: 'primary', display: 'block' }}
+              >
+                Login
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>
-  );
-
-  return (
-      <AppBar position="static" color='primary'>
-        {isLoggedIn ? LoggedInNav : LoggedOutNav}
-      </AppBar>    
+    </AppBar>
   );
 };
 export default ResponsiveAppBar;

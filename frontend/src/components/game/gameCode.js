@@ -82,11 +82,8 @@ const styles = {
     render () {
         return (
             <Grid
-            container
             spacing={0}
             direction="column"
-            alignItems="center"
-            justifyContent="center"
             >
         <Box sx={{pb:2}}>
             <Box sx={{pb:2}}>
@@ -97,14 +94,13 @@ const styles = {
             id="gameCode"
             autoComplete='off'
             value={this.state.value}
-            ref="gameCode"
             variant="outlined"
             inputProps={{ maxLength: 6, 'data-testid': 'codeBox', style: { textAlign: 'center' }}}
             onChange={this.handleChange}/>
             <br />
         </Box>
         <ButtonGroup variant="contained">
-            <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
+            <Button color='secondary' onClick={this.submitCode}   data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
         </ButtonGroup>
         <Box sx={{pb:2}}>
                 { this.state.loading && <LinearProgress /> }
