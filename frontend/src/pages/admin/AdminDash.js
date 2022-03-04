@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AdminSideMenu } from '../../components/layout/AdminSideMenu';
+import { AdminSideMenu } from '../../components/layout/SideMenu';
 import { Box, Button, ThemeProvider, StyledEngineProvider, Tooltip } from '@mui/material';
 import { Toolbar } from '@mui/material';
 import { Container } from '@mui/material';
@@ -62,7 +62,7 @@ export default function AdminDash () {
     <StyledEngineProvider injectFirst>
       <div>
         <Box sx={{ display: 'flex' }}>
-          <AdminSideMenu />
+          <SideMenu />
           <Box
             component="main"
             sx={{

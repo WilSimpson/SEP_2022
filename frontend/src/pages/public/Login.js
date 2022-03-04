@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import AuthService from '../../services/auth.service';
 import validator from 'validator';
+import {User} from '../models/user.model';
 
 
 export default function Login() {
@@ -45,12 +46,17 @@ export default function Login() {
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-                    window.location.href = "/admin-dashboard";
+                    if (User.prototype.isAdmin) { 
+                        window.location.href = "/admin-dashboard";
+                    } else {
+                        window.location.href = "/faculty-dashboard";
+                    }
                 } else {
                     setErrMsg('There was an issue handling your login. Please try again later.');
                 }
             },
             (error) => {
+                console.log('reached');
                 if (error.response.status === 401) {
                     setErrMsg(error.response.data.detail);
                 } else {

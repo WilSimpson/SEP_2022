@@ -18,6 +18,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import AuthService from '../../services/auth.service';
+import { User } from '../models/user.model';
 
 const drawerWidth = 240;
 
@@ -48,7 +49,7 @@ const drawerWidth = 240;
   );
 
 
-export function AdminSideMenu () {   
+export function SideMenu () {   
     
     const [open, setOpen] = React.useState(true);
     const [gameManageOpen, setGameManageOpen] = React.useState(false);
@@ -217,10 +218,18 @@ export function AdminSideMenu () {
                         <Divider />
                         <List component="nav">
                             <div>
+                              {User.prototype.isAdmin ? 
+                              <React.Fragment>
                                 {dashboardItem}
                                 {gameManagementItem}
                                 {userManagementItem}
-                                {reportsItem}
+                                {reportsItem} 
+                              </React.Fragment>
+                                :
+                                <React.Fragment>
+                                  {dashboardItem}
+                                </React.Fragment>
+                              }
                             </div>
                             <Divider sx={{ my: 1 }} />
                             <div>
