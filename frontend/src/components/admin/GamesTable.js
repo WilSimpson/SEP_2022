@@ -14,10 +14,8 @@ export default function GamesTable(props) {
   } 
 
   const handleChangePage = (event, newPage) => {
-    
     setPage(newPage);
   };
-
 
   return (
     <Grid container justifyContent="center" spacing={2}>

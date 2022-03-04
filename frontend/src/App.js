@@ -24,7 +24,6 @@ const history = createBrowserHistory();
 const { persistor, store } = configureStore();
 
 function App() {
-  alertService.alert({severity: alertSeverity.info, message: "Hello"})
 
   return (
     <div className="App">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Paper, Toolbar } from "@mui/material"
+import { Container, Grid, Paper, Toolbar } from "@mui/material"
 import GamesTable from '../../../components/admin/GamesTable';
 import gameService from '../../../services/game.service';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';

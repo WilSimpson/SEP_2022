@@ -1,9 +1,10 @@
-import { Alert, AlertTitle } from "@mui/material";
+import { Alert, AlertTitle, Stack } from "@mui/material";
 import React from "react";
 import PropTypes from 'prop-types';
 import titlizeString from "../../helpers/StringFormatter";
 import { alertService } from '../../services/alert.service';
 import { createBrowserHistory } from 'history'
+import { LaptopWindows } from "@material-ui/icons";
 
 const history = createBrowserHistory();
 
@@ -12,21 +13,28 @@ class PageAlert extends React.Component {
     super(props)
 
     this.state = {
-      alerts: []
+      alerts: JSON.parse(window.localStorage.getItem('alerts')) || []
     }
   }
 
+  setAlerts(alerts) {
+    window.localStorage.setItem('alerts', JSON.stringify(alerts.alerts))
+    this.setState({ alerts: alerts.alerts })
+  }
+
   componentDidMount() {
+    console.log('mounted')
     this.subscription = alertService.onAlert(this.props.id)
       .subscribe(alert => {
         if (!alert.message) {
           const alerts = this.state.alerts.filter(a => a.keepAfterRouteChange)
-          alerts.forEach((a) => {delete a.keepAfterRouteChange})
-          this.setState({alerts})
+          alerts.forEach((a) => { delete a.keepAfterRouteChange })
+          this.setAlerts({alerts})
           return
         }
-
-        this.setState({alerts: [...this.state.alerts, alert]})
+        console.log('this.state.alerts.alerts', this.state.alerts.alerts)
+        console.log('this.state.alerts', this.state.alerts)
+        this.setAlerts({ alerts: [...this.state.alerts, alert] })
         if (alert.autoClose) {
           setTimeout(() => this.removeAlert(alert), 5000)
         }
@@ -38,10 +46,12 @@ class PageAlert extends React.Component {
   }
 
   removeAlert(alert) {
-    this.setState({alerts: this.state.alerts.filter(a => a !== alert)})
+    console.log('removed')
+    this.setAlerts({ alerts: this.state.alerts.filter(a => a !== alert) })
   }
 
   componentWillUnmount() {
+    console.log('unmounting')
     this.subscription.unsubscribe()
     this.historyUnlisten()
   }
@@ -50,13 +60,15 @@ class PageAlert extends React.Component {
     if (!this.state.alerts.length) return null
     return (
       <div class="alerts">
-      {this.state.alerts.map((alert) => 
-        <Alert serverity={alert.severity} onClose={() => {this.removeAlert(alert)}}>
-          <AlertTitle>{titlizeString(alert.severity)}</AlertTitle>
-          {alert.message}
-        </Alert>
-      )}
-    </div>
+        <Stack sx={{ width: '100%' }} spacing={2}>
+          {this.state.alerts.map((alert) =>
+            <Alert serverity={alert.severity} onClose={() => { this.removeAlert(alert) }} sx={{ border: '1px solid' }}>
+              <AlertTitle>{titlizeString(alert.severity)}</AlertTitle>
+              {alert.message}
+            </Alert>
+          )}
+        </Stack>
+      </div>
     );
   }
 }
