@@ -82,3 +82,4 @@ class User(AbstractBaseUser):
         return self.role == UserRole.ADMIN
 
     objects = UserManager()
+
