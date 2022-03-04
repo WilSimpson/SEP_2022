@@ -13,28 +13,24 @@ import {
     Typography
 } from '@mui/material'
 import AuthService from '../services/auth.service';
-import validator from 'validator';
+import gameServices from '../services/services';
 
 const theme = createTheme();
 
 
 export default function Passcode(props) {
-    const userRef = useRef();
     const errRef = useRef();
 
     // State elements
     const [pcd, setPcd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-
-    useEffect(() => {
-        userRef.current.focus();
-    }, [])  
+  
 
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setErrMsg('');
-        AuthService.login(email, pwd).then(
+        gameServices.checkPasscode(pcd).then(
             (response) => {
                 if (response.status === 200) {
                     window.location.href = props.data.question;
