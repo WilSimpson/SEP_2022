@@ -71,5 +71,10 @@
     "jsdom": "19.0.0",
     "jsdom-global": "3.0.2",
     "redux-devtools-extension": "^2.13.9"
-  }
+  },
+  "jest":{
+    "testEnvironment": "jsdom",
+    "collectCoverage": true,
+    "coverageReporters": ["json", "html"]
+}
 }

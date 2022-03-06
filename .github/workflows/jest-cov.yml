@@ -1,0 +1,31 @@
+name: Jest Coverage
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Node.js, NPM and Yarn
+      uses: actions/setup-node@v1
+      with:
+          node-version: 16
+
+    - name: NPM Cache
+      uses: actions/cache@v2
+      with:
+        path: "frontend/node_modules"
+        key: node-modules-${{ hashFiles('frontend/package.json') }}
+
+    - name: Generate Coverage
+      working-directory: ./frontend
+      run: |
+        npm install
+        npx jest --coverage
