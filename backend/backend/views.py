@@ -55,7 +55,7 @@ class GameViewSet(ViewSet):
                     value       = question['value'],
                     passcode    = question['passcode'],
                     chance      = question['chance'],
-                    game_id  = new_game.id
+                    game_id     = new_game.id
                 )
                 question_reference[new_question.id] = question
             for option in options:
@@ -88,36 +88,40 @@ class GameViewSet(ViewSet):
     
     def update(self, request, pk=None):
         try:
-            game_data = request.data
-            questions = game_data['questions']
-            options = game_data['options']
-            Game.objects.filter(id=pk).update(
-                title       = game_data['title'],
-                active      = game_data['active'],
-                creator_id  = game_data['creator_id'],
-                code        = game_data['code']
-            )
-            for question in questions: 
-                Question.objects.filter(id = question['id']).update(
-                    value       = question['value'],
-                    passcode    = question['passcode'],
-                    chance      = question['chance'],
-                    game_id  = question['game_id']
+            if (Game.objects.get(id=pk)):
+                game_data = request.data
+                questions = game_data['questions']
+                options = game_data['options']
+                Game.objects.filter(id=pk).update(
+                    title       = game_data['title'],
+                    active      = game_data['active'],
+                    creator_id  = game_data['creator_id'],
+                    code        = game_data['code']
                 )
-            for option in options:
-                Option.objects.filter(id=option['id']).update(
-                    value               = option['value'],
-                    weight              = option['weight'],
-                    dest_question_id    = option['dest_question_id'],
-                    source_question_id  = option['source_question_id']                    
-                )            
-            return Response()
+                for question in questions: 
+                    Question.objects.filter(id = question['id']).update(
+                        value       = question['value'],
+                        passcode    = question['passcode'],
+                        chance      = question['chance'],
+                        game_id  = question['game_id']
+                    )
+                for option in options:
+                    Option.objects.filter(id=option['id']).update(
+                        value               = option['value'],
+                        weight              = option['weight'],
+                        dest_question_id    = option['dest_question_id'],
+                        source_question_id  = option['source_question_id']                    
+                    )            
+                return Response()
+            else:
+                raise Exception
         except Exception as e:
             return HttpResponse(status=501)
         
     def delete(self, request, pk):
         try:
-            Game.objects.filter(id=pk).delete()
+            if Game.objects.get(id=pk):
+                Game.objects.filter(id=pk).delete()
             return Response()
         except Exception as e:
             return HttpResponse(status=501)
