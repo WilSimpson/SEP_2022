@@ -9,14 +9,14 @@ def get_game_data(id):
     response_data['active'] = game.active
     questions = []
     options = []
-    all_game_questions = Question.objects.filter(game_id_id=id).all()
+    all_game_questions = Question.objects.filter(game_id=id).all()
     for question in all_game_questions:
         q = {}
         q['id'] = question.id
         q['value'] = question.value
         q['passcode'] = question.passcode
         q['chance'] = question.chance
-        q['game_id_id'] = question.game_id_id
+        q['game_id'] = question.game_id
         questions.append(q)
         all_question_options = Option.objects.filter(source_question_id=question.id).all()
         for option in all_question_options:

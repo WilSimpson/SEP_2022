@@ -55,7 +55,7 @@ class GameViewSet(ViewSet):
                     value       = question['value'],
                     passcode    = question['passcode'],
                     chance      = question['chance'],
-                    game_id_id  = new_game.id
+                    game_id  = new_game.id
                 )
                 question_reference[new_question.id] = question
             for option in options:
@@ -102,7 +102,7 @@ class GameViewSet(ViewSet):
                     value       = question['value'],
                     passcode    = question['passcode'],
                     chance      = question['chance'],
-                    game_id_id  = question['game_id_id']
+                    game_id  = question['game_id']
                 )
             for option in options:
                 Option.objects.filter(id=option['id']).update(

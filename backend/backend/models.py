@@ -93,7 +93,7 @@ class Game(models.Model):
 
 class Question(models.Model):
     value       = models.TextField()
-    game_id     = models.ForeignKey(Game, on_delete= models.CASCADE)
+    game        = models.ForeignKey(Game, on_delete= models.CASCADE)
     passcode    = models.CharField(max_length=255)
     chance      = models.BooleanField()
     chance_game = models.CharField(max_length=50)
