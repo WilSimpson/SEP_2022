@@ -30,14 +30,13 @@ from backend import views
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
+router.register(r'games', GameViewSet, basename='game')
 
 urlpatterns = [
     path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
-    path('api/games/<id>/', GameViewSet.as_view({'get':'get'}), name='get_game'),
     path('api/games/create/', GameViewSet.as_view({'post':'create'}), name='create_game'),
-    path('api/games/update/<id>/', GameViewSet.as_view({'put':'update'}), name='update_game'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls)
 ]
