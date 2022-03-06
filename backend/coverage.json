@@ -1,0 +1,45 @@
+{
+    "meta": {
+        "version": "6.3.2",
+        "timestamp": "2022-03-06T17:18:37.490075",
+        "branch_coverage": false,
+        "show_contexts": false
+    },
+    "files": {
+        "manage.py": {
+            "executed_lines": [
+                2,
+                3,
+                4,
+                7,
+                9,
+                10,
+                11,
+                18,
+                21,
+                22
+            ],
+            "summary": {
+                "covered_lines": 10,
+                "num_statements": 12,
+                "percent_covered": 83.33333333333333,
+                "percent_covered_display": "83",
+                "missing_lines": 2,
+                "excluded_lines": 0
+            },
+            "missing_lines": [
+                12,
+                13
+            ],
+            "excluded_lines": []
+        }
+    },
+    "totals": {
+        "covered_lines": 10,
+        "num_statements": 12,
+        "percent_covered": 83.33333333333333,
+        "percent_covered_display": "83",
+        "missing_lines": 2,
+        "excluded_lines": 0
+    }
+}
