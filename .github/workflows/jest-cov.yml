@@ -28,4 +28,4 @@ jobs:
       working-directory: ./frontend
       run: |
         npm install
-        npx jest --coverage
+        npm run test -- --coverage --watchAll=false
