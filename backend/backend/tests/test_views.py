@@ -4,6 +4,8 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 
+from backend.models import Game, Option, Question
+
 from .factories import UserFactory
 
 from django.conf import settings
@@ -215,3 +217,176 @@ class VerifyViewTestCase(TestCase):
         }
         resp = self.client.post('/api/token/verify', data=data)
         self.assertEqual(resp.status_code, 401)
+class GameViewSetTestCase(TestCase):
+    def setUp(self):
+        # create game
+        self.game = Game.objects.create(title='TestGame', creator_id=1, code=123456, active=True)
+        self.q1 = Question.objects.create(value='Q1', passcode=123456, chance=False, game_id=self.game.id)
+        self.q2 = Question.objects.create(value='Q2', passcode=123456, chance=False, game_id=self.game.id)
+        self.o1 = Option.objects.create(value='O1', weight=1, dest_question_id=self.q2.id, source_question_id=self.q1.id)
+        self.o2 = Option.objects.create(value='O2', weight=1, dest_question_id=self.q2.id, source_question_id=self.q1.id)
+        self.initial_game_count = Game.objects.all().count()
+        self.initial_question_count = Question.objects.all().count()
+        self.initial_option_count = Option.objects.all().count()
+        self.data = {"title": "TestGame", "creator_id": 1,"code": 123456, "active": True,
+                    "questions": [{"id": self.q1.id,"value": "Q1","passcode": "123456","chance": False,"game_id": self.game.id},
+                                {"id": self.q2.id,"value": "Q2","passcode": "123456","chance": False,"game_id": self.game.id}
+                    ],
+                    "options": [{"id": self.o1.id,"value": "O1","weight": 1,"dest_question_id": self.q2.id,"source_question_id": self.q1.id},
+                                {"id": self.o2.id,"value": "O2","weight": 1,"dest_question_id": self.q2.id,"source_question_id": self.q1.id}
+                    ]}
+        self.create_data = {"title": "TestGame","active": True,"creator_id": 1,"code": 123456,
+                            "questions": [{"label": "Q1","value": "Q1","passcode": 123456,"chance": False},
+                                          {"label": "Q2","value": "Q2","passcode": 123456,"chance": False}
+                            ],
+                            "options": [{"value": "O1","source_label": "Q1","dest_label": "Q2","weight": 1},
+                                        {"value": "O2","source_label": "Q1","dest_label": "Q2","weight": 1}
+                            ]}
+        
+    def test_get_valid_game(self):
+        resp = self.client.get('/api/games/'+str(self.game.id)+'/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, self.data)
+        
+    def test_get_invalid_game(self):
+        resp = self.client.get('/api/games/'+str(self.game.id + 1)+'/')
+        self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+        
+    def test_delete_valid_game(self):
+        initial_game_count = Game.objects.all().count()
+        initial_question_count = Question.objects.all().count()
+        initial_option_count = Option.objects.all().count()
+        resp = self.client.delete('/api/games/'+str(self.game.id)+'/')
+        self.assertEqual(Game.objects.all().count(), initial_game_count-1)
+        self.assertEqual(Question.objects.all().count(), initial_question_count-2)
+        self.assertEqual(Option.objects.all().count(), initial_option_count-2)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        
+    def test_delete_invalid_game(self):
+        resp = self.client.delete('/api/games/'+str(self.game.id+1)+'/')
+        self.assertEqual(Game.objects.all().count(), self.initial_game_count)
+        self.assertEqual(Question.objects.all().count(), self.initial_question_count)
+        self.assertEqual(Option.objects.all().count(), self.initial_option_count)
+        self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+    
+    def test_get_all_games(self):
+        resp = self.client.get('/api/games/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, [self.data])
+    
+    def test_get_all_games_empty(self):
+        Game.objects.filter(id=self.game.id).delete()
+        resp = self.client.get('/api/games/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, [])
+    
+    def test_create_game(self):
+        resp = self.client.post('/api/games/', self.create_data, content_type='application/json')
+        self.assertEqual(Game.objects.all().count(), self.initial_game_count+1)
+        self.assertEqual(Question.objects.all().count(), self.initial_question_count+2)
+        self.assertEqual(Option.objects.all().count(), self.initial_option_count+2)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        games = Game.objects.all()
+        for game in games:
+            if game.id != self.game.id:
+                new_game = game
+                break
+        self.assertEqual(new_game.title, self.create_data['title'])
+        self.assertEqual(new_game.active, self.create_data['active'])
+        self.assertEqual(new_game.code, self.create_data['code'])
+        self.assertEqual(new_game.creator_id, self.create_data['creator_id'])
+        new_questions = Question.objects.filter(game_id=new_game.id).all()
+        i = 0
+        for question in new_questions:
+            self.assertEqual(question.value, self.create_data['questions'][i]['value'])
+            self.assertEqual(question.passcode, str(self.create_data['questions'][i]['passcode']))
+            self.assertEqual(question.chance, self.create_data['questions'][i]['chance'])
+            self.assertEqual(question.game_id, game.id)
+            i+=1
+            j=0
+            new_options = Option.objects.filter(source_question_id=question.id)
+            for option in new_options:
+                self.assertEqual(option.value, self.create_data['options'][j]['value'])
+                self.assertEqual(option.weight, self.create_data['options'][j]['weight'])
+                self.assertEqual(option.source_question_id, question.id)
+                self.assertIsNotNone(option.dest_question)
+                j+=1
+    
+    def test_create_game_no_code(self):
+        new_game = self.create_data
+        new_game["code"] = None
+        resp = self.client.post('/api/games/', new_game, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+        
+    def test_create_game_no_title(self):
+        new_game = self.create_data
+        new_game["title"] = None
+        resp = self.client.post('/api/games/', new_game, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+        
+    def test_create_game_no_questions(self):
+        new_game = self.create_data
+        new_game["questions"] = None
+        resp = self.client.post('/api/games/', new_game, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+    
+    def test_create_game_no_options(self):
+        new_game = self.create_data
+        new_game["questions"] = None
+        resp = self.client.post('/api/games/', new_game, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+    
+    def test_update_game_game_values(self):
+        updated_game_data = self.data
+        updated_game_data["title"] = "TestGame 2"
+        updated_game_data["creator_id"] = 2
+        updated_game_data["code"] = 654321
+        updated_game_data["active"] = not self.game.active
+        resp = self.client.put('/api/games/'+str(self.game.id)+'/', updated_game_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_game = Game.objects.get(id=self.game.id)
+        self.assertEqual(updated_game_data["title"], updated_game.title)
+        self.assertEqual(updated_game_data["creator_id"], updated_game.creator_id)
+        self.assertEqual(updated_game_data["code"], updated_game.code)
+        self.assertEqual(updated_game_data["active"], updated_game.active)
+        
+    def test_update_game_question_values(self):
+        updated_question_data = self.data
+        updated_question_data["questions"][0]["value"] = "Q1-1"
+        updated_question_data["questions"][0]["passcode"] = "654321"
+        updated_question_data["questions"][0]["chance"] = True
+        updated_question_data["questions"][1]["value"] = "Q2-1"
+        updated_question_data["questions"][1]["passcode"] = "654321"
+        updated_question_data["questions"][1]["chance"] = True
+        resp = self.client.put('/api/games/'+str(self.game.id)+'/', updated_question_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_game = Game.objects.get(id=self.game.id)
+        updated_questions = Question.objects.filter(game_id=self.game.id).all()
+        i=0
+        for question in updated_questions:
+            self.assertEqual(updated_question_data["questions"][i]["value"], question.value)
+            self.assertEqual(updated_question_data["questions"][i]["passcode"], question.passcode)
+            self.assertEqual(updated_question_data["questions"][i]["chance"], question.chance)
+            i+=1
+            
+    def test_update_game_option_values(self):
+        updated_option_data = self.data
+        updated_option_data["options"][0]["value"] = "O1-1"
+        updated_option_data["options"][0]["weight"] = 2
+        updated_option_data["options"][1]["value"] = "O2-1"
+        updated_option_data["options"][1]["weight"] = 2
+        resp = self.client.put('/api/games/'+str(self.game.id)+'/', updated_option_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_game = Game.objects.get(id=self.game.id)
+        updated_questions = Question.objects.filter(game_id=self.game.id).all()
+        for question in updated_questions:
+            i=0
+            updated_options = Option.objects.filter(source_question_id=question.id)
+            for option in updated_options:
+                self.assertEqual(updated_option_data["options"][i]["value"], option.value)
+                self.assertEqual(updated_option_data["options"][i]["weight"], option.weight)
+                i+=1
+    
+    def test_update_invalid_game(self):
+        resp = self.client.put('/api/games/'+str(0)+'/', self.data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
