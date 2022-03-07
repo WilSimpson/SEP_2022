@@ -125,3 +125,24 @@ class GameViewSet(ViewSet):
             return Response()
         except Exception as e:
             return HttpResponse(status=501)
+
+@api_view(['POST'])
+def toggle_active(request):
+    '''Expects an ID of the game from the frontend
+        returns -- an HTTP status:
+                                    200 -- The game was activated
+                                    501 -- The game does not exist
+                                    502 -- The game is already active
+                                    503 -- There was a different problem'''
+    try:
+        try:
+            game = Game.objects.get(id=int(request.data['id']))
+        except Exception as e:
+            return HttpResponse(status=501)
+        if game.active:
+            return HttpResponse(status=502)
+        game.active = True
+        game.save()
+        return HttpResponse(status=200)
+    except Exception as e:
+        return HttpResponse(status=503)
