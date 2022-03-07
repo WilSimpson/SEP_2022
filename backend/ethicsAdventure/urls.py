@@ -17,7 +17,7 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, re_path, include
 
-from backend.views import UserViewSet
+from backend.views import GameViewSet, UserViewSet
 from django.contrib.auth.models import User
 
 from backend import views
@@ -27,15 +27,19 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView
 )
 from backend.views import RoleTokenObtainPairView
+from backend import views
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
+router.register(r'games', GameViewSet, basename='game')
 
 urlpatterns = [
     path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
     path('api/games/startSession', views.start_session, name='start_session'),
+    path('api/games/create/', GameViewSet.as_view({'post':'create'}), name='create_game'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls)
 ]
+

@@ -83,11 +83,23 @@ class User(AbstractBaseUser):
         return self.role == UserRole.ADMIN
 
     objects = UserManager()
-
+    
 class Game(models.Model):
-    title = models.CharField(max_length=255)
-    creator_id = models.IntegerField()
-    code = models.IntegerField(validators=[MinValueValidator(0),
-                                       MaxValueValidator(999999)], default=0)
-    active = models.BooleanField()
-    content = models.JSONField()
+    title       = models.CharField(max_length=255)
+    creator_id  = models.IntegerField()
+    code        = models.IntegerField(validators=[MinValueValidator(0),
+                                                   MaxValueValidator(999999)], default=0)
+    active      = models.BooleanField()
+
+class Question(models.Model):
+    value       = models.TextField()
+    game        = models.ForeignKey(Game, on_delete= models.CASCADE)
+    passcode    = models.CharField(max_length=255)
+    chance      = models.BooleanField()
+    chance_game = models.CharField(max_length=50)
+    
+class Option(models.Model):
+    value           = models.TextField()
+    weight          = models.IntegerField()
+    source_question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='source')
+    dest_question   = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='destination')
