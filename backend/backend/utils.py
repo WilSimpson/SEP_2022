@@ -3,10 +3,13 @@ from .models import Game, Question, Option
 def get_game_data(id):
     response_data = {}
     game = Game.objects.get(id=id)
+    response_data['id'] = id
     response_data['title'] = game.title
     response_data['creator_id'] = game.creator_id
     response_data['code'] = game.code
     response_data['active'] = game.active
+    response_data['created_at'] = game.created_at
+    response_data['updated_at'] = game.created_at
     questions = []
     options = []
     all_game_questions = Question.objects.filter(game_id=id).all()
@@ -17,6 +20,8 @@ def get_game_data(id):
         q['passcode'] = question.passcode
         q['chance'] = question.chance
         q['game_id'] = question.game_id
+        q['created_at'] = question.created_at
+        q['updated_at'] = question.created_at
         questions.append(q)
         all_question_options = Option.objects.filter(source_question_id=question.id).all()
         for option in all_question_options:
@@ -26,6 +31,8 @@ def get_game_data(id):
             o['weight'] = option.weight
             o['dest_question_id'] = option.dest_question_id
             o['source_question_id'] = option.source_question_id
+            o['created_at'] = game.created_at
+            o['updated_at'] = game.created_at
             options.append(o)
     response_data['questions'] = questions
     response_data['options'] = options

@@ -6,8 +6,8 @@ export default function GameFields(props) {
 
     const [title, setTitle] = React.useState(isEditing ? props.game.title : "")
     const [active, setActive] = React.useState(isEditing? props.game.active : true)
-    const [questionsJSON, setQuestonsJSON] = React.useState(isEditing? props.game.questions : "[]")
-    const [optionsJSON, setOptionsJSON] = React.useState(isEditing? props.game.options : "[]")
+    const [questionsJSON, setQuestonsJSON] = React.useState(isEditing? JSON.stringify(props.game.questions) : "[]")
+    const [optionsJSON, setOptionsJSON] = React.useState(isEditing? JSON.stringify(props.game.options) : "[]")
     
     const editDisplay = isEditing ? {} : { display: 'none' }
 

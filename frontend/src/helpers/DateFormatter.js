@@ -23,7 +23,7 @@ const days = [
   'Sat'
 ]
 
-export default function FormatDate(date) {
+export function formatDate(date) {
   const d = new Date(date);
   return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }

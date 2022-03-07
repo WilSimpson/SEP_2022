@@ -15,6 +15,8 @@ import { gameSessions, Games } from '../../helpers/DummyData';
 import gameService from '../../services/game.service'
 import GamesTable from '../../components/admin/GamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
+import Loading from '../../components/layout/loading';
+import { alertService, alertSeverity } from '../../services/alert.service';
 
 function GameSessionTable() {
   return (
@@ -58,56 +60,74 @@ function GameSessionTable() {
 
 
 export default function AdminDash() {
+  const [games, setGames] = React.useState([])
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    async function getGames() {
+      const resp = await gameService.getGames().catch((error) => {
+        alertService.alert({ severity: alertSeverity.error, message: error })
+      });
+      const games = [...resp.data]
+      setGames(games)
+      setLoading(false)
+    }
+    getGames();
+  }, [])
+
 
   return (
     <AuthenticatedLayout>
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8} lg={9} >
-            <Paper
-              elevation={7}
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <GamesTable data={gameService.getGames()} />
-            </Paper>
+      <Loading loading={loading}>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8} lg={9} >
+              <Paper
+                elevation={7}
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <GamesTable data={games} />
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper
+                elevation={7}
+                data-testid='total-games'
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: 240,
+                }}
+              >
+                <React.Fragment>
+                  <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                    Total Games
+                  </Typography>
+                  <Typography component="p" variant="h4">
+                    {games.length}
+                  </Typography>
+                  <div>
+                    <Link color="primary" href="#">
+                      View Games
+                    </Link>
+                  </div>
+                </React.Fragment>
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper elevation={7} sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                <GameSessionTable />
+              </Paper>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <Paper
-              elevation={7}
-              data-testid='total-games'
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                height: 240,
-              }}
-            >
-              <React.Fragment>
-                <Typography component="h2" variant="h6" color="primary" gutterBottom>
-                  Total Games
-                </Typography>
-                <Typography component="p" variant="h4">
-                  {gameService.getGames().length}
-                </Typography>
-                <div>
-                  <Link color="primary" href="#">
-                    View Games
-                  </Link>
-                </div>
-              </React.Fragment>
-            </Paper>
-          </Grid>
-          <Grid item xs={12}>
-            <Paper elevation={7} sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-              <GameSessionTable />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </Loading>
+
     </AuthenticatedLayout>
   );
 }

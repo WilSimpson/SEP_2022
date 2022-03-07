@@ -57,7 +57,6 @@ export default function Login() {
         }
       },
       (error) => {
-        console.log('reached');
         if (error.response.status === 401) {
           setErrMsg(error.response.data.detail);
         } else {

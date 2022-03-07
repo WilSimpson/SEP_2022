@@ -43,7 +43,6 @@ const ResponsiveAppBar = () => {
 
   function handleChooseUserOption(event, link) {
     setAnchorElUser(null);
-    console.log('chose', link)
   }
 
   return (

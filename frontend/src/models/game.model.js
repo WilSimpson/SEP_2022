@@ -1,4 +1,4 @@
-import FormatDate from "../helpers/DateFormatter";
+import { formatDate } from "../helpers/DateFormatter";
 
 class GameQuestion {
     constructor(id, value, passcode, chance, game_id) {
@@ -35,7 +35,7 @@ class Game {
     }
 
     formatCreatedAt() {
-        return FormatDate(this.createdAt)
+        return formatDate(this.createdAt)
     }
 
     asOption() {

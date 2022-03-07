@@ -51,7 +51,6 @@ export default function StartingSurvey() {
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      console.log(formValues);
       let path = `../gameSession`; 
       navigate(path, {
           state: {

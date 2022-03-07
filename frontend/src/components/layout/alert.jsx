@@ -31,8 +31,7 @@ class PageAlert extends React.Component {
           this.setAlerts({alerts})
           return
         }
-        console.log('this.state.alerts.alerts', this.state.alerts.alerts)
-        console.log('this.state.alerts', this.state.alerts)
+        
         this.setAlerts({ alerts: [...this.state.alerts, alert] })
         if (alert.autoClose) {
           setTimeout(() => this.removeAlert(alert), 5000)
@@ -45,12 +44,10 @@ class PageAlert extends React.Component {
   }
 
   removeAlert(alert) {
-    console.log('removed')
     this.setAlerts({ alerts: this.state.alerts.filter(a => a !== alert) })
   }
 
   componentWillUnmount() {
-    console.log('unmounting')
     this.subscription.unsubscribe()
     this.historyUnlisten()
   }

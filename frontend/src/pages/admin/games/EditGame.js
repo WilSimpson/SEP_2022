@@ -1,30 +1,11 @@
 import React, { useEffect } from 'react';
-import { CircularProgress, Container, Grid, Paper, Toolbar } from "@mui/material"
+import { Container, Grid, Paper } from "@mui/material"
 import GameFields from '../../../components/admin/GameFields';
 import gameService from '../../../services/game.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import { alertService, alertSeverity } from '../../../services/alert.service';
-import { LaptopWindows } from '@material-ui/icons';
-import { Navigate } from 'react-router-dom';
-import axios from 'axios';
 import Loading from '../../../components/layout/loading';
-
-function useTraceUpdate(props) {
-  const prev = React.useRef(props);
-  useEffect(() => {
-    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
-      if (prev.current[k] !== v) {
-        ps[k] = [prev.current[k], v];
-      }
-      return ps;
-    }, {});
-    if (Object.keys(changedProps).length > 0) {
-      console.log('Changed props:', changedProps);
-    }
-    prev.current = props;
-  });
-}
 
 export default function EditGamePage(props) {
   const navigate = useNavigate();
@@ -48,7 +29,6 @@ export default function EditGamePage(props) {
   }, [])
 
   function notFound() {
-    console.log('Game not found')
     alertService.alert({ severity: alertSeverity.warning, message: `Game ${id} not found` })
     navigate('/admin-dashboard/games')
   }
