@@ -101,26 +101,26 @@ class GameViewSet(ViewSet):
                 game_data = request.data
                 questions = game_data['questions']
                 options = game_data['options']
-                Game.objects.filter(id=pk).update(
-                    title       = game_data['title'],
-                    active      = game_data['active'],
-                    creator_id  = game_data['creator_id'],
-                    code        = game_data['code']
-                )
+                game_to_update = Game.objects.get(id=pk)
+                game_to_update.title       = game_data['title']
+                game_to_update.active      = game_data['active']
+                game_to_update.creator_id  = game_data['creator_id']
+                game_to_update.code        = game_data['code']
                 for question in questions: 
-                    Question.objects.filter(id = question['id']).update(
-                        value       = question['value'],
-                        passcode    = question['passcode'],
-                        chance      = question['chance'],
-                        game_id  = question['game_id']
-                    )
+                    question_to_update = Question.objects.get(id=question['id'])
+                    question_to_update.value    = question['value']
+                    question_to_update.passcode = question['passcode']
+                    question_to_update.chance   = question['chance']
+                    question_to_update.game_id  = question['game_id']
+                    question_to_update.save()
                 for option in options:
-                    Option.objects.filter(id=option['id']).update(
-                        value               = option['value'],
-                        weight              = option['weight'],
-                        dest_question_id    = option['dest_question_id'],
-                        source_question_id  = option['source_question_id']                    
-                    )            
+                    option_to_update = Option.objects.get(id=option['id'])
+                    option_to_update.value               = option['value']
+                    option_to_update.weight              = option['weight']
+                    option_to_update.dest_question_id    = option['dest_question_id']
+                    option_to_update.source_question_id  = option['source_question_id']   
+                    option_to_update.save() 
+                game_to_update.save()
                 return Response()
             else:
                 raise Exception
