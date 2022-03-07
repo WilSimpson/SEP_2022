@@ -8,6 +8,7 @@ import withStyles from '@mui/styles/withStyles';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from "react-router-dom";
 import GameService from '../services/services';
+import { LinearProgress } from '@mui/material';
 
 const styles = {
     input: {
@@ -24,6 +25,7 @@ const styles = {
             value: '',
             errMsg: '',
             submitDisabled: true,
+            loading: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.submitCode = this.submitCode.bind(this);
@@ -38,6 +40,7 @@ const styles = {
      }
 
     submitCode() {
+        this.setState({loading: true});
         const re = /^[0-9\b]{6}$/;
         const code = this.state.value;
          if (re.test(code)) {
@@ -72,7 +75,8 @@ const styles = {
             } else {
                 this.setState({errMsg: "This Gamecode is not valid. Gamecodes must contain only number values."});
             }
-         }
+         };
+         this.setState({loading: false});
      }
 
     render () {
@@ -99,9 +103,12 @@ const styles = {
             onChange={this.handleChange}/>
             <br />
         </Box>
-        <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
+        <ButtonGroup variant="contained">
             <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
         </ButtonGroup>
+        <Box sx={{pb:2}}>
+                { this.state.loading && <LinearProgress /> }
+            </Box>
         </Grid>
         );
     }

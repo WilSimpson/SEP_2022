@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ResponsiveAppBar from './nav';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -36,10 +35,10 @@ export default function Knowledge() {
               3.) Answer the question
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              4.) Read the Resault
+              4.) Read the Result
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              5.) Proceed to given location and enter code if nessesssary
+              5.) Proceed to given location and enter code if necessary
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
               6.) Repeat until game is over
