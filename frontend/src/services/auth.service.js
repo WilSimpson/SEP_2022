@@ -17,7 +17,7 @@ class AuthService {
             if (response.status === 200) {
                 var token = response.data;
                 var decoded = jwt_decode(token.access);
-                const user = new User(decoded.email,'', '' , decoded.role, response.data);
+                const user = new User(decoded.email,'', '' , decoded.role, response.data, decoded.id);
                 localStorage.setItem('user', JSON.stringify(user));
                 store.dispatch({
                     type: LOGIN_USER

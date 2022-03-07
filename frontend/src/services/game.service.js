@@ -12,19 +12,30 @@ class GameService {
     return axios.get(`${API_URL}api/games/${id}/`)
   }
 
-  createGame(name, json) {
-    return axios.post(API_URL + 'api/games/', json)
+  createGame(title, active, creator_id, code, questionsJSON, optionsJSON) {
+    return axios.post(API_URL + 'api/games/', {
+      title: title,
+      active: active,
+      questions: JSON.parse(questionsJSON),
+      code: code,
+      creator_id: parseInt(creator_id),
+      options: JSON.parse(optionsJSON)
+    })
   }
 
   updateGame(id, title, active, creator_id, code, questionsJSON, optionsJSON) {
     return axios.put(API_URL + `api/games/${id}/`, {
       title: title,
       active: active,
-      questions: questionsJSON,
+      questions: JSON.parse(questionsJSON),
       code: parseInt(code),
       creator_id: parseInt(creator_id),
-      options: optionsJSON
+      options: JSON.parse(optionsJSON)
     })
+  }
+
+  deleteGame(id) {
+    return axios.delete(`${API_URL}api/games/${id}/`);
   }
 }
 

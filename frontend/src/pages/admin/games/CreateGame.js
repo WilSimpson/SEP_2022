@@ -11,14 +11,18 @@ export default function CreateGamePage() {
   const navigate = useNavigate();
 
   function handleCancel() {
-    alertService.alert({severity: alertSeverity.info, message: "Game not created"})
+    alertService.alert({ severity: alertSeverity.info, message: "Game not created" })
     navigate('/admin-dashboard/games')
   }
 
-  function handleSubmit(name, json) {
-    gameService.createGame(name, json)
-    alertService.alert({severity: alertSeverity.success, message: "Game created"})
-    navigate('/admin-dashboard/games')
+  function handleSubmit(title, active, creator_id, code, questionsJSON, optionsJSON) {
+    console.log('code', code)
+    gameService.createGame(title, active, creator_id, code, questionsJSON, optionsJSON).then((success) => {
+      alertService.alert({ severity: alertSeverity.success, message: "Game created" })
+      navigate('/admin-dashboard/games')
+    }, (error) => {
+      alertService.alert({ severity: alertSeverity.error, message: error.message })
+    })
   }
 
   return (

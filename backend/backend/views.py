@@ -60,6 +60,7 @@ class GameViewSet(ViewSet):
                     game_id     = new_game.id
                 )
                 question_reference[new_question.id] = question
+            print('type(options[0]):', type(options[0]))
             for option in options:
                 source_label = option['source_label']
                 dest_label = option['dest_label']
@@ -79,6 +80,8 @@ class GameViewSet(ViewSet):
                 )
             return Response()
         except Exception as e:
+            print(f"Unexpected {e=}, {type(e)=}")
+            traceback.print_exc()
             return HttpResponse(status=501)
     
     def get(self, request, pk=None):
@@ -93,25 +96,19 @@ class GameViewSet(ViewSet):
             if (Game.objects.get(id=pk)):
                 game_data = request.data
                 questions = game_data['questions']
-                if (isinstance(questions, str)):
-                    questions = json.loads(questions)
-
                 options = game_data['options']
-                if (isinstance(options, str)):
-                    options = json.loads(options)
-
                 Game.objects.filter(id=pk).update(
-                    title       = str(game_data['title']),
-                    active      = bool(game_data['active']),
-                    creator_id  = int(game_data['creator_id']),
-                    code        = int(game_data['code'])
+                    title       = game_data['title'],
+                    active      = game_data['active'],
+                    creator_id  = game_data['creator_id'],
+                    code        = game_data['code']
                 )
                 for question in questions: 
                     Question.objects.filter(id = int(question['id'])).update(
-                        value       = str(question['value']),
-                        passcode    = str(question['passcode']),
-                        chance      = bool(question['chance']),
-                        game_id  = int(question['game_id'])
+                        value       = question['value'],
+                        passcode    = question['passcode'],
+                        chance      = question['chance'],
+                        game_id     = question['game_id']
                     )
                 for option in options:
                     Option.objects.filter(id=option['id']).update(
@@ -124,8 +121,6 @@ class GameViewSet(ViewSet):
             else:
                 raise Exception
         except Exception as e:
-            print(f"Unexpected {e=}, {type(e)=}")
-            traceback.print_exc()
             return HttpResponse(status=501)
         
     def delete(self, request, pk):

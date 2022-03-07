@@ -1,13 +1,17 @@
 import React from 'react';
-import { Autocomplete, ButtonGroup, Chip, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
+import { Autocomplete, Button, ButtonGroup, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 import { Delete, Edit } from '@material-ui/icons';
 import { Game } from '../../models/game.model';
 import { formatDate } from '../../helpers/DateFormatter';
 import { useNavigate } from 'react-router';
+import gameService from '../../services/game.service';
+import { alertService, alertSeverity } from '../../services/alert.service';
 
 export default function GamesTable(props) {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(5);
+  const [confirmationDeleteID, setConfirmationDeleteID] = React.useState(null)
+  const [games, setGames] = React.useState(props.data)
   const navigate = useNavigate();
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * pageSize - props.data.length) : 0;
@@ -21,8 +25,41 @@ export default function GamesTable(props) {
     setPage(newPage);
   };
 
+  const handleCloseConfirmation = () => {
+    setConfirmationDeleteID(null)
+  };
+
+  const handleAcceptConfirmation = () => {
+    gameService.deleteGame(confirmationDeleteID).then(
+      (success) => {
+        handleCloseConfirmation()
+        alertService.alert({ severity: alertSeverity.success, message: 'Game successfully deleted' })
+        setGames(games.filter((game) => game.id != confirmationDeleteID))
+        navigate('/admin-dashboard/games')
+      }, (error) => {
+        alertService.alert({ severity: alertSeverity.error, message: error.message })
+      })
+  };
+
   return (
     <Grid container justifyContent="center" spacing={2}>
+      <Dialog open={confirmationDeleteID != null}>
+        <DialogTitle id="alert-dialog-title">
+          {"Are you sure you want to delete this game?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Deletion is permanent and this game can no longer be used or viewed. A hidden copy will be kept
+            kept in the database for logging and compilation of reports that used this game.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAcceptConfirmation}>Delete Permanently</Button>
+          <Button onClick={handleCloseConfirmation} autoFocus>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid item xs={2}>
         <h2>All Games</h2>
       </Grid>
@@ -50,32 +87,32 @@ export default function GamesTable(props) {
             </TableHead>
             <TableBody>
               {(pageSize > 0
-                ? props.data.slice(page * pageSize, page * pageSize + pageSize)
-                : props.data)
-                .map((row) => (
-                  <TableRow key={row.id}>
+                ? games.slice(page * pageSize, page * pageSize + pageSize)
+                : games)
+                .map((game) => (
+                  <TableRow key={game.id}>
                     <TableCell component="th" scope="row">
-                      {row.id}
+                      {game.id}
                     </TableCell>
                     <TableCell>
-                      {row.title}
+                      {game.title}
                     </TableCell>
                     <TableCell>
-                      {formatDate(row.created_at)}
+                      {formatDate(game.created_at)}
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={row.active ? "ACTIVE" : "INACTIVE"}
-                        color={row.active ? "primary" : "warning"}
+                        label={game.active ? "ACTIVE" : "INACTIVE"}
+                        color={game.active ? "primary" : "warning"}
                         size="small"
                       />
                     </TableCell>
                     <TableCell>
                       <ButtonGroup variant="outlined" aria-label="edit delete game button group">
-                        <IconButton aria-label="edit" onClick={() => { navigate(`/admin-dashboard/games/${row.id}`) }}>
+                        <IconButton aria-label="edit" onClick={() => { navigate(`/admin-dashboard/games/${game.id}`) }}>
                           <Edit />
                         </IconButton>
-                        <IconButton aria-label="delete">
+                        <IconButton aria-label="delete" onClick={() => { setConfirmationDeleteID(game.id) }}>
                           <Delete />
                         </IconButton>
                       </ButtonGroup>
