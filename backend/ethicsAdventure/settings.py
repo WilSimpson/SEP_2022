@@ -171,6 +171,7 @@ STATIC_ROOT = BASE_DIR / 'django-static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # Subsitute custom User model
 AUTH_USER_MODEL = 'backend.User'
 

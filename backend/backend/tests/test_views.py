@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate
 
 from .factories import UserFactory
 
+from ..models import Game, Option, Question
+
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -217,6 +219,31 @@ class VerifyViewTestCase(TestCase):
         self.assertEqual(resp.status_code, 401)
 
 class JoinGameTestCase(TestCase):
-    def set_up(self):
-        self.game = get_game_model().objects
-        self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
+    def setUp(self):
+        Game.objects.create(title='testActive', creator_id=999, code=999999, active=True)
+        Game.objects.create(title='testInactive', creator_id=999, code=999998, active=False)
+
+    def test_valid_game(self):
+        data = {
+            'code': 999999
+        }
+
+        resp = self.client.post('/api/games/joinGame/', data=data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_inactive_game(self):
+        data = {
+            'code': 999998
+        }
+
+        resp = self.client.post('/api/games/joinGame/', data=data)
+        self.assertEqual(resp.status_code, 502)
+
+    
+    def test_invalid_game(self):
+        data = {
+            'code': 999997
+        }
+
+        resp = self.client.post('/api/games/joinGame/', data=data)
+        self.assertEqual(resp.status_code, 501)

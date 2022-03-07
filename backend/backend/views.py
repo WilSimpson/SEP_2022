@@ -57,7 +57,7 @@ def joinGame(request):
         ret_json = {'id':game_json['id'], 'title':game_json['title'], 'creator_id':game_json['creator_id'],
                     'code':game_json['code'], 'questions':[QuestionSerializer(question).data for question
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
-        return Response(ret_json)
+        return Response(ret_json, status=200)
     except Exception as e:
         return HttpResponse(status=503)
 
