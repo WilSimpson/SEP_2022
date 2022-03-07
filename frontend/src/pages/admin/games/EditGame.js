@@ -1,23 +1,56 @@
-import React from 'react';
-import { Container, Grid, Paper, Toolbar } from "@mui/material"
+import React, { useEffect } from 'react';
+import { CircularProgress, Container, Grid, Paper, Toolbar } from "@mui/material"
 import GameFields from '../../../components/admin/GameFields';
 import gameService from '../../../services/game.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import { alertService, alertSeverity } from '../../../services/alert.service';
 import { LaptopWindows } from '@material-ui/icons';
-import { Redirect } from 'react-route-dom';
+import { Navigate } from 'react-router-dom';
+import axios from 'axios';
+import Loading from '../../../components/layout/loading';
+
+function useTraceUpdate(props) {
+  const prev = React.useRef(props);
+  useEffect(() => {
+    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
+      if (prev.current[k] !== v) {
+        ps[k] = [prev.current[k], v];
+      }
+      return ps;
+    }, {});
+    if (Object.keys(changedProps).length > 0) {
+      console.log('Changed props:', changedProps);
+    }
+    prev.current = props;
+  });
+}
 
 export default function EditGamePage(props) {
   const navigate = useNavigate();
   const { id } = useParams();
-  const game = gameService.getGame(id - 1)
+  const [game, setGame] = React.useState(null)
 
-  console.log('!game!', game)
+  useEffect(() => {
+    async function getGame() {
+      const resp = await gameService.getGame(id).catch(() => {
+        notFound()
+      });
+      const game = resp.data
 
-  if (game === null) {
+      if (game === null) {
+        notFound()
+      }
+
+      setGame(game)
+    }
+    getGame();
+  }, [])
+
+  function notFound() {
     console.log('Game not found')
     alertService.alert({ severity: alertSeverity.warning, message: `Game ${id} not found` })
+    navigate('/admin-dashboard/games')
   }
 
   function handleCancel() {
@@ -29,24 +62,19 @@ export default function EditGamePage(props) {
     alertService.alert({ severity: alertSeverity.success, message: "Changes saved" })
     gameService.updateGame(name, json, active)
     navigate('/admin-dashboard/games')
-
   }
 
   return (
-    <>
-      {
-        game === null
-          ? <Redirect to="/admin-dashboard/games" />
-          : <AuthenticatedLayout>
-              <Container maxWidth="lg" >
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={12} lg={12} component={Paper}>
-                    <GameFields game={game} onCancel={handleCancel} onSubmit={handleSubmit} />
-                  </Grid>
-                </Grid>
-              </Container>
-            </AuthenticatedLayout >
-      }
-    </>
+    <AuthenticatedLayout>
+      <Loading loading={game === null}>
+        <Container maxWidth="lg" >
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={12} lg={12} component={Paper}>
+              <GameFields game={game} onCancel={handleCancel} onSubmit={handleSubmit} />
+            </Grid>
+          </Grid>
+        </Container>
+      </Loading>
+    </AuthenticatedLayout >
   );
 }

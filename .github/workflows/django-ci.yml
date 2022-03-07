@@ -31,7 +31,7 @@ jobs:
         wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
         sudo apt-get -y update
         sudo apt-get remove libpq5
-        sudo apt-get install libpq-dev -y
+        sudo apt-get install libpq-dev python3-dev -y
         make install-backend
 
     - name: Run Tests

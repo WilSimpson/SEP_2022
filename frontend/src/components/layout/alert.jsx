@@ -23,7 +23,6 @@ class PageAlert extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounted with alerts:', this.state.alerts)
     this.subscription = alertService.onAlert(this.props.id)
       .subscribe(alert => {
         if (!alert.message) {
@@ -55,9 +54,8 @@ class PageAlert extends React.Component {
     this.subscription.unsubscribe()
     this.historyUnlisten()
   }
-
+  
   render() {
-    console.log('rendering, alerts:', this.state.alerts)
     if (!this.state.alerts.length) return null
     return (
       <div class="alerts">

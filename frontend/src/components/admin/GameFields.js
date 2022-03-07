@@ -4,9 +4,10 @@ import React from 'react';
 export default function GameFields(props) {
     const isEditing = props.game != null
 
-    const [name, setName] = React.useState(isEditing ? props.game.name : "")
+    const [title, setTitle] = React.useState(isEditing ? props.game.title : "")
     const [active, setActive] = React.useState(isEditing? props.game.active : true)
-    const [json, setJSON] = React.useState(isEditing? props.game.json : "")
+    const [questionsJSON, setQuestonsJSON] = React.useState(isEditing? props.game.questions : "[]")
+    const [optionsJSON, setOptionsJSON] = React.useState(isEditing? props.game.options : "[]")
     
     const editDisplay = isEditing ? {} : { display: 'none' }
 
@@ -16,7 +17,7 @@ export default function GameFields(props) {
                 <h2>
                 { 
                     isEditing
-                        ? `Edit Game ${props.game.id} (${props.game.name})` 
+                        ? `Edit Game: ${props.game.title}` 
                         : "Create Game" 
                 }
                 </h2>
@@ -25,14 +26,14 @@ export default function GameFields(props) {
                 <TextField
                     required
                     id="outlined-required"
-                    label="Name"
-                    defaultValue={name}
-                    onChange={(e) => setName(e.target.value)}
+                    label="Title"
+                    defaultValue={title}
+                    onChange={(e) => setTitle(e.target.value)}
                 />
             </Grid>
             
             <Grid item xs={12} sx={editDisplay}>
-                Active <Switch label="Active" checked={active} />
+                Active <Switch label="Active" checked={active} onChange={() => setActive(!active)} />
             </Grid>
 
             <Grid item xs={12}>
@@ -40,9 +41,21 @@ export default function GameFields(props) {
                     multiline
                     required
                     id="outlined-multiline-flexible"
-                    label="Game JSON"
-                    defaultValue={json}
-                    onChange={(e) => setJSON(e.target.value)}
+                    label="Questions JSON"
+                    defaultValue={questionsJSON}
+                    onChange={(e) => setQuestonsJSON(e.target.value)}
+                    rows={10}
+                />
+            </Grid>
+
+            <Grid item xs={12}>
+                <TextField
+                    multiline
+                    required
+                    id="outlined-multiline-flexible"
+                    label="Options JSON"
+                    defaultValue={optionsJSON}
+                    onChange={(e) => setOptionsJSON(e.target.value)}
                     rows={10}
                 />
             </Grid>
@@ -51,7 +64,7 @@ export default function GameFields(props) {
                 <Button onClick={props.onCancel}>Cancel</Button>
             </Grid>
             <Grid item xs={6}>
-                <Button variant="contained" onClick={() => {props.onSubmit(name, active, json) }}>Submit</Button>
+                <Button variant="contained" onClick={() => {props.onSubmit(title, active, questionsJSON, optionsJSON) }}>Submit</Button>
             </Grid>
         </Grid>
     );
