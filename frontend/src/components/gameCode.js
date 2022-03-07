@@ -122,9 +122,6 @@ const styles = {
         <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
             <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
         </ButtonGroup>
-        <Box sx={{pb:2}}>
-                { this.state.loading && <LinearProgress /> }
-            </Box>
         </Grid>
         );
     }

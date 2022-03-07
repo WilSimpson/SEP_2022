@@ -6,7 +6,7 @@ const API_URL = 'http://localhost:8000/api/'
 class GameService {
 
     joinGame(gameCode) {
-        return axios.post(API_URL + 'joinGame/', {
+        return axios.post(API_URL + 'games/joinGame/', {
             'code': gameCode
         })
         .then(response => {

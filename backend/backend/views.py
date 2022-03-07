@@ -51,14 +51,13 @@ def joinGame(request):
     try:
         game_serializer = GameSerializer(game)
         game_json = game_serializer.data
-
         questions = Question.objects.filter(game=game_json['id'])
-        options = #A fun little algorithm here, but make sure questions work first
+        options = Option.objects.filter(source_question__in=[q.id for q in questions])
 
         ret_json = {'id':game_json['id'], 'title':game_json['title'], 'creator_id':game_json['creator_id'],
                     'code':game_json['code'], 'questions':[QuestionSerializer(question).data for question
-                    in questions]}
-        return Response(json.dump(ret_json))
+                    in questions], 'options':[OptionSerializer(option).data for option in options]}
+        return Response(ret_json)
     except Exception as e:
         return HttpResponse(status=503)
 
