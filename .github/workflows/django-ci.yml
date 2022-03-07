@@ -39,5 +39,7 @@ jobs:
 
     - name: Build coverage file
       run: |
+        cd backend
         coverage run --source='.' manage.py test
         coverage report > backend_coverage.txt
+        cd ..
