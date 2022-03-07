@@ -13,18 +13,13 @@ import configureStore from './store/store';
 import CreateGamePage from './pages/admin/games/CreateGame';
 import ViewGamesPage from './pages/admin/games/ViewGames';
 import EditGamePage from './pages/admin/games/EditGame'
-import { createBrowserHistory } from 'history'
-import { alertService, alertSeverity } from './services/alert.service';
-import authService from './services/auth.service';
-import AuthenticatedLayout from './components/layout/authenticated.layout';
-import DefaultLayout from './components/layout/default.layout';
+import { createBrowserHistory } from 'history';
 import Logout from './pages/public/logout';
 
 const history = createBrowserHistory();
 const { persistor, store } = configureStore();
 
 function App() {
-
   return (
     <div className="App">
       <Router history={history}>

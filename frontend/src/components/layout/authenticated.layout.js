@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Toolbar } from "@mui/material";
 import { alertService, alertSeverity } from "../../services/alert.service";
 import { PageAlert } from "./alert";
 import { SideMenu } from "./SideMenu";
@@ -19,11 +19,13 @@ export default function AuthenticatedLayout(props) {
             overflow: 'auto',
           }}
         >
+          <Toolbar />
           <Grid container justifyContent="center" spacing={2}>
             <Grid item xs={6}>
               <PageAlert />
             </Grid>
           </Grid>
+          <Toolbar />
           {props.children}
         </Box>
       </SideMenu>

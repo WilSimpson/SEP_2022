@@ -9,17 +9,20 @@ class GameService {
   constructor() {
     this.games = []
 
+    for (let i = 0; i < Games.length; i++) {
+      this.games[i] = Object.assign(new Game(), Games[i])
+    }
+
     axios.get(API_URL + 'api/games')
       .then((response) => {
+        this.games = []
         for (let i = 0; i < response.data.length; i++) {
           this.games[i] = Object.assign(new Game(), response.data[i])
         }
       }, () => {
         console.log('using dummy data')
-        for (let i = 0; i < Games.length; i++) {
-          this.games[i] = Object.assign(new Game(), Games[i])
-        }
-      })    
+
+      })
   }
 
   getGames() {

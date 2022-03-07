@@ -23,7 +23,7 @@ class PageAlert extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounted')
+    console.log('mounted with alerts:', this.state.alerts)
     this.subscription = alertService.onAlert(this.props.id)
       .subscribe(alert => {
         if (!alert.message) {
@@ -57,12 +57,13 @@ class PageAlert extends React.Component {
   }
 
   render() {
+    console.log('rendering, alerts:', this.state.alerts)
     if (!this.state.alerts.length) return null
     return (
       <div class="alerts">
         <Stack sx={{ width: '100%' }} spacing={2}>
           {this.state.alerts.map((alert) =>
-            <Alert serverity={alert.severity} onClose={() => { this.removeAlert(alert) }} sx={{ border: '1px solid' }}>
+            <Alert severity={alert.severity} onClose={() => { this.removeAlert(alert) }} sx={{ border: '1px solid' }}>
               <AlertTitle>{titlizeString(alert.severity)}</AlertTitle>
               {alert.message}
             </Alert>

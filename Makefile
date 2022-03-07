@@ -116,3 +116,17 @@ test-frontend: install-frontend
 test-backend: install-backend
 	python $(BASE_DIR_BE)/manage.py test
 	python $(BASE_DIR_BE)/manage.py test backend
+
+
+#
+# AWS Targets
+#
+aws-setup: aws-login aws-docker-login
+
+aws-login:
+ifndef GITPOD_AWS_CONFIGURED
+	@aws configure sso --profile default
+	@export GITPOD_AWS_CONFIGURED=true
+else
+	@echo "Already logged in"
+endif
