@@ -44,39 +44,48 @@ class GameViewSet(ViewSet):
             game_data = request.data
             questions = game_data['questions']
             options = game_data['options']
-            question_reference = {}
-            new_game = Game.objects.create(
+            question_label_reference = {}
+            option_labels = []
+            option_i = 0
+            source_q = 1
+            dest_q = 2
+            new_game = Game(
                 title       = game_data['title'], 
                 active      = game_data['active'], 
                 creator_id  = game_data['creator_id'], 
                 code        = game_data['code'])
+            
             for question in questions:
-                new_question = Question.objects.create(
+                new_question = Question(
                     value       = question['value'],
                     passcode    = question['passcode'],
-                    chance      = question['chance'],
-                    game_id     = new_game.id
+                    chance      = question['chance']
                 )
-                question_reference[new_question.id] = question
+                question_label_reference[question['label']] = new_question
             for option in options:
-                source_label = option['source_label']
-                dest_label = option['dest_label']
-                source_question, dest_question = None, None
-                for q_id, q in question_reference.items():
-                    if q['label'] == source_label:
-                        source_question = q_id
-                    if q['label'] == dest_label:
-                        dest_question = q_id 
-                    if (source_question != None) and (dest_question != None):
-                        break
-                Option.objects.create(
+                new_option = Option(
                     value               = option['value'],
-                    weight              = option['weight'],
-                    dest_question_id    = dest_question,
-                    source_question_id  = source_question
+                    weight              = option['weight']
                 )
+                option_labels.append([new_option, option['source_label'], option['dest_label']])
+            new_game.save()
+            
+            for label, question in question_label_reference.items():
+                question.game_id = new_game.id
+                question.save()
+            
+            for new_option in option_labels:
+                option_obj = new_option[option_i]
+                for q_label, q in question_label_reference.items():
+                    if q_label == new_option[source_q]:
+                        option_obj.source_question_id = q.id
+                    if q_label == new_option[dest_q]:
+                        option_obj.dest_question_id = q.id
+                option_obj.save()
+                    
             return Response()
         except Exception as e:
+            print(e)
             return HttpResponse(status=501)
     
     def get(self, request, pk=None):
