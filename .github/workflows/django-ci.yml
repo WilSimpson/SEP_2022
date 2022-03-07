@@ -36,3 +36,8 @@ jobs:
 
     - name: Run Tests
       run: make test-backend
+
+    - name: Build coverage file
+      run: |
+        coverage run --source='.' manage.py test
+        coverage report > backend_coverage.txt
