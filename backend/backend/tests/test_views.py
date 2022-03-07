@@ -215,3 +215,8 @@ class VerifyViewTestCase(TestCase):
         }
         resp = self.client.post('/api/token/verify', data=data)
         self.assertEqual(resp.status_code, 401)
+
+class JoinGameTestCase(TestCase):
+    def set_up(self):
+        self.game = get_game_model().objects
+        self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
