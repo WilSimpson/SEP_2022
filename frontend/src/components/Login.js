@@ -46,7 +46,7 @@ export default function Login() {
         AuthService.login(email, pwd).then(
             (response) => {
                 if (response.status === 200) {
-                    if (User.prototype.isAdmin) { 
+                    if (User.prototype.isAdmin()) {
                         window.location.href = "/admin-dashboard";
                     } else {
                         window.location.href = "/faculty-dashboard";

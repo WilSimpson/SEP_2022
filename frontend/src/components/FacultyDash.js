@@ -49,7 +49,7 @@ function GameSessionTable() {
           Active Game Sessions
 
       </Typography>
-<SearchBar
+    <SearchBar
           value={searched}
           onChange={(searchVal) => requestSearch(searchVal)}
           onCancelSearch={() => cancelSearch()}
