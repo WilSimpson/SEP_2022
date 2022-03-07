@@ -44,9 +44,9 @@ function App() {
                   exact
                   path='/faculty-dashboard'
                   element={
-                  //<ProtectedRoute>
+                  <ProtectedRoute>
                     <FacultyDash />
-                  //</ProtectedRoute>
+                  </ProtectedRoute>
                   }
                 />
               </Routes>

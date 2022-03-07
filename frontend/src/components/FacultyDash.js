@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FacultySideMenu } from './FacultySideMenu';
+import { SideMenu } from './SideMenu';
 import { Box, Button, ThemeProvider, StyledEngineProvider, Tooltip } from '@mui/material';
 import { Toolbar } from '@mui/material';
 import { Container } from '@mui/material';
@@ -122,7 +122,7 @@ export default function FacultyDash () {
     <StyledEngineProvider injectFirst>
       <div>
         <Box sx={{ display: 'flex' }}>
-          <FacultySideMenu />
+          <SideMenu />
           <Box
             component="main"
             sx={{
