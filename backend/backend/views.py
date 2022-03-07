@@ -17,6 +17,8 @@ from rest_framework.response import Response
 
 import json
 
+import traceback
+
 
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
@@ -91,31 +93,39 @@ class GameViewSet(ViewSet):
             if (Game.objects.get(id=pk)):
                 game_data = request.data
                 questions = game_data['questions']
+                if (isinstance(questions, str)):
+                    questions = json.loads(questions)
+
                 options = game_data['options']
+                if (isinstance(options, str)):
+                    options = json.loads(options)
+
                 Game.objects.filter(id=pk).update(
-                    title       = game_data['title'],
-                    active      = game_data['active'],
-                    creator_id  = game_data['creator_id'],
-                    code        = game_data['code']
+                    title       = str(game_data['title']),
+                    active      = bool(game_data['active']),
+                    creator_id  = int(game_data['creator_id']),
+                    code        = int(game_data['code'])
                 )
                 for question in questions: 
-                    Question.objects.filter(id = question['id']).update(
-                        value       = question['value'],
-                        passcode    = question['passcode'],
-                        chance      = question['chance'],
-                        game_id  = question['game_id']
+                    Question.objects.filter(id = int(question['id'])).update(
+                        value       = str(question['value']),
+                        passcode    = str(question['passcode']),
+                        chance      = bool(question['chance']),
+                        game_id  = int(question['game_id'])
                     )
                 for option in options:
                     Option.objects.filter(id=option['id']).update(
-                        value               = option['value'],
-                        weight              = option['weight'],
-                        dest_question_id    = option['dest_question_id'],
-                        source_question_id  = option['source_question_id']                    
+                        value               = str(option['value']),
+                        weight              = int(option['weight']),
+                        dest_question_id    = int(option['dest_question_id']),
+                        source_question_id  = int(option['source_question_id'])                    
                     )            
                 return Response()
             else:
                 raise Exception
         except Exception as e:
+            print(f"Unexpected {e=}, {type(e)=}")
+            traceback.print_exc()
             return HttpResponse(status=501)
         
     def delete(self, request, pk):

@@ -11,6 +11,7 @@ export default function EditGamePage(props) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [game, setGame] = React.useState(null)
+  const [loading, setLoading] = React.useState(true)
 
   useEffect(() => {
     async function getGame() {
@@ -24,6 +25,7 @@ export default function EditGamePage(props) {
       }
 
       setGame(game)
+      setLoading(false)
     }
     getGame();
   }, [])
@@ -38,15 +40,21 @@ export default function EditGamePage(props) {
     navigate('/admin-dashboard/games')
   }
 
-  function handleSubmit(name, json, active) {
-    alertService.alert({ severity: alertSeverity.success, message: "Changes saved" })
-    gameService.updateGame(name, json, active)
-    navigate('/admin-dashboard/games')
+  function handleSubmit(title, active, creator_id, code, questionsJSON, optionsJSON) {
+    setLoading(true)
+    gameService.updateGame(id, title, active, creator_id, code, questionsJSON, optionsJSON).then(
+      (success) => {
+        alertService.alert({ severity: alertSeverity.success, message: "Changes saved" })
+        navigate('/admin-dashboard/games')
+      }, (error) => {
+        alertService.alert({severity: alertSeverity.error, message: error.message})
+        setLoading(false)
+      })
   }
 
   return (
     <AuthenticatedLayout>
-      <Loading loading={game === null}>
+      <Loading loading={loading}>
         <Container maxWidth="lg" >
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12} component={Paper}>

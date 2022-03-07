@@ -28,11 +28,11 @@ class PageAlert extends React.Component {
         if (!alert.message) {
           const alerts = this.state.alerts.filter(a => a.keepAfterRouteChange)
           alerts.forEach((a) => { delete a.keepAfterRouteChange })
-          this.setAlerts({alerts})
+          this.setAlerts({ alerts })
           return
         }
-        
-        this.setAlerts({ alerts: [...this.state.alerts, alert] })
+
+        this.setAlerts({ alerts: [...this.state.alerts.filter((a) => a.id != alert.id), alert] })
         if (alert.autoClose) {
           setTimeout(() => this.removeAlert(alert), 5000)
         }
@@ -51,20 +51,20 @@ class PageAlert extends React.Component {
     this.subscription.unsubscribe()
     this.historyUnlisten()
   }
-  
+
   render() {
     if (!this.state.alerts.length) return null
     return (
-      <div class="alerts">
-        <Stack sx={{ width: '100%' }} spacing={2}>
-          {this.state.alerts.map((alert) =>
-            <Alert severity={alert.severity} onClose={() => { this.removeAlert(alert) }} sx={{ border: '1px solid' }}>
-              <AlertTitle>{titlizeString(alert.severity)}</AlertTitle>
-              {alert.message}
-            </Alert>
-          )}
-        </Stack>
-      </div>
+      <Stack sx={{ width: '100%' }} spacing={2}>
+        {this.state.alerts.map((alert) =>
+          <Alert key={alert.id} severity={alert.severity} onClose={() => { this.removeAlert(alert) }} sx={{ border: '1px solid' }}>
+            <AlertTitle>{titlizeString(alert.severity)}</AlertTitle>
+            {typeof (alert.message) === 'string'
+              ? alert.message
+              : JSON.stringify(alert.message)}
+          </Alert>
+        )}
+      </Stack>
     );
   }
 }

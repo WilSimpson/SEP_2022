@@ -16,8 +16,15 @@ class GameService {
     return axios.post(API_URL + 'api/games/', json)
   }
 
-  updateGame(id, json) {
-    return axios.put(API_URL + 'api/games/id', json)
+  updateGame(id, title, active, creator_id, code, questionsJSON, optionsJSON) {
+    return axios.put(API_URL + `api/games/${id}/`, {
+      title: title,
+      active: active,
+      questions: questionsJSON,
+      code: parseInt(code),
+      creator_id: parseInt(creator_id),
+      options: optionsJSON
+    })
   }
 }
 

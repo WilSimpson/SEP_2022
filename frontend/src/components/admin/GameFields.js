@@ -64,7 +64,7 @@ export default function GameFields(props) {
                 <Button onClick={props.onCancel}>Cancel</Button>
             </Grid>
             <Grid item xs={6}>
-                <Button variant="contained" onClick={() => {props.onSubmit(title, active, questionsJSON, optionsJSON) }}>Submit</Button>
+                <Button variant="contained" onClick={() => {props.onSubmit(title, active, props.game.creator_id, props.game.code, questionsJSON, optionsJSON) }}>Submit</Button>
             </Grid>
         </Grid>
     );
