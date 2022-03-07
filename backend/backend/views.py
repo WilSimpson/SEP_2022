@@ -8,12 +8,11 @@ from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
 
-from .serializers import UserSerializer
 from .models import Game, Option, Question
 from .utils import get_game_data
 
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import RoleTokenObtainPairSerializer, JoinGameSerializer
+from .serializers import *
 
 from .models import Game
 
@@ -36,14 +35,32 @@ class RoleTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 def joinGame(request):
+    '''Accepts a game code in the request
+        Returns a game object or an error code
+        Error Codes:
+            501 - The game does not exist
+            502 - The game is not active
+            503 - There was some other problem'''
     try:
         game = Game.objects.get(code=int(request.data['code']))
-        if not game.active:
-            return HttpResponse(status=502)
-        serializer = JoinGameSerializer(game)
-        return Response(serializer.data)
     except Exception as e:
         return HttpResponse(status=501)
+    if not game.active:
+        return HttpResponse(status=502)
+
+    try:
+        game_serializer = GameSerializer(game)
+        game_json = game_serializer.data
+
+        questions = Question.objects.filter(game=game_json['id'])
+        options = #A fun little algorithm here, but make sure questions work first
+
+        ret_json = {'id':game_json['id'], 'title':game_json['title'], 'creator_id':game_json['creator_id'],
+                    'code':game_json['code'], 'questions':[QuestionSerializer(question).data for question
+                    in questions]}
+        return Response(json.dump(ret_json))
+    except Exception as e:
+        return HttpResponse(status=503)
 
 
 serializer_class = RoleTokenObtainPairSerializer    
