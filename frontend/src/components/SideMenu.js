@@ -49,8 +49,7 @@ const drawerWidth = 240;
   );
 
 
-export function SideMenu () {   
-    let isAdmin = User.prototype.isAdmin()
+export function SideMenu () {
     const [open, setOpen] = React.useState(true);
     const [gameManageOpen, setGameManageOpen] = React.useState(false);
     const [userManageOpen, setUserManageOpen] = React.useState(false);
@@ -237,7 +236,7 @@ export function SideMenu () {
                         <Divider />
                         <List component="nav">
                             <div>
-                              {isAdmin ?
+                              {User.prototype.isAdmin() ?
                               <React.Fragment>
                                 {dashboardItem}
                                 {gameManagementItem}
