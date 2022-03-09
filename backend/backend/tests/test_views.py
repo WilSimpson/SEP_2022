@@ -6,13 +6,14 @@ from django.contrib.auth import authenticate
 
 from .factories import UserFactory
 
-from ..models import Game, Option, Question
+from ..models import *
 
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import jwt
 import os
+from datetime import datetime
 
 # TODO: Refactor tests to be DRY
 class UserViewSetTestCase(TestCase):
@@ -220,8 +221,14 @@ class VerifyViewTestCase(TestCase):
 
 class JoinGameTestCase(TestCase):
     def setUp(self):
-        Game.objects.create(title='testActive', creator_id=999, code=999999, active=True)
-        Game.objects.create(title='testInactive', creator_id=999, code=999998, active=False)
+        new_active = Game.objects.create(title='testActive', creator_id=999, code=999999, active=True)
+        new_inactive = Game.objects.create(title='testInactive', creator_id=999, code=999998, active=False)
+        active_session = GameSession.objects.create(creator_id=999, game=new_active, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        inactive_session = GameSession.objects.create(creator_id=999, game=new_inactive, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999998)
+        sessionless_game = Game.objects.create(title='noSession', creator_id=999, code=999997, active=True)
+
 
     def test_valid_game(self):
         data = {
@@ -240,10 +247,51 @@ class JoinGameTestCase(TestCase):
         self.assertEqual(resp.status_code, 502)
 
     
-    def test_invalid_game(self):
+    def test_sessionless_game(self):
         data = {
             'code': 999997
         }
 
         resp = self.client.post('/api/games/joinGame/', data=data)
+        self.assertEqual(resp.status_code, 503)
+
+    def test_invalid_game(self):
+        data = {
+            'code': 999996
+        }
+
+        resp = self.client.post('/api/games/joinGame/', data=data)
+        self.assertEqual(resp.status_code, 501)
+
+
+class CreateTeamTestCase(TestCase):
+    def setUp(self):
+        new_active = Game.objects.create(title='testActive', creator_id=999, code=999999, active=True)
+        self.active_session = GameSession.objects.create(creator_id=999, game=new_active, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        new_mode = GameMode.objects.create(name="Walking")
+
+
+    def test_valid_request(self):
+        data = {
+            'session': self.active_session.id,
+            'mode': "Walking",
+            'guest': "yes",
+            'size': 1,
+            'first_time': "yes"
+        }
+
+        resp = self.client.post('/api/teams/createTeam/', data=data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_invalid_request(self):
+        data = {
+            'session': self.active_session.id,
+            'mode': "walk",
+            'guest': "yes",
+            'size': 1,
+            'first_time': "yes"
+        }
+
+        resp = self.client.post('/api/teams/createTeam/', data=data)
         self.assertEqual(resp.status_code, 501)
