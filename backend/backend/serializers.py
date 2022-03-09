@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer, CharField
 from django.contrib.auth import get_user_model
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Game, Question, Option
+from .models import *
 
 class UserSerializer(ModelSerializer):
     password = CharField(write_only=True)

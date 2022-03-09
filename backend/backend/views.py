@@ -46,11 +46,11 @@ def joinGame(request):
 
     try:
         game = Game.objects.get(code=int(request.data['code']))
-            new_game_session = GameSession.objects.create(
+        new_game_session = GameSession.objects.create(
                 game       = game, 
                 start_time      = datetime.now(), 
                 creator_id  = 1, 
-                code        = request.data['code'],
+                code        = game.code,
                 notes = "",
                 timeout = 5)
     except Exception as e:
@@ -70,7 +70,7 @@ def joinGame(request):
         options = Option.objects.filter(source_question__in=[q.id for q in questions])
 
         ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
-                    'code':session_json['code'], 'timeout':session_json['timeout'] 'questions':[QuestionSerializer(question).data for question
+                    'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':[QuestionSerializer(question).data for question
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
         return Response(ret_json, status=200)
     except Exception as e:
