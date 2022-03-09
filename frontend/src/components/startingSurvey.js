@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { Typography } from '@mui/material';
-import GameService from '../services/services'
+import GameService from '../services/gameServices'
 import Alert from '@mui/material/Alert';
 
 export default function StartingSurvey() {
@@ -101,7 +101,7 @@ export default function StartingSurvey() {
           mb: 3,
         }}
       >
-  <Typography> {`Game Title: ${state.game.title}`} </Typography>
+  <Typography> {`Game Title: ${state ? state.game.title : "Game is NULL"}`} </Typography>
   <Box sx={{pb:2}}>
                 { err && <Alert severity="error">{err}</Alert> }
             </Box>
