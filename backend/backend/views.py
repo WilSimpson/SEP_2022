@@ -21,6 +21,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 import json
+from datetime import datetime
 
 
 class UserViewSet(GenericViewSet,
@@ -40,26 +41,40 @@ def joinGame(request):
         Error Codes:
             501 - The game does not exist
             502 - The game is not active
-            503 - There was some other problem'''
+            503 - The game session does not exist
+            504 - There was another problem'''
+
     try:
         game = Game.objects.get(code=int(request.data['code']))
+            new_game_session = GameSession.objects.create(
+                game       = game, 
+                start_time      = datetime.now(), 
+                creator_id  = 1, 
+                code        = request.data['code'],
+                notes = "",
+                timeout = 5)
     except Exception as e:
         return HttpResponse(status=501)
     if not game.active:
         return HttpResponse(status=502)
-
+    try:
+        game_session = GameSession.objects.get(code=int(request.data['code']))
+    except:
+        return HttpResponse(status=503)
     try:
         game_serializer = GameSerializer(game)
+        game_session_serializer = GameSessionSerializer(game_session)
         game_json = game_serializer.data
+        session_json = game_session_serializer.data
         questions = Question.objects.filter(game=game_json['id'])
         options = Option.objects.filter(source_question__in=[q.id for q in questions])
 
-        ret_json = {'id':game_json['id'], 'title':game_json['title'], 'creator_id':game_json['creator_id'],
-                    'code':game_json['code'], 'questions':[QuestionSerializer(question).data for question
+        ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
+                    'code':session_json['code'], 'timeout':session_json['timeout'] 'questions':[QuestionSerializer(question).data for question
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
         return Response(ret_json, status=200)
     except Exception as e:
-        return HttpResponse(status=503)
+        return HttpResponse(status=504)
 
 
 serializer_class = RoleTokenObtainPairSerializer    
