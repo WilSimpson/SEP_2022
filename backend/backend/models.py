@@ -103,3 +103,24 @@ class Option(models.Model):
     weight          = models.IntegerField()
     source_question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='source')
     dest_question   = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='destination')
+
+class GameSession(models.Model):
+    creator_id  = models.IntegerField()
+    game = models.ForeignKey(Game, on_delete= models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    notes = models.TextField()
+    timeout = models.IntegerField()
+    code = models.IntegerField(validators=[MinValueValidator(0),
+                                MaxValueValidator(999999)], default=0)
+
+class GameMode(models.Model):
+    name = models.CharField(max_length=20)
+
+class Team(models.Model):
+    game_session = models.ForeignKey(GameSession, on_delete= models.CASCADE)
+    game_mode = models.ForeignKey(GameMode, on_delete=models.CASCADE)
+    guest = models.BooleanField(default=True)
+    size = models.IntegerField()
+    first_time = models.BooleanField()
+    completed = models.BooleanField()
