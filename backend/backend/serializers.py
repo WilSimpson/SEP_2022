@@ -46,3 +46,18 @@ class OptionSerializer(ModelSerializer):
     class Meta:
         model = Option
         fields = '__all__'
+
+class GameSessionSerializer(ModelSerializer):
+    class Meta:
+        model = GameSession
+        fields = '__all__'
+
+class TeamSerializer(ModelSerializer):
+    class Meta:
+        model = Team
+        fields = '__all__'
+
+class GameModeSerializer(ModelSerializer):
+    class Meta:
+        model = GameMode
+        fields = '__all__'        
