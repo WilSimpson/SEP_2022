@@ -28,9 +28,31 @@ class GameService {
 
     
     }
+
+    sendTeamInit(session_id, mode, guest, size, first_time) {
+        return axios.post(API_URL + 'teams/createTeam/', {
+            'session': session_id,
+            'mode': mode,
+            'guest': guest,
+            'size': size,
+            'first_time': first_time
+        })
+        .then(response => {
+            if (response.data) {
+                localStorage.setItem('teamObject', response.data); 
+            }
+            return response.data;
+        });
+
+    
+    }
     
     clearGame() {
-        localStorage.removeItem('gameCode');
+        localStorage.removeItem('gameObject');
+    }
+
+    clearTeam() {
+        localStorage.removeItem('teamObject');
     }
 
 }

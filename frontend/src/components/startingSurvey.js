@@ -16,6 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { Typography } from '@mui/material';
+import GameService from '../services/services'
 
 export default function StartingSurvey() {
 
@@ -31,6 +32,7 @@ export default function StartingSurvey() {
 
     const [formValues, setFormValues] = useState(defaultValues);
     const [submitDisabled, setSubmitDisabled] = useState(true);
+    const [err, setErr] = useState("");
 
     const handleInputChange = (e) => {
       const { name, value } = e.target;
@@ -53,34 +55,39 @@ export default function StartingSurvey() {
     const handleSubmit = (event) => {
       event.preventDefault();
       console.log(formValues);
-      let path = `../gameSession`; 
-      navigate(path, {
-          state: {
-              //Carries the gameCode with the state
-              code: state ? state.code : 'DEV###',
-              //Initialize state with the response parsed as an array of questions
-              game: state ? state.game : [
-                    {
-                      "id": '1',
-                      'text': "This is an example question for development",
-                      "password": "psw",
-                      "onlyChance": false,
-                      "options": [
-                          {
-                          "text": "Option 1",
-                          "link": "1a"
-                            },
-                            {
-                                "text": "Option 2",
-                                "link": "1b"
-                            }
-                        ],
-                    }
-                ],
-              //Carry the form data forward
-              formData: formValues,
-          }
-      });
+      GameService.sendTeamInit(state.game.id, formValues.type, false, formValues.size, formValues.first).then(
+        (response) => {
+            console.log(response)
+            let path = `../gameSession`; 
+            navigate(path, {
+                state: {
+                    //Carries the gameCode with the state
+                    code: state.code,
+                    //Initialize state with the response parsed as an array of questions
+                    game: state.game,
+                    //Carry the form data forward
+                    formData: formValues,
+                }
+            });
+        },
+        (error) => {
+            console.log(error.response.status);
+            if (error.resonse && error.response.status === 404) {
+                setErr("Could not communicate with the server. Please try again later or contact the game owner.");
+            } else {
+                if (error.response.status === 501) {
+                    setErr("There was a 501");
+                }
+                else if (error.response.status === 502) {
+                  setErr("There was a 502");
+                } else if (error.response.status === 503) {
+                  setErr("There was a 503");
+                } else {
+                  setErr("There was some other problem");
+                }
+            }
+        }
+    );
     };
 
   return (

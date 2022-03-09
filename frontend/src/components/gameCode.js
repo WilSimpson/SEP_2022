@@ -75,8 +75,10 @@ const styles = {
                         }
                         else if (error.response.status === 502) {
                             this.setState({errMsg: "This game is not currently active"});
+                        } else if (error.response.status === 503) {
+                            this.setState({errMsg: "There is no game session associated with this game"});
                         } else {
-                            this.setState({errMsg: "There was a problem loading this game. Please try again later."});
+                            this.setState({errMsg: "There was a problem. Please try again later."});
                         }
                     }
                 }

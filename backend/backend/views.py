@@ -76,6 +76,14 @@ def joinGame(request):
     except Exception as e:
         return HttpResponse(status=504)
 
+@api_view(['POST'])
+def create_team(request):
+    '''Accepts an object of params to create a team
+        Returns a team id
+        Error Codes:
+            501 - Invalid params
+            502 - A different problem'''
+    return Response({'id':1}, status=200)
 
 serializer_class = RoleTokenObtainPairSerializer    
     

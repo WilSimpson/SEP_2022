@@ -39,6 +39,7 @@ urlpatterns = [
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
     path('api/games/create/', GameViewSet.as_view({'post':'create'}), name='create_game'),
+    path('api/teams/createTeam/', views.create_team, name='createTeam'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls)
 ]
