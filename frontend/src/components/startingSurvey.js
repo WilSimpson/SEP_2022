@@ -67,6 +67,7 @@ export default function StartingSurvey() {
                     game: state.game,
                     //Carry the form data forward
                     formData: formValues,
+                    team_id: response['id'],
                 }
             });
         },
