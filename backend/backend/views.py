@@ -74,13 +74,9 @@ def create_team(request):
     '''Accepts an object of params to create a team
         Returns a team id
         Error Codes:
-            501 - Could not create a team'''    
-    # GameMode.objects.create(name="Limited Walking")
-    # GameMode.objects.create(name="Walking")
-    # GameMode.objects.create(name="No Walking")         
+            501 - Could not create a team'''          
     try:
         session = GameSession.objects.get(id=request.data['session'])
-        print(request.data['mode'])
         mode = GameMode.objects.get(name=request.data['mode'])
         new_team = Team.objects.create(
                 game_session = session, 
@@ -91,10 +87,12 @@ def create_team(request):
                 completed = False)
         return Response({'id':new_team.id}, status=200)
     except Exception as e:
-        print(e)
         return HttpResponse(status=501)
+
+
 serializer_class = RoleTokenObtainPairSerializer    
     
+
 class GameViewSet(ViewSet):
     def list(self, request):
         try:

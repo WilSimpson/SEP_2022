@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { Typography } from '@mui/material';
 import GameService from '../services/services'
+import Alert from '@mui/material/Alert';
 
 export default function StartingSurvey() {
 
@@ -54,7 +55,6 @@ export default function StartingSurvey() {
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      console.log(formValues);
       GameService.sendTeamInit(state.game.id, formValues.type, false, formValues.size, formValues.first).then(
         (response) => {
             console.log(response)
@@ -72,19 +72,13 @@ export default function StartingSurvey() {
             });
         },
         (error) => {
-            console.log(error.response.status);
             if (error.resonse && error.response.status === 404) {
                 setErr("Could not communicate with the server. Please try again later or contact the game owner.");
             } else {
                 if (error.response.status === 501) {
-                    setErr("There was a 501");
-                }
-                else if (error.response.status === 502) {
-                  setErr("There was a 502");
-                } else if (error.response.status === 503) {
-                  setErr("There was a 503");
+                    setErr("Could not create team. Please try again later.");
                 } else {
-                  setErr("There was some other problem");
+                  setErr("There was a problem. Please try again later.");
                 }
             }
         }
@@ -107,6 +101,9 @@ export default function StartingSurvey() {
         }}
       >
   <Typography> {`Game Title: ${state.game.title}`} </Typography>
+  <Box sx={{pb:2}}>
+                { err && <Alert severity="error">{err}</Alert> }
+            </Box>
   <form onSubmit={handleSubmit}>
     <Grid container alignItems="center" justifyContent="center" direction="column">
       <Grid item>
