@@ -162,13 +162,13 @@ export default function StartingSurvey() {
             onChange={handleInputChange}
             required
           >
-            <MenuItem key="walk" value="walk">
+            <MenuItem key="Walking" value="Walking">
               Walking
             </MenuItem>
-            <MenuItem key="limited" value="limited">
+            <MenuItem key="Limited Walking" value="Limited Walking">
               Limited Walking
             </MenuItem>
-            <MenuItem key="none" value="none">
+            <MenuItem key="No Walking" value="No Walking">
               No Walking
             </MenuItem>
           </Select>

@@ -46,13 +46,6 @@ def joinGame(request):
 
     try:
         game = Game.objects.get(code=int(request.data['code']))
-        new_game_session = GameSession.objects.create(
-                game       = game, 
-                start_time      = datetime.now(), 
-                creator_id  = 1, 
-                code        = game.code,
-                notes = "",
-                timeout = 5)
     except Exception as e:
         return HttpResponse(status=501)
     if not game.active:
@@ -81,10 +74,25 @@ def create_team(request):
     '''Accepts an object of params to create a team
         Returns a team id
         Error Codes:
-            501 - Invalid params
-            502 - A different problem'''
-    return Response({'id':1}, status=200)
-
+            501 - Could not create a team'''    
+    # GameMode.objects.create(name="Limited Walking")
+    # GameMode.objects.create(name="Walking")
+    # GameMode.objects.create(name="No Walking")         
+    try:
+        session = GameSession.objects.get(id=request.data['session'])
+        print(request.data['mode'])
+        mode = GameMode.objects.get(name=request.data['mode'])
+        new_team = Team.objects.create(
+                game_session = session, 
+                game_mode = mode,
+                guest = True if request.data['first_time'] == "yes" else False,
+                size = request.data['size'],
+                first_time = True if request.data['first_time'] == "yes" else False,
+                completed = False)
+        return Response({'id':new_team.id}, status=200)
+    except Exception as e:
+        print(e)
+        return HttpResponse(status=501)
 serializer_class = RoleTokenObtainPairSerializer    
     
 class GameViewSet(ViewSet):
