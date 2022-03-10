@@ -1,5 +1,5 @@
 import '../setupTests';
-import GameService from '../services/services';
+import GameService from '../services/gameServices';
 import axios from 'axios';
 
 jest.mock('axios');

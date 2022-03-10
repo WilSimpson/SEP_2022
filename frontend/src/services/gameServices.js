@@ -33,6 +33,16 @@ class GameService {
         localStorage.removeItem('gameCode');
     }
 
+    checkPasscode(pcd){
+        //need axios once a backend exists
+        if (pcd === "correct"){
+            return {response: {status:200}}
+        }
+        else {
+            return {error:{response: {status:401, data:{detail:"wrong passcode"}}}}
+        }
+    }
+
 }
 
 export default new GameService();
