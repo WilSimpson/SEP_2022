@@ -36,7 +36,7 @@ export default function GameFields(props) {
             </Grid>
 
             <Grid item xs={12} sx={editDisplay}>
-                Active <Switch label="Active" checked={active} onChange={() => setActive(!active)} />
+                { active ? 'Active' : 'Inactive' } <Switch label="Active" checked={active} onChange={() => setActive(!active)} />
             </Grid>
 
             <Grid item xs={12}>
