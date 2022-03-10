@@ -56,11 +56,19 @@ class GameViewSet(ViewSet):
                 code        = game_data['code'])
             
             for question in questions:
-                new_question = Question(
+                if 'chance_game' in question:    
+                    new_question = Question(
+                        value       = question['value'],
+                        passcode    = question['passcode'],
+                        chance      = question['chance'],
+                        chance_game = question['chance_game']
+                    )
+                else:
+                    new_question = Question(
                     value       = question['value'],
                     passcode    = question['passcode'],
                     chance      = question['chance']
-                )
+                    )
                 question_label_reference[question['label']] = new_question
             for option in options:
                 new_option = Option(

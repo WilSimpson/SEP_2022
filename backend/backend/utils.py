@@ -16,7 +16,9 @@ def get_game_data(id):
         q['value'] = question.value
         q['passcode'] = question.passcode
         q['chance'] = question.chance
+        q['chance_game'] = question.chance_game
         q['game_id'] = question.game_id
+        
         questions.append(q)
         all_question_options = Option.objects.filter(source_question_id=question.id).all()
         for option in all_question_options:
