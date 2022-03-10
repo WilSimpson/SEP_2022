@@ -221,16 +221,16 @@ class GameViewSetTestCase(TestCase):
     def setUp(self):
         # create game
         self.game = Game.objects.create(title='TestGame', creator_id=1, code=123456, active=True)
-        self.q1 = Question.objects.create(value='Q1', passcode=123456, chance=False, game_id=self.game.id)
-        self.q2 = Question.objects.create(value='Q2', passcode=123456, chance=False, game_id=self.game.id)
+        self.q1 = Question.objects.create(value='Q1', passcode=123456, chance=False, game_id=self.game.id, chance_game=Question.ChanceGame.NO_GAME)
+        self.q2 = Question.objects.create(value='Q2', passcode=123456, chance=False, game_id=self.game.id, chance_game=Question.ChanceGame.NO_GAME)
         self.o1 = Option.objects.create(value='O1', weight=1, dest_question_id=self.q2.id, source_question_id=self.q1.id)
         self.o2 = Option.objects.create(value='O2', weight=1, dest_question_id=self.q2.id, source_question_id=self.q1.id)
         self.initial_game_count = Game.objects.all().count()
         self.initial_question_count = Question.objects.all().count()
         self.initial_option_count = Option.objects.all().count()
         self.data = {"title": "TestGame", "creator_id": 1,"code": 123456, "active": True,
-                    "questions": [{"id": self.q1.id,"value": "Q1","passcode": "123456","chance": False,"game_id": self.game.id},
-                                {"id": self.q2.id,"value": "Q2","passcode": "123456","chance": False,"game_id": self.game.id}
+                    "questions": [{"id": self.q1.id,"value": "Q1","passcode": "123456","chance": False,"chance_game":"NO_GAME","game_id": self.game.id},
+                                {"id": self.q2.id,"value": "Q2","passcode": "123456","chance": False,"chance_game":"NO_GAME","game_id": self.game.id}
                     ],
                     "options": [{"id": self.o1.id,"value": "O1","weight": 1,"dest_question_id": self.q2.id,"source_question_id": self.q1.id},
                                 {"id": self.o2.id,"value": "O2","weight": 1,"dest_question_id": self.q2.id,"source_question_id": self.q1.id}
