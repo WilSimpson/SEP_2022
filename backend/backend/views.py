@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 from .serializers import UserSerializer
 from .models import Game, Option, Question
-from .utils import get_game_data
+from .utils import get_game_data, get_chance_game
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import RoleTokenObtainPairSerializer
@@ -54,21 +54,17 @@ class GameViewSet(ViewSet):
                 active      = game_data['active'], 
                 creator_id  = game_data['creator_id'], 
                 code        = game_data['code'])
-            
             for question in questions:
-                if 'chance_game' in question:    
-                    new_question = Question(
-                        value       = question['value'],
-                        passcode    = question['passcode'],
-                        chance      = question['chance'],
-                        chance_game = question['chance_game']
-                    )
-                else:
-                    new_question = Question(
+                try:
+                    chance_game = get_chance_game(question)
+                except Exception as e:
+                    return HttpResponse(status=400, content=e)
+                new_question = Question(
                     value       = question['value'],
                     passcode    = question['passcode'],
-                    chance      = question['chance']
-                    )
+                    chance      = question['chance'],
+                    chance_game = chance_game
+                )
                 question_label_reference[question['label']] = new_question
             for option in options:
                 new_option = Option(
