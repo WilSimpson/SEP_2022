@@ -10,11 +10,15 @@ import { User } from '../models/user.model';
 describe("<SideMenu />", () => {
     
     it ("should render the SideMenu component", () => {
+        const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
+        localStorage.setItem('user', JSON.stringify(result));
         const shallowWrapper = shallow(<SideMenu />);
         expect (shallowWrapper);
     });
     describe("Dashboard Button", () => {
         it("should have clickable dashboard button", () => {
+            const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let dashboardLink =  getByTestId('dashboard-item');
             expect(dashboardLink).toBeInTheDocument();
@@ -111,6 +115,8 @@ describe("<SideMenu />", () => {
 
     describe("Logout Button", () => {
         it("should have clickable logout button", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let logoutLink =  getByTestId('logout-item');
             expect(logoutLink).toBeInTheDocument();
@@ -121,6 +127,8 @@ describe("<SideMenu />", () => {
 
     describe("Help Button", () => {
         it("should have clickable help button", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let helpLink =  getByTestId('help-item');
             expect(helpLink).toBeInTheDocument();
@@ -128,6 +136,8 @@ describe("<SideMenu />", () => {
         });
 
         it ("should reveal 2 new buttons when clicked", () => {
+            const result = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+            localStorage.setItem('user', JSON.stringify(result));
             const { getByTestId } = render(<SideMenu />);
             let helpLink =  getByTestId('help-item');
             try {
