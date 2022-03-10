@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       max-parallel: 4
       matrix:
@@ -16,6 +16,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Install Node.js, NPM and Yarn
+      uses: actions/setup-node@v1
+      with:
+          node-version: 16
 
     - name: NPM Cache
       uses: actions/cache@v2
@@ -26,8 +31,11 @@ jobs:
     - run: npm ci
       working-directory: ./frontend
 
-    - run: npm ci
-      working-directory: ./frontend
-
     - name: Run Tests
       run: make test-frontend
+
+    - name: Generate Coverage
+      working-directory: ./frontend
+      run: |
+        npm install
+        npm run test -- --coverage --watchAll=false

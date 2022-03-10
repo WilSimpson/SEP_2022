@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       max-parallel: 4
       matrix:
@@ -25,5 +25,21 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install dependencies
+      run: |
+        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+        sudo apt-get -y update
+        sudo apt-get remove libpq5
+        sudo apt-get install libpq-dev -y
+        make install-backend
+
     - name: Run Tests
       run: make test-backend
+
+    - name: Build coverage file
+      run: |
+        cd backend
+        coverage run --source='.' manage.py test
+        coverage report > backend_coverage.txt
+        cd ..
