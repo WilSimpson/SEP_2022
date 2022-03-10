@@ -49,11 +49,11 @@ const drawerWidth = 240;
   );
 
 
-export function SideMenu () {   
-    
+export function SideMenu () {
     const [open, setOpen] = React.useState(true);
     const [gameManageOpen, setGameManageOpen] = React.useState(false);
     const [userManageOpen, setUserManageOpen] = React.useState(false);
+    const [gameSessionManageOpen, setGameSessionManageOpen] = React.useState(false);
     const [reportsOpen, setReportsOpen] = React.useState(false);
     const [helpOpen, setHelpOpen] = React.useState(false);
 
@@ -64,6 +64,9 @@ export function SideMenu () {
       const handleGameManagement = () => {
         setGameManageOpen(!gameManageOpen);
       };
+
+      const handleGameSessionManagement = () => {
+        setGameSessionManageOpen(!setGameSessionManageOpen)}
   
       const handleUserManagement = () => {
         setUserManageOpen(!userManageOpen);
@@ -89,10 +92,25 @@ export function SideMenu () {
           </ListItemButton>
     );
 
+    const gameSessionManagementItem = (
+        <div>
+            <ListItemButton
+            onClick={handleGameSessionManagement}
+            disabled={!open}
+            data-testid='game-session-manage-item'
+            >
+                <ListItemIcon>
+                <BarChartIcon />
+                </ListItemIcon>
+                <ListItemText primary="Game Sessions" />
+            </ListItemButton>
+        </div>
+    );
+
     const gameManagementItem = (
         <div>
             <ListItemButton 
-            onClick={handleGameManagement} 
+            onClick={handleGameManagement}
             disabled={!open}
             data-testid='game-manage-item'
             >
@@ -218,18 +236,21 @@ export function SideMenu () {
                         <Divider />
                         <List component="nav">
                             <div>
-                              {User.prototype.isAdmin ? 
+                              {User.prototype.isAdmin() ?
                               <React.Fragment>
                                 {dashboardItem}
                                 {gameManagementItem}
                                 {userManagementItem}
-                                {reportsItem} 
                               </React.Fragment>
                                 :
                                 <React.Fragment>
                                   {dashboardItem}
+                                  {gameSessionManagementItem}
                                 </React.Fragment>
                               }
+                              <React.Fragment>
+                              {reportsItem}
+                              </React.Fragment>
                             </div>
                             <Divider sx={{ my: 1 }} />
                             <div>

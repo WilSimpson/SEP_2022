@@ -8,6 +8,7 @@ import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
 import Login from './components/Login';
 import Knowledge from './components/knowledge';
 import AdminDash from './components/AdminDash';
+import FacultyDash from './components/FacultyDash';
 import Passcode from './components/passcode';
 import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
@@ -38,6 +39,15 @@ function App() {
                   element={
                   <ProtectedRoute>
                     <AdminDash />
+                  </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path='/faculty-dashboard'
+                  element={
+                  <ProtectedRoute>
+                    <FacultyDash />
                   </ProtectedRoute>
                   }
                 />
