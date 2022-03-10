@@ -9,6 +9,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Knowledge from './components/knowledge';
 import AdminDash from './components/AdminDash';
+import Passcode from './components/passcode';
 import ProtectedRoute from './ProtectedRoute';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -32,6 +33,7 @@ function App() {
                 <Route exact path='/login' element={<Login />} />
                 <Route exact path='/register' element={<Register />} />
                 <Route exact path='/started' element={<Knowledge />} />
+                <Route exact path='/pass' element={<Passcode data={{question:"/#", location:"SC123"}} />} />
                 <Route 
                   exact
                   path='/admin-dashboard' 
