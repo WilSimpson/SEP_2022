@@ -100,11 +100,20 @@ class Game(models.Model):
     updated_at  = AutoDateTimeField(default=timezone.now)
 
 class Question(models.Model):
+    class ChanceGame(models.TextChoices):
+        COIN_FLIP       = 'COIN_FLIP'
+        SPIN_WHEEL      = 'SPIN_WHEEL'
+        DRAW_MARBLE     = 'DRAW_MARBLE'
+        ROLL_DIE        = 'ROLL_DIE'
+        DRAW_CARD_COLOR = 'DRAW_CARD_COLOR'
+        DRAW_CARD_SUIT  = 'DRAW_CARD_SUIT'
+        NO_GAME         = 'NO_GAME'
+        
     value       = models.TextField()
     game        = models.ForeignKey(Game, on_delete= models.CASCADE)
     passcode    = models.CharField(max_length=255)
     chance      = models.BooleanField()
-    chance_game = models.CharField(max_length=50)
+    chance_game = models.CharField(max_length=50, choices=ChanceGame.choices)
     created_at  = models.DateField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
     

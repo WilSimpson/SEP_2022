@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 from .serializers import UserSerializer
 from .models import Game, Option, Question
-from .utils import get_game_data
+from .utils import get_game_data, get_chance_game
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import RoleTokenObtainPairSerializer
@@ -46,42 +46,51 @@ class GameViewSet(ViewSet):
             game_data = request.data
             questions = game_data['questions']
             options = game_data['options']
-            question_reference = {}
-            new_game = Game.objects.create(
+            question_label_reference = {}
+            option_labels = []
+            option_i = 0
+            source_q = 1
+            dest_q = 2
+            new_game = Game(
                 title       = game_data['title'], 
                 active      = game_data['active'], 
                 creator_id  = game_data['creator_id'], 
                 code        = game_data['code'])
             for question in questions:
-                new_question = Question.objects.create(
+                try:
+                    chance_game = get_chance_game(question)
+                except Exception as e:
+                    return HttpResponse(status=400, content=e)
+                new_question = Question(
                     value       = question['value'],
                     passcode    = question['passcode'],
                     chance      = question['chance'],
-                    game_id     = new_game.id
+                    chance_game = chance_game
                 )
-                question_reference[new_question.id] = question
-            print('type(options[0]):', type(options[0]))
+                question_label_reference[question['label']] = new_question
             for option in options:
-                source_label = option['source_label']
-                dest_label = option['dest_label']
-                source_question, dest_question = None, None
-                for q_id, q in question_reference.items():
-                    if q['label'] == source_label:
-                        source_question = q_id
-                    if q['label'] == dest_label:
-                        dest_question = q_id 
-                    if (source_question != None) and (dest_question != None):
-                        break
-                Option.objects.create(
+                new_option = Option(
                     value               = option['value'],
-                    weight              = option['weight'],
-                    dest_question_id    = dest_question,
-                    source_question_id  = source_question
+                    weight              = option['weight']
                 )
+                option_labels.append([new_option, option['source_label'], option['dest_label']])
+            new_game.save()
+            
+            for label, question in question_label_reference.items():
+                question.game_id = new_game.id
+                question.save()
+            
+            for new_option in option_labels:
+                option_obj = new_option[option_i]
+                for q_label, q in question_label_reference.items():
+                    if q_label == new_option[source_q]:
+                        option_obj.source_question_id = q.id
+                    if q_label == new_option[dest_q]:
+                        option_obj.dest_question_id = q.id
+                option_obj.save()
+                    
             return Response()
         except Exception as e:
-            print(f"Unexpected {e=}, {type(e)=}")
-            traceback.print_exc()
             return HttpResponse(status=501)
     
     def get(self, request, pk=None):
@@ -97,26 +106,31 @@ class GameViewSet(ViewSet):
                 game_data = request.data
                 questions = game_data['questions']
                 options = game_data['options']
-                Game.objects.filter(id=pk).update(
-                    title       = game_data['title'],
-                    active      = game_data['active'],
-                    creator_id  = game_data['creator_id'],
-                    code        = game_data['code']
-                )
+                game_to_update = Game.objects.get(id=pk)
+                game_to_update.title       = game_data['title']
+                game_to_update.active      = game_data['active']
+                game_to_update.creator_id  = game_data['creator_id']
+                game_to_update.code        = game_data['code']
                 for question in questions: 
-                    Question.objects.filter(id = int(question['id'])).update(
-                        value       = question['value'],
-                        passcode    = question['passcode'],
-                        chance      = question['chance'],
-                        game_id     = question['game_id']
-                    )
+                    try:
+                        chance_game = get_chance_game(question)
+                    except Exception as e:
+                        return HttpResponse(status=400, content=e)
+                    question_to_update = Question.objects.get(id=question['id'])
+                    question_to_update.value        = question['value']
+                    question_to_update.passcode     = question['passcode']
+                    question_to_update.chance       = question['chance']
+                    question_to_update.game_id      = question['game_id']
+                    question_to_update.chance_game  = chance_game
+                    question_to_update.save()
                 for option in options:
-                    Option.objects.filter(id=option['id']).update(
-                        value               = str(option['value']),
-                        weight              = int(option['weight']),
-                        dest_question_id    = int(option['dest_question_id']),
-                        source_question_id  = int(option['source_question_id'])                    
-                    )            
+                    option_to_update = Option.objects.get(id=option['id'])
+                    option_to_update.value               = option['value']
+                    option_to_update.weight              = option['weight']
+                    option_to_update.dest_question_id    = option['dest_question_id']
+                    option_to_update.source_question_id  = option['source_question_id']   
+                    option_to_update.save() 
+                game_to_update.save()
                 return Response()
             else:
                 raise Exception

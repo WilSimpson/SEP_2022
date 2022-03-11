@@ -16,6 +16,7 @@ import AuthService from '../../services/auth.service';
 import validator from 'validator';
 import { User } from '../../models/user.model';
 import DefaultLayout from '../../components/layout/default.layout';
+import authService from '../../services/auth.service';
 
 
 export default function Login() {
@@ -47,7 +48,7 @@ export default function Login() {
     AuthService.login(email, pwd).then(
       (response) => {
         if (response.status === 200) {
-          if (User.prototype.isAdmin) {
+          if (authService.currentUser().isAdmin()) {
             window.location.href = "/admin-dashboard";
           } else {
             window.location.href = "/faculty-dashboard";

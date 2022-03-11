@@ -33,3 +33,9 @@ jobs:
 
     - name: Run Tests
       run: make test-frontend
+
+    - name: Generate Coverage
+      working-directory: ./frontend
+      run: |
+        npm install
+        npm run test -- --coverage --watchAll=false

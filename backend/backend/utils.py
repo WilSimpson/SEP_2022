@@ -1,4 +1,6 @@
 from .models import Game, Question, Option
+from django.http import HttpResponse
+
 
 def get_game_data(id):
     response_data = {}
@@ -19,9 +21,11 @@ def get_game_data(id):
         q['value'] = question.value
         q['passcode'] = question.passcode
         q['chance'] = question.chance
+        q['chance_game'] = question.chance_game
         q['game_id'] = question.game_id
         q['created_at'] = question.created_at
         q['updated_at'] = question.created_at
+        
         questions.append(q)
         all_question_options = Option.objects.filter(source_question_id=question.id).all()
         for option in all_question_options:
@@ -37,3 +41,14 @@ def get_game_data(id):
     response_data['questions'] = questions
     response_data['options'] = options
     return response_data
+
+def get_chance_game(question):
+    if 'chance_game' in question:
+        chance_game = question['chance_game']
+        games = Question.ChanceGame.choices
+        for t in games:
+            if chance_game in t:
+                return t[0]
+        raise Exception("The chance game '" + chance_game + "' does not exist.")
+    else:
+        return Question.ChanceGame.NO_GAME

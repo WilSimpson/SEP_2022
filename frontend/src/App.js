@@ -2,7 +2,7 @@ import './App.css';
 import Home from './pages/public/home';
 import StartingSurvey from './components/game/startingSurvey';
 import GameSession from './components/game/gameSession';
-import {  BrowserRouter as Router,  Routes,  Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './pages/public/Login';
 import Knowledge from './pages/public/Knowledge';
 import AdminDash from './pages/admin/AdminDash';
@@ -32,16 +32,28 @@ function App() {
               <Route exact path='/login' element={<Login />} />
               <Route exact path='/started' element={<Knowledge />} />
               <Route exact path='/logout' element={<Logout />} />
-              <Route 
+              <Route exact path='/pass' element={<Passcode data={{ question: "/#", location: "SC123" }} />} />
+              <Route
                 exact
-                path='/admin-dashboard' 
+                path='/admin-dashboard'
                 element={
-                <ProtectedRoute>
-                  <AdminDash />
-                </ProtectedRoute>
+                  <ProtectedRoute>
+                    <AdminDash />
+                  </ProtectedRoute>
                 }
               />
-              <Route exact path='/admin-dashboard/games' 
+
+              <Route
+                exact
+                path='/faculty-dashboard'
+                element={
+                  <ProtectedRoute>
+                    <FacultyDash />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route exact path='/admin-dashboard/games'
                 element={
                   <ProtectedRoute>
                     <ViewGamesPage />
@@ -49,14 +61,14 @@ function App() {
                 }
               />
 
-              <Route exact path='/admin-dashboard/games/new' 
+              <Route exact path='/admin-dashboard/games/new'
                 element={
                   <ProtectedRoute>
                     <CreateGamePage />
                   </ProtectedRoute>
                 }
               />
-              <Route path='/admin-dashboard/games/:id' 
+              <Route path='/admin-dashboard/games/:id'
                 element={
                   <ProtectedRoute>
                     <EditGamePage />
@@ -67,7 +79,7 @@ function App() {
           </PersistGate>
         </Provider>
       </Router>
-    </div>
+    </div >
   );
 }
 
