@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import Home from './pages/public/home';
 import StartingSurvey from './components/game/startingSurvey';
@@ -15,6 +16,8 @@ import ViewGamesPage from './pages/admin/games/ViewGames';
 import EditGamePage from './pages/admin/games/EditGame';
 import {createBrowserHistory} from 'history';
 import Logout from './pages/public/logout';
+import FacultyDash from './pages/faculty/FacultyDash';
+import Passcode from './pages/game/passcode';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
