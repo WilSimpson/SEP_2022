@@ -230,6 +230,8 @@ def start_session(request):
         base_game = Game.objects.get(id=int(request.data['id']))
     except Exception:
         return HttpResponseServerError('You cannot create a session for a game that does not exist.')
+    if not base_game.active:
+        return HttpResponseServerError('You can only create sessions for active games.')
     try:
         req_creator_id = request.data['creator_id']
         req_notes = request.data['notes']

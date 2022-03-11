@@ -475,6 +475,7 @@ class GameViewSetTestCase(TestCase):
 class SessionViewTestCase(TestCase):
     def setUp(self):
         self.game = Game.objects.create(title='test', creator_id=999, code=999999, active=True)
+        self.inactive_game = Game.objects.create(title='testInactive', creator_id=999, code=999998, active=False)
 
     def test_valid_session_start(self):
         data = {
@@ -491,9 +492,6 @@ class SessionViewTestCase(TestCase):
         data = {
             'id': self.game.id,
         }
-        print("START-------")
-        print(data)
-
         resp = self.client.post('/api/games/startSession/', data=data)
         self.assertEqual(resp.status_code, 500)
 
@@ -501,6 +499,17 @@ class SessionViewTestCase(TestCase):
         data = {
             'creator_id': 1,
             'id': 9999999,
+            'notes': "This is a test note",
+            'timeout': 5
+        }
+
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 500)
+
+    def test_session_start_inactive_game(self):
+        data = {
+            'creator_id': 1,
+            'id': self.inactive_game.id,
             'notes': "This is a test note",
             'timeout': 5
         }
