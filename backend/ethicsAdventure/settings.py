@@ -17,7 +17,6 @@ from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 from datetime import timedelta
 
-
 def get_env(var):
     try:
         return os.environ[var]
@@ -172,6 +171,7 @@ STATIC_ROOT = BASE_DIR / 'django-static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 # Subsitute custom User model
 AUTH_USER_MODEL = 'backend.User'

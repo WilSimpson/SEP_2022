@@ -124,3 +124,24 @@ class Option(models.Model):
     dest_question   = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='destination')
     created_at      = models.DateField(default=timezone.now)
     updated_at      = AutoDateTimeField(default=timezone.now)
+
+class GameSession(models.Model):
+    creator_id  = models.IntegerField()
+    game = models.ForeignKey(Game, on_delete= models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(blank=True, null=True)
+    notes = models.TextField()
+    timeout = models.IntegerField()
+    code = models.IntegerField(validators=[MinValueValidator(0),
+                                MaxValueValidator(999999)], default=0)
+
+class GameMode(models.Model):
+    name = models.CharField(max_length=20)
+
+class Team(models.Model):
+    game_session = models.ForeignKey(GameSession, on_delete= models.CASCADE)
+    game_mode = models.ForeignKey(GameMode, on_delete=models.CASCADE)
+    guest = models.BooleanField(default=True)
+    size = models.IntegerField()
+    first_time = models.BooleanField()
+    completed = models.BooleanField()

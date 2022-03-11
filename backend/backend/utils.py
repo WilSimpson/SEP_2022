@@ -1,5 +1,6 @@
 from .models import Game, Question, Option
 from django.http import HttpResponse
+from random import randint
 
 
 def get_game_data(id):
@@ -42,6 +43,16 @@ def get_game_data(id):
     response_data['options'] = options
     return response_data
 
+
+def unique_random(low, high, exclude):
+    '''Low -- lower bound
+    High -- upper bound
+    Exclude -- A list of numbers which should not be returned'''
+    exclude = set(exclude)
+    rand_int = randint(low,high)
+    return unique_random() if rand_int in exclude else rand_int
+
+ 
 def get_chance_game(question):
     if 'chance_game' in question:
         chance_game = question['chance_game']
@@ -52,3 +63,4 @@ def get_chance_game(question):
         raise Exception("The chance game '" + chance_game + "' does not exist.")
     else:
         return Question.ChanceGame.NO_GAME
+
