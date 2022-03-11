@@ -326,7 +326,10 @@ class GameViewSetTestCase(TestCase):
     def test_get_valid_game(self):
         resp = self.client.get('/api/games/'+str(self.game.id)+'/')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(resp.data, self.data)
+        self.assertEqual(resp.data['title'], self.data['title'])
+        self.assertEqual(resp.data['code'], self.data['code'])
+        self.assertEqual(resp.data['creator_id'], self.data['creator_id'])
+        self.assertIsNotNone(resp.data['id'])
         
     def test_get_invalid_game(self):
         resp = self.client.get('/api/games/'+str(self.game.id + 1)+'/')
@@ -352,7 +355,8 @@ class GameViewSetTestCase(TestCase):
     def test_get_all_games(self):
         resp = self.client.get('/api/games/')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(resp.data, [self.data])
+        self.assertEqual(len(resp.data), 1)
+        self.assertEqual(resp.data[0]['title'], self.data['title'])
     
     def test_get_all_games_empty(self):
         Game.objects.filter(id=self.game.id).delete()
