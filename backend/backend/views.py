@@ -209,3 +209,27 @@ class GameViewSet(ViewSet):
             return Response()
         except Exception as e:
             return HttpResponse(status=501)
+
+class GameSessionAnswerViewSet(ViewSet):
+    def create(self, request):
+        try:
+            answer_data = request.data
+            try: 
+                option = Option.objects.get(id=answer_data["option_id"])
+                question = Question.objects.get(id=option.source_question_id)
+            except Exception as e:
+                return HttpResponse(status=400, content="This option does not exist.")
+            try: 
+                team = Team.objects.get(id=answer_data["team_id"])
+            except Exception as e:
+                return HttpResponse(status=400, content="This team does not exist.")
+            answer = GameSessionAnswer(
+                team = team,
+                question_id = question.id,
+                option_chosen_id = option.id
+            )
+            answer.save()
+            return Response()
+        except Exception as e:
+            print (e)
+            return HttpResponse(status=500)
