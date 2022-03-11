@@ -15,6 +15,9 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { Typography } from '@mui/material';
+import GameService from '../services/gameServices'
+import Alert from '@mui/material/Alert';
 
 export default function StartingSurvey() {
 
@@ -23,6 +26,7 @@ export default function StartingSurvey() {
     size: 1,
     first: "",
     type: "",
+    guest: "",
   };
 
     //a null gamecode will not allow page to load
@@ -30,6 +34,7 @@ export default function StartingSurvey() {
 
     const [formValues, setFormValues] = useState(defaultValues);
     const [submitDisabled, setSubmitDisabled] = useState(true);
+    const [err, setErr] = useState("");
 
     const handleInputChange = (e) => {
       const { name, value } = e.target;
@@ -51,35 +56,34 @@ export default function StartingSurvey() {
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      console.log(formValues);
-      let path = `../gameSession`; 
-      navigate(path, {
-          state: {
-              //Carries the gameCode with the state
-              code: state ? state.code : 'DEV###',
-              //Initialize state with the response parsed as an array of questions
-              game: state ? state.game : [
-                    {
-                      "id": '1',
-                      'text': "This is an example question for development",
-                      "password": "psw",
-                      "onlyChance": false,
-                      "options": [
-                          {
-                          "text": "Option 1",
-                          "link": "1a"
-                            },
-                            {
-                                "text": "Option 2",
-                                "link": "1b"
-                            }
-                        ],
-                    }
-                ],
-              //Carry the form data forward
-              formData: formValues,
-          }
-      });
+      GameService.sendTeamInit(state.game.id, formValues.type, false, formValues.size, formValues.first).then(
+        (response) => {
+            console.log(response)
+            let path = `../gameSession`; 
+            navigate(path, {
+                state: {
+                    //Carries the gameCode with the state
+                    code: state.code,
+                    //Initialize state with the response parsed as an array of questions
+                    game: state.game,
+                    //Carry the form data forward
+                    formData: formValues,
+                    team_id: response['id'],
+                }
+            });
+        },
+        (error) => {
+            if (error.resonse && error.response.status === 404) {
+                setErr('There was an unexpected error reaching the server. Please try again later.');
+            } else {
+                if (error.response && error.response.status === 500) {
+                    setErr(error.resonse.data);
+                } else {
+                  setErr("The server is unreachable at this time. Please try again later.");
+                }
+            }
+        }
+    );
     };
 
   return (
@@ -97,6 +101,10 @@ export default function StartingSurvey() {
           mb: 3,
         }}
       >
+  <Typography> {`Game Title: ${state ? state.game.title : "Game is NULL"}`} </Typography>
+  <Box sx={{pb:2}}>
+                { err && <Alert severity="error">{err}</Alert> }
+            </Box>
   <form onSubmit={handleSubmit}>
     <Grid container alignItems="center" justifyContent="center" direction="column">
       <Grid item>
@@ -145,6 +153,34 @@ export default function StartingSurvey() {
       <Grid item>
       <Box sx={{pb:2}}>
         <FormControl>
+          <FormLabel>Are you a guest in this building?</FormLabel>
+          <RadioGroup
+            name="guest"
+            defaultValue="yes"
+            value={formValues.guest}
+            onChange={handleInputChange}
+            row
+          >
+            <FormControlLabel
+              key="yes"
+              value="yes"
+              control={<Radio size="small" />}
+              label="Yes"
+              selected
+            />
+            <FormControlLabel
+              key="no"
+              value="no"
+              control={<Radio size="small" />}
+              label="No"
+            />
+          </RadioGroup>
+        </FormControl>
+        </Box>
+      </Grid>
+      <Grid item>
+      <Box sx={{pb:2}}>
+        <FormControl>
         <FormLabel>Which version of the game would you like to play?</FormLabel>
           <Select
             name="type"
@@ -152,13 +188,13 @@ export default function StartingSurvey() {
             onChange={handleInputChange}
             required
           >
-            <MenuItem key="walk" value="walk">
+            <MenuItem key="Walking" value="Walking">
               Walking
             </MenuItem>
-            <MenuItem key="limited" value="limited">
+            <MenuItem key="Limited Walking" value="Limited Walking">
               Limited Walking
             </MenuItem>
-            <MenuItem key="none" value="none">
+            <MenuItem key="No Walking" value="No Walking">
               No Walking
             </MenuItem>
           </Select>
