@@ -46,7 +46,7 @@ export default function StartingSurvey() {
       return true;
     })
     };
-
+    
     let navigate = useNavigate();
 
     const handleSubmit = (event) => {

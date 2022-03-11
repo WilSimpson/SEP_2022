@@ -7,6 +7,16 @@ import { User } from '../models/user.model';
 
 const {persistor, store, API_URL} = configureStore();
 
+
+export function authHeader() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.accessToken) {
+        return { Authorization: 'Bearer ' + user.token.access };
+    } else {
+        return {};
+    }
+}
+
 class AuthService {
     login(email, password) {
         return axios.post(API_URL + 'api/token/', {

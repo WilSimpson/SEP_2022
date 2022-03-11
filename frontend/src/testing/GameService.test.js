@@ -1,5 +1,5 @@
 import '../setupTests';
-import GamePlayService from '../services/gameplay.services';
+import gamePlayService from '../services/gameplay.service';
 import axios from 'axios';
 
 jest.mock('axios');
@@ -33,7 +33,7 @@ describe('GameService', () => {
                 }
              axios.post.mockResolvedValue(response);
  
-             const result = GamePlayService.joinGame('555555');
+             const result = gamePlayService.joinGame('555555');
              expect(result).toEqual(Promise.resolve(response));
         });
  
@@ -46,7 +46,7 @@ describe('GameService', () => {
          }
          axios.post.mockResolvedValue(response);
  
-         const result = await GamePlayService.joinGame('555555');
+         const result = await gamePlayService.joinGame('555555');
          expect(result).toEqual(undefined);
     });
     });

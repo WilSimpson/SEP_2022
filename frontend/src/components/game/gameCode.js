@@ -7,7 +7,7 @@ import { TextField } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from "react-router-dom";
-import GameService from '../../services/gameplay.services';
+import gamePlayService from '../../services/gameplay.service';
 import { LinearProgress } from '@mui/material';
 
 const styles = {
@@ -46,7 +46,7 @@ const styles = {
          if (re.test(code)) {
             //Do the thing with game service
             this.setState({errMsg: ""});
-            GameService.joinGame(code).then(
+            gamePlayService.joinGame(code).then(
                 (response) => {
                     if (response.status === 200) {
                         let path = `startingSurvey`; 

@@ -20,7 +20,10 @@ describe("<ResponsiveAppBar />", () => {
         act(() => {
             render(<ResponsiveAppBar />, container);
         });
-        expect(container.textContent).toBe("Get StartedAboutHelp");
+        expect(container.textContent).toContain("Get Started");
+        expect(container.textContent).toContain("About");
+        expect(container.textContent).toContain("Help");
+        expect(container.textContent).toContain("Login");
     });
 
     it("Should have some children nodes", () => {
@@ -38,6 +41,9 @@ describe("<ResponsiveAppBar />", () => {
         act(() => {
             profileButton.dispatchEvent(new MouseEvent("click", {bubbles:true}));
         });
-        expect(container.textContent).toBe("Get StartedAboutHelp");
+        expect(container.textContent).toContain("Get Started");
+        expect(container.textContent).toContain("About");
+        expect(container.textContent).toContain("Help");
+        expect(container.textContent).toContain("Login");
     });
 });

@@ -236,7 +236,6 @@ export function SideMenu(props) {
         </Toolbar>
         <Divider />
         <List component="nav">
-          <div>
             {User.prototype.isAdmin ?
               <React.Fragment>
                 {dashboardItem}
@@ -248,12 +247,9 @@ export function SideMenu(props) {
               <React.Fragment>
                 {dashboardItem}
                 {gameSessionManagementItem}
+                {reportsItem}
               </React.Fragment>
             }
-            <React.Fragment>
-              {reportsItem}
-            </React.Fragment>
-          </div>
           <Divider sx={{ my: 1 }} />
           <div>
             {logoutItem}

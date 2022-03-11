@@ -82,7 +82,7 @@ export default function Login() {
         <Typography component='h1' variant='h5'>
           Sign in
         </Typography>
-        <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }} data-testid="submit-form">
           {errMsg && <Alert severity="error" ref={errRef} data-testid='err-msg'>{errMsg}</Alert>}
           <TextField
             margin='normal'

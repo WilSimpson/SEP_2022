@@ -7,7 +7,7 @@ const initialState = {
   authenticated: false
 };
 
-const API_URL = 'http://localhost:8000/';
+export const API_URL = 'http://localhost:8000/';
 
 const createNoopStorage = () => {
   return {

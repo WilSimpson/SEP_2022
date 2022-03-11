@@ -11,10 +11,10 @@ export default function GamesTable(props) {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(5);
   const [confirmationDeleteID, setConfirmationDeleteID] = React.useState(null)
-  const [games, setGames] = React.useState(props.data)
+  const [games, setGames] = React.useState(props.data || [])
   const navigate = useNavigate();
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * pageSize - props.data.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * pageSize - games.length) : 0;
 
   const handleChangePageSize = (event) => {
     setPageSize(event.target.value);
@@ -68,7 +68,7 @@ export default function GamesTable(props) {
           disablePortal
           freeSolo
           id="game-search"
-          options={props.data.map((game) => game.title)}
+          options={games.map((game) => game.title)}
           renderInput={(params) => <TextField {...params} label="Find Game" />}
           onChange={(event, selected) => { window.location.href = `/admin-dashboard/games/${selected.id}` }}
         />
@@ -131,7 +131,7 @@ export default function GamesTable(props) {
                 <TablePagination
                   rowsPerPageOptions={[5, 15, 30, { label: 'All', value: -1 }]}
                   colSpan={3}
-                  count={props.data.length}
+                  count={games.length}
                   rowsPerPage={pageSize}
                   page={page}
                   SelectProps={{

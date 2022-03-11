@@ -25,6 +25,6 @@ describe("<Home />", () => {
                 </Routes>
             </BrowserRouter>, container);
         });
-        expect(container.textContent).toBe("To join a game, enter your 6-digit game code:Game CodeGame CodeJoin Game");
+        expect(container.textContent).toContain("To join a game, enter your 6-digit game code");
     });
 });
