@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('backend', '0004_rename_game_id_question_game'),
+        ('backend', '0005_game_created_at_game_updated_at_option_created_at_and_more'),
     ]
 
     operations = [
