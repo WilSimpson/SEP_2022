@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 
 from .models import Game, Option, Question
-from .utils import get_game_data
+from .utils import *
 
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
@@ -26,6 +26,7 @@ from rest_framework.response import Response
 
 import json
 from datetime import datetime
+from random import randint
 
 
 class UserViewSet(GenericViewSet,
@@ -207,18 +208,43 @@ def toggle_active(request):
     '''Expects an ID of the game from the frontend
         returns -- an HTTP status:
                                     200 -- The game was activated
-                                    501 -- The game does not exist
-                                    502 -- The game is already active
-                                    503 -- There was a different problem'''
+                                    500 -- There was a problem toggling the game'''
     try:
         try:
             game = Game.objects.get(id=int(request.data['id']))
         except Exception as e:
-            return HttpResponse(status=501)
-        if game.active:
-            return HttpResponse(status=502)
-        game.active = True
+            return HttpResponseServerError('This game does not exist.')
+        game.active = not game.active
         game.save()
         return HttpResponse(status=200)
     except Exception as e:
-        return HttpResponse(status=503)
+        return HttpResponseServerError('Could not update game state.')
+
+
+@api_view(['POST'])
+def start_session(request):
+    '''Expects a game id, creator_id, notes, and a timeout(minutes)
+        Returns -- A game session id and gamecode (status 200) on success
+        Error -- Returns an error message (status 500)'''
+    try:
+        base_game = Game.objects.get(id=int(request.data['id']))
+    except Exception:
+        return HttpResponseServerError('You cannot create a session for a game that does not exist.')
+    try:
+        req_creator_id = request.data['creator_id']
+        req_notes = request.data['notes']
+        req_timeout = int(request.data['timeout'])
+        sessions = GameSession.objects.all()
+        new_session = GameSession.objects.create(
+            creator_id  = req_creator_id,
+            game = base_game,
+            start_time = datetime.now(),
+            end_time = None,
+            notes = req_notes,
+            timeout = req_timeout,
+            code = unique_random(0, 999999, [session.code for session in sessions])
+        )
+        return Response(data={'id':new_session.id, 'code':new_session.code}, status=200)
+    except Exception:
+        return HttpResponseServerError('There was a problem creating this session.')
+    

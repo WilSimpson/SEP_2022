@@ -470,3 +470,55 @@ class GameViewSetTestCase(TestCase):
     def test_update_invalid_game(self):
         resp = self.client.put('/api/games/'+str(0)+'/', self.data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+
+
+class SessionViewTestCase(TestCase):
+    def setUp(self):
+        self.game = Game.objects.create(title='test', creator_id=999, code=999999, active=True)
+
+    def test_valid_session_start(self):
+        data = {
+            'creator_id': 1,
+            'id': self.game.id,
+            'notes': "This is a test note",
+            'timeout': 5
+        }
+
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_invalid_session_start(self):
+        data = {
+            'id': self.game.id,
+        }
+        print("START-------")
+        print(data)
+
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 500)
+
+    def test_session_start_no_game(self):
+        data = {
+            'creator_id': 1,
+            'id': 9999999,
+            'notes': "This is a test note",
+            'timeout': 5
+        }
+
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 500)
+
+    def test_toggle_valid(self):
+        state = self.game.active
+        data = {
+            'id': self.game.id
+        }
+        resp = self.client.post('/api/games/toggleActive/', data=data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_toggle_invalid(self):
+        data = {
+            'id': 9999999
+        }
+        resp = self.client.post('/api/games/toggleActive/', data=data)
+        self.assertEqual(resp.status_code, 500)
