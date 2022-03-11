@@ -1,10 +1,10 @@
-import { createStore } from "redux";
-import { persistStore, persistReducer } from 'redux-persist';
+import {createStore} from 'redux';
+import {persistStore, persistReducer} from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
-import { LOGIN_USER, LOGOUT_USER } from "./types";
+import {LOGIN_USER, LOGOUT_USER} from './types';
 
 const initialState = {
-  authenticated: false
+  authenticated: false,
 };
 
 export const API_URL = 'http://localhost:8000/';
@@ -23,20 +23,23 @@ const createNoopStorage = () => {
   };
 };
 
-const storage = typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
+const storage =
+  typeof window !== 'undefined' ?
+    createWebStorage('local') :
+    createNoopStorage();
 
 const persistConfig = {
   key: 'root',
   storage,
-}
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_USER:
-      return { ...state, authenticated: true };
+      return {...state, authenticated: true};
 
     case LOGOUT_USER:
-      return { ...state, authenticated: false};
+      return {...state, authenticated: false};
 
     default:
       return state;
@@ -46,7 +49,7 @@ const reducer = (state = initialState, action) => {
 const persistedReducer = persistReducer(persistConfig, reducer);
 
 export default function configureStore() {
-  let store = createStore(persistedReducer)
-  let persistor = persistStore(store)
-  return { store, persistor, API_URL }
+  const store = createStore(persistedReducer);
+  const persistor = persistStore(store);
+  return {store, persistor, API_URL};
 }

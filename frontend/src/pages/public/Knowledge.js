@@ -10,7 +10,7 @@ import DefaultLayout from '../../components/layout/default.layout';
 export default function Knowledge() {
   return (
     <DefaultLayout>
-      <Container maxWidth='xl'>
+      <Container maxWidth="xl">
         <Box
           sx={{
             pt: 0,
@@ -21,25 +21,60 @@ export default function Knowledge() {
           }}
         >
           <Container maxWidth="sm">
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              How to play a game: 
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
+              How to play a game:
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
               1.) Scan a QR code given to you by the game host
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
               2.) Enter the asked for info
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
               3.) Answer the question
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
               4.) Read the Result
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
               5.) Proceed to given location and enter code if necessary
             </Typography>
-            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
               6.) Repeat until game is over
             </Typography>
           </Container>

@@ -1,9 +1,9 @@
-import { gameSessions } from "../helpers/DummyData";
+import {gameSessions} from '../helpers/DummyData';
 
 class GameSessionService {
   getGameSessions() {
-    //@TODO: Replace with api calls
-    return gameSessions
+    // @TODO: Replace with api calls
+    return gameSessions;
   }
 }
 

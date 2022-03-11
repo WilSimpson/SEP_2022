@@ -1,22 +1,28 @@
 import * as React from 'react';
-import { SideMenu } from '../../components/layout/SideMenu';
-import { Box, Button, ThemeProvider, StyledEngineProvider, Tooltip } from '@mui/material';
-import { Toolbar } from '@mui/material';
-import { Container } from '@mui/material';
-import { Grid } from '@mui/material';
-import { Paper } from '@mui/material';
-import { Typography } from '@mui/material';
-import { Link } from '@mui/material';
-import { Table } from '@mui/material';
-import { IconButton } from '@mui/material';
+import {SideMenu} from '../../components/layout/SideMenu';
+import {
+  Box,
+  Button,
+  ThemeProvider,
+  StyledEngineProvider,
+  Tooltip,
+} from '@mui/material';
+import {Toolbar} from '@mui/material';
+import {Container} from '@mui/material';
+import {Grid} from '@mui/material';
+import {Paper} from '@mui/material';
+import {Typography} from '@mui/material';
+import {Link} from '@mui/material';
+import {Table} from '@mui/material';
+import {IconButton} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import { TableHead, TableRow, TableCell, TableBody, } from '@mui/material';
-import { gameSessions, Games } from '../../helpers/DummyData';
-import gameService from '../../services/game.service'
+import {TableHead, TableRow, TableCell, TableBody} from '@mui/material';
+import {gameSessions, Games} from '../../helpers/DummyData';
+import gameService from '../../services/game.service';
 import GamesTable from '../../components/admin/GamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import Loading from '../../components/layout/loading';
-import { alertService, alertSeverity } from '../../services/alert.service';
+import {alertService, alertSeverity} from '../../services/alert.service';
 
 export function GameSessionTable() {
   return (
@@ -24,7 +30,7 @@ export function GameSessionTable() {
       <Typography component="h2" variant="h6" gutterBottom>
         Active Game Sessions
       </Typography>
-      <Table size="small" data-testid='active-game-sessions'>
+      <Table size="small" data-testid="active-game-sessions">
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
@@ -39,8 +45,10 @@ export function GameSessionTable() {
           {gameSessions.map((row) => (
             <TableRow key={row.id}>
               <TableCell>
-                <Tooltip title='Download QR Code'>
-                  <IconButton size="large"><DownloadIcon /></IconButton>
+                <Tooltip title="Download QR Code">
+                  <IconButton size="large">
+                    <DownloadIcon />
+                  </IconButton>
                 </Tooltip>
               </TableCell>
               <TableCell>{row.name}</TableCell>
@@ -58,30 +66,28 @@ export function GameSessionTable() {
   );
 }
 
-
 export default function AdminDash() {
-  const [games, setGames] = React.useState([])
-  const [loading, setLoading] = React.useState(true)
+  const [games, setGames] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     async function getGames() {
       const resp = await gameService.getGames().catch((error) => {
-        alertService.alert({ severity: alertSeverity.error, message: error })
+        alertService.alert({severity: alertSeverity.error, message: error});
       });
-      const games = [...resp.data]
-      setGames(games)
-      setLoading(false)
+      const games = [...resp.data];
+      setGames(games);
+      setLoading(false);
     }
     getGames();
-  }, [])
-
+  }, []);
 
   return (
     <AuthenticatedLayout>
       <Loading loading={loading}>
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9} >
+            <Grid item xs={12} md={8} lg={9}>
               <Paper
                 elevation={7}
                 sx={{
@@ -96,7 +102,7 @@ export default function AdminDash() {
             <Grid item xs={12} md={4} lg={3}>
               <Paper
                 elevation={7}
-                data-testid='total-games'
+                data-testid="total-games"
                 sx={{
                   p: 2,
                   display: 'flex',
@@ -105,7 +111,12 @@ export default function AdminDash() {
                 }}
               >
                 <React.Fragment>
-                  <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                  <Typography
+                    component="h2"
+                    variant="h6"
+                    color="primary"
+                    gutterBottom
+                  >
                     Total Games
                   </Typography>
                   <Typography component="p" variant="h4">
@@ -120,14 +131,16 @@ export default function AdminDash() {
               </Paper>
             </Grid>
             <Grid item xs={12}>
-              <Paper elevation={7} sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+              <Paper
+                elevation={7}
+                sx={{p: 2, display: 'flex', flexDirection: 'column'}}
+              >
                 <GameSessionTable />
               </Paper>
             </Grid>
           </Grid>
         </Container>
       </Loading>
-
     </AuthenticatedLayout>
   );
 }

@@ -1,11 +1,10 @@
-import { CssBaseline, Grid } from "@mui/material";
-import { alertService, alertSeverity } from "../../services/alert.service";
-import { PageAlert } from "./alert";
-import ResponsiveAppBar from "./nav"
+import {CssBaseline, Grid} from '@mui/material';
+import {alertService, alertSeverity} from '../../services/alert.service';
+import {PageAlert} from './alert';
+import ResponsiveAppBar from './nav';
 import StickyFooter from './stickyFooter';
 
 export default function DefaultLayout(props) {
-  
   return (
     <>
       <CssBaseline />
@@ -16,9 +15,9 @@ export default function DefaultLayout(props) {
             <PageAlert />
           </Grid>
         </Grid>
-          {props.children}
+        {props.children}
       </main>
       <StickyFooter />
     </>
-  );  
+  );
 }

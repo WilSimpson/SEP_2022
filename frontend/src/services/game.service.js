@@ -1,15 +1,15 @@
-import axios from "axios";
-import configureStore from "../store/store";
+import axios from 'axios';
+import configureStore from '../store/store';
 
-const { persistor, store, API_URL } = configureStore();
+const {persistor, store, API_URL} = configureStore();
 
 class GameService {
   getGames() {
-    return axios.get(API_URL + 'api/games/')
+    return axios.get(API_URL + 'api/games/');
   }
 
   getGame(id) {
-    return axios.get(`${API_URL}api/games/${id}/`)
+    return axios.get(`${API_URL}api/games/${id}/`);
   }
 
   createGame(title, active, creator_id, code, questionsJSON, optionsJSON) {
@@ -19,8 +19,8 @@ class GameService {
       questions: JSON.parse(questionsJSON),
       code: code,
       creator_id: parseInt(creator_id),
-      options: JSON.parse(optionsJSON)
-    })
+      options: JSON.parse(optionsJSON),
+    });
   }
 
   updateGame(id, title, active, creator_id, code, questionsJSON, optionsJSON) {
@@ -30,8 +30,8 @@ class GameService {
       questions: JSON.parse(questionsJSON),
       code: parseInt(code),
       creator_id: parseInt(creator_id),
-      options: JSON.parse(optionsJSON)
-    })
+      options: JSON.parse(optionsJSON),
+    });
   }
 
   deleteGame(id) {

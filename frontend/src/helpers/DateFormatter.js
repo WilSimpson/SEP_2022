@@ -10,20 +10,14 @@ const months = [
   'September',
   'October',
   'November',
-  'December'
-]
+  'December',
+];
 
-const days = [
-  'Sun',
-  'Mon',
-  'Tue',
-  'Wed',
-  'Thu',
-  'Fri',
-  'Sat'
-]
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export function formatDate(date) {
   const d = new Date(date);
-  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  return `${days[d.getDay()]}, ${
+    months[d.getMonth()]
+  } ${d.getDate()}, ${d.getFullYear()}`;
 }

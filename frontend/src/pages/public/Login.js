@@ -1,7 +1,7 @@
 import React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import LockOutlinedIcon from '@mui/icons-material/AccountCircle';
-import { StyledEngineProvider } from '@mui/material/styles';
+import {StyledEngineProvider} from '@mui/material/styles';
 import {
   Alert,
   Avatar,
@@ -10,14 +10,13 @@ import {
   Container,
   CssBaseline,
   TextField,
-  Typography
-} from '@mui/material'
+  Typography,
+} from '@mui/material';
 import AuthService from '../../services/auth.service';
 import validator from 'validator';
-import { User } from '../../models/user.model';
+import {User} from '../../models/user.model';
 import DefaultLayout from '../../components/layout/default.layout';
 import authService from '../../services/auth.service';
-
 
 export default function Login() {
   const userRef = useRef();
@@ -31,7 +30,7 @@ export default function Login() {
 
   useEffect(() => {
     userRef.current.focus();
-  }, [])
+  }, []);
 
   useEffect(() => {
     setErrMsg('');
@@ -40,32 +39,34 @@ export default function Login() {
     } else {
       setDisableSubmit(true);
     }
-  }, [email, pwd])
+  }, [email, pwd]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrMsg('');
     AuthService.login(email, pwd).then(
-      (response) => {
-        if (response.status === 200) {
-          if (authService.currentUser().isAdmin()) {
-            window.location.href = "/admin-dashboard";
+        (response) => {
+          if (response.status === 200) {
+            if (authService.currentUser().isAdmin()) {
+              window.location.href = '/admin-dashboard';
+            } else {
+              window.location.href = '/faculty-dashboard';
+            }
           } else {
-            window.location.href = "/faculty-dashboard";
+            setErrMsg(
+                'There was an issue handling your login. Please try again later.',
+            );
           }
-        } else {
-          setErrMsg('There was an issue handling your login. Please try again later.');
-        }
-      },
-      (error) => {
-        if (error.response.status === 401) {
-          setErrMsg(error.response.data.detail);
-        } else {
-          setErrMsg('There was an unexpected error. Please try again later.');
-        }
-      }
+        },
+        (error) => {
+          if (error.response.status === 401) {
+            setErrMsg(error.response.data.detail);
+          } else {
+            setErrMsg('There was an unexpected error. Please try again later.');
+          }
+        },
     );
-  }
+  };
 
   return (
     <DefaultLayout>
@@ -75,51 +76,62 @@ export default function Login() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-        }}>
-        <Avatar sx={{ m: 1, bgcolor: 'blue' }}>
+        }}
+      >
+        <Avatar sx={{m: 1, bgcolor: 'blue'}}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component='h1' variant='h5'>
+        <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }} data-testid="submit-form">
-          {errMsg && <Alert severity="error" ref={errRef} data-testid='err-msg'>{errMsg}</Alert>}
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{mt: 1}}
+          data-testid="submit-form"
+        >
+          {errMsg && (
+            <Alert severity="error" ref={errRef} data-testid="err-msg">
+              {errMsg}
+            </Alert>
+          )}
           <TextField
-            margin='normal'
+            margin="normal"
             required
             fullWidth
-            id='email'
-            label='Email Address'
-            name='email'
+            id="email"
+            label="Email Address"
+            name="email"
             value={email}
-            autoComplete='email'
+            autoComplete="email"
             autoFocus
             ref={userRef}
             onChange={(e) => setEmail(e.target.value)}
-            inputProps={{ 'data-testid': 'email-input' }}
+            inputProps={{'data-testid': 'email-input'}}
           />
           <TextField
-            margin='normal'
+            margin="normal"
             required
             fullWidth
-            name='password'
-            label='Password'
-            type='password'
-            id='password'
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
             value={pwd}
-            autoComplete='current-password'
+            autoComplete="current-password"
             onChange={(e) => setPwd(e.target.value)}
-            inputProps={{ 'data-testid': 'pass-input' }}
+            inputProps={{'data-testid': 'pass-input'}}
           />
           <Button
-            type='submit'
-            id='submit-button'
+            type="submit"
+            id="submit-button"
             fullWidth
-            variant='contained'
-            sx={{ mt: 3, mb: 2 }}
+            variant="contained"
+            sx={{mt: 3, mb: 2}}
             disabled={disableSubmit}
-            data-testid='submit-button'
-            color='secondary'
+            data-testid="submit-button"
+            color="secondary"
           >
             Sign In
           </Button>

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useContext, useEffect, useRef, useState} from 'react';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {
-    Alert,
-    Avatar,
-    Box,
-    Button,
-    Container,
-    CssBaseline,
-    TextField,
-    Typography
-} from '@mui/material'
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  TextField,
+  Typography,
+} from '@mui/material';
 import AuthService from '../../services/auth.service';
 import validator from 'validator';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -24,55 +24,52 @@ import MenuItem from '@mui/material/MenuItem';
 
 const theme = createTheme();
 
-
 export default function Register() {
-    const userRef = useRef();
-    const errRef = useRef();
+  const userRef = useRef();
+  const errRef = useRef();
 
-    // State elements
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [first, setFirst] = useState('');
-    const [last, setLast] = useState('');
-    const [role, setRole] = useState('');
-    const [errMsg, setErrMsg] = useState('');
-    const [disableSubmit, setDisableSubmit] = useState(true);
+  // State elements
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [first, setFirst] = useState('');
+  const [last, setLast] = useState('');
+  const [role, setRole] = useState('');
+  const [errMsg, setErrMsg] = useState('');
+  const [disableSubmit, setDisableSubmit] = useState(true);
 
-
-
-    useEffect(() => {
-        setErrMsg('');
-        if (validator.isEmail(email) && password.length >= 6) {
-            setDisableSubmit(false);
-        } else {
-            setDisableSubmit(true);
-        }
-    }, [email, password])
-
-
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setErrMsg('');
-        AuthService.register(email, password, first, last, role).then(
-            (response) => {
-                if (response.status === 200) {
-                    window.location.href = "/users";
-                } else {
-                    setErrMsg('There was an issue handling your account registration. Please try again later.');
-                }
-            },
-            (error) => {
-                if (error.response.status === 401) {
-                    setErrMsg(error.response.data.detail);
-                } else {
-                    setErrMsg('There was an unexpected error. Please try again later.');
-                }
-            }
-        );
+  useEffect(() => {
+    setErrMsg('');
+    if (validator.isEmail(email) && password.length >= 6) {
+      setDisableSubmit(false);
+    } else {
+      setDisableSubmit(true);
     }
+  }, [email, password]);
 
-    return (
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setErrMsg('');
+    AuthService.register(email, password, first, last, role).then(
+        (response) => {
+          if (response.status === 200) {
+            window.location.href = '/users';
+          } else {
+            setErrMsg(
+                'There was an issue handling your account registration. Please try again later.',
+            );
+          }
+        },
+        (error) => {
+          if (error.response.status === 401) {
+            setErrMsg(error.response.data.detail);
+          } else {
+            setErrMsg('There was an unexpected error. Please try again later.');
+          }
+        },
+    );
+  };
+
+  return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -84,16 +81,21 @@ export default function Register() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Register Account
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{mt: 3}}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <TextField                                          //first name field
+                <TextField // first name field
                   autoComplete="given-name"
                   name="first"
                   required
@@ -102,12 +104,12 @@ export default function Register() {
                   label="First Name"
                   ref={userRef}
                   onChange={(e) => setFirst(e.target.value)}
-                  inputProps={{ 'data-testid': 'first-input'}}
+                  inputProps={{'data-testid': 'first-input'}}
                   autoFocus
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField                                          //last name field
+                <TextField // last name field
                   required
                   fullWidth
                   id="last"
@@ -115,12 +117,12 @@ export default function Register() {
                   name="last"
                   ref={userRef}
                   onChange={(e) => setLast(e.target.value)}
-                  inputProps={{ 'data-testid': 'last-input'}}
+                  inputProps={{'data-testid': 'last-input'}}
                   autoComplete="family-name"
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField                                          //email field
+                <TextField // email field
                   required
                   fullWidth
                   id="email"
@@ -129,11 +131,11 @@ export default function Register() {
                   autoComplete="email"
                   ref={userRef}
                   onChange={(e) => setEmail(e.target.value)}
-                  inputProps={{ 'data-testid': 'email-input'}}
+                  inputProps={{'data-testid': 'email-input'}}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField                                          //pass field
+                <TextField // pass field
                   required
                   fullWidth
                   name="password"
@@ -142,19 +144,19 @@ export default function Register() {
                   id="password"
                   autoComplete="new-password"
                   onChange={(e) => setPassword(e.target.value)}
-                  inputProps={{ 'data-testid': 'pass-input'}}
+                  inputProps={{'data-testid': 'pass-input'}}
                 />
               </Grid>
               <Grid item xs={12}>
                 <InputLabel id="role">User Role</InputLabel>
-                <Select                                             //select role drop-down
+                <Select // select role drop-down
                   required
                   fullWidth
                   labelId="role"
                   label="User's Role"
                   id="role"
                   value={role}
-                  inputProps={{ 'data-testid': 'role-select'}}
+                  inputProps={{'data-testid': 'role-select'}}
                   onChange={(e) => setRole(e.target.value)}
                 >
                   <MenuItem value={'Administrator'}>Administrator</MenuItem>
@@ -162,13 +164,13 @@ export default function Register() {
                 </Select>
               </Grid>
             </Grid>
-            <Button                                                 //submit button
+            <Button // submit button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{mt: 3, mb: 2}}
               disabled={disableSubmit}
-              data-testid='submit-button'
+              data-testid="submit-button"
             >
               Register Account
             </Button>

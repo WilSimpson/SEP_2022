@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Box, Link } from "@mui/material";
-import { Divider } from '@mui/material';
+import {Box, Link} from '@mui/material';
+import {Divider} from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -12,49 +12,48 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import { AccountBox, AccountTree, Help } from '@material-ui/icons';
+import {AccountBox, AccountTree, Help} from '@material-ui/icons';
 import List from '@mui/material/List';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import AuthService from '../../services/auth.service';
-import { User } from '../../models/user.model';
+import {User} from '../../models/user.model';
 
 const drawerWidth = 240;
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({theme, open}) => ({
+  '& .MuiDrawer-paper': {
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    boxSizing: 'border-box',
+    ...(!open && {
+      overflowX: 'hidden',
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+        duration: theme.transitions.duration.leavingScreen,
       }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
-
+      width: theme.spacing(7),
+      [theme.breakpoints.up('sm')]: {
+        width: theme.spacing(9),
+      },
+    }),
+  },
+}));
 
 export function SideMenu(props) {
-
   const [open, setOpen] = React.useState(true);
   const [gameManageOpen, setGameManageOpen] = React.useState(false);
   const [userManageOpen, setUserManageOpen] = React.useState(false);
-  const [gameSessionManageOpen, setGameSessionManageOpen] = React.useState(false);
+  const [gameSessionManageOpen, setGameSessionManageOpen] =
+    React.useState(false);
   const [reportsOpen, setReportsOpen] = React.useState(false);
   const [helpOpen, setHelpOpen] = React.useState(false);
 
@@ -67,8 +66,8 @@ export function SideMenu(props) {
   };
 
   const handleGameSessionManagement = () => {
-    setGameSessionManageOpen(!setGameSessionManageOpen)
-  }
+    setGameSessionManageOpen(!setGameSessionManageOpen);
+  };
 
   const handleUserManagement = () => {
     setUserManageOpen(!userManageOpen);
@@ -76,18 +75,19 @@ export function SideMenu(props) {
 
   const handleReports = () => {
     setReportsOpen(!reportsOpen);
-  }
+  };
 
   const handleHelp = () => {
     setHelpOpen(!helpOpen);
-  }
+  };
 
   const dashboardItem = (
     <ListItemButton
       disabled={!open}
       component={Link}
-      data-testid='dashboard-item'
-      href='/admin-dashboard'>
+      data-testid="dashboard-item"
+      href="/admin-dashboard"
+    >
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
@@ -100,7 +100,7 @@ export function SideMenu(props) {
       <ListItemButton
         onClick={handleGameSessionManagement}
         disabled={!open}
-        data-testid='game-session-manage-item'
+        data-testid="game-session-manage-item"
       >
         <ListItemIcon>
           <BarChartIcon />
@@ -115,7 +115,7 @@ export function SideMenu(props) {
       <ListItemButton
         onClick={handleGameManagement}
         disabled={!open}
-        data-testid='game-manage-item'
+        data-testid="game-manage-item"
       >
         <ListItemIcon>
           <AccountTree />
@@ -125,10 +125,20 @@ export function SideMenu(props) {
       </ListItemButton>
       <Collapse in={gameManageOpen && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }} data-testid='game-develop-item' component={Link} href='/admin-dashboard/games/new'>
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="game-develop-item"
+            component={Link}
+            href="/admin-dashboard/games/new"
+          >
             <ListItemText primary="Create Game" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} data-testid='game-view-item' component={Link} href="/admin-dashboard/games">
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="game-view-item"
+            component={Link}
+            href="/admin-dashboard/games"
+          >
             <ListItemText primary="View Games" />
           </ListItemButton>
         </List>
@@ -142,7 +152,7 @@ export function SideMenu(props) {
         onClick={handleUserManagement}
         disabled={!open}
         component={Link}
-        data-testid='user-manage-item'
+        data-testid="user-manage-item"
       >
         <ListItemIcon>
           <PeopleIcon />
@@ -152,13 +162,13 @@ export function SideMenu(props) {
       </ListItemButton>
       <Collapse in={userManageOpen && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }} data-testid='user-create-item'>
+          <ListItemButton sx={{pl: 4}} data-testid="user-create-item">
             <ListItemText primary="Create Users" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} data-testid='user-edit-item'>
+          <ListItemButton sx={{pl: 4}} data-testid="user-edit-item">
             <ListItemText primary="Edit Users" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} data-testid='user-view-item'>
+          <ListItemButton sx={{pl: 4}} data-testid="user-view-item">
             <ListItemText primary="View Users" />
           </ListItemButton>
         </List>
@@ -171,7 +181,7 @@ export function SideMenu(props) {
       onClick={handleReports}
       disabled={!open}
       component={Link}
-      data-testid='reports-item'
+      data-testid="reports-item"
     >
       <ListItemIcon>
         <BarChartIcon />
@@ -184,7 +194,7 @@ export function SideMenu(props) {
     <ListItemButton
       disabled={!open}
       onClick={AuthService.logout}
-      data-testid='logout-item'
+      data-testid="logout-item"
     >
       <ListItemIcon>
         <AccountBox />
@@ -198,7 +208,8 @@ export function SideMenu(props) {
       <ListItemButton
         onClick={handleHelp}
         disabled={!open}
-        data-testid='help-item'>
+        data-testid="help-item"
+      >
         <ListItemIcon>
           <Help />
         </ListItemIcon>
@@ -207,10 +218,10 @@ export function SideMenu(props) {
       </ListItemButton>
       <Collapse in={helpOpen && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }} data-testid='getting-started-item'>
+          <ListItemButton sx={{pl: 4}} data-testid="getting-started-item">
             <ListItemText primary="Getting Started" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} data-testid='about-item'>
+          <ListItemButton sx={{pl: 4}} data-testid="about-item">
             <ListItemText primary="About" />
           </ListItemButton>
         </List>
@@ -218,9 +229,8 @@ export function SideMenu(props) {
     </div>
   );
 
-
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{display: 'flex'}}>
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{
@@ -230,27 +240,27 @@ export function SideMenu(props) {
             px: [1],
           }}
         >
-          <IconButton onClick={toggleDrawer} data-testid='drawer-toggle'>
+          <IconButton onClick={toggleDrawer} data-testid="drawer-toggle">
             <ChevronLeftIcon />
           </IconButton>
         </Toolbar>
         <Divider />
         <List component="nav">
-            {User.prototype.isAdmin ?
-              <React.Fragment>
-                {dashboardItem}
-                {gameManagementItem}
-                {userManagementItem}
-                {reportsItem}
-              </React.Fragment>
-              :
-              <React.Fragment>
-                {dashboardItem}
-                {gameSessionManagementItem}
-                {reportsItem}
-              </React.Fragment>
-            }
-          <Divider sx={{ my: 1 }} />
+          {User.prototype.isAdmin ? (
+            <React.Fragment>
+              {dashboardItem}
+              {gameManagementItem}
+              {userManagementItem}
+              {reportsItem}
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              {dashboardItem}
+              {gameSessionManagementItem}
+              {reportsItem}
+            </React.Fragment>
+          )}
+          <Divider sx={{my: 1}} />
           <div>
             {logoutItem}
             {helpItem}
