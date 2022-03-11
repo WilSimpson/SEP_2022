@@ -89,18 +89,18 @@ describe("<Login />", () => {
       expect(submitButton).not.toBeDisabled();
     });
 
-    it('should call AuthService login when clicked', () => {
+    it('should call AuthService login when clicked', async () => {
+      const promise = Promise.resolve()
       AuthService.login.mockResolvedValue({
-        response: [{ status: 200 }]
+        response: jest.fn(() => promise)
       });
 
-      // act(() => {
       fireEvent.change(emailField, { target: { value: "valid@email.com" } });
       fireEvent.change(passwordField, { target: { value: "morethan6" } });
       fireEvent.click(submitButton);
-      // })
 
       expect(AuthService.login).toHaveBeenCalled();
+      await act(() => promise)
     });
 
   });

@@ -77,7 +77,7 @@ export default function GamesTable(props) {
         <TableContainer data-testid="games-table">
           <Table sx={{ minWidth: 500 }} aria-label="games pagination table">
             <TableHead>
-              <TableRow class="game-columns">
+              <TableRow className="game-columns">
                 <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
                 <TableCell>Created</TableCell>
@@ -127,7 +127,7 @@ export default function GamesTable(props) {
               )}
             </TableBody>
             <TableFooter>
-              <TableRow class="game-pagination">
+              <TableRow className="game-pagination">
                 <TablePagination
                   rowsPerPageOptions={[5, 15, 30, { label: 'All', value: -1 }]}
                   colSpan={3}

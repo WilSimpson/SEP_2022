@@ -1,9 +1,10 @@
 import React from 'react';
 import { configure, mount, shallow } from 'enzyme';
-import Register from '../components/Register';
+import Register from '../pages/public/Register';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, act } from '@testing-library/react';
+import { waitFor } from '@testing-library/dom';
 import AuthService from '../services/auth.service';
 
 jest.mock('../services/auth.service');
@@ -139,15 +140,18 @@ describe("<Register />", () => {
             expect(submitButton).not.toBeDisabled();
         });
 
-        it ('should call AuthService register when clicked', () => {
+        it ('should call AuthService register when clicked', async () => {
+            const promise = Promise.resolve()
             AuthService.register.mockResolvedValue({
-              response: [{status: 200}]
+              response: jest.fn(() => promise)
             });
 
             fireEvent.change(emailField, { target: { value: "valid@email.com" } });
             fireEvent.change(passwordField, { target: { value: "morethan6" } });
             fireEvent.click(submitButton);
+            
             expect(AuthService.register).toHaveBeenCalled();
+            await act(() => promise)
         });
 
     });

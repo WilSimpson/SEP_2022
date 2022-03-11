@@ -7,8 +7,11 @@ import { User } from '../models/user.model';
 import FacultyDash from '../pages/faculty/FacultyDash';
 import { BrowserRouter } from 'react-router-dom';
 import GamesTable from '../components/admin/GamesTable';
+import axios from 'axios';
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
+
+jest.mock('axios');
 
 describe("<FacultyDash />", () => {
     beforeEach(() => {
@@ -18,24 +21,21 @@ describe("<FacultyDash />", () => {
         localStorage.clear();
     })
 
-    it ("should render the FacultyDash component", () => {
-        expect (shallow(<BrowserRouter><FacultyDash /></BrowserRouter>));
+    it("should render the FacultyDash component", () => {
+        expect(shallow(<BrowserRouter><FacultyDash /></BrowserRouter>));
     });
 
-    it ("should have an All Games table", () => {
-        const shallowWrapper = shallow(<FacultyDash />);
-    expect(shallowWrapper.find(GamesTable).length).toEqual(1);
+    it("should have an All Games table", () => {
+        expect(shallow(<FacultyDash />).find(GamesTable).length).toEqual(1);
     });
 
     it("should have an indicator to Total Games", () => {
         const { getByTestId } = render(<BrowserRouter><FacultyDash /></BrowserRouter>);
-        let totalGamesCard =  getByTestId('total-games');
-        expect(totalGamesCard).toBeInTheDocument();
+        expect(getByTestId('total-games')).toBeInTheDocument();
     });
 
-    it ("should have a table to show Active Game Sessions", () => {
+    it("should have a table to show Active Game Sessions", () => {
         const { getByTestId } = render(<BrowserRouter><FacultyDash /></BrowserRouter>);
-        let gameSessionsTable =  getByTestId('active-game-sessions');
-        expect(gameSessionsTable).toBeInTheDocument();
+        expect(getByTestId('active-game-sessions')).toBeInTheDocument();
     });
 });
