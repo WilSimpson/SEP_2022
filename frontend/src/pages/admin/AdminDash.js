@@ -18,7 +18,7 @@ import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import Loading from '../../components/layout/loading';
 import { alertService, alertSeverity } from '../../services/alert.service';
 
-function GameSessionTable() {
+export function GameSessionTable() {
   return (
     <React.Fragment>
       <Typography component="h2" variant="h6" gutterBottom>

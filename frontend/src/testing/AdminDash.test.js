@@ -1,31 +1,39 @@
 import React from 'react';
-import { configure, mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import '../setupTests';
 import '@testing-library/jest-dom/extend-expect';
-import { render, fireEvent } from '@testing-library/react';
-import AdminDash from '../pages/admin/AdminDash';
+import AdminDash, { GameSessionTable } from '../pages/admin/AdminDash';
+import { User } from '../models/user.model';
+import { afterEach, beforeEach } from '@jest/globals';
+import GamesTable from '../components/admin/GamesTable';
+
+const user = new User('test@test.com', '', '', 'ADMIN', 'jwt-token', 1);
 
 describe("<AdminDash />", () => {
-    it ("should render the AdminDash component", () => {
-        const shallowWrapper = shallow(<AdminDash />);
-        expect (shallowWrapper);
-    });
+  beforeEach(() => {
+    localStorage.setItem('user', JSON.stringify(user));
+  })
+  afterEach(() => {
+    localStorage.clear();
+  })
 
-    it ("should have an All Games table", () => {
-        const { getByTestId } = render(<AdminDash />);
-        let gamesTable =  getByTestId('games-table');
-        expect(gamesTable).toBeInTheDocument();
-    });
+  it("should render the AdminDash component", () => {
+    const shallowWrapper = shallow(<AdminDash />);
+    expect(shallowWrapper);
+  });
 
-    it("should have an indicator to Total Games", () => {
-        const { getByTestId } = render(<AdminDash />);
-        let totalGamesCard =  getByTestId('total-games');
-        expect(totalGamesCard).toBeInTheDocument();
-    });
+  it("should have an All Games table", () => {
+    const shallowWrapper = shallow(<AdminDash />);
+    expect(shallowWrapper.find(GamesTable).length).toEqual(1);
+  });
 
-    it ("should have a table to show Active Game Sessions", () => {
-        const { getByTestId } = render(<AdminDash />);
-        let gameSessionsTable =  getByTestId('active-game-sessions');
-        expect(gameSessionsTable).toBeInTheDocument();
-    });
+  it("should have an indicator to Total Games", () => {
+    const shallowWrapper = shallow(<AdminDash />);
+    expect(shallowWrapper.find('[data-testid="total-games"]').length).toEqual(1);
+  });
+
+  it("should have a table to show Active Game Sessions", () => {
+    const shallowWrapper = shallow(<AdminDash />);
+    expect(shallowWrapper.find(GameSessionTable).length).toEqual(1);
+  });
 });

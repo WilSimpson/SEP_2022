@@ -77,7 +77,7 @@ export default function GamesTable(props) {
         <TableContainer data-testid="games-table">
           <Table sx={{ minWidth: 500 }} aria-label="games pagination table">
             <TableHead>
-              <TableRow>
+              <TableRow class="game-columns">
                 <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
                 <TableCell>Created</TableCell>
@@ -90,7 +90,7 @@ export default function GamesTable(props) {
                 ? games.slice(page * pageSize, page * pageSize + pageSize)
                 : games)
                 .map((game) => (
-                  <TableRow key={game.id}>
+                  <TableRow key={game.id} className="game-row">
                     <TableCell component="th" scope="row">
                       {game.id}
                     </TableCell>
@@ -127,7 +127,7 @@ export default function GamesTable(props) {
               )}
             </TableBody>
             <TableFooter>
-              <TableRow>
+              <TableRow class="game-pagination">
                 <TablePagination
                   rowsPerPageOptions={[5, 15, 30, { label: 'All', value: -1 }]}
                   colSpan={3}
