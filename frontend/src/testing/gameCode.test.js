@@ -8,7 +8,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
 describe('<GameCode />', () => {
   it('should render the GameCode component', () => {
-    wrapper = shallow(<GameCode />);
+    expect(shallow(<GameCode />));
   });
 
   it('should accept a valid gamecode', () => {

@@ -56,7 +56,6 @@ describe('<Login />', () => {
       submitButton = getByTestId('submit-button');
       passwordField = getByTestId('pass-input');
       emailField = getByTestId('email-input');
-      submitForm = getByTestId('submit-form');
     });
 
     it('should exist', () => {
