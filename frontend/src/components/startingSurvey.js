@@ -74,12 +74,12 @@ export default function StartingSurvey() {
         },
         (error) => {
             if (error.resonse && error.response.status === 404) {
-                setErr("Could not communicate with the server. Please try again later or contact the game owner.");
+                setErr('There was an unexpected error reaching the server. Please try again later.');
             } else {
-                if (error.response.status === 501) {
-                    setErr("Could not create team. Please try again later.");
+                if (error.response && error.response.status === 500) {
+                    setErr(error.resonse.data);
                 } else {
-                  setErr("There was a problem. Please try again later.");
+                  setErr("The server is unreachable at this time. Please try again later.");
                 }
             }
         }

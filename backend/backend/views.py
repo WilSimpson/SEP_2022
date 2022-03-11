@@ -16,7 +16,7 @@ from .serializers import *
 
 from .models import Game
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -39,21 +39,18 @@ def joinGame(request):
     '''Accepts a game code in the request
         Returns a game object or an error code
         Error Codes:
-            501 - The game does not exist
-            502 - The game is not active
-            503 - The game session does not exist
-            504 - There was another problem'''
+            500 - There was an error finding the game session'''
 
     try:
         game = Game.objects.get(code=int(request.data['code']))
     except Exception as e:
-        return HttpResponse(status=501)
+        return HttpResponseServerError('The game you are trying to access does not exist.')
     if not game.active:
-        return HttpResponse(status=502)
+        return HttpResponseServerError('This game session is not active. Please try again later or contact the game owner.')
     try:
         game_session = GameSession.objects.get(code=int(request.data['code']))
     except:
-        return HttpResponse(status=503)
+        return HttpResponseServerError('There is no session for the game you are trying to join.')
     try:
         game_serializer = GameSerializer(game)
         game_session_serializer = GameSessionSerializer(game_session)
@@ -67,14 +64,14 @@ def joinGame(request):
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
         return Response(ret_json, status=200)
     except Exception as e:
-        return HttpResponse(status=504)
+        return HttpResponseServerError('There was a problem accessing this game session. Please try again later.')
 
 @api_view(['POST'])
 def create_team(request):
     '''Accepts an object of params to create a team
         Returns a team id
         Error Codes:
-            501 - Could not create a team'''          
+            500 - Could not create a team'''          
     try:
         session = GameSession.objects.get(id=request.data['session'])
         mode = GameMode.objects.get(name=request.data['mode'])
@@ -87,7 +84,7 @@ def create_team(request):
                 completed = False)
         return Response({'id':new_team.id}, status=200)
     except Exception as e:
-        return HttpResponse(status=501)
+        return HttpResponseServerError('A team could not be created. Please try again later.')
 
 
 serializer_class = RoleTokenObtainPairSerializer    

@@ -246,7 +246,7 @@ class JoinGameTestCase(TestCase):
         }
 
         resp = self.client.post('/api/games/joinGame/', data=data)
-        self.assertEqual(resp.status_code, 502)
+        self.assertEqual(resp.status_code, 500)
 
     
     def test_sessionless_game(self):
@@ -255,7 +255,7 @@ class JoinGameTestCase(TestCase):
         }
 
         resp = self.client.post('/api/games/joinGame/', data=data)
-        self.assertEqual(resp.status_code, 503)
+        self.assertEqual(resp.status_code, 500)
 
     def test_invalid_game(self):
         data = {
@@ -263,7 +263,7 @@ class JoinGameTestCase(TestCase):
         }
 
         resp = self.client.post('/api/games/joinGame/', data=data)
-        self.assertEqual(resp.status_code, 501)
+        self.assertEqual(resp.status_code, 500)
 
 
 class CreateTeamTestCase(TestCase):
@@ -296,7 +296,7 @@ class CreateTeamTestCase(TestCase):
         }
 
         resp = self.client.post('/api/teams/createTeam/', data=data)
-        self.assertEqual(resp.status_code, 501)
+        self.assertEqual(resp.status_code, 500)
 class GameViewSetTestCase(TestCase):
     def setUp(self):
         # create game

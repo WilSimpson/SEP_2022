@@ -53,7 +53,6 @@ const styles = {
             this.setState({errMsg: ""});
             GameService.joinGame(code).then(
                 (response) => {
-                    console.log(response)
                     let path = `startingSurvey`; 
                     this.props.navigate(path, {
                         state: {
@@ -66,19 +65,13 @@ const styles = {
 
                 },
                 (error) => {
-                    console.log(error.response.status);
                     if (error.resonse && error.response.status === 404) {
-                        this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
+                        this.setState({errMsg: 'There was an unexpected error reaching the server. Please try again later.'});
                     } else {
-                        if (error.response.status === 501) {
-                            this.setState({errMsg: "This game does not exist"});
-                        }
-                        else if (error.response.status === 502) {
-                            this.setState({errMsg: "This game is not currently active"});
-                        } else if (error.response.status === 503) {
-                            this.setState({errMsg: "There is no game session associated with this game"});
+                        if (error.response && error.response.status === 500) {
+                            this.setState({errMsg: error.response.data});
                         } else {
-                            this.setState({errMsg: "There was a problem. Please try again later."});
+                            this.setState({errMsg: 'The server is currently unreachable. Please try again later.'});
                         }
                     }
                 }
