@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 // does this have to be the port the backend runs on?
-const API_URL = 'http://localhost:3000/api/auth'
+const API_URL = 'http://localhost:8000/api/'
 
 class GameService {
 
     joinGame(gameCode) {
-        return axios.post(API_URL + 'joinGame', {
-            gameCode
+        return axios.post(API_URL + 'games/joinGame/', {
+            'code': gameCode
         })
         .then(response => {
             if (response.data) {
@@ -21,7 +21,25 @@ class GameService {
     //             {'text': "Email CEO", 'link': "3A"}],
     //              'password': "psw",
     //              'only_chance': false}}
-                localStorage.setItem('gameObject', JSON.parse(response.data)); 
+                localStorage.setItem('gameObject', response.data); 
+            }
+            return response.data;
+        });
+
+    
+    }
+
+    sendTeamInit(session_id, mode, guest, size, first_time) {
+        return axios.post(API_URL + 'teams/createTeam/', {
+            'session': session_id,
+            'mode': mode,
+            'guest': guest,
+            'size': size,
+            'first_time': first_time
+        })
+        .then(response => {
+            if (response.data) {
+                localStorage.setItem('teamObject', response.data); 
             }
             return response.data;
         });
@@ -30,7 +48,11 @@ class GameService {
     }
     
     clearGame() {
-        localStorage.removeItem('gameCode');
+        localStorage.removeItem('gameObject');
+    }
+
+    clearTeam() {
+        localStorage.removeItem('teamObject');
     }
 
     checkPasscode(pcd){

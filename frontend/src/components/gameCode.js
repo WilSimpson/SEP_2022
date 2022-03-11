@@ -29,6 +29,11 @@ const styles = {
         };
         this.handleChange = this.handleChange.bind(this);
         this.submitCode = this.submitCode.bind(this);
+        this.toggleLoading = this.toggleLoading.bind(this);
+    }
+
+    toggleLoading() {
+        this.setState({loading: true});
     }
 
     handleChange(e) {
@@ -40,7 +45,7 @@ const styles = {
      }
 
     submitCode() {
-        this.setState({loading: true});
+        this.toggleLoading()
         const re = /^[0-9\b]{6}$/;
         const code = this.state.value;
          if (re.test(code)) {
@@ -48,23 +53,26 @@ const styles = {
             this.setState({errMsg: ""});
             GameService.joinGame(code).then(
                 (response) => {
-                    if (response.status === 200) {
-                        let path = `startingSurvey`; 
-                        this.props.navigate(path, {
-                            state: {
-                                //Carries the gameCode with the state
-                                code: this.state.value,
-                                //Initialize state with the response parsed as an array of questions
-                                game: response.data,
-                            }
-                        });
-                    }
+                    let path = `startingSurvey`; 
+                    this.props.navigate(path, {
+                        state: {
+                            //Carries the gameCode with the state
+                            code: this.state.value,
+                            //Initialize state with the response parsed as an array of questions
+                            game: response,
+                        }
+                    });
+
                 },
                 (error) => {
-                    if (error.response.status === 404) {
-                        this.setState({errMsg: "Could not communicate with the server. Please try again later or contact the game owner."});
+                    if (error.resonse && error.response.status === 404) {
+                        this.setState({errMsg: 'There was an unexpected error reaching the server. Please try again later.'});
                     } else {
-                        this.setState({errMsg: error.response.data.detail});
+                        if (error.response && error.response.status === 500) {
+                            this.setState({errMsg: error.response.data});
+                        } else {
+                            this.setState({errMsg: 'The server is currently unreachable. Please try again later.'});
+                        }
                     }
                 }
             );
@@ -75,8 +83,8 @@ const styles = {
             } else {
                 this.setState({errMsg: "This Gamecode is not valid. Gamecodes must contain only number values."});
             }
-         };
-         this.setState({loading: false});
+         }
+         this.toggleLoading()
      }
 
     render () {
@@ -103,12 +111,12 @@ const styles = {
             onChange={this.handleChange}/>
             <br />
         </Box>
-        <ButtonGroup variant="contained">
+        <Box sx={{pb:2}}>
+                { !this.state.errMsg && this.state.loading && <LinearProgress /> }
+        </Box>
+        <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
             <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit'}} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
         </ButtonGroup>
-        <Box sx={{pb:2}}>
-                { this.state.loading && <LinearProgress /> }
-            </Box>
         </Grid>
         );
     }

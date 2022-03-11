@@ -1,0 +1,23 @@
+Name                                          Stmts   Miss  Cover
+-----------------------------------------------------------------
+backend/__init__.py                               0      0   100%
+backend/admin.py                                  1      0   100%
+backend/apps.py                                   4      0   100%
+backend/migrations/0001_initial.py                5      0   100%
+backend/migrations/0002_alter_user_email.py       4      0   100%
+backend/migrations/__init__.py                    0      0   100%
+backend/models.py                                51     14    73%
+backend/serializers.py                           18      0   100%
+backend/tests/__init__.py                         0      0   100%
+backend/tests/factories.py                        9      0   100%
+backend/tests/test_serializers.py                 9      0   100%
+backend/tests/test_views.py                     123      0   100%
+backend/views.py                                 13      0   100%
+ethicsAdventure/__init__.py                       0      0   100%
+ethicsAdventure/asgi.py                           4      4     0%
+ethicsAdventure/settings.py                      40      3    92%
+ethicsAdventure/urls.py                          10      0   100%
+ethicsAdventure/wsgi.py                           4      4     0%
+manage.py                                        12      2    83%
+-----------------------------------------------------------------
+TOTAL                                           307     27    91%
