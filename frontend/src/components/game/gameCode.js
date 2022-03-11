@@ -7,7 +7,7 @@ import { TextField } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import Alert from '@mui/material/Alert';
 import { useNavigate } from "react-router-dom";
-import GameService from '../services/gameServices';
+import GamePlayService from '../../services/gameplay.service'
 import { LinearProgress } from '@mui/material';
 
 const styles = {
@@ -51,7 +51,7 @@ class GameCode extends React.Component {
     if (re.test(code)) {
       //Do the thing with game service
       this.setState({ errMsg: "" });
-      GameService.joinGame(code).then(
+      GamePlayService.joinGame(code).then(
         (response) => {
           let path = `startingSurvey`;
           this.props.navigate(path, {
@@ -93,8 +93,6 @@ class GameCode extends React.Component {
         container
         spacing={0}
         direction="column"
-        alignItems="center"
-        justifyContent="center"
       >
         <Box sx={{ pb: 2 }}>
           <Box sx={{ pb: 2 }}>
@@ -114,8 +112,8 @@ class GameCode extends React.Component {
         <Box sx={{ pb: 2 }}>
           {!this.state.errMsg && this.state.loading && <LinearProgress />}
         </Box>
-        <ButtonGroup variant="contained" size='large' alignItems="center" justify="center">
-          <Button color='secondary' onClick={this.submitCode} inputProps={{ 'data-testid': 'submit' }} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
+        <ButtonGroup variant="contained" size='large' justify="center">
+          <Button color='secondary' onClick={this.submitCode} data-testid='submit' disabled={this.state.submitDisabled}>Join Game</Button>
         </ButtonGroup>
       </Grid>
     );

@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { Typography } from '@mui/material';
-import GameService from '../services/gameServices'
+import GamePlayService from '../../services/gameplay.service'
 import Alert from '@mui/material/Alert';
 
 export default function StartingSurvey() {
@@ -56,7 +56,7 @@ export default function StartingSurvey() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    GameService.sendTeamInit(state.game.id, formValues.type, false, formValues.size, formValues.first).then(
+    GamePlayService.sendTeamInit(state.game.id, formValues.type, false, formValues.size, formValues.first).then(
       (response) => {
         console.log(response)
         let path = `../gameSession`;
