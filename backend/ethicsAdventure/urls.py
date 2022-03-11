@@ -38,6 +38,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
     path('api/games/toggleActive', views.toggle_active, name='toggle_active'),
+    path('api/games/startSession', views.start_session, name='start_session'),
     path('api/games/create/', GameViewSet.as_view({'post':'create'}), name='create_game'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls)
