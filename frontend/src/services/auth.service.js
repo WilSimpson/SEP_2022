@@ -39,6 +39,16 @@ class AuthService {
         return JSON.parse(localStorage.getItem('user'));
     }
 
+    register(email, password, firstname, lastname, role){
+        return axios.post(API_URL + '/users', {
+            'email': email,
+            'password': password,
+            'first': firstname,
+            'last': lastname,
+            'role': role
+        });
+    }
+
     isLoggedIn() {
         return (localStorage.getItem('user') !== null);
     }

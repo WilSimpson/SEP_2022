@@ -301,22 +301,22 @@ class GameViewSetTestCase(TestCase):
     def setUp(self):
         # create game
         self.game = Game.objects.create(title='TestGame', creator_id=1, code=123456, active=True)
-        self.q1 = Question.objects.create(value='Q1', passcode=123456, chance=False, game_id=self.game.id)
-        self.q2 = Question.objects.create(value='Q2', passcode=123456, chance=False, game_id=self.game.id)
+        self.q1 = Question.objects.create(value='Q1', passcode=123456, chance=False, game_id=self.game.id, chance_game=Question.ChanceGame.NO_GAME)
+        self.q2 = Question.objects.create(value='Q2', passcode=123456, chance=False, game_id=self.game.id, chance_game=Question.ChanceGame.NO_GAME)
         self.o1 = Option.objects.create(value='O1', weight=1, dest_question_id=self.q2.id, source_question_id=self.q1.id)
         self.o2 = Option.objects.create(value='O2', weight=1, dest_question_id=self.q2.id, source_question_id=self.q1.id)
         self.initial_game_count = Game.objects.all().count()
         self.initial_question_count = Question.objects.all().count()
         self.initial_option_count = Option.objects.all().count()
         self.data = {"title": "TestGame", "creator_id": 1,"code": 123456, "active": True,
-                    "questions": [{"id": self.q1.id,"value": "Q1","passcode": "123456","chance": False,"game_id": self.game.id},
-                                {"id": self.q2.id,"value": "Q2","passcode": "123456","chance": False,"game_id": self.game.id}
+                    "questions": [{"id": self.q1.id,"value": "Q1","passcode": "123456","chance": False,"chance_game":"NO_GAME","game_id": self.game.id},
+                                {"id": self.q2.id,"value": "Q2","passcode": "123456","chance": False,"chance_game":"NO_GAME","game_id": self.game.id}
                     ],
                     "options": [{"id": self.o1.id,"value": "O1","weight": 1,"dest_question_id": self.q2.id,"source_question_id": self.q1.id},
                                 {"id": self.o2.id,"value": "O2","weight": 1,"dest_question_id": self.q2.id,"source_question_id": self.q1.id}
                     ]}
         self.create_data = {"title": "TestGame","active": True,"creator_id": 1,"code": 123456,
-                            "questions": [{"label": "Q1","value": "Q1","passcode": 123456,"chance": False},
+                            "questions": [{"label": "Q1","value": "Q1","passcode": 123456,"chance": True,"chance_game":"Spin Wheel"},
                                           {"label": "Q2","value": "Q2","passcode": 123456,"chance": False}
                             ],
                             "options": [{"value": "O1","source_label": "Q1","dest_label": "Q2","weight": 1},
@@ -415,6 +415,12 @@ class GameViewSetTestCase(TestCase):
         new_game["questions"] = None
         resp = self.client.post('/api/games/', new_game, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+        
+    def test_create_game_incorrect_chance_game(self):
+        new_game = self.create_data
+        new_game["questions"][0]["chance_game"] = "invalid entry"
+        resp = self.client.post('/api/games/', new_game, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_update_game_game_values(self):
         updated_game_data = self.data
@@ -435,9 +441,11 @@ class GameViewSetTestCase(TestCase):
         updated_question_data["questions"][0]["value"] = "Q1-1"
         updated_question_data["questions"][0]["passcode"] = "654321"
         updated_question_data["questions"][0]["chance"] = True
+        updated_question_data["questions"][0]["chance_game"] = "ROLL_DIE"
         updated_question_data["questions"][1]["value"] = "Q2-1"
         updated_question_data["questions"][1]["passcode"] = "654321"
         updated_question_data["questions"][1]["chance"] = True
+        updated_question_data["questions"][0]["chance_game"] = "ROLL_DIE"
         resp = self.client.put('/api/games/'+str(self.game.id)+'/', updated_question_data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_game = Game.objects.get(id=self.game.id)
@@ -447,6 +455,7 @@ class GameViewSetTestCase(TestCase):
             self.assertEqual(updated_question_data["questions"][i]["value"], question.value)
             self.assertEqual(updated_question_data["questions"][i]["passcode"], question.passcode)
             self.assertEqual(updated_question_data["questions"][i]["chance"], question.chance)
+            self.assertEqual(updated_question_data["questions"][i]["chance_game"], question.chance_game)
             i+=1
             
     def test_update_game_option_values(self):
@@ -471,7 +480,12 @@ class GameViewSetTestCase(TestCase):
         resp = self.client.put('/api/games/'+str(0)+'/', self.data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
 
-
+    def test_update_invalid_chance_game(self):
+        updated_data = self.data
+        updated_data["questions"][0]["chance_game"] = "invalid entry"
+        resp = self.client.put('/api/games/'+str(self.game.id)+'/', updated_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
 class SessionViewTestCase(TestCase):
     def setUp(self):
         self.game = Game.objects.create(title='test', creator_id=999, code=999999, active=True)
@@ -531,3 +545,4 @@ class SessionViewTestCase(TestCase):
         }
         resp = self.client.post('/api/games/toggleActive/', data=data)
         self.assertEqual(resp.status_code, 500)
+

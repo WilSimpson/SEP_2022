@@ -9,11 +9,13 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 
 from .models import Game, Option, Question
+
 from .utils import *
 
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
@@ -122,12 +124,16 @@ class GameViewSet(ViewSet):
                 active      = game_data['active'], 
                 creator_id  = game_data['creator_id'], 
                 code        = game_data['code'])
-            
             for question in questions:
+                try:
+                    chance_game = get_chance_game(question)
+                except Exception as e:
+                    return HttpResponse(status=400, content=e)
                 new_question = Question(
                     value       = question['value'],
                     passcode    = question['passcode'],
-                    chance      = question['chance']
+                    chance      = question['chance'],
+                    chance_game = chance_game
                 )
                 question_label_reference[question['label']] = new_question
             for option in options:
@@ -175,11 +181,16 @@ class GameViewSet(ViewSet):
                 game_to_update.creator_id  = game_data['creator_id']
                 game_to_update.code        = game_data['code']
                 for question in questions: 
+                    try:
+                        chance_game = get_chance_game(question)
+                    except Exception as e:
+                        return HttpResponse(status=400, content=e)
                     question_to_update = Question.objects.get(id=question['id'])
-                    question_to_update.value    = question['value']
-                    question_to_update.passcode = question['passcode']
-                    question_to_update.chance   = question['chance']
-                    question_to_update.game_id  = question['game_id']
+                    question_to_update.value        = question['value']
+                    question_to_update.passcode     = question['passcode']
+                    question_to_update.chance       = question['chance']
+                    question_to_update.game_id      = question['game_id']
+                    question_to_update.chance_game  = chance_game
                     question_to_update.save()
                 for option in options:
                     option_to_update = Option.objects.get(id=option['id'])

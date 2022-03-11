@@ -1,5 +1,7 @@
 from .models import Game, Question, Option
+from django.http import HttpResponse
 from random import randint
+
 
 def get_game_data(id):
     response_data = {}
@@ -17,7 +19,9 @@ def get_game_data(id):
         q['value'] = question.value
         q['passcode'] = question.passcode
         q['chance'] = question.chance
+        q['chance_game'] = question.chance_game
         q['game_id'] = question.game_id
+        
         questions.append(q)
         all_question_options = Option.objects.filter(source_question_id=question.id).all()
         for option in all_question_options:
@@ -40,3 +44,16 @@ def unique_random(low, high, exclude):
     exclude = set(exclude)
     rand_int = randint(low,high)
     return unique_random() if rand_int in exclude else rand_int
+
+ 
+def get_chance_game(question):
+    if 'chance_game' in question:
+        chance_game = question['chance_game']
+        games = Question.ChanceGame.choices
+        for t in games:
+            if chance_game in t:
+                return t[0]
+        raise Exception("The chance game '" + chance_game + "' does not exist.")
+    else:
+        return Question.ChanceGame.NO_GAME
+
