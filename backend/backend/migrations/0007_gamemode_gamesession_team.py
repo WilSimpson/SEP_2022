@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('backend', '0004_rename_game_id_question_game'),
+        ('backend', '0006_alter_question_chance_game'),
     ]
 
     operations = [
