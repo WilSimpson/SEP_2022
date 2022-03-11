@@ -8,13 +8,15 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 
 describe('<StartingSurvey />', () => {
   it('should render the StartingSurvey component', () => {
-    expect(shallow(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<StartingSurvey />} />
-          </Routes>
-        </BrowserRouter>,
-    ));
+    expect(
+        shallow(
+            <BrowserRouter>
+              <Routes>
+                <Route path="*" element={<StartingSurvey />} />
+              </Routes>
+            </BrowserRouter>,
+        ),
+    );
   });
 
   it('should route towards the game session', () => {
