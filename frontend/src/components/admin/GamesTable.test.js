@@ -1,9 +1,10 @@
 import { beforeEach } from "@jest/globals";
-import { render, } from "enzyme";
+import { render, shallow } from "enzyme";
 import { unmountComponentAtNode } from "react-dom";
 import { User } from "../../models/user.model";
 import GamesTable from "./GamesTable";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { TableContainer } from "@mui/material";
 
 const mockUseNavigate = jest.fn();
 const mockUseParams = jest.fn();
@@ -77,7 +78,7 @@ let container = null;
 beforeEach(() => {
   localStorage.setItem('user', JSON.stringify(user));
   container = document.createElement("div");
-    document.body.appendChild(container);
+  document.body.appendChild(container);
 })
 
 afterEach(() => {
@@ -87,32 +88,27 @@ afterEach(() => {
   container = null;
 })
 
-function getGamesTable(game=[]) {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="*" element={GamesTable} />
-      </Routes>
-    </BrowserRouter>
-  );
+function getGamesTable(games = []) {
+  return <GamesTable games={games} />
 }
 
 describe("<GamesTable />", () => {
   let comp = null;
 
   it('test', () => {
-    comp = render(getGamesTable())
+    comp = shallow(getGamesTable())
   })
-  // describe("given no games", () => {
-  //   beforeEach(() => {
-  //     comp = render(getGamesTable())
-  //   })
 
-  //   it('should be a games table', () => {
-  //     console.log(shallow(getGamesTable()).debug())
-  //     const input = comp.find(TableContainer)
-  //     expect(input.length).toEqual(1);
-  //   })
+  describe("given no games", () => {
+    beforeEach(() => {
+      comp = render(getGamesTable())
+    })
+
+    it('should be a games table', () => {
+      const input = comp.find(TableContainer)
+      expect(input.length).toEqual(1);
+    })
+  });
 
   //   // it('should show no games', () => {
   //   //   const rows = comp.find(TableRow).filterWhere((i) => i.prop('className') == 'game-row');

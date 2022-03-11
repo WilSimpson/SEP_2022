@@ -1,9 +1,7 @@
 import React from 'react';
 import { Autocomplete, Button, ButtonGroup, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 import { Delete, Edit } from '@material-ui/icons';
-import { Game } from '../../models/game.model';
 import { formatDate } from '../../helpers/DateFormatter';
-import { useNavigate } from 'react-router';
 import gameService from '../../services/game.service';
 import { alertService, alertSeverity } from '../../services/alert.service';
 
@@ -12,7 +10,6 @@ export default function GamesTable(props) {
   const [pageSize, setPageSize] = React.useState(5);
   const [confirmationDeleteID, setConfirmationDeleteID] = React.useState(null)
   const [games, setGames] = React.useState(props.data || [])
-  const navigate = useNavigate();
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * pageSize - games.length) : 0;
 
@@ -29,18 +26,6 @@ export default function GamesTable(props) {
     setConfirmationDeleteID(null)
   };
 
-  const handleAcceptConfirmation = () => {
-    gameService.deleteGame(confirmationDeleteID).then(
-      (success) => {
-        handleCloseConfirmation()
-        alertService.alert({ severity: alertSeverity.success, message: 'Game successfully deleted' })
-        setGames(games.filter((game) => game.id != confirmationDeleteID))
-        navigate('/admin-dashboard/games')
-      }, (error) => {
-        alertService.alert({ severity: alertSeverity.error, message: error.message })
-      })
-  };
-
   return (
     <Grid container justifyContent="center" spacing={2}>
       <Dialog open={confirmationDeleteID != null}>
@@ -54,7 +39,7 @@ export default function GamesTable(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAcceptConfirmation}>Delete Permanently</Button>
+          <Button onClick={() => props.onConfirmDelete(confirmationDeleteID)}>Delete Permanently</Button>
           <Button onClick={handleCloseConfirmation} autoFocus>
             Cancel
           </Button>
@@ -109,7 +94,7 @@ export default function GamesTable(props) {
                     </TableCell>
                     <TableCell>
                       <ButtonGroup variant="outlined" aria-label="edit delete game button group">
-                        <IconButton aria-label="edit" onClick={() => { navigate(`/admin-dashboard/games/${game.id}`) }}>
+                        <IconButton aria-label="edit" onClick={() => { props.onEdit(game.id) }}>
                           <Edit />
                         </IconButton>
                         <IconButton aria-label="delete" onClick={() => { setConfirmationDeleteID(game.id) }}>
