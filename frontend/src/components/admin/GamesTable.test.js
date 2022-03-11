@@ -1,10 +1,9 @@
-import { beforeEach } from "@jest/globals";
-import { render, shallow } from "enzyme";
-import { unmountComponentAtNode } from "react-dom";
+import { afterAll, afterEach, beforeEach, expect } from "@jest/globals";
+import { mount, shallow } from "enzyme";
 import { User } from "../../models/user.model";
 import GamesTable from "./GamesTable";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { TableContainer } from "@mui/material";
+import { TableContainer, TableRow } from "@mui/material";
+import { waitFor } from "@testing-library/dom";
 
 const mockUseNavigate = jest.fn();
 const mockUseParams = jest.fn();
@@ -27,7 +26,7 @@ jest.doMock('react-router-dom', () => ({
 //   };
 // });
 
-const user = new User('email@example.com', 'FirstName', 'LastName', 'ADMIN', 'token', 1);
+
 const games = [
   {
     title: 'My Title',
@@ -73,61 +72,38 @@ const games = [
   },
 ]
 
-let container = null;
+const user = new User('email@example.com', 'FirstName', 'LastName', 'ADMIN', 'token', 1);
 
 beforeEach(() => {
   localStorage.setItem('user', JSON.stringify(user));
-  container = document.createElement("div");
-  document.body.appendChild(container);
 })
 
 afterEach(() => {
   localStorage.clear();
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
 })
-
-function getGamesTable(games = []) {
-  return <GamesTable games={games} />
-}
 
 describe("<GamesTable />", () => {
   let comp = null;
 
-  it('test', () => {
-    comp = shallow(getGamesTable())
-  })
-
   describe("given no games", () => {
-    beforeEach(() => {
-      comp = render(getGamesTable())
+    beforeAll(() => {
+      comp = mount(<GamesTable />);
     })
 
     it('should be a games table', () => {
       const input = comp.find(TableContainer)
       expect(input.length).toEqual(1);
     })
+
+    it('should show no games', () => {
+      const rows = comp.find(TableRow).filterWhere((i) => i.prop('className') == 'game-row');
+      expect(rows.length).toEqual(0)
+    })
+
+    afterAll(() => {
+      comp.unmount();
+    })
+
   });
-
-  //   // it('should show no games', () => {
-  //   //   const rows = comp.find(TableRow).filterWhere((i) => i.prop('className') == 'game-row');
-  //   //   expect(rows.length).toEqual(0)
-  //   // })
-  // })
-
-  // describe("given 6 games", () => {
-  //   beforeEach(() => {
-  //     comp = render(getGamesTable(games))
-  //   })
-
-  //   it('should be a games table', () => {
-  //     expect(comp);
-  //   })
-
-  //   it('should show 5 games on the first page', () => {
-  //     const rows = comp.find(TableRow).filterWhere((i) => i.prop('className') == 'game-row');
-  //     expect(rows.length).toEqual(5)
-  //   })
-  // })
 });
+

@@ -45,7 +45,7 @@ export default function ViewGamesPage() {
               <GamesTable
                 data={games}
                 onConfirmDelete={handleAcceptConfirmDelete}
-                onEdit={id => navigate(`/admin-dashboard/games/${id}`) }
+                onEdit={id => navigate(`/admin-dashboard/games/${id}`)}
               />
             </Grid>
           </Grid>
