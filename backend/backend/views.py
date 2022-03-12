@@ -30,6 +30,8 @@ import json
 from datetime import datetime
 from random import randint
 
+import traceback
+
 
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
@@ -159,7 +161,6 @@ class GameViewSet(ViewSet):
                     
             return Response()
         except Exception as e:
-            print(e)
             return HttpResponse(status=501)
     
     def get(self, request, pk=None):

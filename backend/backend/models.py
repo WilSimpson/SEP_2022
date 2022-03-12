@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
+
+class AutoDateTimeField(models.DateTimeField):
+    def pre_save(self, model_instance, add):
+        return timezone.now()
 
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password, role='FACULTY'):
@@ -53,6 +58,9 @@ class User(AbstractBaseUser):
     email      = models.CharField(max_length=100, unique=True)
     password   = models.CharField(max_length=100)
 
+    created_at  = AutoDateTimeField(default=timezone.now)
+    updated_at  = AutoDateTimeField(default=timezone.now)
+
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'role']
@@ -83,13 +91,16 @@ class User(AbstractBaseUser):
         return self.role == UserRole.ADMIN
 
     objects = UserManager()
-    
+
+
 class Game(models.Model):
     title       = models.CharField(max_length=255)
     creator_id  = models.IntegerField()
     code        = models.IntegerField(validators=[MinValueValidator(0),
                                                    MaxValueValidator(999999)], default=0)
     active      = models.BooleanField()
+    created_at  = AutoDateTimeField(default=timezone.now)
+    updated_at  = AutoDateTimeField(default=timezone.now)
 
 class Question(models.Model):
     class ChanceGame(models.TextChoices):
@@ -106,12 +117,16 @@ class Question(models.Model):
     passcode    = models.CharField(max_length=255)
     chance      = models.BooleanField()
     chance_game = models.CharField(max_length=50, choices=ChanceGame.choices)
+    created_at  = AutoDateTimeField(default=timezone.now)
+    updated_at  = AutoDateTimeField(default=timezone.now)
     
 class Option(models.Model):
     value           = models.TextField()
     weight          = models.IntegerField()
     source_question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='source')
     dest_question   = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='destination')
+    created_at  = AutoDateTimeField(default=timezone.now)
+    updated_at  = AutoDateTimeField(default=timezone.now)
 
 class GameSession(models.Model):
     creator_id  = models.IntegerField()
@@ -122,9 +137,13 @@ class GameSession(models.Model):
     timeout = models.IntegerField()
     code = models.IntegerField(validators=[MinValueValidator(0),
                                 MaxValueValidator(999999)], default=0)
+    created_at  = AutoDateTimeField(default=timezone.now)
+    updated_at  = AutoDateTimeField(default=timezone.now)
 
 class GameMode(models.Model):
     name = models.CharField(max_length=20)
+    created_at  = AutoDateTimeField(default=timezone.now)
+    updated_at  = AutoDateTimeField(default=timezone.now)
 
 class Team(models.Model):
     game_session = models.ForeignKey(GameSession, on_delete= models.CASCADE)
@@ -133,3 +152,5 @@ class Team(models.Model):
     size = models.IntegerField()
     first_time = models.BooleanField()
     completed = models.BooleanField()
+    created_at  = AutoDateTimeField(default=timezone.now)
+    updated_at  = AutoDateTimeField(default=timezone.now)

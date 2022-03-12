@@ -1,3 +1,3 @@
-test ('filler test', () => {
+test('filler test', () => {
   expect(true).toBe(true);
 });

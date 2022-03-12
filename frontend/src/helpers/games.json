@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "name": "Engineering Ethics Adventure",
+    "creatorID": "1",
+    "active": true,
+    "startQuestionID": "1",
+    "createdAt": "2022-02-01"
+  },
+  {
+    "id": "2",
+    "name": "Business Ethics Adventure",
+    "creatorID": "2",
+    "active": true,
+    "startQuestionID": "1",
+    "createdAt": "2022-02-02"
+  },
+  {
+    "id": "3",
+    "name": "Public Ethics Adventure",
+    "creatorID": "1",
+    "active": true,
+    "startQuestionID": "1",
+    "createdAt": "2022-02-03"
+  },
+  {
+    "id": "4",
+    "name": "Psychology Ethics Adventure",
+    "creatorID": "1",
+    "active": true,
+    "startQuestionID": "1",
+    "createdAt": "2022-02-04"
+  },
+  {
+    "id": "5",
+    "name": "Law Ethics Adventuer",
+    "creatorID": "2",
+    "active": true,
+    "startQuestionID": "1",
+    "createdAt": "2022-02-05"
+  },
+  {
+    "id": "6",
+    "name": "Test Game",
+    "creatorID": "3",
+    "active": false,
+    "startQuestionID": "1",
+    "createdAt": "2022-02-06"
+  }
+]

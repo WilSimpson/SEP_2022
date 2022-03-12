@@ -28,6 +28,7 @@ class RoleTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         token['email'] = user.email
         token['role'] = user.role
+        token['id'] = user.id
 
         return token
 
