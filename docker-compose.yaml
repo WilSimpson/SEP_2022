@@ -1,17 +1,6 @@
 version: "0.1.0"
 
 services:
-  db:
-    image: postgres
-    volumes:
-      - ./ea/data/db:/var/lib/postgresql/data
-    env_file:
-      - .env
-    ports:
-      - 5423:5432
-    networks:
-      - local
-
   backend:
     restart: unless-stopped
     build:
@@ -26,8 +15,6 @@ services:
       - .env
     depends_on:
       - db
-    networks:
-      - local
   
   frontend:
     restart: unless-stopped
@@ -42,15 +29,6 @@ services:
       - .env
     depends_on:
       - backend
-    networks:
-      - local
-      - default
 
 volumes:
   static_volume: {}
-
-
-networks:
-  local:
-    internal: true
-    name: internal-network

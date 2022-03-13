@@ -29,6 +29,7 @@ services:
       - db
     networks:
       - local
+      - default
   
   frontend:
     restart: unless-stopped
@@ -43,7 +44,6 @@ services:
     depends_on:
       - backend
     networks:
-      - local
       - default
 
 volumes:
