@@ -13,7 +13,8 @@ class GameService {
           if (response.data) {
           // Expects a string format as JSON
           // Should result in an array of keyed question objects. Ex:
-          // {"1": {'text': "You are a software engineer doing stuff with cars. Make Choices.",
+          // {"1": {'text': "You are a software engineer doing stuff
+          //                 with cars. Make Choices.",
           //             'options': [{'text': "Ignore Result", 'link': "1A"},
           //             {'text': "Technician Re-test", 'link': "2A"},
           //             {'text': "Engineer Re-test", 'link': "5A"},
@@ -27,14 +28,14 @@ class GameService {
         });
   }
 
-  sendTeamInit(session_id, mode, guest, size, first_time) {
+  sendTeamInit(sessionId, mode, guest, size, firstTime) {
     return axios
         .post(API_URL + 'teams/createTeam/', {
-          session: session_id,
+          session: sessionId,
           mode: mode,
           guest: guest,
           size: size,
-          first_time: first_time,
+          first_time: firstTime,
         })
         .then((response) => {
           if (response.data) {

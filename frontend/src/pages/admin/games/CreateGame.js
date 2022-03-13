@@ -1,9 +1,10 @@
 import React from 'react';
-import {Container, Grid, Paper, Toolbar} from '@mui/material';
+import {Container, Grid, Paper} from '@mui/material';
 import GameFields from '../../../components/admin/GameFields';
 import gameService from '../../../services/game.service';
 import {useNavigate} from 'react-router-dom';
-import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
+import AuthenticatedLayout
+  from '../../../components/layout/authenticated.layout';
 import {alertService, alertSeverity} from '../../../services/alert.service';
 
 export default function CreateGamePage() {
@@ -20,14 +21,14 @@ export default function CreateGamePage() {
   function handleSubmit(
       title,
       active,
-      creator_id,
+      creatorId,
       code,
       questionsJSON,
       optionsJSON,
   ) {
     console.log('code', code);
     gameService
-        .createGame(title, active, creator_id, code, questionsJSON, optionsJSON)
+        .createGame(title, active, creatorId, code, questionsJSON, optionsJSON)
         .then(
             (success) => {
               alertService.alert({

@@ -1,20 +1,16 @@
 import React from 'react';
 import {useEffect, useRef, useState} from 'react';
 import LockOutlinedIcon from '@mui/icons-material/AccountCircle';
-import {StyledEngineProvider} from '@mui/material/styles';
 import {
   Alert,
   Avatar,
   Box,
   Button,
-  Container,
-  CssBaseline,
   TextField,
   Typography,
 } from '@mui/material';
 import AuthService from '../../services/auth.service';
 import validator from 'validator';
-import {User} from '../../models/user.model';
 import DefaultLayout from '../../components/layout/default.layout';
 import authService from '../../services/auth.service';
 
@@ -54,7 +50,8 @@ export default function Login() {
             }
           } else {
             setErrMsg(
-                'There was an issue handling your login. Please try again later.',
+                'There was an issue handling your login. ' +
+                'Please try again later.',
             );
           }
         },

@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Container, Grid, Paper} from '@mui/material';
 import GamesTable from '../../../components/admin/GamesTable';
 import gameService from '../../../services/game.service';
-import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
+import AuthenticatedLayout
+  from '../../../components/layout/authenticated.layout';
 import {alertService, alertSeverity} from '../../../services/alert.service';
 import Loading from '../../../components/layout/loading';
 import {useNavigate} from 'react-router';

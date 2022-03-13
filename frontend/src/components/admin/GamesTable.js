@@ -11,7 +11,6 @@ import {
   DialogTitle,
   Grid,
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -24,14 +23,12 @@ import {
 } from '@mui/material';
 import {Delete, Edit} from '@material-ui/icons';
 import {formatDate} from '../../helpers/DateFormatter';
-import gameService from '../../services/game.service';
-import {alertService, alertSeverity} from '../../services/alert.service';
 
 export default function GamesTable(props) {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(5);
   const [confirmationDeleteID, setConfirmationDeleteID] = React.useState(null);
-  const [games, setGames] = React.useState(props.data || []);
+  const games = props.data || [];
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * pageSize - games.length) : 0;

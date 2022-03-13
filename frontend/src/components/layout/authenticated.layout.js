@@ -1,5 +1,5 @@
+import React from 'react';
 import {Box, Grid, Toolbar} from '@mui/material';
-import {alertService, alertSeverity} from '../../services/alert.service';
 import {PageAlert} from './alert';
 import {SideMenu} from './SideMenu';
 

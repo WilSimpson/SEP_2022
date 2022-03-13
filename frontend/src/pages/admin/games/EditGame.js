@@ -3,7 +3,8 @@ import {Container, Grid, Paper} from '@mui/material';
 import GameFields from '../../../components/admin/GameFields';
 import gameService from '../../../services/game.service';
 import {useNavigate, useParams} from 'react-router-dom';
-import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
+import AuthenticatedLayout
+  from '../../../components/layout/authenticated.layout';
 import {alertService, alertSeverity} from '../../../services/alert.service';
 import Loading from '../../../components/layout/loading';
 
@@ -49,7 +50,7 @@ export default function EditGamePage(props) {
   function handleSubmit(
       title,
       active,
-      creator_id,
+      creatorId,
       code,
       questionsJSON,
       optionsJSON,
@@ -60,7 +61,7 @@ export default function EditGamePage(props) {
             id,
             title,
             active,
-            creator_id,
+            creatorId,
             code,
             questionsJSON,
             optionsJSON,

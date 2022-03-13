@@ -1,23 +1,21 @@
 import * as React from 'react';
-import {SideMenu} from '../../components/layout/SideMenu';
 import {
-  Box,
+  Container,
   Button,
-  ThemeProvider,
-  StyledEngineProvider,
   Tooltip,
+  Grid,
+  Paper,
+  Typography,
+  Link,
+  Table,
+  IconButton,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from '@mui/material';
-import {Toolbar} from '@mui/material';
-import {Container} from '@mui/material';
-import {Grid} from '@mui/material';
-import {Paper} from '@mui/material';
-import {Typography} from '@mui/material';
-import {Link} from '@mui/material';
-import {Table} from '@mui/material';
-import {IconButton} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import {TableHead, TableRow, TableCell, TableBody} from '@mui/material';
-import {gameSessions, Games} from '../../helpers/DummyData';
+import {gameSessions} from '../../helpers/DummyData';
 import gameService from '../../services/game.service';
 import GamesTable from '../../components/admin/GamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';

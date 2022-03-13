@@ -1,3 +1,4 @@
+import React from 'react';
 import {alertService, alertSeverity} from '../../services/alert.service';
 import authService from '../../services/auth.service';
 

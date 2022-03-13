@@ -66,7 +66,7 @@ export function SideMenu(props) {
   };
 
   const handleGameSessionManagement = () => {
-    setGameSessionManageOpen(!setGameSessionManageOpen);
+    setGameSessionManageOpen(!gameSessionManageOpen);
   };
 
   const handleUserManagement = () => {

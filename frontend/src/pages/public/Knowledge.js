@@ -1,10 +1,7 @@
 import * as React from 'react';
-import ResponsiveAppBar from '../../components/layout/nav';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import StickyFooter from '../../components/layout/stickyFooter';
 import DefaultLayout from '../../components/layout/default.layout';
 
 export default function Knowledge() {
