@@ -88,7 +88,6 @@ def create_team(request):
                 completed = False)
         return Response({'id':new_team.id}, status=200)
     except Exception as e:
-        printf()
         return HttpResponseServerError('A team could not be created. Please try again later.')
 
 
