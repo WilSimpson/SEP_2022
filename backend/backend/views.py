@@ -51,17 +51,12 @@ def joinGame(request):
             500 - There was an error finding the game session'''
 
     try:
-        game = Game.objects.get(code=int(request.data['code']))
-    except Exception as e:
-        return HttpResponseServerError('The game you are trying to access does not exist.')
-    if not game.active:
-        return HttpResponseServerError('This game session is not active. Please try again later or contact the game owner.')
-    try:
         game_session = GameSession.objects.get(code=int(request.data['code']))
     except:
         return HttpResponseServerError('There is no session for the game you are trying to join.')
+
     try:
-        game_serializer = GameSerializer(game)
+        game_serializer = GameSerializer(game_session.game)
         game_session_serializer = GameSessionSerializer(game_session)
         game_json = game_serializer.data
         session_json = game_session_serializer.data
@@ -93,6 +88,7 @@ def create_team(request):
                 completed = False)
         return Response({'id':new_team.id}, status=200)
     except Exception as e:
+        printf()
         return HttpResponseServerError('A team could not be created. Please try again later.')
 
 
