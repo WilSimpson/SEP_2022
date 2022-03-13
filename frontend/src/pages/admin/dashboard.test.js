@@ -2,10 +2,10 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
-import AdminDash, {GameSessionTable} from '../pages/admin/AdminDash';
+import AdminDash, {GameSessionTable} from './dashboard';
 import {User} from '../../models/user';
 import {afterEach, beforeEach} from '@jest/globals';
-import GamesTable from '../components/admin/GamesTable';
+import GamesTable from '../../components/admin/gamesTable';
 
 const user = new User('test@test.com', '', '', 'ADMIN', 'jwt-token', 1);
 

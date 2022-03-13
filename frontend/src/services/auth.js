@@ -1,6 +1,7 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import {configureStore, API_URL} from '../store/store';
+import configureStore from '../store/store'
+import {API_URL} from '../store/store';
 import {LOGIN_USER, LOGOUT_USER} from '../store/types';
 import {User} from '../models/user';
 

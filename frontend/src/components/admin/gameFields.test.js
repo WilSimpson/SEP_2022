@@ -1,8 +1,8 @@
 import React from 'react';
-import GameFields from './GameFields';
+import GameFields from './gameFields';
 import {shallow} from 'enzyme';
 import {afterEach, beforeEach, expect, jest} from '@jest/globals';
-import {User} from '../../models/user.model';
+import {User} from '../../models/user';
 import {Button, TextField} from '@mui/material';
 
 const user = new User(

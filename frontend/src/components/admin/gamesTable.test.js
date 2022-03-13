@@ -1,9 +1,8 @@
 import {afterAll, afterEach, beforeEach, expect} from '@jest/globals';
-import {mount, shallow} from 'enzyme';
-import {User} from '../../models/user.model';
-import GamesTable from './GamesTable';
+import {mount} from 'enzyme';
+import {User} from '../../models/user';
+import GamesTable from './gamesTable';
 import {TableContainer, TableRow} from '@mui/material';
-import {waitFor} from '@testing-library/dom';
 
 const mockUseNavigate = jest.fn();
 const mockUseParams = jest.fn();

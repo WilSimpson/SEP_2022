@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
-import Home from '../pages/public/home';
+import Home from './home';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 let container = null;

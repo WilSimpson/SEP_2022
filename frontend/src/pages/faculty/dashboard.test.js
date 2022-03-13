@@ -2,12 +2,11 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
-import {render, fireEvent} from '@testing-library/react';
+import {render} from '@testing-library/react';
 import {User} from '../../models/user';
-import FacultyDash from '../pages/faculty/FacultyDash';
+import FacultyDash from './dashboard';
 import {BrowserRouter} from 'react-router-dom';
-import GamesTable from '../components/admin/GamesTable';
-import axios from 'axios';
+import GamesTable from '../../components/admin/gamesTable';
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
 
