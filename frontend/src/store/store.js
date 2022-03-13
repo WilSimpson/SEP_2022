@@ -7,8 +7,10 @@ const initialState = {
   authenticated: false,
 };
 
-export const API_URL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 
-  'http://localhost:8000' : 'https://sep22.forever.dev/api';
+export const API_URL =
+!process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
+  'http://localhost:8000' :
+  'https://sep22.forever.dev/api';
 
 const createNoopStorage = () => {
   return {

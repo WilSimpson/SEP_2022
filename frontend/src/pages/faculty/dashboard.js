@@ -9,11 +9,11 @@ import {
   Link,
   Table,
   IconButton,
+  TextField,
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import {TableHead, TableRow, TableCell, TableBody} from '@mui/material';
 import {useState} from 'react';
-import SearchBar from 'material-ui-search-bar';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import GamesTable from '../../components/admin/gamesTable';
 import gameService from '../../services/game';
@@ -27,19 +27,14 @@ import gameSessionService from '../../services/gameSession';
 // }
 
 function GameSessionTable() {
-  const [rows, setRows] = useState(gameSessionService.getGameSessions());
-  const [searched, setSearched] = useState('');
+  const rows = gameSessionService.getGameSessions();
+  const [filteredRows, setFilteredRows] = useState(rows);
 
   const requestSearch = (searchedVal) => {
-    const filteredRows = originalRows.filter((row) => {
+    console.log(searchedVal);
+    setFilteredRows(rows.filter((row) => {
       return row.gamecode.includes(searchedVal);
-    });
-    setRows(filteredRows);
-  };
-
-  const cancelSearch = () => {
-    setSearched('');
-    requestSearch(searched);
+    }));
   };
 
   return (
@@ -47,10 +42,9 @@ function GameSessionTable() {
       <Typography component="h2" variant="h6" gutterBottom>
         Active Game Sessions
       </Typography>
-      <SearchBar
-        value={searched}
-        onChange={(searchVal) => requestSearch(searchVal)}
-        onCancelSearch={() => cancelSearch()}
+      <TextField
+        label='Search by Session Code'
+        onChange={(event) => requestSearch(event.target.value)}
       />
       <Table size="small" data-testid="active-game-sessions">
         <TableHead>
@@ -64,7 +58,7 @@ function GameSessionTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {filteredRows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>
                 <Tooltip title="Download QR Code">
