@@ -1,7 +1,5 @@
 import axios from 'axios';
-import configureStore from '../store/store';
-
-const {API_URL} = configureStore();
+import {API_URL} from '../store/store';
 
 class GameService {
   getGames() {

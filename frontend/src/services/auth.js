@@ -1,10 +1,10 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import configureStore from '../store/store';
+import {configureStore, API_URL} from '../store/store';
 import {LOGIN_USER, LOGOUT_USER} from '../store/types';
 import {User} from '../models/user';
 
-const {store, API_URL} = configureStore();
+const {store} = configureStore();
 
 export function authHeader() {
   const user = JSON.parse(localStorage.getItem('user'));

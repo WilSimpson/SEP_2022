@@ -1,7 +1,5 @@
 import axios from 'axios';
-
-// does this have to be the port the backend runs on?
-const API_URL = 'http://localhost:8000/api/';
+import {API_URL} from '../store/store'
 
 class GameService {
   joinGame(gameCode) {
