@@ -1,26 +1,29 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import Login from '../pages/public/Login';
-import '../setupTests';
+import Register from '../pages/public/Register';
+import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent, act} from '@testing-library/react';
 import AuthService from '../services/auth.service';
 
 jest.mock('../services/auth.service');
 
-describe('<Login />', () => {
+describe('<Register />', () => {
   let emailField;
   let passwordField;
+  let firstField;
+  let lastField;
+  let roleSelect;
   let submitButton;
 
-  it('should render the Login component', () => {
-    const shallowWrapper = shallow(<Login />);
+  it('should render the Register component', () => {
+    const shallowWrapper = shallow(<Register />);
     expect(shallowWrapper);
   });
 
   describe('Email Field', () => {
     beforeEach(() => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<Register />);
       emailField = getByTestId('email-input');
     });
 
@@ -36,7 +39,7 @@ describe('<Login />', () => {
 
   describe('Password Field', () => {
     beforeEach(() => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<Register />);
       passwordField = getByTestId('pass-input');
     });
 
@@ -50,12 +53,62 @@ describe('<Login />', () => {
     });
   });
 
+  describe('First Name Field', () => {
+    beforeEach(() => {
+      const {getByTestId} = render(<Register />);
+      firstField = getByTestId('first-input');
+    });
+
+    it('should exist', () => {
+      expect(firstField).toBeInTheDocument();
+    });
+
+    it('should accept input', () => {
+      fireEvent.change(firstField, {target: {value: 'John'}});
+      expect(firstField.value).toBe('John');
+    });
+  });
+
+  describe('Last Name Field', () => {
+    beforeEach(() => {
+      const {getByTestId} = render(<Register />);
+      lastField = getByTestId('last-input');
+    });
+
+    it('should exist', () => {
+      expect(lastField).toBeInTheDocument();
+    });
+
+    it('should accept input', () => {
+      fireEvent.change(lastField, {target: {value: 'Smith'}});
+      expect(lastField.value).toBe('Smith');
+    });
+  });
+
+  describe('Select Role Drop-down', () => {
+    beforeEach(() => {
+      const {getByTestId} = render(<Register />);
+      roleSelect = getByTestId('role-select');
+    });
+
+    it('should exist', () => {
+      expect(roleSelect).toBeInTheDocument();
+    });
+
+    // add more tests for drop down
+  });
+
+  // haven't changed submit button test to account for other fields not being
+  // selected, functionality for this needs to be done in Register.js as well
   describe('Submit Button', () => {
     beforeEach(() => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<Register />);
       submitButton = getByTestId('submit-button');
       passwordField = getByTestId('pass-input');
       emailField = getByTestId('email-input');
+      firstField = getByTestId('first-input');
+      lastField = getByTestId('last-input');
+      roleSelect = getByTestId('role-select');
     });
 
     it('should exist', () => {
@@ -71,7 +124,6 @@ describe('<Login />', () => {
     it('should be disabled when email is valid and password is invalid', () => {
       fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
       fireEvent.change(passwordField, {target: {value: 'bad'}});
-
       expect(submitButton).toBeDisabled();
     });
 
@@ -87,9 +139,9 @@ describe('<Login />', () => {
       expect(submitButton).not.toBeDisabled();
     });
 
-    it('should call AuthService login when clicked', async () => {
+    it('should call AuthService register when clicked', async () => {
       const promise = Promise.resolve();
-      AuthService.login.mockResolvedValue({
+      AuthService.register.mockResolvedValue({
         response: jest.fn(() => promise),
       });
 
@@ -97,7 +149,7 @@ describe('<Login />', () => {
       fireEvent.change(passwordField, {target: {value: 'morethan6'}});
       fireEvent.click(submitButton);
 
-      expect(AuthService.login).toHaveBeenCalled();
+      expect(AuthService.register).toHaveBeenCalled();
       await act(() => promise);
     });
   });

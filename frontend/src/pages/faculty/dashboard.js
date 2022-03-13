@@ -1,20 +1,23 @@
 import * as React from 'react';
-import {Button, Tooltip} from '@mui/material';
-import {Container} from '@mui/material';
-import {Grid} from '@mui/material';
-import {Paper} from '@mui/material';
-import {Typography} from '@mui/material';
-import {Link} from '@mui/material';
-import {Table} from '@mui/material';
-import {IconButton} from '@mui/material';
+import {
+  Button,
+  Tooltip,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  Link,
+  Table,
+  IconButton,
+} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import {TableHead, TableRow, TableCell, TableBody} from '@mui/material';
 import {useState} from 'react';
 import SearchBar from 'material-ui-search-bar';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
-import GamesTable from '../../components/admin/GamesTable';
-import gameService from '../../services/game.service';
-import gameSessionService from '../../services/gamesession.service';
+import GamesTable from '../../components/admin/gamesTable';
+import gameService from '../../services/game';
+import gameSessionService from '../../services/gameSession';
 
 // interface GamesSessions {
 //   name: string;

@@ -1,9 +1,9 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import '../setupTests';
+import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent} from '@testing-library/react';
-import {User} from '../models/user.model';
+import {User} from '../../models/user';
 import FacultyDash from '../pages/faculty/FacultyDash';
 import {BrowserRouter} from 'react-router-dom';
 import GamesTable from '../components/admin/GamesTable';

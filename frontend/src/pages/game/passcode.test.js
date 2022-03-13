@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import Passcode from '../pages/game/passcode';
-import '../setupTests';
+import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent} from '@testing-library/react';
-import gamePlayService from '../services/gameplay.service';
+import gamePlayService from '../../services/gameplay';
 
 jest.mock('../services/gameplay.service');
 

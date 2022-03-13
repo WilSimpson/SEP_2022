@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import accountIcon from '../../images/accountIcon.png';
 import logoSmall from '../../images/logoSmall.png';
 import {ButtonGroup} from '@mui/material';
-import authService from '../../services/auth.service';
+import authService from '../../services/auth';
 
 // const pages = ['Get Started', 'About', 'Help'];
 

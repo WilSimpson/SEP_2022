@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Grid, Paper} from '@mui/material';
-import GamesTable from '../../../components/admin/GamesTable';
-import gameService from '../../../services/game.service';
+import GamesTable from '../../../components/admin/gamesTable';
+import gameService from '../../../services/game';
 import AuthenticatedLayout
   from '../../../components/layout/authenticated.layout';
-import {alertService, alertSeverity} from '../../../services/alert.service';
+import {alertService, alertSeverity} from '../../../services/alert';
 import Loading from '../../../components/layout/loading';
 import {useNavigate} from 'react-router';
 

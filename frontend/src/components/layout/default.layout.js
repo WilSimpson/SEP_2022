@@ -2,7 +2,7 @@ import React from 'react';
 import {CssBaseline, Grid} from '@mui/material';
 import {PageAlert} from './alert';
 import ResponsiveAppBar from './nav';
-import StickyFooter from './stickyFooter';
+import StickyFooter from './footer';
 
 export default function DefaultLayout(props) {
   return (

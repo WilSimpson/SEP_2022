@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import AuthService from '../../services/auth.service';
+import AuthService from '../../services/auth';
 import validator from 'validator';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';

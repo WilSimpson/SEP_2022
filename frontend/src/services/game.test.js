@@ -1,10 +1,10 @@
 import '../setupTests';
-import gamePlayService from '../services/gameplay.service';
+import gamePlayService from './gameplay';
 import axios from 'axios';
 
 jest.mock('axios');
 
-describe('GameService', () => {
+describe('Game Service', () => {
   describe('joinGame', () => {
     it('should return a game object on success', () => {
       const response = {

@@ -17,8 +17,7 @@ import List from '@mui/material/List';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import AuthService from '../../services/auth.service';
-import {User} from '../../models/user.model';
+import AuthService from '../../services/auth';
 
 const drawerWidth = 240;
 
@@ -246,7 +245,7 @@ export function SideMenu(props) {
         </Toolbar>
         <Divider />
         <List component="nav">
-          {User.prototype.isAdmin ? (
+          {AuthService.currentUser().isAdmin() ? (
             <React.Fragment>
               {dashboardItem}
               {gameManagementItem}

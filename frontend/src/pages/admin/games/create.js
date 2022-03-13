@@ -1,11 +1,11 @@
 import React from 'react';
 import {Container, Grid, Paper} from '@mui/material';
-import GameFields from '../../../components/admin/GameFields';
-import gameService from '../../../services/game.service';
+import GameFields from '../../../components/admin/gameFields';
+import gameService from '../../../services/game';
 import {useNavigate} from 'react-router-dom';
 import AuthenticatedLayout
   from '../../../components/layout/authenticated.layout';
-import {alertService, alertSeverity} from '../../../services/alert.service';
+import {alertService, alertSeverity} from '../../../services/alert';
 
 export default function CreateGamePage() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import '../setupTests';
-import AuthService from '../services/auth.service';
+import AuthService from './auth';
 import axios from 'axios';
 
 jest.mock('axios');

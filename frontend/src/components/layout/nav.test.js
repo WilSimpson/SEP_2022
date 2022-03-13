@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
-import ResponsiveAppBar from '../components/layout/nav';
+import ResponsiveAppBar from './nav';
 
 let container = null;
 

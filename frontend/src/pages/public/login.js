@@ -9,10 +9,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import AuthService from '../../services/auth.service';
+import AuthService from '../../services/auth';
 import validator from 'validator';
 import DefaultLayout from '../../components/layout/default.layout';
-import authService from '../../services/auth.service';
+import authService from '../../services/auth';
 
 export default function Login() {
   const userRef = useRef();

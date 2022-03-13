@@ -7,7 +7,7 @@ import {TextField} from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import Alert from '@mui/material/Alert';
 import {useNavigate} from 'react-router-dom';
-import GamePlayService from '../../services/gameplay.service';
+import GamePlayService from '../../services/gameplay';
 import {LinearProgress} from '@mui/material';
 
 const styles = {

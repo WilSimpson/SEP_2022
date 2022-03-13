@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
-import GamePlayService from '../../services/gameplay.service';
+import GamePlayService from '../../services/gameplay';
 import Alert from '@mui/material/Alert';
 
 export default function StartingSurvey() {

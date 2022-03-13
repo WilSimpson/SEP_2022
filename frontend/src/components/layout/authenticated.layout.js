@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Grid, Toolbar} from '@mui/material';
 import {PageAlert} from './alert';
-import {SideMenu} from './SideMenu';
+import {SideMenu} from './sideMenu';
 
 export default function AuthenticatedLayout(props) {
   return (

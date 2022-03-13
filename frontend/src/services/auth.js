@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import configureStore from '../store/store';
 import {LOGIN_USER, LOGOUT_USER} from '../store/types';
-import {User} from '../models/user.model';
+import {User} from '../models/user';
 
 const {store, API_URL} = configureStore();
 
@@ -52,7 +52,9 @@ class AuthService {
   }
 
   currentUser() {
-    return JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user'));
+    user.__proto__ = User.prototype;
+    return user;
   }
 
   register(email, password, firstname, lastname, role) {

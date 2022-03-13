@@ -1,5 +1,3 @@
-import authService from '../services/auth.service';
-
 const ADMIN = 'ADMIN';
 const FACULTY = 'FACULTY';
 
@@ -14,10 +12,10 @@ export class User {
   }
 
   isAdmin() {
-    return authService.currentUser().role === ADMIN;
+    return this.role == ADMIN;
   }
 
   isFaculty() {
-    return authService.currentUser().role === FACULTY;
+    return this.role == FACULTY;
   }
 }

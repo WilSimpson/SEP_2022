@@ -1,4 +1,4 @@
-import {gameSessions} from '../helpers/DummyData';
+import {gameSessions} from '../helpers/dummyData';
 
 class GameSessionService {
   getGameSessions() {

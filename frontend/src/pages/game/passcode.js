@@ -1,7 +1,7 @@
 import React from 'react';
 import {useRef, useState} from 'react';
 import {Alert, Box, Button, TextField, Typography} from '@mui/material';
-import gamePlayService from '../../services/gameplay.service';
+import gamePlayService from '../../services/gameplay';
 import DefaultLayout from '../../components/layout/default.layout';
 
 export default function Passcode(props) {

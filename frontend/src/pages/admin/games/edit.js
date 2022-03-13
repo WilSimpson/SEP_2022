@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {Container, Grid, Paper} from '@mui/material';
-import GameFields from '../../../components/admin/GameFields';
-import gameService from '../../../services/game.service';
+import GameFields from '../../../components/admin/gameFields';
+import gameService from '../../../services/game';
 import {useNavigate, useParams} from 'react-router-dom';
 import AuthenticatedLayout
   from '../../../components/layout/authenticated.layout';
-import {alertService, alertSeverity} from '../../../services/alert.service';
+import {alertService, alertSeverity} from '../../../services/alert';
 import Loading from '../../../components/layout/loading';
 
 export default function EditGamePage(props) {

@@ -15,12 +15,12 @@ import {
   TableBody,
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import {gameSessions} from '../../helpers/DummyData';
-import gameService from '../../services/game.service';
-import GamesTable from '../../components/admin/GamesTable';
+import {gameSessions} from '../../helpers/dummyData';
+import gameService from '../../services/game';
+import GamesTable from '../../components/admin/gamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import Loading from '../../components/layout/loading';
-import {alertService, alertSeverity} from '../../services/alert.service';
+import {alertService, alertSeverity} from '../../services/alert';
 
 export function GameSessionTable() {
   return (

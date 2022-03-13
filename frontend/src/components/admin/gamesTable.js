@@ -22,7 +22,7 @@ import {
   TextField,
 } from '@mui/material';
 import {Delete, Edit} from '@material-ui/icons';
-import {formatDate} from '../../helpers/DateFormatter';
+import {formatDate} from '../../helpers/dateFormatter';
 
 export default function GamesTable(props) {
   const [page, setPage] = React.useState(0);

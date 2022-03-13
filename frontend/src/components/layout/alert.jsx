@@ -1,8 +1,8 @@
 import React from 'react';
 import {Alert, AlertTitle, Stack} from '@mui/material';
 import PropTypes from 'prop-types';
-import titlizeString from '../../helpers/StringFormatter';
-import {alertService} from '../../services/alert.service';
+import titlizeString from '../../helpers/stringFormatter';
+import {alertService} from '../../services/alert';
 import {createBrowserHistory} from 'history';
 
 const history = createBrowserHistory();

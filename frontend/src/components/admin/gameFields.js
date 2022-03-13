@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, TextField, Grid, Switch} from '@mui/material';
-import authService from '../../services/auth.service';
+import authService from '../../services/auth';
 
 export default function GameFields(props) {
   const isEditing = props.game != null;
