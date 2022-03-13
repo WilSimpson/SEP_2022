@@ -55,6 +55,9 @@ def joinGame(request):
     except:
         return HttpResponseServerError('There is no session for the game you are trying to join.')
 
+    if not game_session.game.active:
+        return HttpResponseServerError('The game is no longer active')
+
     try:
         game_serializer = GameSerializer(game_session.game)
         game_session_serializer = GameSessionSerializer(game_session)
