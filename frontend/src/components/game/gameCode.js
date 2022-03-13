@@ -117,7 +117,7 @@ class GameCode extends React.Component {
             id="gameCode"
             autoComplete="off"
             value={this.state.value}
-            ref={props.gameCode}
+            ref={this.props.gameCode}
             variant="outlined"
             inputProps={{
               'maxLength': 6,

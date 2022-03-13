@@ -3,6 +3,7 @@ import {Alert, AlertTitle, Stack} from '@mui/material';
 import PropTypes from 'prop-types';
 import titlizeString from '../../helpers/StringFormatter';
 import {alertService} from '../../services/alert.service';
+import {createBrowserHistory} from 'history';
 
 const history = createBrowserHistory();
 
