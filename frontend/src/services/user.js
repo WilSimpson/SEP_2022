@@ -4,7 +4,7 @@ import {API_URL} from '../store/store'
 
 class UserService {
   getUser() {
-    return axios.get(API_URL + 'user', {headers: authHeader()});
+    return axios.get(API_URL + '/user', {headers: authHeader()});
   }
 }
 export default new UserService();

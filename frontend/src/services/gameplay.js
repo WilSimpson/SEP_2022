@@ -4,7 +4,7 @@ import {API_URL} from '../store/store'
 class GameService {
   joinGame(gameCode) {
     return axios
-        .post(API_URL + 'games/joinGame/', {
+        .post(API_URL + '/games/joinGame/', {
           code: gameCode,
         })
         .then((response) => {
@@ -28,7 +28,7 @@ class GameService {
 
   sendTeamInit(sessionId, mode, guest, size, firstTime) {
     return axios
-        .post(API_URL + 'teams/createTeam/', {
+        .post(API_URL + '/teams/createTeam/', {
           session: sessionId,
           mode: mode,
           guest: guest,

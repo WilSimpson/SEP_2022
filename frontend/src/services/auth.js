@@ -18,7 +18,7 @@ export function authHeader() {
 class AuthService {
   login(email, password) {
     return axios
-        .post(API_URL + 'api/token/', {
+        .post(API_URL + '/api/token/', {
           email: email,
           password: password,
         })
