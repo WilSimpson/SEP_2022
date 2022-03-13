@@ -21,7 +21,7 @@ export default function Knowledge() {
             <Typography
               variant="h5"
               align="center"
-              color="text.secondary"
+              color="secondary"
               paragraph
             >
               How to play a game:
@@ -29,7 +29,7 @@ export default function Knowledge() {
             <Typography
               variant="h5"
               align="center"
-              color="text.secondary"
+              color="secondary"
               paragraph
             >
               1.) Scan a QR code given to you by the game host
@@ -37,7 +37,7 @@ export default function Knowledge() {
             <Typography
               variant="h5"
               align="center"
-              color="text.secondary"
+              color="secondary"
               paragraph
             >
               2.) Enter the asked for info
@@ -45,7 +45,7 @@ export default function Knowledge() {
             <Typography
               variant="h5"
               align="center"
-              color="text.secondary"
+              color="secondary"
               paragraph
             >
               3.) Answer the question
@@ -53,7 +53,7 @@ export default function Knowledge() {
             <Typography
               variant="h5"
               align="center"
-              color="text.secondary"
+              color="secondary"
               paragraph
             >
               4.) Read the Result
@@ -61,7 +61,7 @@ export default function Knowledge() {
             <Typography
               variant="h5"
               align="center"
-              color="text.secondary"
+              color="secondary"
               paragraph
             >
               5.) Proceed to given location and enter code if necessary
@@ -69,7 +69,7 @@ export default function Knowledge() {
             <Typography
               variant="h5"
               align="center"
-              color="text.secondary"
+              color="secondary"
               paragraph
             >
               6.) Repeat until game is over

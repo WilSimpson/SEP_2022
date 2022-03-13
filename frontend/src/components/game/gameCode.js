@@ -105,7 +105,7 @@ class GameCode extends React.Component {
 
   render() {
     return (
-      <Grid container spacing={0} direction="column">
+      <Grid spacing={0} direction="column">
         <Box sx={{pb: 2}}>
           <Box sx={{pb: 2}}>
             {this.state.errMsg && (
