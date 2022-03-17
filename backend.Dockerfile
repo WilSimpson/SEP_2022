@@ -12,7 +12,8 @@ RUN apt-get install -y \
     dos2unix \
     && apt-get clean
 
-COPY ./ ./
+COPY ./backend ./
+COPY ./.env ./
 RUN pip install --upgrade pip
 RUN pip install gunicorn
 RUN pip install -r requirements.txt
@@ -21,3 +22,6 @@ RUN pip install -r requirements.txt
 RUN find . -type f -print0 | xargs -0 dos2unix && \
     apt-get remove --purge dos2unix -y && \
     rm -rf /var/lib/apt/lists/*
+
+RUN chmod +x /app/wsgi-entrypoint.sh
+RUN ls -la /app

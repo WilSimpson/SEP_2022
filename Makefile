@@ -91,7 +91,7 @@ build: build-frontend build-backend
 
 build-%:
 	@echo Building $*
-	docker build -t ea-$* -f $(ROOT_DIR)/$*/Dockerfile $(ROOT_DIR)/$*
+	docker build -t ea-$* -f $(ROOT_DIR)/$*.Dockerfile $(ROOT_DIR)/.
 
 push: push-frontend push-backend
 
@@ -125,8 +125,15 @@ aws-setup: aws-login aws-docker-login
 
 aws-login:
 ifndef GITPOD_AWS_CONFIGURED
-	@aws configure sso --profile default
+	@aws configure sso --profile team2
 	@export GITPOD_AWS_CONFIGURED=true
 else
 	@echo "Already logged in"
+endif
+
+aws-docker-login:
+ifndef GITPOD_AWS_CONFIGURED
+	@echo "Not signed in"
+else
+	@aws ecr get-login-password --profile team2 | docker login --username AWS --password-stdin $(EA_BASE_REGISTRY)
 endif
