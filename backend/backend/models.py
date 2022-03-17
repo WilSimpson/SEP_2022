@@ -155,7 +155,6 @@ class Team(models.Model):
     completed = models.BooleanField()
 
 class GameSessionAnswer(models.Model):
-    time = models.DateTimeField(default=datetime.now)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     option_chosen = models.ForeignKey(Option, on_delete=models.CASCADE)
