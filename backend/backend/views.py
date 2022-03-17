@@ -9,19 +9,28 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 
 from .models import Game, Option, Question
-from .utils import get_game_data, get_chance_game
+
+from .utils import *
+
+from django.http import JsonResponse, HttpResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
 
 from .models import Game
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 import json
 from datetime import datetime
+from random import randint
+
+import traceback
 
 
 class UserViewSet(GenericViewSet,
@@ -39,21 +48,18 @@ def joinGame(request):
     '''Accepts a game code in the request
         Returns a game object or an error code
         Error Codes:
-            501 - The game does not exist
-            502 - The game is not active
-            503 - The game session does not exist
-            504 - There was another problem'''
+            500 - There was an error finding the game session'''
 
     try:
         game = Game.objects.get(code=int(request.data['code']))
     except Exception as e:
-        return HttpResponse(status=501)
+        return HttpResponseServerError('The game you are trying to access does not exist.')
     if not game.active:
-        return HttpResponse(status=502)
+        return HttpResponseServerError('This game session is not active. Please try again later or contact the game owner.')
     try:
         game_session = GameSession.objects.get(code=int(request.data['code']))
     except:
-        return HttpResponse(status=503)
+        return HttpResponseServerError('There is no session for the game you are trying to join.')
     try:
         game_serializer = GameSerializer(game)
         game_session_serializer = GameSessionSerializer(game_session)
@@ -67,14 +73,14 @@ def joinGame(request):
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
         return Response(ret_json, status=200)
     except Exception as e:
-        return HttpResponse(status=504)
+        return HttpResponseServerError('There was a problem accessing this game session. Please try again later.')
 
 @api_view(['POST'])
 def create_team(request):
     '''Accepts an object of params to create a team
         Returns a team id
         Error Codes:
-            501 - Could not create a team'''          
+            500 - Could not create a team'''          
     try:
         session = GameSession.objects.get(id=request.data['session'])
         mode = GameMode.objects.get(name=request.data['mode'])
@@ -87,7 +93,7 @@ def create_team(request):
                 completed = False)
         return Response({'id':new_team.id}, status=200)
     except Exception as e:
-        return HttpResponse(status=501)
+        return HttpResponseServerError('A team could not be created. Please try again later.')
 
 
 serializer_class = RoleTokenObtainPairSerializer    
@@ -155,7 +161,6 @@ class GameViewSet(ViewSet):
                     
             return Response()
         except Exception as e:
-            print(e)
             return HttpResponse(status=501)
     
     def get(self, request, pk=None):
@@ -233,3 +238,51 @@ class GameSessionAnswerViewSet(ViewSet):
         except Exception as e:
             print (e)
             return HttpResponse(status=500)
+        
+@api_view(['POST'])
+def toggle_active(request):
+    '''Expects an ID of the game from the frontend
+        returns -- an HTTP status:
+                                    200 -- The game was activated
+                                    500 -- There was a problem toggling the game'''
+    try:
+        try:
+            game = Game.objects.get(id=int(request.data['id']))
+        except Exception as e:
+            return HttpResponseServerError('This game does not exist.')
+        game.active = not game.active
+        game.save()
+        return HttpResponse(status=200)
+    except Exception as e:
+        return HttpResponseServerError('Could not update game state.')
+
+
+@api_view(['POST'])
+def start_session(request):
+    '''Expects a game id, creator_id, notes, and a timeout(minutes)
+        Returns -- A game session id and gamecode (status 200) on success
+        Error -- Returns an error message (status 500)'''
+    try:
+        base_game = Game.objects.get(id=int(request.data['id']))
+    except Exception:
+        return HttpResponseServerError('You cannot create a session for a game that does not exist.')
+    if not base_game.active:
+        return HttpResponseServerError('You can only create sessions for active games.')
+    try:
+        req_creator_id = request.data['creator_id']
+        req_notes = request.data['notes']
+        req_timeout = int(request.data['timeout'])
+        sessions = GameSession.objects.all()
+        new_session = GameSession.objects.create(
+            creator_id  = req_creator_id,
+            game = base_game,
+            start_time = datetime.now(),
+            end_time = None,
+            notes = req_notes,
+            timeout = req_timeout,
+            code = unique_random(0, 999999, [session.code for session in sessions])
+        )
+        return Response(data={'id':new_session.id, 'code':new_session.code}, status=200)
+    except Exception:
+        return HttpResponseServerError('There was a problem creating this session.')
+    

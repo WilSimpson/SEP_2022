@@ -21,7 +21,10 @@ class GameSerializerTest(TestCase):
     def test_fields(self):
         serializer = GameSerializer(self.game)
         for k, v in serializer.data.items():
-            self.assertEqual(v, getattr(self.game, k))
+            if(type(getattr(self.game, k)) == datetime):
+                self.assertEqual(v[:-4], getattr(self.game, k).replace(tzinfo=None).isoformat(sep='T', timespec='milliseconds')) 
+            else:
+                self.assertEqual(v, getattr(self.game, k))
 
 class QuestionSerializerTest(TestCase):
     def setUp(self):
@@ -77,4 +80,7 @@ class GameModeSerializerTest(TestCase):
     def test_fields(self):
         serializer = GameModeSerializer(self.mode)
         for k, v in serializer.data.items():
-            self.assertEqual(v, getattr(self.mode, k))
+            if (type(getattr(self.mode, k)) == datetime):
+                self.assertEqual(v[:-4], getattr(self.mode, k).replace(tzinfo=None).isoformat(sep='T', timespec='milliseconds')) 
+            else:
+                self.assertEqual(v, getattr(self.mode, k))

@@ -246,7 +246,7 @@ class JoinGameTestCase(TestCase):
         }
 
         resp = self.client.post('/api/games/joinGame/', data=data)
-        self.assertEqual(resp.status_code, 502)
+        self.assertEqual(resp.status_code, 500)
 
     
     def test_sessionless_game(self):
@@ -255,7 +255,7 @@ class JoinGameTestCase(TestCase):
         }
 
         resp = self.client.post('/api/games/joinGame/', data=data)
-        self.assertEqual(resp.status_code, 503)
+        self.assertEqual(resp.status_code, 500)
 
     def test_invalid_game(self):
         data = {
@@ -263,7 +263,7 @@ class JoinGameTestCase(TestCase):
         }
 
         resp = self.client.post('/api/games/joinGame/', data=data)
-        self.assertEqual(resp.status_code, 501)
+        self.assertEqual(resp.status_code, 500)
 
 
 class CreateTeamTestCase(TestCase):
@@ -296,7 +296,7 @@ class CreateTeamTestCase(TestCase):
         }
 
         resp = self.client.post('/api/teams/createTeam/', data=data)
-        self.assertEqual(resp.status_code, 501)
+        self.assertEqual(resp.status_code, 500)
 class GameViewSetTestCase(TestCase):
     def setUp(self):
         # create game
@@ -326,7 +326,10 @@ class GameViewSetTestCase(TestCase):
     def test_get_valid_game(self):
         resp = self.client.get('/api/games/'+str(self.game.id)+'/')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(resp.data, self.data)
+        self.assertEqual(resp.data['title'], self.data['title'])
+        self.assertEqual(resp.data['code'], self.data['code'])
+        self.assertEqual(resp.data['creator_id'], self.data['creator_id'])
+        self.assertIsNotNone(resp.data['id'])
         
     def test_get_invalid_game(self):
         resp = self.client.get('/api/games/'+str(self.game.id + 1)+'/')
@@ -352,7 +355,8 @@ class GameViewSetTestCase(TestCase):
     def test_get_all_games(self):
         resp = self.client.get('/api/games/')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(resp.data, [self.data])
+        self.assertEqual(len(resp.data), 1)
+        self.assertEqual(resp.data[0]['title'], self.data['title'])
     
     def test_get_all_games_empty(self):
         Game.objects.filter(id=self.game.id).delete()
@@ -480,6 +484,7 @@ class GameViewSetTestCase(TestCase):
         resp = self.client.put('/api/games/'+str(0)+'/', self.data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
         
+
     def test_update_invalid_chance_game(self):
         updated_data = self.data
         updated_data["questions"][0]["chance_game"] = "invalid entry"
@@ -516,3 +521,64 @@ class GameSessionAnswerViewSetTest(TestCase):
         resp = self.client.post('/api/gameSession/answer/', invalid_data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
+        
+class SessionViewTestCase(TestCase):
+    def setUp(self):
+        self.game = Game.objects.create(title='test', creator_id=999, code=999999, active=True)
+        self.inactive_game = Game.objects.create(title='testInactive', creator_id=999, code=999998, active=False)
+
+    def test_valid_session_start(self):
+        data = {
+            'creator_id': 1,
+            'id': self.game.id,
+            'notes': "This is a test note",
+            'timeout': 5
+        }
+
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_invalid_session_start(self):
+        data = {
+            'id': self.game.id,
+        }
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 500)
+
+    def test_session_start_no_game(self):
+        data = {
+            'creator_id': 1,
+            'id': 9999999,
+            'notes': "This is a test note",
+            'timeout': 5
+        }
+
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 500)
+
+    def test_session_start_inactive_game(self):
+        data = {
+            'creator_id': 1,
+            'id': self.inactive_game.id,
+            'notes': "This is a test note",
+            'timeout': 5
+        }
+
+        resp = self.client.post('/api/games/startSession/', data=data)
+        self.assertEqual(resp.status_code, 500)
+
+    def test_toggle_valid(self):
+        state = self.game.active
+        data = {
+            'id': self.game.id
+        }
+        resp = self.client.post('/api/games/toggleActive/', data=data)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_toggle_invalid(self):
+        data = {
+            'id': 9999999
+        }
+        resp = self.client.post('/api/games/toggleActive/', data=data)
+        self.assertEqual(resp.status_code, 500)
+

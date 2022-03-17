@@ -30,7 +30,7 @@ def should_debug():
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
-dotenv_path = BASE_DIR.cwd() / '.env'
+dotenv_path = BASE_DIR.cwd() / '../.env'
 load_dotenv(dotenv_path=dotenv_path)
 
 # Quick-start development settings - unsuitable for production
@@ -64,7 +64,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'backend',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'corsheaders'
 ]
 
 REST_FRAMEWORK = {
@@ -206,3 +207,5 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+APPEND_SLASH = False

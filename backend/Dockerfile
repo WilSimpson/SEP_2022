@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install
 RUN apt-get install -y \
-    libpq-dev \
+    libpq-dev python3-dev \
     && apt-get clean
 
 COPY ./ ./
