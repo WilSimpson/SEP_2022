@@ -7,7 +7,7 @@ import {TextField} from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import Alert from '@mui/material/Alert';
 import {useNavigate} from 'react-router-dom';
-import GamePlayService from '../../services/gameplay.service';
+import GamePlayService from '../../services/gameplay';
 import {LinearProgress} from '@mui/material';
 
 const styles = {
@@ -59,7 +59,8 @@ class GameCode extends React.Component {
               state: {
               // Carries the gameCode with the state
                 code: this.state.value,
-                // Initialize state with the response parsed as an array of questions
+                // Initialize state with the response
+                // parsed as an array of questions
                 game: response,
               },
             });
@@ -68,7 +69,8 @@ class GameCode extends React.Component {
             if (error.resonse && error.response.status === 404) {
               this.setState({
                 errMsg:
-                'There was an unexpected error reaching the server. Please try again later.',
+                'There was an unexpected error reaching the server. ' +
+                'Please try again later.',
               });
             } else {
               if (error.response && error.response.status === 500) {
@@ -76,7 +78,8 @@ class GameCode extends React.Component {
               } else {
                 this.setState({
                   errMsg:
-                  'The server is currently unreachable. Please try again later.',
+                  'The server is currently unreachable. ' +
+                  'Please try again later.',
                 });
               }
             }
@@ -92,7 +95,8 @@ class GameCode extends React.Component {
       } else {
         this.setState({
           errMsg:
-            'This Gamecode is not valid. Gamecodes must contain only number values.',
+            'This Gamecode is not valid. ' +
+            'Gamecodes must contain only number values.',
         });
       }
     }
@@ -101,7 +105,7 @@ class GameCode extends React.Component {
 
   render() {
     return (
-      <Grid container spacing={0} direction="column">
+      <Grid spacing={0} direction="column">
         <Box sx={{pb: 2}}>
           <Box sx={{pb: 2}}>
             {this.state.errMsg && (
@@ -113,7 +117,7 @@ class GameCode extends React.Component {
             id="gameCode"
             autoComplete="off"
             value={this.state.value}
-            ref="gameCode"
+            ref={this.props.gameCode}
             variant="outlined"
             inputProps={{
               'maxLength': 6,

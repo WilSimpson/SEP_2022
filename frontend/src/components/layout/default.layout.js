@@ -1,8 +1,8 @@
+import React from 'react';
 import {CssBaseline, Grid} from '@mui/material';
-import {alertService, alertSeverity} from '../../services/alert.service';
 import {PageAlert} from './alert';
 import ResponsiveAppBar from './nav';
-import StickyFooter from './stickyFooter';
+import StickyFooter from './footer';
 
 export default function DefaultLayout(props) {
   return (
