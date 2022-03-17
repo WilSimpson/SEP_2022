@@ -3,15 +3,15 @@ import {API_URL} from '../store/store';
 
 class GameService {
   getGames() {
-    return axios.get(API_URL + '/api/games/');
+    return axios.get(API_URL + '/games/');
   }
 
   getGame(id) {
-    return axios.get(`${API_URL}/api/games/${id}/`);
+    return axios.get(`${API_URL}/games/${id}/`);
   }
 
   createGame(title, active, creatorId, code, questionsJSON, optionsJSON) {
-    return axios.post(API_URL + '/api/games/', {
+    return axios.post(API_URL + '/games/', {
       title: title,
       active: active,
       questions: JSON.parse(questionsJSON),
@@ -22,7 +22,7 @@ class GameService {
   }
 
   updateGame(id, title, active, creatorId, code, questionsJSON, optionsJSON) {
-    return axios.put(API_URL + `/api/games/${id}/`, {
+    return axios.put(API_URL + `/games/${id}/`, {
       title: title,
       active: active,
       questions: JSON.parse(questionsJSON),
@@ -33,7 +33,7 @@ class GameService {
   }
 
   deleteGame(id) {
-    return axios.delete(`${API_URL}/api/games/${id}/`);
+    return axios.delete(`${API_URL}/games/${id}/`);
   }
 }
 
