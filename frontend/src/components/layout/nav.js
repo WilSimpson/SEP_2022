@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import accountIcon from '../../images/accountIcon.png';
 import logoSmall from '../../images/logoSmall.png';
 import {ButtonGroup} from '@mui/material';
-import authService from '../../services/auth.service';
+import authService from '../../services/auth';
 
 // const pages = ['Get Started', 'About', 'Help'];
 
@@ -145,19 +145,28 @@ const ResponsiveAppBar = () => {
                       key={name}
                       onClick={(e) => handleChooseUserOption(e, link)}
                     >
-                      <Typography textAlign="center">{name}</Typography>
+                      <Typography
+                        textAlign="center"
+                        variant='h1'
+                      >
+                        {name}
+                      </Typography>
                     </MenuItem>
                   ))}
                 </Menu>
               </div>
             ) : (
-              <Button
-                key="Login"
-                href="/login"
-                sx={{my: 2, color: 'primary', display: 'block'}}
+              <MenuItem
+                key='Login'
               >
-                Login
-              </Button>
+                <Button
+                  key="Login"
+                  href="/login"
+                  sx={{my: 2, color: 'common.white', display: 'block'}}
+                >
+                  Login
+                </Button>
+              </MenuItem>
             )}
           </Box>
         </Toolbar>

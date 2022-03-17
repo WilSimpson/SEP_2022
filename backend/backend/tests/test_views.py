@@ -244,7 +244,6 @@ class JoinGameTestCase(TestCase):
         data = {
             'code': 999998
         }
-
         resp = self.client.post('/api/games/joinGame/', data=data)
         self.assertEqual(resp.status_code, 500)
 

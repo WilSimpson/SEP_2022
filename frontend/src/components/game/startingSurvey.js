@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
-import GamePlayService from '../../services/gameplay.service';
+import GamePlayService from '../../services/gameplay';
 import Alert from '@mui/material/Alert';
 
 export default function StartingSurvey() {
@@ -69,7 +69,8 @@ export default function StartingSurvey() {
             state: {
             // Carries the gameCode with the state
               code: state.code,
-              // Initialize state with the response parsed as an array of questions
+              // Initialize state with the response
+              // parsed as an array of questions
               game: state.game,
               // Carry the form data forward
               formData: formValues,
@@ -80,14 +81,16 @@ export default function StartingSurvey() {
         (error) => {
           if (error.resonse && error.response.status === 404) {
             setErr(
-                'There was an unexpected error reaching the server. Please try again later.',
+                'There was an unexpected error reaching the server. ' +
+                'Please try again later.',
             );
           } else {
             if (error.response && error.response.status === 500) {
               setErr(error.resonse.data);
             } else {
               setErr(
-                  'The server is unreachable at this time. Please try again later.',
+                  'The server is unreachable at this time. ' +
+                  'Please try again later.',
               );
             }
           }

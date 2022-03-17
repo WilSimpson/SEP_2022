@@ -12,7 +12,7 @@ services:
     ports:
       - 5423:5432
     networks:
-      - local
+      - ea-local
 
   backend:
     restart: unless-stopped
@@ -28,7 +28,8 @@ services:
     depends_on:
       - db
     networks:
-      - local
+      - ea-local
+      - default
   
   frontend:
     restart: unless-stopped
@@ -43,13 +44,12 @@ services:
     depends_on:
       - backend
     networks:
-      - local
       - default
 
 volumes:
   static_volume: {}
 
 networks:
-  local:
+  ea-local:
     internal: true
     name: internal-network

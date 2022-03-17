@@ -7,7 +7,10 @@ const initialState = {
   authenticated: false,
 };
 
-export const API_URL = 'http://localhost:8000/';
+export const API_URL =
+!process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
+  'http://localhost:8000/api' :
+  'https://sep22.forever.dev/api';
 
 const createNoopStorage = () => {
   return {
@@ -51,5 +54,5 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 export default function configureStore() {
   const store = createStore(persistedReducer);
   const persistor = persistStore(store);
-  return {store, persistor, API_URL};
+  return {store, persistor};
 }

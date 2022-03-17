@@ -1,10 +1,9 @@
-import {Alert, AlertTitle, Stack} from '@mui/material';
 import React from 'react';
+import {Alert, AlertTitle, Stack} from '@mui/material';
 import PropTypes from 'prop-types';
-import titlizeString from '../../helpers/StringFormatter';
-import {alertService} from '../../services/alert.service';
+import titlizeString from '../../helpers/stringFormatter';
+import {alertService} from '../../services/alert';
 import {createBrowserHistory} from 'history';
-import {LaptopWindows} from '@material-ui/icons';
 
 const history = createBrowserHistory();
 
@@ -38,7 +37,11 @@ class PageAlert extends React.Component {
           }
 
           this.setAlerts({
-            alerts: [...this.state.alerts.filter((a) => a.id != alert.id), alert],
+            alerts: [
+              ...this.state.alerts.filter((a) => {
+                a.id != alert.id;
+              }),
+              alert],
           });
           if (alert.autoClose) {
             setTimeout(() => this.removeAlert(alert), 5000);
