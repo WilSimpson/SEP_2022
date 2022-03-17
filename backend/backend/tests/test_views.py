@@ -482,12 +482,44 @@ class GameViewSetTestCase(TestCase):
     def test_update_invalid_game(self):
         resp = self.client.put('/api/games/'+str(0)+'/', self.data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_501_NOT_IMPLEMENTED)
+        
 
     def test_update_invalid_chance_game(self):
         updated_data = self.data
         updated_data["questions"][0]["chance_game"] = "invalid entry"
         resp = self.client.put('/api/games/'+str(self.game.id)+'/', updated_data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+class GameSessionAnswerViewSetTest(TestCase):
+    def setUp(self):
+        self.game = Game.objects.create(title='TestGame', creator_id=1, code=123456, active=True)
+        self.q1 = Question.objects.create(value='Q1', passcode=123456, chance=False, game_id=self.game.id, chance_game=Question.ChanceGame.NO_GAME)
+        self.q2 = Question.objects.create(value='Q2', passcode=123456, chance=False, game_id=self.game.id, chance_game=Question.ChanceGame.NO_GAME)
+        self.o1 = Option.objects.create(value='O1', weight=1, dest_question_id=self.q2.id, source_question_id=self.q1.id)
+        self.gamesession = GameSession.objects.create(creator_id=1, start_time='2022-01-01 10:00:00', notes='notes', timeout=20, code='123456', game_id=self.game.id)
+        self.gamemode = GameMode.objects.create(name='Walking')
+        self.team = Team.objects.create(guest=True, size=1, first_time=True, completed=False, game_mode_id=self.gamemode.id, game_session_id=self.gamesession.id)
+        self.data = {"option_id": self.o1.id, "team_id": self.team.id}
+        self.initial_gamesessionanswer_count = GameSessionAnswer.objects.all().count()
+        
+    def test_valid_answer(self):
+        resp = self.client.post('/api/gameSession/answer/', self.data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count + 1)
+    
+    def test_answer_invalid_option(self):
+        invalid_data = self.data
+        invalid_data["option_id"] = 0
+        resp = self.client.post('/api/gameSession/answer/', invalid_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
+        
+    def test_answer_invalid_team(self):
+        invalid_data = self.data
+        invalid_data["team_id"] = 0
+        resp = self.client.post('/api/gameSession/answer/', invalid_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
         
 class SessionViewTestCase(TestCase):
     def setUp(self):

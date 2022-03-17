@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -152,5 +153,11 @@ class Team(models.Model):
     size = models.IntegerField()
     first_time = models.BooleanField()
     completed = models.BooleanField()
+
+class GameSessionAnswer(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    option_chosen = models.ForeignKey(Option, on_delete=models.CASCADE)
+    
     created_at  = AutoDateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
