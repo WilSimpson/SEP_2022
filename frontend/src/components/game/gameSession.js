@@ -7,7 +7,7 @@ import {useLocation} from 'react-router-dom';
 import {useState} from 'react';
 import {Button} from '@mui/material';
 import {ButtonGroup} from '@mui/material';
-// import GamePlayService from '../../services/gameplay';
+import GamePlayService from '../../services/gameplay';
 export default function GameSession() {
   const {state} = useLocation();
   const [currentQuestion, setQuestion] = useState(state.game.questions[0]);
@@ -25,7 +25,7 @@ export default function GameSession() {
   }, [currentQuestion]);
 
   const nextQuestion = () => {
-    // GamePlayService.answerQuestion(selectedOption.id, state.team_id);
+    GamePlayService.answerQuestion(selectedOption.id, state.team_id);
     const question = (state.game.questions).find(
         (question) => question.id == selectedOption.dest_question,
     );

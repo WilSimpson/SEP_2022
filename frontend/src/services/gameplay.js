@@ -43,6 +43,15 @@ class GameService {
         });
   }
 
+  answerQuestion(optionId, teamId) {
+    return axios
+        .post(API_URL + '/gameSession/answer/', {
+          'option_id': optionId,
+          'team_id': teamId,
+        })
+        .then((response) => {});
+  }
+
   clearGame() {
     localStorage.removeItem('gameObject');
   }
