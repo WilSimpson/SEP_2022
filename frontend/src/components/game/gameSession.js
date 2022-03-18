@@ -82,6 +82,7 @@ export default function GameSession() {
                     variant=
                       {selectedOption == option ? 'contained' : 'outlined'}
                     sx={{marginTop: 5}}
+                    data-testid={'option'+ String(option.id)}
                     onClick={() => setSelectedOption(option)}>
                     {option.value}
                   </Button>
