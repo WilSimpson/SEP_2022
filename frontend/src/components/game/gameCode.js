@@ -66,7 +66,7 @@ class GameCode extends React.Component {
             });
           },
           (error) => {
-            if (error.resonse && error.response.status === 404) {
+            if (error.response && error.response.status === 404) {
               this.setState({
                 errMsg:
                 'There was an unexpected error reaching the server. ' +

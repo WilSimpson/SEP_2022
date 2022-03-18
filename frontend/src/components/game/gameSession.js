@@ -8,6 +8,7 @@ import {useState} from 'react';
 import {Button} from '@mui/material';
 import {ButtonGroup} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
+import {alertService, alertSeverity} from '../../services/alert';
 export default function GameSession() {
   const {state} = useLocation();
   const [currentQuestion, setQuestion] = useState(state.game.questions[0]);
@@ -25,7 +26,22 @@ export default function GameSession() {
   }, [currentQuestion]);
 
   const nextQuestion = () => {
-    GamePlayService.answerQuestion(selectedOption.id, state.team_id);
+    GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
+        (response) => {},
+        (error) => {
+          let errMessage = '';
+          if (error.response && error.response.data) {
+            errMessage = error.response.data;
+          } else {
+            errMessage = 'The server is currently unreachable. ' +
+            'Please try again later.';
+          }
+          alertService.alert({
+            severity: alertSeverity.error,
+            message: errMessage,
+          });
+        },
+    );
     const question = (state.game.questions).find(
         (question) => question.id == selectedOption.dest_question,
     );
