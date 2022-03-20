@@ -4,7 +4,37 @@ import axios from 'axios';
 
 jest.mock('axios');
 
-describe('Game Service', () => {
+describe('Game Play Service', () => {
+  describe('answerQuestion', () => {
+    it('should return status 200 on success', () => {
+      const response = {
+        response: [
+          {
+            status: 200,
+          },
+        ],
+      };
+      axios.post.mockResolvedValue(response);
+
+      const result = gamePlayService.answerQuestion(1, 1);
+      expect(result).toEqual(Promise.resolve(response));
+    });
+
+    it('no response on failure', async () => {
+      const response = {
+        response: [
+          {
+            status: 404,
+          },
+        ],
+      };
+      axios.post.mockResolvedValue(response);
+
+      const result = await gamePlayService.answerQuestion(1,1);
+      expect(result).toEqual(undefined);
+    });
+  });
+
   describe('joinGame', () => {
     it('should return a game object on success', () => {
       const response = {

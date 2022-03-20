@@ -153,6 +153,8 @@ class Team(models.Model):
     size = models.IntegerField()
     first_time = models.BooleanField()
     completed = models.BooleanField()
+    created_at = AutoDateTimeField(default=timezone.now)
+    updated_at = AutoDateTimeField(default=timezone.now)
 
 class GameSessionAnswer(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
