@@ -72,6 +72,18 @@ class GameService {
       };
     }
   }
+  random(options) { // {0:0.5, 1:0.3, 2:0.2}
+    // options and weights are passed in, must add to 1
+    let i;
+    let sum = 0;
+    const r=Math.random();
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        sum += options[i];
+        if (r <= sum) return i;
+      }
+    }
+  }
 }
 
 export default new GameService();
