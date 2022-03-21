@@ -10,7 +10,7 @@ export default function GenerateQRPage() {
 
   return (
     <AuthenticatedLayout>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{pl: '3rem', width: '100%'}}>
         <Grid item xs={12} md={8} lg={9}>
           <Paper
             elevation={7}
@@ -18,20 +18,17 @@ export default function GenerateQRPage() {
               p: 2,
               display: 'flex',
               flexDirection: 'column',
-              height: 240,
             }}
           >
             <h1>Generate QR Code</h1>
             <p>Enter the URL for the QR code to link to</p>
-            <Grid item xs={12}>
-              <TextField
-                required
-                id="outlined-required"
-                label="QR URL"
-                defaultValue=''
-                onChange={(e) => setURL(e.target.value)}
-              />
-            </Grid>
+            <TextField
+              required
+              id="outlined-required"
+              label="QR URL"
+              defaultValue=''
+              onChange={(e) => setURL(e.target.value)}
+            />
             <Button
               onClick={() => {
                 if (url == '') {
