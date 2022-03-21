@@ -72,9 +72,20 @@ class GameService {
       };
     }
   }
-  random(options) { // {0:0.5, 1:0.3, 2:0.2}
-    // options and weights are passed in, must add to 1
+  random(options) { // {0:2, 1:1, 2:3}
     let i;
+    let total = 0;
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        total += options[i];
+      }
+    }
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        options[i] = options[i]/total;
+      }
+    }
+    console.log('The options are:', options);
     let sum = 0;
     const r=Math.random();
     for (i in options) {
