@@ -9,6 +9,7 @@ import {Button} from '@mui/material';
 import {ButtonGroup} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
+import gameplay from '../../services/gameplay';
 export default function GameSession() {
   const {state} = useLocation();
   const [currentQuestion, setQuestion] = useState(state.game.questions[0]);
@@ -48,6 +49,20 @@ export default function GameSession() {
     setSelectedOption(null);
     setQuestion(question);
   };
+  const weights = () => {
+    weights = {};
+    index = 0;
+    for (i in currentOptions) {
+      if (currentOptions.hasOwnProperty(i)) {
+        weights.index = i.weight;
+        index = index + 1;
+      }
+    }
+  };
+  function choiceClick() {
+    const choice = gameplay.random(weights);
+    return choice;
+  }
   if (currentQuestion.chance) {
     return (
       <div className='container'>
@@ -145,6 +160,14 @@ export default function GameSession() {
                       {option.value}
                     </Button>
                   ))}
+                  <Button
+                    color='secondary'
+                    sx={{marginTop: 5}}
+                    onClick={setSelectedOption(choiceClick())}
+                    disabled={false}
+                  >
+                    Chance
+                  </Button>
                   <Button
                     color='secondary'
                     sx={{marginTop: 5}}
