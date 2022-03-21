@@ -9,7 +9,6 @@ import {Button} from '@mui/material';
 import {ButtonGroup} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
-import gameplay from '../../services/gameplay';
 export default function GameSession() {
   const {state} = useLocation();
   const [currentQuestion, setQuestion] = useState(state.game.questions[0]);
@@ -49,21 +48,24 @@ export default function GameSession() {
     setSelectedOption(null);
     setQuestion(question);
   };
-  const weights = () => {
-    weights = {};
-    index = 0;
-    for (i in currentOptions) {
-      if (currentOptions.hasOwnProperty(i)) {
-        weights.index = i.weight;
-        index = index + 1;
-      }
+  const weights = {};
+  let index = 0;
+  let i;
+  for (i in currentOptions) {
+    if (currentOptions.hasOwnProperty(i)) {
+      weights[index] = currentOptions[i].weight;
+      index = index + 1;
     }
-  };
+  }
+  console.log('Options are: ', currentOptions);
+  console.log('Weights are: ', weights);
+
   function choiceClick() {
-    const choice = gameplay.random(weights);
+    const choice = GamePlayService.random(weights);
+    console.log('The random choice: ', choice);
     return choice;
   }
-  if (currentQuestion.chance) {
+  if (!currentQuestion.chance) {
     return (
       <div className='container'>
         <CssBaseline />
@@ -144,7 +146,7 @@ export default function GameSession() {
                 </Typography>
                 <ButtonGroup
                   variant="contained"
-                  alignItems="center"
+                  // alignItems="center"
                   justify="center"
                   orientation="vertical"
                   fullWidth={true}
@@ -163,7 +165,9 @@ export default function GameSession() {
                   <Button
                     color='secondary'
                     sx={{marginTop: 5}}
-                    onClick={setSelectedOption(choiceClick())}
+                    onClick={() =>
+                      setSelectedOption(currentOptions[choiceClick()])
+                    }
                     disabled={false}
                   >
                     Chance
@@ -172,7 +176,7 @@ export default function GameSession() {
                     color='secondary'
                     sx={{marginTop: 5}}
                     onClick={nextQuestion}
-                    inputProps={{'data-testid': 'continue'}}
+                    // inputProps={{'data-testid': 'continue'}}
                     data-testid='continue'
                     disabled={!selectedOption}
                   >
