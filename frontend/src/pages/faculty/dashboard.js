@@ -18,6 +18,7 @@ import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import GamesTable from '../../components/admin/gamesTable';
 import gameService from '../../services/game';
 import gameSessionService from '../../services/gameSession';
+import CourseService from '../../services/courses';
 
 // interface GamesSessions {
 //   name: string;
@@ -82,11 +83,82 @@ function GameSessionTable() {
   );
 }
 
+
+function CoursesTable() {
+  const [filteredRows, setFilteredRows] = useState([]);
+  React.useEffect(() => {
+    async function getMyCourses(id) {
+      const resp = await CourseService.getMyCourses(id).catch((error) => {
+        alertService.alert({severity: alertSeverity.error, message: error});
+      });
+      const courseRows = [...resp.data];
+      setFilteredRows(courseRows);
+    }
+    // Replace with user id
+    getMyCourses(localStorage.getItem('user'));
+  }, []);
+  console.log(`Rows = ${filteredRows}`);
+
+  const requestSearch = (searchedVal) => {
+    console.log(searchedVal);
+    setFilteredRows(filteredRows.filter((row) => {
+      return row.course_name.some((e) => row.includes(e));
+    }));
+  };
+
+  return (
+    <React.Fragment>
+      <Typography component="h2" variant="h6" gutterBottom>
+        Courses
+      </Typography>
+      <TextField
+        label='Search by Course Name'
+        onChange={(event) => requestSearch(event.target.value)}
+      />
+      <Table size="small" data-testid="course_table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Department</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Course Number</TableCell>
+            <TableCell>Section Number</TableCell>
+            <TableCell>Semester</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {filteredRows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>{row.department}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.course_number}</TableCell>
+              <TableCell>{row.section_number}</TableCell>
+              <TableCell>{row.semester}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </React.Fragment>
+  );
+}
+
 export default function FacultyDash() {
   return (
     <AuthenticatedLayout>
       <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
         <Grid container spacing={3}>
+          <Grid item xs={12} md={12} lg={12}>
+            <Paper
+              elevation={7}
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                height: 240,
+              }}
+            >
+              <CoursesTable />
+            </Paper>
+          </Grid>
           <Grid item xs={12} md={8} lg={9}>
             <Paper
               elevation={7}
