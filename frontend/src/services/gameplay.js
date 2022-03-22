@@ -43,6 +43,14 @@ class GameService {
         });
   }
 
+  teamCompleteGame(teamId) {
+    return axios
+        .post(API_URL + '/teams/complete/', {
+          team: teamId,
+        })
+        .then((response) => {});
+  }
+
   answerQuestion(optionId, teamId) {
     return axios
         .post(API_URL + '/gameSession/answer/', {

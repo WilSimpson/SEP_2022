@@ -18,6 +18,7 @@ import {createBrowserHistory} from 'history';
 import Logout from './pages/public/logout';
 import FacultyDash from './pages/faculty/dashboard';
 import Passcode from './pages/game/passcode';
+import EndGame from './pages/game/endGame';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -35,6 +36,7 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/started" element={<Knowledge />} />
               <Route exact path="/logout" element={<Logout />} />
+              <Route exact path="/endGame" element={<EndGame />} />
               <Route
                 exact
                 path="/pass"

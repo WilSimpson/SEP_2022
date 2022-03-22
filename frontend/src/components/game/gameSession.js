@@ -9,8 +9,10 @@ import {Button} from '@mui/material';
 import {ButtonGroup} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
+import {useNavigate} from 'react-router-dom';
 export default function GameSession() {
   const {state} = useLocation();
+  const navigate = useNavigate();
   const [currentQuestion, setQuestion] = useState(state.initialQuestion);
   const [currentOptions, setOptions] = useState(
       state.game.options.filter(
@@ -56,7 +58,24 @@ export default function GameSession() {
   };
 
   const completeGame = () => {
-
+    GamePlayService.teamCompleteGame(state.team_id).then(
+        (response) => {
+          navigate(`../endGame`);
+        },
+        (error) => {
+          let errMessage = '';
+          if (error.response && error.response.data) {
+            errMessage = error.response.data;
+          } else {
+            errMessage = 'The server is currently unreachable. ' +
+            'Please try again later.';
+          }
+          alertService.alert({
+            severity: alertSeverity.error,
+            message: errMessage,
+          });
+        },
+    );
   };
 
   return (
