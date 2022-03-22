@@ -11,7 +11,7 @@ import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
 export default function GameSession() {
   const {state} = useLocation();
-  const [currentQuestion, setQuestion] = useState(state.game.questions[0]);
+  const [currentQuestion, setQuestion] = useState(state.initialQuestion);
   const [currentOptions, setOptions] = useState(
       state.game.options.filter(
           (option) => option.source_question == currentQuestion.id,
