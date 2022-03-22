@@ -2,7 +2,7 @@ import {Button, Typography} from '@mui/material';
 import React from 'react';
 import DefaultLayout from '../layout/default.layout';
 import logoLarge from '../../images/logoLarge.png';
-export default function EndGameSession(props) {
+export default function EndGamePlay(props) {
   return (
     <DefaultLayout>
       <Typography variant='h2' component='div' marginTop={5} gutterBottom>
