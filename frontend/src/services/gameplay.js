@@ -85,7 +85,6 @@ class GameService {
         options[i] = options[i]/total;
       }
     }
-    console.log('The options are:', options);
     let sum = 0;
     const r=Math.random();
     for (i in options) {
