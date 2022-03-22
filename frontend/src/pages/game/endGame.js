@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Container, Grid} from '@mui/material';
-import EndGameSession from '../../components/game/endGameSession';
+import EndGamePlay from '../../components/game/endGamePlay';
 
 export default function EndGame() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function EndGame() {
     <Container maxWidth="lg">
       <Grid container spacing={3}>
         <Grid item xs={12} md={12} lg={12}>
-          <EndGameSession returnHome={returnHome}/>
+          <EndGamePlay returnHome={returnHome}/>
         </Grid>
       </Grid>
     </Container>
