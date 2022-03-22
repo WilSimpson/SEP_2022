@@ -17,6 +17,8 @@ export default function GameSession() {
           (option) => option.source_question == currentQuestion.id,
       ));
   const [selectedOption, setSelectedOption] = useState();
+  const [endGame, setEndGame] = useState(false);
+
 
   React.useEffect(() => {
     setOptions(
@@ -24,6 +26,10 @@ export default function GameSession() {
             (option) => option.source_question == currentQuestion.id,
         ));
   }, [currentQuestion]);
+
+  React.useEffect(() => {
+    setEndGame(currentOptions.length == 0);
+  }, [currentOptions]);
 
   const nextQuestion = () => {
     GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
@@ -45,8 +51,12 @@ export default function GameSession() {
     const question = (state.game.questions).find(
         (question) => question.id == selectedOption.dest_question,
     );
-    setSelectedOption(null);
     setQuestion(question);
+    setSelectedOption(null);
+  };
+
+  const completeGame = () => {
+
   };
 
   return (
@@ -88,16 +98,32 @@ export default function GameSession() {
                     {option.value}
                   </Button>
                 ))}
-                <Button
-                  color='secondary'
-                  sx={{marginTop: 5}}
-                  onClick={nextQuestion}
-                  inputProps={{'data-testid': 'continue'}}
-                  data-testid='continue'
-                  disabled={!selectedOption}
-                >
-                  Continue
-                </Button>
+                {
+                  endGame ?
+                    (
+                      <Button
+                        color='secondary'
+                        sx={{marginTop: 5}}
+                        onClick={completeGame}
+                        inputProps={{'data-testid': 'complete'}}
+                        data-testid='complete'
+                      >
+                        Complete Game
+                      </Button>
+                    ) :
+                    (
+                      <Button
+                        color='secondary'
+                        sx={{marginTop: 5}}
+                        onClick={nextQuestion}
+                        inputProps={{'data-testid': 'continue'}}
+                        data-testid='continue'
+                        disabled={!selectedOption}
+                      >
+                        Continue
+                      </Button>
+                    )
+                }
               </ButtonGroup>
             </Container>
           </Box>
