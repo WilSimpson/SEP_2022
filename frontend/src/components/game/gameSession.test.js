@@ -1,14 +1,13 @@
 import React from 'react';
 import GameSession from './gameSession';
 import {shallow} from 'enzyme';
-import {BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 import { fireEvent, getByTestId } from '@testing-library/react';
 import GamePlayService from '../../services/gameplay';
 
 const TEAM_ID = 1;
-const mockedUsedNavigate = jest.fn();
 
 jest.mock('../../services/gameplay');
 
