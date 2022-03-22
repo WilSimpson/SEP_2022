@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {Container, Grid} from '@mui/material';
 import EndGameSession from '../../components/game/endGameSession';
 
-export default function PlayGame() {
+export default function EndGame() {
   const navigate = useNavigate();
 
   function returnHome() {
