@@ -62,7 +62,6 @@ export default function GameSession() {
 
   function choiceClick() {
     const choice = GamePlayService.random(weights);
-    console.log('The random choice: ', choice);
     return choice;
   }
   if (!currentQuestion.chance) {
@@ -168,7 +167,7 @@ export default function GameSession() {
                     onClick={() =>
                       setSelectedOption(currentOptions[choiceClick()])
                     }
-                    disabled={false}
+                    disabled={selectedOption}
                   >
                     Chance
                   </Button>
