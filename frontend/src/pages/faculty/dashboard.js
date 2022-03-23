@@ -90,14 +90,19 @@ function GameSessionTable() {
 function CoursesTable() {
   const [filteredRows, setFilteredRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     CourseService.getMyCourses(1).then(
         (response) => {
+          setRows(response.data);
           setFilteredRows(response.data);
           setLoading(false);
         }, (error) => {
           console.log(`There was an error ${error}`);
+          setRows([{department: 'There was a problem',
+            name: 'N/A', course_number: 'N/A', section_number: 'N/A',
+            semester: 'N/A'}]);
           setFilteredRows([{department: 'There was a problem',
             name: 'N/A', course_number: 'N/A', section_number: 'N/A',
             semester: 'N/A'}]);
@@ -107,9 +112,9 @@ function CoursesTable() {
   }, []);
 
   const searchCourses = (searchedVal) => {
-    console.log(searchedVal);
-    setFilteredRows(filteredRows.filter((row) => {
-      return row.some(() => row.includes(searchedVal));
+    setFilteredRows(rows.filter((row) => {
+      return Object.values(row).some((e) => e.toLowerCase()
+          .includes(searchedVal.toLowerCase()));
     }));
   };
 
@@ -119,7 +124,6 @@ function CoursesTable() {
         Courses
       </Typography>
       <Box sx={{pb: 2}}>
-        {console.log(loading)}
         {loading && <LinearProgress />}
       </Box>
       <TextField
