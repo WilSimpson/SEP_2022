@@ -130,7 +130,7 @@ function CoursesTable() {
         label='Search by Course Name'
         onChange={(event) => searchCourses(event.target.value)}
       />
-      <Table size="small" data-testid="course_table">
+      <Table data-testid="course_table" sx={{minWidth: 500}}>
         <TableHead>
           <TableRow>
             <TableCell>Department</TableCell>
@@ -169,6 +169,7 @@ export default function FacultyDash() {
                 display: 'flex',
                 flexDirection: 'column',
                 height: 240,
+                overflowX: 'auto',
               }}
             >
               <CoursesTable />
