@@ -16,7 +16,11 @@ export default function EndGamePlay(props) {
       <Typography variant='h4' component='div' marginTop={5} gutterBottom>
           Your game path has been recorded!
       </Typography>
-      <Button variant='contained' onClick={props.returnHome} data-testid='return-home'>
+      <Button
+        variant='contained'
+        onClick={props.returnHome}
+        data-testid='return-home'
+      >
           Return Home
       </Button>
     </DefaultLayout>
