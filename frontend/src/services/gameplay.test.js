@@ -83,4 +83,9 @@ describe('Game Play Service', () => {
       expect(result).toEqual(undefined);
     });
   });
+  describe('random', () => {
+    it('should return an index', () => {
+      expect(["0","1","2"]).toContain(gamePlayService.random({0:2, 1:1, 2:3}))
+    });
+  });
 });
