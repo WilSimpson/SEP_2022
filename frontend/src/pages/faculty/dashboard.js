@@ -255,7 +255,8 @@ export default function FacultyDash() {
           <Grid item xs={12}>
             <Paper
               elevation={7}
-              sx={{p: 2, display: 'flex', flexDirection: 'column'}}
+              sx={{p: 2, display: 'flex', flexDirection: 'column',
+                overflowX: 'auto'}}
             >
               <GameSessionTable />
             </Paper>
