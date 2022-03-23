@@ -105,6 +105,7 @@ export default function GameSession() {
                   <Button
                     color='secondary'
                     sx={{marginTop: 5}}
+                    data-testid='chance'
                     onClick={() =>
                       setSelectedOption(currentOptions[choiceClick()])
                     }
