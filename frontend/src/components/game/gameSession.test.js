@@ -49,6 +49,14 @@ jest.mock('react-router-dom', () => ({
               chance_game: "NO_GAME",
               game: '1'
             },
+            {
+              id: 3,
+              value: "Question 3",
+              passcode: "123456",
+              chance: false,
+              chance_game: "NO_GAME",
+              game: '1'
+            },
           ],
           options: [
             {
@@ -61,21 +69,21 @@ jest.mock('react-router-dom', () => ({
             {
               id: 2,
               value: 'Option 2',
-              dest_question: 2,
+              dest_question: 3,
               source_question: 1,
               weight: 1,
             },
             {
                 id: 3,
                 value: 'Option 3',
-                des_question: 1,
+                des_question: 3,
                 source_question: 2,
                 weight: 1,
             },
             {
               id: 4,
               value: 'Option 4',
-              des_question: 1,
+              des_question: 3,
               source_question: 2,
               weight: 1,
             },
@@ -153,7 +161,7 @@ describe('<GameSession />', () => {
         response: jest.fn(() => promise),
       });
   
-      fireEvent.click(option2);
+      fireEvent.click(option1);
       fireEvent.click(continueButton);
       expect(GamePlayService.answerQuestion).toHaveBeenCalled();
       await act(() => promise);
@@ -167,7 +175,7 @@ describe('<GameSession />', () => {
         response: jest.fn(() => promise),
       });
   
-      fireEvent.click(option2);
+      fireEvent.click(option1);
       fireEvent.click(continueButton);
       expect(container.textContent).toContain(
           'Question 2',
@@ -233,7 +241,7 @@ describe('<GameSession />', () => {
     continueButton = getByTestId(container, 'continue');
     option1 = getByTestId(container, 'option1');
     option2 = getByTestId(container, 'option2');
-    fireEvent.click(option2);
+    fireEvent.click(option1);
     fireEvent.click(continueButton);
     chanceButton = getByTestId(container, 'chance')
     option3 = getByTestId(container, 'option3');
