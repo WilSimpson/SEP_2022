@@ -19,6 +19,9 @@ import GamesTable from '../../components/admin/gamesTable';
 import gameService from '../../services/game';
 import gameSessionService from '../../services/gameSession';
 import CourseService from '../../services/courses';
+import {useEffect} from 'react';
+import {LinearProgress} from '@mui/material';
+import {Box} from '@mui/system';
 
 // interface GamesSessions {
 //   name: string;
@@ -86,23 +89,27 @@ function GameSessionTable() {
 
 function CoursesTable() {
   const [filteredRows, setFilteredRows] = useState([]);
-  React.useEffect(() => {
-    async function getMyCourses(id) {
-      const resp = await CourseService.getMyCourses(id).catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      });
-      const courseRows = [...resp.data];
-      setFilteredRows(courseRows);
-    }
-    // Replace with user id
-    getMyCourses(localStorage.getItem('user'));
-  }, []);
-  console.log(`Rows = ${filteredRows}`);
+  const [loading, setLoading] = useState(true);
 
-  const requestSearch = (searchedVal) => {
+  useEffect(() => {
+    CourseService.getMyCourses(1).then(
+        (response) => {
+          setFilteredRows(response.data);
+          setLoading(false);
+        }, (error) => {
+          console.log(`There was an error ${error}`);
+          setFilteredRows([{department: 'There was a problem',
+            name: 'N/A', course_number: 'N/A', section_number: 'N/A',
+            semester: 'N/A'}]);
+          setLoading(false);
+        },
+    );
+  }, []);
+
+  const searchCourses = (searchedVal) => {
     console.log(searchedVal);
     setFilteredRows(filteredRows.filter((row) => {
-      return row.course_name.some((e) => row.includes(e));
+      return row.some(() => row.includes(searchedVal));
     }));
   };
 
@@ -111,9 +118,13 @@ function CoursesTable() {
       <Typography component="h2" variant="h6" gutterBottom>
         Courses
       </Typography>
+      <Box sx={{pb: 2}}>
+        {console.log(loading)}
+        {loading && <LinearProgress />}
+      </Box>
       <TextField
         label='Search by Course Name'
-        onChange={(event) => requestSearch(event.target.value)}
+        onChange={(event) => searchCourses(event.target.value)}
       />
       <Table size="small" data-testid="course_table">
         <TableHead>

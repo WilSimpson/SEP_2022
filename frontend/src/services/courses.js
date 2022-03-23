@@ -10,6 +10,8 @@ class CourseService {
   getMyCourses(facultyId) {
     // Expects the id of the current user
     // - returns all courses associated with them
+    // Expects a response of an array of objects where each object
+    // has the required row information
     return axios.get(`${API_URL}/courses/${facultyId}/`);
   }
 }
