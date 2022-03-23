@@ -135,4 +135,5 @@ dmypy.json
 
 data/
 
-package-lock.json
+selenium/node_modules/
+selenium/browsers
