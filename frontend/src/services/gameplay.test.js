@@ -83,4 +83,34 @@ describe('Game Play Service', () => {
       expect(result).toEqual(undefined);
     });
   });
+
+  describe('teamCompleteGame', () => {
+    it('should return status 200 on success', () => {
+      const response = {
+        response: [
+          {
+            status: 200,
+          },
+        ],
+      };
+      axios.post.mockResolvedValue(response);
+
+      const result = gamePlayService.teamCompleteGame(1);
+      expect(result).toEqual(Promise.resolve(response));
+    });
+
+    it('no response on failure', async () => {
+      const response = {
+        response: [
+          {
+            status: 404,
+          },
+        ],
+      };
+      axios.post.mockResolvedValue(response);
+
+      const result = await gamePlayService.teamCompleteGame(1);
+      expect(result).toEqual(undefined);
+    });
+  });
 });

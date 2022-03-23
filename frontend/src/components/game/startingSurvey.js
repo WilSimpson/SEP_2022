@@ -51,6 +51,18 @@ export default function StartingSurvey() {
     });
   };
 
+  const initialQuestion = (game) => {
+    const destinationQuestions = game.options.map(
+        (option) => option.dest_question,
+    );
+    const startingQuestions = game.questions.filter(
+        (question) => !destinationQuestions.includes(question.id),
+    );
+    const startQ =
+    startingQuestions[Math.floor(Math.random() * startingQuestions.length)];
+    return startQ;
+  };
+
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -65,6 +77,7 @@ export default function StartingSurvey() {
         (response) => {
           console.log(response);
           const path = `../gameSession`;
+          const initialQ = initialQuestion(state.game);
           navigate(path, {
             state: {
             // Carries the gameCode with the state
@@ -75,6 +88,7 @@ export default function StartingSurvey() {
               // Carry the form data forward
               formData: formValues,
               team_id: response['id'],
+              initialQuestion: initialQ,
             },
           });
         },
