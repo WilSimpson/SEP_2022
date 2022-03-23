@@ -21,4 +21,13 @@ else
   fi
 fi
 
+npm install
+
+if [[ -z "${DISPLAY}" ]]; then
+  echo 'Please set a display with Xvfb'
+  # Example of setting
+  # sudo Xvfb :1 -screen 0 1024x768x24 & export DISPLAY=:1
+  exit 1
+fi
+
 node src/sample-test.js
