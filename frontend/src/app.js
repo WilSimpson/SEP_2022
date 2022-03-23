@@ -18,6 +18,7 @@ import {createBrowserHistory} from 'history';
 import Logout from './pages/public/logout';
 import FacultyDash from './pages/faculty/dashboard';
 import Passcode from './pages/game/passcode';
+import StartGameSession from './pages/faculty/games/startGameSession';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -86,6 +87,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <EditGamePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/faculty-dashboard/startGame"
+                element={
+                  <ProtectedRoute>
+                    <StartGameSession />
                   </ProtectedRoute>
                 }
               />
