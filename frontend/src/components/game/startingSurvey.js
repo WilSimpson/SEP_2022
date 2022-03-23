@@ -79,14 +79,14 @@ export default function StartingSurvey() {
           });
         },
         (error) => {
-          if (error.resonse && error.response.status === 404) {
+          if (error.response && error.response.status === 404) {
             setErr(
                 'There was an unexpected error reaching the server. ' +
                 'Please try again later.',
             );
           } else {
             if (error.response && error.response.status === 500) {
-              setErr(error.resonse.data);
+              setErr(error.response.data);
             } else {
               setErr(
                   'The server is unreachable at this time. ' +

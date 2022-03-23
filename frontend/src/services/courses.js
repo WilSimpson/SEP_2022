@@ -14,6 +14,21 @@ class CourseService {
     // has the required row information
     return axios.get(`${API_URL}/courses/${facultyId}/`);
   }
+
+  createCourse(name, department, courseNumber, sectionNumber,
+      semester, userId) {
+    // Sends a post request to api/courses/createCourse/
+    // Content is keys: name, department, courseNumber,
+    // sectionNumber, semester, and userId
+    return axios.post(API_URL + '/courses/createCourse', {
+      name: name,
+      department: department,
+      courseNumber: courseNumber,
+      sectionNumber: sectionNumber,
+      semester: semester,
+      userId: userId,
+    });
+  }
 }
 
 export default new CourseService();

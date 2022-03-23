@@ -101,10 +101,10 @@ function CoursesTable() {
         }, (error) => {
           console.log(`There was an error ${error}`);
           setRows([{department: 'There was a problem',
-            name: 'N/A', course_number: 'N/A', section_number: 'N/A',
+            name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
             semester: 'N/A'}]);
           setFilteredRows([{department: 'There was a problem',
-            name: 'N/A', course_number: 'N/A', section_number: 'N/A',
+            name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
             semester: 'N/A'}]);
           setLoading(false);
         },
@@ -145,8 +145,8 @@ function CoursesTable() {
             <TableRow key={row.id}>
               <TableCell>{row.department}</TableCell>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.course_number}</TableCell>
-              <TableCell>{row.section_number}</TableCell>
+              <TableCell>{row.courseNumber}</TableCell>
+              <TableCell>{row.sectionNumber}</TableCell>
               <TableCell>{row.semester}</TableCell>
             </TableRow>
           ))}
@@ -161,7 +161,40 @@ export default function FacultyDash() {
     <AuthenticatedLayout>
       <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={12} lg={12}>
+          <Grid item xs={12} md={3} lg={3}>
+            <Paper
+              elevation={7}
+              data-testid="totalCourses"
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                height: 240,
+                overflowX: 'auto',
+              }}
+            >
+              <React.Fragment>
+                <Typography
+                  component="h2"
+                  variant="h6"
+                  color="primary"
+                  gutterBottom
+                >
+                  Total Courses
+                </Typography>
+                <Typography component="p" variant="h4">
+                  1
+                </Typography>
+                <div>
+                  <Button color="secondary" variant="contained"
+                    href="faculty-dashboard/addCourse">
+                    Add a Course
+                  </Button>
+                </div>
+              </React.Fragment>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={9} lg={9}>
             <Paper
               elevation={7}
               sx={{
