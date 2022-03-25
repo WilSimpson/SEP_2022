@@ -101,7 +101,7 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <StartGameSession />
-                  </ProctedRoute>
+                  </ProtectedRoute>
                 }
               />
               <Route
