@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, re_path, include
+from rest_framework.schemas import get_schema_view
+from django.views.generic import TemplateView
 
 from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet
 from django.contrib.auth.models import User
@@ -35,13 +37,20 @@ router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
 
 urlpatterns = [
+    path('openapi/', get_schema_view(
+        title="School Service",
+        description="API developers hpoing to use our service"
+    ), name='openapi-schema'),
+    path('docs/', TemplateView.as_view(
+        template_name='documentation.html',
+        extra_context={'schema_url':'openapi-schema'}
+    ), name='swagger-ui'),
     path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
     path('api/games/toggleActive/', views.toggle_active, name='toggle_active'),
     path('api/games/startSession/', views.start_session, name='start_session'),
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
-    path('api/games/create/', GameViewSet.as_view({'post':'create'}), name='create_game'),
     path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),
