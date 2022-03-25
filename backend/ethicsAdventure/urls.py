@@ -33,6 +33,7 @@ from backend import views
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
+router.register(r'courses', CourseViewSet, basename='courses')
 
 urlpatterns = [
     path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
