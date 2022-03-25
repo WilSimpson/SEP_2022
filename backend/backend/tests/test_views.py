@@ -265,15 +265,16 @@ class JoinGameTestCase(TestCase):
         self.assertEqual(resp.status_code, 500)
 
 
-class CreateTeamTestCase(TestCase):
+class TeamTestCase(TestCase):
     def setUp(self):
         new_active = Game.objects.create(title='testActive', creator_id=999, code=999999, active=True)
         self.active_session = GameSession.objects.create(creator_id=999, game=new_active, start_time=datetime.now(), end_time = None,
             notes = "", timeout = 5, code = 999999)
-        new_mode = GameMode.objects.create(name="Walking")
+        self.new_mode = GameMode.objects.create(name="Walking")
+        self.test_team = Team.objects.create(guest=False, size=1, first_time=False, completed=False, game_mode=self.new_mode, game_session=self.active_session)
 
 
-    def test_valid_request(self):
+    def test_create_team_valid_request(self):
         data = {
             'session': self.active_session.id,
             'mode': "Walking",
@@ -285,7 +286,7 @@ class CreateTeamTestCase(TestCase):
         resp = self.client.post('/api/teams/createTeam/', data=data)
         self.assertEqual(resp.status_code, 200)
 
-    def test_invalid_request(self):
+    def test_create_team_invalid_request(self):
         data = {
             'session': self.active_session.id,
             'mode': "walk",
@@ -296,6 +297,23 @@ class CreateTeamTestCase(TestCase):
 
         resp = self.client.post('/api/teams/createTeam/', data=data)
         self.assertEqual(resp.status_code, 500)
+        
+    def test_complete_game_valid_request(self):
+        data = {
+            'team': self.test_team.id
+        }
+        resp = self.client.post('/api/teams/complete/', data=data)
+        updated_team = Team.objects.get(id=self.test_team.id)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(updated_team.completed, True)
+        
+    def test_complete_game_invalid_team(self):
+        data = {
+            'team': 0
+        }
+        resp = self.client.post('/api/teams/complete/', data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
 class GameViewSetTestCase(TestCase):
     def setUp(self):
         # create game

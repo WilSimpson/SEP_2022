@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/games/create/', GameViewSet.as_view({'post':'create'}), name='create_game'),
     path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
+    path('api/teams/complete/', views.complete_team, name='completeTeam'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls)
 ]
