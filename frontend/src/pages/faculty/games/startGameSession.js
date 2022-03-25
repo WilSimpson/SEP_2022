@@ -19,14 +19,14 @@ export default function StartGameSession(props) {
   }
 
   function handleSubmit(
-      creatorID,
-      gameID,
+      creatorId,
+      gameId,
       notes,
       timeout,
 
   ) {
     gameSessionService
-        .createGameSession(creatorID, gameID, notes, timeout)
+        .createGameSession(creatorId, gameId, notes, timeout)
         .then(
             (success) => {
               alertService.alert({

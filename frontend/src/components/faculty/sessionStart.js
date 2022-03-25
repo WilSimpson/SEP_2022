@@ -3,10 +3,10 @@ import {Button, TextField, Grid} from '@mui/material';
 import AuthService from '../../services/auth';
 
 export default function sessionStart(props) {
-  const creatorID = AuthService.currentUser();
+  const creatorId = AuthService.currentUser().id;
   const [notes, setNotes] = React.useState('""');
   const [timeout, setTimeout] = React.useState();
-  const [gameID, setGameID] = React.useState();
+  const [gameId, setGameId] = React.useState();
 
   return (
     <Grid container spacing={3}>
@@ -18,8 +18,8 @@ export default function sessionStart(props) {
           required
           id="outlined-required"
           label="Game ID"
-          defaultValue={gameID}
-          onChange={(e) => setGameID(e.target.value)}
+          defaultValue={gameId}
+          onChange={(e) => setGameId(e.target.value)}
         />
       </Grid>
       <Grid item xs={12}>
@@ -50,8 +50,8 @@ export default function sessionStart(props) {
           variant="contained"
           onClick={() => {
             props.onSubmit(
-                creatorID,
-                gameID,
+                creatorId,
+                gameId,
                 notes,
                 timeout,
             );
