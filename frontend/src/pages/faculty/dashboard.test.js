@@ -7,13 +7,14 @@ import FacultyDash from './dashboard';
 import {BrowserRouter} from 'react-router-dom';
 import GamesTable from '../../components/admin/gamesTable';
 import {render} from '@testing-library/react'
+import axios from 'axios';
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
 const res = [{department: 'There was a problem',
   name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
   semester: 'N/A'}];
 
-// jest.mock('axios');
+jest.mock('axios');
 
 
 describe('<FacultyDash />', () => {
@@ -39,6 +40,8 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have an indicator to Total Games', () => {
+    const resp = {data: []};
+    axios.get.mockResolvedValue(resp);
     const {getByTestId} = render(
         <BrowserRouter>
           <FacultyDash />
@@ -48,6 +51,8 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have a table to show Active Game Sessions', () => {
+    const resp = {data: []};
+    axios.get.mockResolvedValue(resp);
     const {getByTestId} = render(
         <BrowserRouter>
           <FacultyDash />
@@ -57,6 +62,8 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have a courses table', () => {
+    const resp = {data: []};
+    axios.get.mockResolvedValue(resp);
     const {getByTestId} = render(
       <BrowserRouter>
         <FacultyDash />
@@ -66,6 +73,8 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have a button to add a new course', () => {
+    const resp = {data: []};
+    axios.get.mockResolvedValue(resp);
     const {getByTestId} = render(
         <BrowserRouter>
           <FacultyDash />
