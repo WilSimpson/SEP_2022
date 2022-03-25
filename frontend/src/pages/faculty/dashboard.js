@@ -18,7 +18,7 @@ import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import GamesTable from '../../components/admin/gamesTable';
 import gameService from '../../services/game';
 import gameSessionService from '../../services/gameSession';
-import CourseService from '../../services/courses';
+import courseService from '../../services/courses';
 import {useEffect} from 'react';
 import {LinearProgress} from '@mui/material';
 import {Box} from '@mui/system';
@@ -94,7 +94,7 @@ function CoursesTable() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    CourseService.getMyCourses(AuthService.currentUser().id).then(
+    courseService.getMyCourses(AuthService.currentUser().id).then(
         (response) => {
           setRows(response.data);
           setFilteredRows(response.data);
