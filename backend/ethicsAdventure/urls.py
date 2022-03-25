@@ -37,7 +37,7 @@ router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
 
 urlpatterns = [
-    path('openapi/', get_schema_view(
+    path('api/openapi/', get_schema_view(
         title="Ethics Adventure",
         description="Documentation for the application APIs"
     ), name='openapi-schema'),
