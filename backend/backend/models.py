@@ -168,4 +168,4 @@ class Course(models.Model):
     section        = models.CharField(max_length=32)
     department    = models.CharField(max_length=32)
     number      = models.IntegerField()
-    userID = models.IntegerField()
+    userId = models.IntegerField()
