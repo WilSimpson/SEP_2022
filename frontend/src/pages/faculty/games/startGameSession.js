@@ -32,9 +32,10 @@ export default function StartGameSession(props) {
         .createGameSession(creatorId, gameId, notes, timeout)
         .then(
             (success) => {
+              console.log('success:', success);
               alertService.alert({
                 severity: alertSeverity.success,
-                message: 'Game Session Started',
+                message: `Game Session Started, Join Code: ${success.data.code}`,
               });
               AuthService.currentUser().isAdmin() ? (
                 navigate('/admin-dashboard')) : (
@@ -61,5 +62,4 @@ export default function StartGameSession(props) {
     </AuthenticatedLayout>
   );
 }
-// @TODO Make this page a page in components/faculty, then use that as a rendering with paper in THIS file
-// @TODO use gameFields and create.js as benchmarks
+

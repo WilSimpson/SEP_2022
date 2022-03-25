@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {
-  // Alert,
+  Alert,
   Avatar,
   Box,
   Button,
@@ -93,11 +93,11 @@ export default function Register() {
             onSubmit={handleSubmit}
             sx={{mt: 3}}
           >
-          {errMsg && (
-            <Alert severity="error" ref={errRef} data-testid="err-msg">
-              {errMsg}
-            </Alert>
-          )}
+            {errMsg && (
+              <Alert severity="error" ref={errRef} data-testid="err-msg">
+                {errMsg}
+              </Alert>
+            )}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField // first name field

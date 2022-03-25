@@ -4,7 +4,7 @@ import AuthService from '../../services/auth';
 
 export default function sessionStart(props) {
   const creatorId = AuthService.currentUser().id;
-  const [notes, setNotes] = React.useState('""');
+  const [notes, setNotes] = React.useState('');
   const [timeout, setTimeout] = React.useState();
   const [gameId, setGameId] = React.useState();
 
