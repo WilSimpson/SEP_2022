@@ -22,6 +22,7 @@ import CourseService from '../../services/courses';
 import {useEffect} from 'react';
 import {LinearProgress} from '@mui/material';
 import {Box} from '@mui/system';
+import AuthService from '../../services/auth';
 
 // interface GamesSessions {
 //   name: string;
@@ -93,7 +94,7 @@ function CoursesTable() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    CourseService.getMyCourses(1).then(
+    CourseService.getMyCourses(AuthService.currentUser().id).then(
         (response) => {
           setRows(response.data);
           setFilteredRows(response.data);
@@ -187,7 +188,8 @@ export default function FacultyDash() {
                 </Typography>
                 <div>
                   <Button color="secondary" variant="contained"
-                    href="faculty-dashboard/addCourse">
+                    href="faculty-dashboard/addCourse"
+                    data-testid="courses-button">
                     Add a Course
                   </Button>
                 </div>

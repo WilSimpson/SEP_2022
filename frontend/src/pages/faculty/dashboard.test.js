@@ -7,8 +7,12 @@ import {User} from '../../models/user';
 import FacultyDash from './dashboard';
 import {BrowserRouter} from 'react-router-dom';
 import GamesTable from '../../components/admin/gamesTable';
+import axios from 'axios';
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
+const res = [{department: 'There was a problem',
+  name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
+  semester: 'N/A'}];
 
 jest.mock('axios');
 
@@ -50,5 +54,23 @@ describe('<FacultyDash />', () => {
         </BrowserRouter>,
     );
     expect(getByTestId('active-game-sessions')).toBeInTheDocument();
+  });
+
+  it('should have a courses table', () => {
+    const {getByTestId} = render(
+      <BrowserRouter>
+        <FacultyDash />
+      </BrowserRouter>,
+  );
+  expect(getByTestId('course_table')).toBeInTheDocument();
+  });
+
+  it('should have a button to add a new course', () => {
+    const {getByTestId} = render(
+        <BrowserRouter>
+          <FacultyDash />
+        </BrowserRouter>,
+    );
+    expect(getByTestId('courses-button')).toBeInTheDocument();
   });
 });
