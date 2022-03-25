@@ -1,18 +1,19 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {User} from '../../models/user';
 import FacultyDash from './dashboard';
 import {BrowserRouter} from 'react-router-dom';
 import GamesTable from '../../components/admin/gamesTable';
+import {render} from '@testing-library/react'
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
 const res = [{department: 'There was a problem',
   name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
   semester: 'N/A'}];
 
-jest.mock('axios');
+// jest.mock('axios');
 
 
 describe('<FacultyDash />', () => {
@@ -38,7 +39,7 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have an indicator to Total Games', () => {
-    const {getByTestId} = mount(
+    const {getByTestId} = render(
         <BrowserRouter>
           <FacultyDash />
         </BrowserRouter>,
@@ -47,7 +48,7 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have a table to show Active Game Sessions', () => {
-    const {getByTestId} = mount(
+    const {getByTestId} = render(
         <BrowserRouter>
           <FacultyDash />
         </BrowserRouter>,
@@ -56,7 +57,7 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have a courses table', () => {
-    const {getByTestId} = mount(
+    const {getByTestId} = render(
       <BrowserRouter>
         <FacultyDash />
       </BrowserRouter>,
@@ -65,7 +66,7 @@ describe('<FacultyDash />', () => {
   });
 
   it('should have a button to add a new course', () => {
-    const {getByTestId} = mount(
+    const {getByTestId} = render(
         <BrowserRouter>
           <FacultyDash />
         </BrowserRouter>,

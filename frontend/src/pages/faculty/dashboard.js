@@ -96,20 +96,20 @@ function CoursesTable() {
   useEffect(() => {
     courseService.getMyCourses(AuthService.currentUser().id).then(
         (response) => {
+          console.log(response.data);
           setRows(response.data);
           setFilteredRows(response.data);
           setLoading(false);
-        }, (error) => {
-          console.log(`There was an error ${error}`);
-          setRows([{department: 'There was a problem',
-            name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
-            semester: 'N/A'}]);
-          setFilteredRows([{department: 'There was a problem',
-            name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
-            semester: 'N/A'}]);
-          setLoading(false);
-        },
-    );
+        }).catch( (error) => {
+      console.log(`There was an error ${error}`);
+      setRows([{department: 'There was a problem',
+        name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
+        semester: 'N/A'}]);
+      setFilteredRows([{department: 'There was a problem',
+        name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
+        semester: 'N/A'}]);
+      setLoading(false);
+    });
   }, []);
 
   const searchCourses = (searchedVal) => {
