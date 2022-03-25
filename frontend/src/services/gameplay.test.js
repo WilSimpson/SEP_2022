@@ -84,6 +84,13 @@ describe('Game Play Service', () => {
     });
   });
 
+  describe('random', () => {
+    it('should return an index', () => {
+      expect(["0","1","2"]).toContain(gamePlayService.random({0:2, 1:1, 2:3}))
+    });
+  });
+
+
   describe('teamCompleteGame', () => {
     it('should return status 200 on success', () => {
       const response = {

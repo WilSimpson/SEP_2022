@@ -27,44 +27,68 @@ jest.mock('react-router-dom', () => ({
       },
       team_id: TEAM_ID,
       game: {
-        id: 1,
-        title: 'TestGame',
-        creator_id: 1,
-        code: 123456,
-        active: true,
-        questions: [
-          {
-            id: 1,
-            value: 'Question 1',
-            passcode: '123456',
-            chance: false,
-            chance_game: 'NO_GAME',
-            game: '1',
-          },
-          {
-            id: 2,
-            value: 'Question 2',
-            passcode: '123456',
-            chance: false,
-            chance_game: 'NO_GAME',
-            game: '1',
-          },
-        ],
-        options: [
-          {
-            id: 1,
-            value: 'Option 1',
-            dest_question: 2,
-            source_question: 1,
-          },
-          {
-            id: 2,
-            value: 'Option 2',
-            dest_question: 2,
-            source_question: 1,
-          },
-        ],
-      },
+          id: 1,
+          title: "TestGame",
+          creator_id: 1,
+          code: 123456,
+          active: true,
+          questions: [
+            {
+              id: 1,
+              value: "Question 1",
+              passcode: "123456",
+              chance: false,
+              chance_game: "NO_GAME",
+              game: '1'
+            },
+            {
+              id: 2,
+              value: "Question 2",
+              passcode: "123456",
+              chance: true,
+              chance_game: "NO_GAME",
+              game: '1'
+            },
+            {
+              id: 3,
+              value: "Question 3",
+              passcode: "123456",
+              chance: false,
+              chance_game: "NO_GAME",
+              game: '1'
+            },
+          ],
+          options: [
+            {
+              id: 1,
+              value: 'Option 1',
+              dest_question: 2,
+              source_question: 1,
+              weight: 1,
+            },
+            {
+              id: 2,
+              value: 'Option 2',
+              dest_question: 3,
+              source_question: 1,
+              weight: 1,
+            },
+            {
+                id: 3,
+                value: 'Option 3',
+                des_question: 3,
+                source_question: 2,
+                weight: 1,
+            },
+            {
+              id: 4,
+              value: 'Option 4',
+              des_question: 3,
+              source_question: 2,
+              weight: 1,
+            },
+          ],
+        },
       formValue: null,
     },
   }),
@@ -87,6 +111,7 @@ describe('<GameSession />', () => {
   let continueButton;
   let option1;
   let option2;
+  let chanceButton;
 
   beforeEach(() => {
     act(() => {
@@ -102,6 +127,7 @@ describe('<GameSession />', () => {
     continueButton = getByTestId(container, 'continue');
     option1 = getByTestId(container, 'option1');
     option2 = getByTestId(container, 'option2');
+    
   });
   describe('Game Play', () => {
     it('should render', () => {
@@ -135,7 +161,7 @@ describe('<GameSession />', () => {
         response: jest.fn(() => promise),
       });
   
-      fireEvent.click(option2);
+      fireEvent.click(option1);
       fireEvent.click(continueButton);
       expect(GamePlayService.answerQuestion).toHaveBeenCalled();
       await act(() => promise);
@@ -149,7 +175,7 @@ describe('<GameSession />', () => {
         response: jest.fn(() => promise),
       });
   
-      fireEvent.click(option2);
+      fireEvent.click(option1);
       fireEvent.click(continueButton);
       expect(container.textContent).toContain(
           'Question 2',
@@ -190,3 +216,51 @@ describe('<GameSession />', () => {
     });
   });
 });
+describe('<GameSession />', () => {
+  let continueButton;
+  let option1;
+  let option2;
+  let option3;
+  let option4;
+  let chanceButton;
+  beforeEach(() => {
+    act(() => {
+      render(
+          <BrowserRouter>
+            <Routes>
+              <Route path="*" element={<GameSession />} />
+            </Routes>
+          </BrowserRouter>,
+          container,
+      );
+    });
+    const promise = Promise.resolve();
+    GamePlayService.answerQuestion.mockResolvedValue({
+      response: jest.fn(() => promise),
+    });
+    continueButton = getByTestId(container, 'continue');
+    option1 = getByTestId(container, 'option1');
+    option2 = getByTestId(container, 'option2');
+    fireEvent.click(option1);
+    fireEvent.click(continueButton);
+    chanceButton = getByTestId(container, 'chance')
+    option3 = getByTestId(container, 'option3');
+    option4 = getByTestId(container, 'option4');
+  });
+  it('should have disabled "Continue" button when option not selected', () => {
+    expect(continueButton).toBeDisabled();
+  });
+  it('option3 should be disabled', () => {
+    expect(option3).toBeDisabled();
+  });
+  it('option4 should be disabled', () => {
+    expect(option4).toBeDisabled();
+  });
+  it('should call random when chance is clicked', () => {
+    fireEvent.click(chanceButton);
+    expect(GamePlayService.random).toHaveBeenCalled();
+  });
+});
+
+
+

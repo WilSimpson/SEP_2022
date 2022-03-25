@@ -77,7 +77,19 @@ export default function GameSession() {
         },
     );
   };
-
+  const weights = {};
+  let index = 0;
+  let i;
+  for (i in currentOptions) {
+    if (currentOptions.hasOwnProperty(i)) {
+      weights[index] = currentOptions[i].weight;
+      index = index + 1;
+    }
+  }
+  function choiceClick() {
+    const choice = GamePlayService.random(weights);
+    return choice;
+  }
   return (
     <div className='container'>
       <CssBaseline />
@@ -113,10 +125,24 @@ export default function GameSession() {
                       {selectedOption == option ? 'contained' : 'outlined'}
                     sx={{marginTop: 5}}
                     data-testid={'option'+ String(option.id)}
-                    onClick={() => setSelectedOption(option)}>
+                    onClick={() => setSelectedOption(option)}
+                    disabled={currentQuestion.chance}>
                     {option.value}
                   </Button>
                 ))}
+                { currentQuestion.chance ?
+                  <Button
+                    color='secondary'
+                    sx={{marginTop: 5}}
+                    data-testid='chance'
+                    onClick={() =>
+                      setSelectedOption(currentOptions[choiceClick()])
+                    }
+                    disabled={selectedOption}
+                  >
+                  Chance
+                  </Button> : null
+                }
                 {
                   endGame ?
                     (
@@ -143,6 +169,7 @@ export default function GameSession() {
                       </Button>
                     )
                 }
+
               </ButtonGroup>
             </Container>
           </Box>
