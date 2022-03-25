@@ -28,19 +28,19 @@ function onAlert(id = defaultID) {
 }
 
 function success(message, options) {
-  alert({...options, type: alertSeverity.success, message});
+  alert({...options, severity: alertSeverity.success, message});
 }
 
 function error(message, options) {
-  alert({...options, type: alertSeverity.error, message});
+  alert({...options, severity: alertSeverity.error, message});
 }
 
 function warning(message, options) {
-  alert({...options, type: alertSeverity.warning, message});
+  alert({...options, severity: alertSeverity.warning, message});
 }
 
 function info(message, options) {
-  alert({...options, type: alertSeverity.info, message});
+  alert({...options, severity: alertSeverity.info, message});
 }
 
 function alert(alert) {

@@ -19,6 +19,8 @@ import Logout from './pages/public/logout';
 import FacultyDash from './pages/faculty/dashboard';
 import Passcode from './pages/game/passcode';
 import AddCourse from './pages/faculty/addCourse';
+import EndGame from './pages/game/endGame';
+import GenerateQRPage from './pages/faculty/generateQR';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -36,6 +38,7 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/started" element={<Knowledge />} />
               <Route exact path="/logout" element={<Logout />} />
+              <Route exact path="/endGame" element={<EndGame />} />
               <Route
                 exact
                 path="/pass"
@@ -97,6 +100,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <EditGamePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/generate-qr"
+                element={
+                  <ProtectedRoute>
+                    <GenerateQRPage />
                   </ProtectedRoute>
                 }
               />

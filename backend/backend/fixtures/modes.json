@@ -1,0 +1,23 @@
+[
+    {
+      "model": "backend.GameMode",
+      "pk": 1,
+      "fields": {
+        "name": "No Walking"
+      }
+    },
+    {
+      "model": "backend.GameMode",
+      "pk": 2,
+      "fields": {
+        "name": "Walking"
+      }
+    },
+    {
+        "model": "backend.GameMode",
+        "pk": 3,
+        "fields": {
+          "name": "Limited Walking"
+        }
+      }
+  ]

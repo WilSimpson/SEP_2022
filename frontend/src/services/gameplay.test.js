@@ -30,7 +30,7 @@ describe('Game Play Service', () => {
       };
       axios.post.mockResolvedValue(response);
 
-      const result = await gamePlayService.answerQuestion(1,1);
+      const result = await gamePlayService.answerQuestion(1, 1);
       expect(result).toEqual(undefined);
     });
   });
@@ -80,6 +80,43 @@ describe('Game Play Service', () => {
       axios.post.mockResolvedValue(response);
 
       const result = await gamePlayService.joinGame('555555');
+      expect(result).toEqual(undefined);
+    });
+  });
+
+  describe('random', () => {
+    it('should return an index', () => {
+      expect(["0","1","2"]).toContain(gamePlayService.random({0:2, 1:1, 2:3}))
+    });
+  });
+
+
+  describe('teamCompleteGame', () => {
+    it('should return status 200 on success', () => {
+      const response = {
+        response: [
+          {
+            status: 200,
+          },
+        ],
+      };
+      axios.post.mockResolvedValue(response);
+
+      const result = gamePlayService.teamCompleteGame(1);
+      expect(result).toEqual(Promise.resolve(response));
+    });
+
+    it('no response on failure', async () => {
+      const response = {
+        response: [
+          {
+            status: 404,
+          },
+        ],
+      };
+      axios.post.mockResolvedValue(response);
+
+      const result = await gamePlayService.teamCompleteGame(1);
       expect(result).toEqual(undefined);
     });
   });

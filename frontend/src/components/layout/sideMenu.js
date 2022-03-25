@@ -191,6 +191,20 @@ export function SideMenu(props) {
     </ListItemButton>
   );
 
+  const generateQR = (
+    <ListItemButton
+      disabled={!open}
+      component={Link}
+      href="/generate-qr"
+      data-testid="generate-qr-item"
+    >
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Generate QR" />
+    </ListItemButton>
+  );
+
   const logoutItem = (
     <ListItemButton
       disabled={!open}
@@ -253,12 +267,14 @@ export function SideMenu(props) {
               {gameManagementItem}
               {userManagementItem}
               {reportsItem}
+              {generateQR}
             </React.Fragment>
           ) : (
             <React.Fragment>
               {dashboardItem}
               {gameSessionManagementItem}
               {reportsItem}
+              {generateQR}
             </React.Fragment>
           )}
           <Divider sx={{my: 1}} />
