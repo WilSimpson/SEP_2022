@@ -163,3 +163,8 @@ class GameSessionAnswer(models.Model):
     
     created_at  = AutoDateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
+class Course(models.Model):        
+    name       = models.TextField()
+    section        = models.CharField(max_length=32)
+    department    = models.CharField(max_length=32)
+    number      = models.IntegerField
