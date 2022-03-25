@@ -97,7 +97,16 @@ function App() {
               />
               <Route
                 exact
-                path="/faculty-dashboard/startGame"
+                path="/faculty-dashboard/startSession"
+                element={
+                  <ProtectedRoute>
+                    <StartGameSession />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/admin-dashboard/startSession"
                 element={
                   <ProtectedRoute>
                     <StartGameSession />

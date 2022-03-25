@@ -6,6 +6,7 @@ import AuthenticatedLayout
   from '../../../components/layout/authenticated.layout';
 import {alertService, alertSeverity} from '../../../services/alert';
 import SessionStart from '../../../components/faculty/sessionStart';
+import AuthService from '../../../services/auth';
 
 export default function StartGameSession(props) {
   const navigate = useNavigate();
@@ -15,7 +16,9 @@ export default function StartGameSession(props) {
       severity: alertSeverity.info,
       message: 'Game Session not Started',
     });
-    navigate('/faculty-dashboard');
+    AuthService.currentUser().isAdmin() ? (
+        navigate('/admin-dashboard')) : (
+        navigate('/faculty-dashboard'));
   }
 
   function handleSubmit(
@@ -33,7 +36,9 @@ export default function StartGameSession(props) {
                 severity: alertSeverity.success,
                 message: 'Game Session Started',
               });
-              navigate('/faculty-dashboard');
+              AuthService.currentUser().isAdmin() ? (
+                navigate('/admin-dashboard')) : (
+                navigate('/faculty-dashboard'));
             },
             (error) => {
               alertService.alert({
