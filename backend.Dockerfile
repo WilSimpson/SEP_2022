@@ -24,4 +24,3 @@ RUN find . -type f -print0 | xargs -0 dos2unix && \
     rm -rf /var/lib/apt/lists/*
 
 RUN chmod +x /app/wsgi-entrypoint.sh
-RUN ls -la /app
