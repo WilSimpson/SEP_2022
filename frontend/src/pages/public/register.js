@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {useContext, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {
-  Alert,
+  // Alert,
   Avatar,
   Box,
   Button,
@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 import AuthService from '../../services/auth';
 import validator from 'validator';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
+// import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import InputLabel from '@mui/material/InputLabel';
@@ -26,7 +26,7 @@ const theme = createTheme();
 
 export default function Register() {
   const userRef = useRef();
-  const errRef = useRef();
+  // const errRef = useRef();
 
   // State elements
   const [email, setEmail] = useState('');
