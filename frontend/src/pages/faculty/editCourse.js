@@ -13,8 +13,15 @@ import CourseService from '../../services/courses';
 import AuthService from '../../services/auth';
 
 export default function EditCourse() {
-  const {state} = useLocation();
-  console.log(state.sectionNumber);
+  let {state} = useLocation();
+  state = state ? state : {
+    id: 1,
+    name: 'NO COURSE FOUND',
+    department: 'NO DEPARTMENT',
+    courseNumber: '0000',
+    sectionNumber: '0000',
+    semester: 'NO SEMESTER',
+  };
 
   const defaultValues = {
     name: state.name,
