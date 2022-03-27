@@ -12,7 +12,8 @@ class CourseService {
     // Expects the id of the current user
     // - returns all courses associated with them
     // Expects a response of an array of objects where each object
-    // has the required row information
+    // has the required row information (see faculty dashboard - must)
+    // Include ID
     return axios.get(`${API_URL}/courses/${facultyId}/`);
     // const courses = {
     //   data: Courses,
@@ -34,6 +35,24 @@ class CourseService {
       userId: userId,
     });
   }
+
+  editCourse(id, name, department, courseNumber, sectionNumber,
+    semester, userId) {
+  // Sends a post request to api/courses/editCourse/
+  // Content is keys: id, name, department, courseNumber,
+  // sectionNumber, semester, and userId
+  // The userID should be used to make sure that someone is not
+  // Editing another person's course
+  return axios.post(API_URL + '/courses/editCourse', {
+    id: id,
+    name: name,
+    department: department,
+    courseNumber: courseNumber,
+    sectionNumber: sectionNumber,
+    semester: semester,
+    userId: userId,
+  });
+}
 }
 
 export default new CourseService();
