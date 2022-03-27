@@ -17,7 +17,7 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, re_path, include
 
-from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet
+from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet, RoleTokenObtainPairView, CourseViewSet
 from django.contrib.auth.models import User
 
 from backend import views
@@ -26,14 +26,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView
 )
-from backend import views
-from backend.views import RoleTokenObtainPairView
-from backend import views
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
-router.register(r'courses', CourseViewSet, basename='courses')
+router.register(r'courses', CourseViewSet, basename='course')
 
 urlpatterns = [
     path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
