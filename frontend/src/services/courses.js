@@ -37,22 +37,22 @@ class CourseService {
   }
 
   editCourse(id, name, department, courseNumber, sectionNumber,
-    semester, userId) {
-  // Sends a post request to api/courses/editCourse/
-  // Content is keys: id, name, department, courseNumber,
-  // sectionNumber, semester, and userId
-  // The userID should be used to make sure that someone is not
-  // Editing another person's course
-  return axios.post(API_URL + '/courses/editCourse', {
-    id: id,
-    name: name,
-    department: department,
-    courseNumber: courseNumber,
-    sectionNumber: sectionNumber,
-    semester: semester,
-    userId: userId,
-  });
-}
+      semester, userId) {
+    // Sends a post request to api/courses/editCourse/
+    // Content is keys: id, name, department, courseNumber,
+    // sectionNumber, semester, and userId
+    // The userID should be used to make sure that someone is not
+    // Editing another person's course
+    return axios.post(API_URL + '/courses/editCourse', {
+      id: id,
+      name: name,
+      department: department,
+      courseNumber: courseNumber,
+      sectionNumber: sectionNumber,
+      semester: semester,
+      userId: userId,
+    });
+  }
 }
 
 export default new CourseService();

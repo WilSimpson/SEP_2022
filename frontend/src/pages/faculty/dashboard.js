@@ -23,6 +23,7 @@ import {useEffect} from 'react';
 import {LinearProgress} from '@mui/material';
 import {Box} from '@mui/system';
 import AuthService from '../../services/auth';
+import EditIcon from '@mui/icons-material/Edit';
 
 // interface GamesSessions {
 //   name: string;
@@ -134,6 +135,7 @@ function CoursesTable() {
       <Table data-testid="course_table" sx={{minWidth: 500}}>
         <TableHead>
           <TableRow>
+            <TableCell>Edit Course</TableCell>
             <TableCell>Department</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Course Number</TableCell>
@@ -144,6 +146,7 @@ function CoursesTable() {
         <TableBody>
           {filteredRows.map((row) => (
             <TableRow key={row.id}>
+              <TableCell><EditIcon /></TableCell>
               <TableCell>{row.department}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.courseNumber}</TableCell>
