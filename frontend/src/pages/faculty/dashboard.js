@@ -24,6 +24,7 @@ import {LinearProgress} from '@mui/material';
 import {Box} from '@mui/system';
 import AuthService from '../../services/auth';
 import EditIcon from '@mui/icons-material/Edit';
+import {useNavigate} from 'react-router-dom';
 
 // interface GamesSessions {
 //   name: string;
@@ -101,14 +102,18 @@ function CoursesTable() {
           setRows(response.data);
           setFilteredRows(response.data);
           setLoading(false);
-        }).catch( (error) => {
+        }).catch((error) => {
       console.log(`There was an error ${error}`);
-      setRows([{department: 'There was a problem',
+      setRows([{
+        department: 'There was a problem',
         name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
-        semester: 'N/A'}]);
-      setFilteredRows([{department: 'There was a problem',
+        semester: 'N/A',
+      }]);
+      setFilteredRows([{
+        department: 'There was a problem',
         name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
-        semester: 'N/A'}]);
+        semester: 'N/A',
+      }]);
       setLoading(false);
     });
   }, []);
@@ -118,6 +123,22 @@ function CoursesTable() {
       return Object.values(row).some((e) => e.toLowerCase()
           .includes(searchedVal.toLowerCase()));
     }));
+  };
+
+  const editThisCourse = (id, name, department, courseNumber,
+      sectionNumber, semester) => {
+    const path = `editCourse`;
+    const navigate = useNavigate();
+    navigate(path, {
+      state: {
+        id: id,
+        name: name,
+        department: department,
+        courseNumber: courseNumber,
+        sectionNember: sectionNumber,
+        semester: semester,
+      },
+    });
   };
 
   return (
@@ -146,7 +167,16 @@ function CoursesTable() {
         <TableBody>
           {filteredRows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell><EditIcon /></TableCell>
+              <TableCell>
+                <Tooltip title="Edit Course">
+                  <div onClick={editThisCourse(row.id, row.name, row.department,
+                      row.courseNumber, row.sectionNumber, row.semester)}>
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </div>
+                </Tooltip>
+              </TableCell>
               <TableCell>{row.department}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.courseNumber}</TableCell>
@@ -260,8 +290,10 @@ export default function FacultyDash() {
           <Grid item xs={12}>
             <Paper
               elevation={7}
-              sx={{p: 2, display: 'flex', flexDirection: 'column',
-                overflowX: 'auto'}}
+              sx={{
+                p: 2, display: 'flex', flexDirection: 'column',
+                overflowX: 'auto',
+              }}
             >
               <GameSessionTable />
             </Paper>
