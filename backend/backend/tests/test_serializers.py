@@ -3,7 +3,7 @@ from django.test import TestCase
 from ..serializers import *
 from .factories import UserFactory
 
-from ..models import Game, Option, Question
+from ..models import Game, Option, Question, Course
 
 from datetime import datetime
 
@@ -84,3 +84,12 @@ class GameModeSerializerTest(TestCase):
                 self.assertEqual(v[:-4], getattr(self.mode, k).replace(tzinfo=None).isoformat(sep='T', timespec='milliseconds')) 
             else:
                 self.assertEqual(v, getattr(self.mode, k))
+
+class CourseSerializerTest(TestCase):
+    def setUp(self):
+        self.course = Course.objects.create(name='courseTest', section='A', department="CS", number=1042, userId=1)
+
+    def test_fields(self):
+        serializer = CourseSerializer(self.course)
+        for k in ['name', 'section', 'department', 'number', 'userId']:
+            self.assertEqual(serializer.data[k], getattr(self.course, k))
