@@ -94,6 +94,7 @@ function CoursesTable() {
   const [filteredRows, setFilteredRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     courseService.getMyCourses(AuthService.currentUser().id).then(
@@ -106,12 +107,12 @@ function CoursesTable() {
       console.log(`There was an error ${error}`);
       setRows([{
         department: 'There was a problem',
-        name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
+        name: 'N/A', courseNumber: '000', sectionNumber: '000',
         semester: 'N/A',
       }]);
       setFilteredRows([{
         department: 'There was a problem',
-        name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
+        name: 'N/A', courseNumber: '000', sectionNumber: '000',
         semester: 'N/A',
       }]);
       setLoading(false);
@@ -128,14 +129,13 @@ function CoursesTable() {
   const editThisCourse = (id, name, department, courseNumber,
       sectionNumber, semester) => {
     const path = `editCourse`;
-    const navigate = useNavigate();
     navigate(path, {
       state: {
         id: id,
         name: name,
         department: department,
         courseNumber: courseNumber,
-        sectionNember: sectionNumber,
+        sectionNumber: sectionNumber,
         semester: semester,
       },
     });

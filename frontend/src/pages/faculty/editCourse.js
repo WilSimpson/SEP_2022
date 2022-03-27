@@ -6,7 +6,7 @@ import {useState} from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import {Typography} from '@mui/material';
 import Alert from '@mui/material/Alert';
 import CourseService from '../../services/courses';
@@ -14,6 +14,7 @@ import AuthService from '../../services/auth';
 
 export default function EditCourse() {
   const {state} = useLocation();
+  console.log(state.sectionNumber);
 
   const defaultValues = {
     name: state.name,
@@ -32,10 +33,8 @@ export default function EditCourse() {
       ...formValues,
       [name]: value,
     });
-    let disableSubmit = false;
     Object.entries(formValues).map(([key, value]) => {
       if (value === defaultValues[key]) {
-        disableSubmit = true;
       }
       return true;
     });
@@ -190,7 +189,7 @@ export default function EditCourse() {
                     type="submit"
                     data-testid="submit"
                   >
-                  Create Course
+                  Save Changes
                   </Button>
                 </Box>
                 <Button

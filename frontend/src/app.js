@@ -21,6 +21,7 @@ import Passcode from './pages/game/passcode';
 import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
+import EditCourse from './pages/faculty/editCourse';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -72,6 +73,16 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AddCourse />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                exact
+                path="/faculty-dashboard/editCourse"
+                element={
+                  <ProtectedRoute>
+                    <EditCourse />
                   </ProtectedRoute>
                 }
               />
