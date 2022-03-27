@@ -169,7 +169,8 @@ function CoursesTable() {
             <TableRow key={row.id}>
               <TableCell>
                 <Tooltip title="Edit Course">
-                  <div onClick={editThisCourse(row.id, row.name, row.department,
+                  <div onClick={() => editThisCourse(row.id, row.name,
+                      row.department,
                       row.courseNumber, row.sectionNumber, row.semester)}>
                     <IconButton>
                       <EditIcon />
