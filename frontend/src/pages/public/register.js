@@ -26,7 +26,7 @@ const theme = createTheme();
 
 export default function Register() {
   const userRef = useRef();
-  // const errRef = useRef();
+  const errRef = useRef();
 
   // State elements
   const [email, setEmail] = useState('');

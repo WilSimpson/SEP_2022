@@ -2,11 +2,11 @@ import React from 'react';
 import {Button, TextField, Grid} from '@mui/material';
 import AuthService from '../../services/auth';
 
-export default function sessionStart(props) {
+export default function SessionStart(props) {
   const creatorId = AuthService.currentUser().id;
-  const [notes, setNotes] = React.useState('');
-  const [timeout, setTimeout] = React.useState();
-  const [gameId, setGameId] = React.useState();
+  const [notes, setNotes] = React.useState(null);
+  const [timeout, setTimeout] = React.useState(null);
+  const [gameId, setGameId] = React.useState(null);
 
   return (
     <Grid container spacing={3}>
