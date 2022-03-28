@@ -5,7 +5,7 @@ from rest_framework import permissions
 import rest_framework.generics
 from rest_framework.mixins import ListModelMixin
 
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -76,6 +76,19 @@ def joinGame(request):
         return Response(ret_json, status=200)
     except Exception as e:
         return HttpResponseServerError('There was a problem accessing this game session. Please try again later.')
+
+@api_view(['POST'])
+def complete_team(request):
+    try:
+        try:
+            team = Team.objects.get(id=request.data['team'])
+        except Exception as e:
+            return HttpResponseBadRequest('This team does not exist.')
+        team.completed = True
+        team.save()
+        return Response(status=200)
+    except Exception as e:
+        return HttpResponseServerError('The game was not successfully saved.')
 
 @api_view(['POST'])
 def create_team(request):

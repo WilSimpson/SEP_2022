@@ -65,7 +65,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'backend',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders'
+    'corsheaders',
+    'rest_framework_swagger',
 ]
 
 REST_FRAMEWORK = {
