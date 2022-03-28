@@ -80,12 +80,26 @@ export function SideMenu(props) {
     setHelpOpen(!helpOpen);
   };
 
-  const dashboardItem = (
+  const adminDashboardItem = (
     <ListItemButton
       disabled={!open}
       component={Link}
-      data-testid="dashboard-item"
+      data-testid="admin-dashboard-item"
       href="/admin-dashboard"
+    >
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText primary="Dashboard" />
+    </ListItemButton>
+  );
+
+  const facultyDashboardItem = (
+    <ListItemButton
+      disabled={!open}
+      component={Link}
+      data-testid="faculty-dashboard-item"
+      href="/faculty-dashboard"
     >
       <ListItemIcon>
         <DashboardIcon />
@@ -282,7 +296,7 @@ export function SideMenu(props) {
         <List component="nav">
           {AuthService.currentUser().isAdmin() ? (
             <React.Fragment>
-              {dashboardItem}
+              {adminDashboardItem}
               {gameManagementItem}
               {userManagementItem}
               {reportsItem}
@@ -290,7 +304,7 @@ export function SideMenu(props) {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              {dashboardItem}
+              {facultyDashboardItem}
               {gameSessionManagementItem}
               {reportsItem}
               {generateQR}
