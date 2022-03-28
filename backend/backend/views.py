@@ -288,77 +288,12 @@ def start_session(request):
         return HttpResponseServerError('There was a problem creating this session.')
 
 class CourseViewSet(ModelViewSet):
-
+    '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String}
+    It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
+    create returns -- 201 on success and 400 on failure
+    read returns -- 200 on success and 404 on failure
+    update returns -- 200 on success and 404 on failure
+    delete returns -- 204 on success and 404 on failure'''
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    # def list(self, request):
-    #     try:
-    #         all_courses = Course.objects.all() 
-    #         response_data = []
-    #         for course in all_courses:
-    #             course_data = (course.id)
-    #             response_data.append(course_data) 
-    #         return Response(data=response_data)
-    #     except Exception as e:
-    #         return HttpResponse(status=501)
-    
-    # def create(self, request):
-    #     try:
-    #         course_data = request.data
-    #         name = course_data['name']
-    #         department = course_data['department']
-    #         courseNumber = course_data['courseNumber']
-    #         sectionNumber = course_data['sectionNumber']
-    #         semester = course_data['semester']
-    #         userId = course_data['userId']
-
-    #         name.save()
-    #         department.save()
-    #         courseNumber.save()
-    #         sectionNumber.save()
-    #         semester.save()
-    #         userId.save()
-                    
-    #         return Response()
-    #     except Exception as e:
-    #         return HttpResponse(status=501)
-    
-    # def get(self, request, pk=None):
-    #     try:
-    #         response_data = get_course_data(pk)
-    #         return Response(data=response_data)
-    #     except Exception as e:
-    #         return HttpResponse(status=501)
-    
-    # def update(self, request, pk=None):
-    #     try:
-    #         if (Course.objects.get(id=pk)):
-    #             course_data = request.data
-    #             name = course_data['name']
-    #             department = course_data['department']
-    #             courseNumber = course_data['courseNumber']
-    #             sectionNumber = course_data['sectionNumber']
-    #             semester = course_data['semester']
-    #             userId = course_data['userId']
-    #             course_to_update = Course.objects.get(id=pk)
-    #             course_to_update.name      = course_data['name']
-    #             course_to_update.department      = course_data['department']
-    #             course_to_update.courseNumber  = course_data['courseNumber']
-    #             course_to_update.sectionNumber        = course_data['sectionNumber']
-    #             course_to_update.semester        = course_data['semester']
-    #             course_to_update.userId        = course_data['userId']
-    #             course_to_update.save()
-    #             return Response()
-    #         else:
-    #             raise Exception
-    #     except Exception as e:
-    #         return HttpResponse(status=501)
-        
-    # def delete(self, request, pk):
-    #     try:
-    #         if Course.objects.get(id=pk):
-    #             Course.objects.filter(id=pk).delete()
-    #         return Response()
-    #     except Exception as e:
-    #         return HttpResponse(status=501)
     
