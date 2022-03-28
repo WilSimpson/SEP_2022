@@ -26,7 +26,7 @@ describe('<SideMenu />', () => {
   describe('Dashboard Button', () => {
     it('should have clickable dashboard button', () => {
       const {getByTestId} = render(<SideMenu />);
-      const dashboardLink = getByTestId('admin-dashboard-item');
+      const dashboardLink = getByTestId('dashboard-item');
       expect(dashboardLink).toBeInTheDocument();
       expect(dashboardLink).not.toBeDisabled();
     });
