@@ -43,6 +43,14 @@ class GameService {
         });
   }
 
+  teamCompleteGame(teamId) {
+    return axios
+        .post(API_URL + '/teams/complete/', {
+          team: teamId,
+        })
+        .then((response) => {});
+  }
+
   answerQuestion(optionId, teamId) {
     return axios
         .post(API_URL + '/gameSession/answer/', {
@@ -70,6 +78,28 @@ class GameService {
           response: {status: 401, data: {detail: 'wrong passcode'}},
         },
       };
+    }
+  }
+  random(options) { // {0:2, 1:1, 2:3}
+    let i;
+    let total = 0;
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        total += options[i];
+      }
+    }
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        options[i] = options[i]/total;
+      }
+    }
+    let sum = 0;
+    const r=Math.random();
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        sum += options[i];
+        if (r <= sum) return i;
+      }
     }
   }
 }

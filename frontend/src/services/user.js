@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {authHeader} from './auth.service';
-import {API_URL} from '../store/store'
+import {API_URL} from '../store/store';
 
 class UserService {
   getUser() {

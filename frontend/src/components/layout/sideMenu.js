@@ -6,6 +6,7 @@ import {styled} from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -85,7 +86,8 @@ export function SideMenu(props) {
       disabled={!open}
       component={Link}
       data-testid="dashboard-item"
-      href="/admin-dashboard"
+      href={AuthService.currentUser().isAdmin() ?
+         '/admin-dashboard' : '/faculty-dashboard'}
     >
       <ListItemIcon>
         <DashboardIcon />
@@ -189,6 +191,20 @@ export function SideMenu(props) {
     </ListItemButton>
   );
 
+  const generateQR = (
+    <ListItemButton
+      disabled={!open}
+      component={Link}
+      href="/generate-qr"
+      data-testid="generate-qr-item"
+    >
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Generate QR" />
+    </ListItemButton>
+  );
+
   const logoutItem = (
     <ListItemButton
       disabled={!open}
@@ -240,7 +256,7 @@ export function SideMenu(props) {
           }}
         >
           <IconButton onClick={toggleDrawer} data-testid="drawer-toggle">
-            <ChevronLeftIcon />
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </Toolbar>
         <Divider />
@@ -251,12 +267,14 @@ export function SideMenu(props) {
               {gameManagementItem}
               {userManagementItem}
               {reportsItem}
+              {generateQR}
             </React.Fragment>
           ) : (
             <React.Fragment>
               {dashboardItem}
               {gameSessionManagementItem}
               {reportsItem}
+              {generateQR}
             </React.Fragment>
           )}
           <Divider sx={{my: 1}} />

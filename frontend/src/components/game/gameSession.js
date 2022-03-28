@@ -9,14 +9,18 @@ import {Button} from '@mui/material';
 import {ButtonGroup} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
+import {useNavigate} from 'react-router-dom';
 export default function GameSession() {
   const {state} = useLocation();
-  const [currentQuestion, setQuestion] = useState(state.game.questions[0]);
+  const navigate = useNavigate();
+  const [currentQuestion, setQuestion] = useState(state.initialQuestion);
   const [currentOptions, setOptions] = useState(
       state.game.options.filter(
           (option) => option.source_question == currentQuestion.id,
       ));
   const [selectedOption, setSelectedOption] = useState();
+  const [endGame, setEndGame] = useState(false);
+
 
   React.useEffect(() => {
     setOptions(
@@ -24,6 +28,10 @@ export default function GameSession() {
             (option) => option.source_question == currentQuestion.id,
         ));
   }, [currentQuestion]);
+
+  React.useEffect(() => {
+    setEndGame(currentOptions.length == 0);
+  }, [currentOptions]);
 
   const nextQuestion = () => {
     GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
@@ -45,10 +53,43 @@ export default function GameSession() {
     const question = (state.game.questions).find(
         (question) => question.id == selectedOption.dest_question,
     );
-    setSelectedOption(null);
     setQuestion(question);
+    setSelectedOption(null);
   };
 
+  const completeGame = () => {
+    GamePlayService.teamCompleteGame(state.team_id).then(
+        (response) => {
+          navigate(`../endGame`);
+        },
+        (error) => {
+          let errMessage = '';
+          if (error.response && error.response.data) {
+            errMessage = error.response.data;
+          } else {
+            errMessage = 'The server is currently unreachable. ' +
+            'Please try again later.';
+          }
+          alertService.alert({
+            severity: alertSeverity.error,
+            message: errMessage,
+          });
+        },
+    );
+  };
+  const weights = {};
+  let index = 0;
+  let i;
+  for (i in currentOptions) {
+    if (currentOptions.hasOwnProperty(i)) {
+      weights[index] = currentOptions[i].weight;
+      index = index + 1;
+    }
+  }
+  function choiceClick() {
+    const choice = GamePlayService.random(weights);
+    return choice;
+  }
   return (
     <div className='container'>
       <CssBaseline />
@@ -84,20 +125,51 @@ export default function GameSession() {
                       {selectedOption == option ? 'contained' : 'outlined'}
                     sx={{marginTop: 5}}
                     data-testid={'option'+ String(option.id)}
-                    onClick={() => setSelectedOption(option)}>
+                    onClick={() => setSelectedOption(option)}
+                    disabled={currentQuestion.chance}>
                     {option.value}
                   </Button>
                 ))}
-                <Button
-                  color='secondary'
-                  sx={{marginTop: 5}}
-                  onClick={nextQuestion}
-                  inputProps={{'data-testid': 'continue'}}
-                  data-testid='continue'
-                  disabled={!selectedOption}
-                >
-                  Continue
-                </Button>
+                { currentQuestion.chance ?
+                  <Button
+                    color='secondary'
+                    sx={{marginTop: 5}}
+                    data-testid='chance'
+                    onClick={() =>
+                      setSelectedOption(currentOptions[choiceClick()])
+                    }
+                    disabled={selectedOption}
+                  >
+                  Chance
+                  </Button> : null
+                }
+                {
+                  endGame ?
+                    (
+                      <Button
+                        color='secondary'
+                        sx={{marginTop: 5}}
+                        onClick={completeGame}
+                        inputProps={{'data-testid': 'complete'}}
+                        data-testid='complete'
+                      >
+                        Complete Game
+                      </Button>
+                    ) :
+                    (
+                      <Button
+                        color='secondary'
+                        sx={{marginTop: 5}}
+                        onClick={nextQuestion}
+                        inputProps={{'data-testid': 'continue'}}
+                        data-testid='continue'
+                        disabled={!selectedOption}
+                      >
+                        Continue
+                      </Button>
+                    )
+                }
+
               </ButtonGroup>
             </Container>
           </Box>

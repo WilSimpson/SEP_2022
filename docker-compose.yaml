@@ -1,9 +1,10 @@
-version: "0.1.0"
+version: "3.8"
 
 services:
   backend:
     restart: unless-stopped
     build:
+      context: .
       dockerfile: ./backend.Dockerfile
     entrypoint: /app/wsgi-entrypoint.sh
     ports:
@@ -12,12 +13,11 @@ services:
       - static_volume:/app/ethicsAdventure/django-static
     env_file:
       - .env
-    depends_on:
-      - db
   
   frontend:
     restart: unless-stopped
     build:
+      context: .
       dockerfile: ./frontend.Dockerfile
     ports:
       - 80:80
