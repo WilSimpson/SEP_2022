@@ -8,6 +8,7 @@ import {User} from '../../models/user';
 import {afterEach, beforeEach} from '@jest/globals';
 
 const user = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
+const fuser = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
 
 describe('<SideMenu />', () => {
   beforeEach(() => {
@@ -136,6 +137,45 @@ describe('<SideMenu />', () => {
       expect(gettingStarted).not.toBeDisabled();
       expect(about).toBeInTheDocument();
       expect(about).not.toBeDisabled();
+    });
+  });
+});
+
+describe('<SideMenu />', () => {
+  beforeEach(() => {
+    localStorage.setItem('user', JSON.stringify(fuser));
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('should render the SideMenu component', () => {
+    expect(shallow(<SideMenu />));
+  });
+
+  describe('Game Management Button', () => {
+    it('should have clickable game session management button as a faculty', () => {
+      const {getByTestId} = render(<SideMenu />);
+      const gameManageLink = getByTestId('game-session-manage-item');
+      expect(gameManageLink).toBeInTheDocument();
+      expect(gameManageLink).not.toBeDisabled();
+      localStorage.removeItem('user');
+    });
+
+    it('should reveal 1 new button when clicked as a faculty', () => {
+      const {getByTestId} = render(<SideMenu />);
+      const gameManageLink = getByTestId('game-session-manage-item');
+      try {
+        getByTestId('session-start-item');
+      } catch (error) {
+        expect(error);
+      }
+      fireEvent.click(gameManageLink);
+      const startSession = getByTestId('session-start-item');
+      expect(startSession).toBeInTheDocument();
+      expect(startSession).not.toBeDisabled();
+      localStorage.removeItem('user');
     });
   });
 });

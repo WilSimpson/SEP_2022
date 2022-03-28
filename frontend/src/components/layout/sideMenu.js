@@ -107,7 +107,20 @@ export function SideMenu(props) {
           <BarChartIcon />
         </ListItemIcon>
         <ListItemText primary="Game Sessions" />
+        {gameSessionManageOpen ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
+      <Collapse in={gameSessionManageOpen && open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="session-start-item"
+            component={Link}
+            href="/faculty-dashboard/startSession"
+          >
+            <ListItemText primary="Start Game Session" />
+          </ListItemButton>
+        </List>
+      </Collapse>
     </div>
   );
 
@@ -141,6 +154,14 @@ export function SideMenu(props) {
             href="/admin-dashboard/games"
           >
             <ListItemText primary="View Games" />
+          </ListItemButton>
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="session-start-item"
+            component={Link}
+            href="/admin-dashboard/startSession"
+          >
+            <ListItemText primary="Start Game Session" />
           </ListItemButton>
         </List>
       </Collapse>
