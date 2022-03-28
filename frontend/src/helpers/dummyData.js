@@ -1,4 +1,5 @@
 export const Games = require('./games.json');
+export const Courses = require('./courses.json');
 
 function createGameSessionTable(id, name, starttime, endtime, gamecode) {
   return {id, name, starttime, endtime, gamecode};
@@ -53,3 +54,4 @@ export const gameSessions = [
       '651756',
   ),
 ];
+
