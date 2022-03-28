@@ -20,6 +20,7 @@ import FacultyDash from './pages/faculty/dashboard';
 import Passcode from './pages/game/passcode';
 import StartGameSession from './pages/faculty/games/startGameSession';
 import Register from './pages/public/register';
+import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
 
@@ -64,6 +65,16 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <FacultyDash />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                exact
+                path="/faculty-dashboard/addCourse"
+                element={
+                  <ProtectedRoute>
+                    <AddCourse />
                   </ProtectedRoute>
                 }
               />

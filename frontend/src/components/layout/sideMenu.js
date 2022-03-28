@@ -6,6 +6,7 @@ import {styled} from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -86,8 +87,7 @@ export function SideMenu(props) {
       component={Link}
       data-testid="dashboard-item"
       href={AuthService.currentUser().isAdmin() ?
-        ('/admin-dashboard') :
-        ('/faculty-dashboard')}
+         '/admin-dashboard' : '/faculty-dashboard'}
     >
       <ListItemIcon>
         <DashboardIcon />
@@ -277,7 +277,7 @@ export function SideMenu(props) {
           }}
         >
           <IconButton onClick={toggleDrawer} data-testid="drawer-toggle">
-            <ChevronLeftIcon />
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </Toolbar>
         <Divider />
