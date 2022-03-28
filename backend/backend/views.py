@@ -45,10 +45,60 @@ class RoleTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 def joinGame(request):
-    '''Accepts a game code in the request
+    '''
+    Accepts a ```Game``` ```code``` in the request to retrieve game session information and return to requestor.
         Returns a game object or an error code
-        Error Codes:
-            500 - There was an error finding the game session'''
+    
+    **Example request**:
+        
+    .. code-block:: http
+            
+        POST  /api/games/joinGame/
+        
+    .. code-block:: json
+
+        {
+            "code": (integer)
+        }
+    
+    **Example response**:
+        
+    .. code-block:: json
+    
+        {
+            "id": (id),
+            "title": "",
+            "creator_id": (id),
+            "code": 123456,
+            "timeout": (integer),
+            "questions": [
+                {
+                    "id": 209,
+                    "value": "Ignore Result",
+                    "passcode": "123456",
+                    "chance": false,
+                    "game_id": 22,
+                    "chance_game": "NO_GAME"
+                }
+            ],
+            "options": [
+                {
+                    "id": 180,
+                    "value": "Ignore Crash",
+                    "weight": 1,
+                    "dest_question_id": 210,
+                    "source_question_id": 209
+                }
+            ]
+        }
+        
+    **Response Codes**:
+    
+    .. code-block:: http
+    
+        200 : Success
+        500 : Fail
+    '''
 
     try:
         game_session = GameSession.objects.get(code=int(request.data['code']))
@@ -75,6 +125,30 @@ def joinGame(request):
 
 @api_view(['POST'])
 def complete_team(request):
+    """
+    Changes field ```complete``` in ```Team``` model to ```True```. Envoke as a team finishes a game.
+    
+    
+    **Example request**:
+        
+    .. code-block:: http
+            
+        POST  /api/teams/complete/
+            
+    .. code-block:: json
+    
+        {
+            "team": 1
+        }   
+            
+    **Response Codes**:
+        
+    .. code-block:: http
+        
+        200 : Success
+        400 : Fail (This team does not exist.)
+        500 : Fail 
+    """
     try:
         try:
             team = Team.objects.get(id=request.data['team'])
@@ -88,10 +162,40 @@ def complete_team(request):
 
 @api_view(['POST'])
 def create_team(request):
-    '''Accepts an object of params to create a team
-        Returns a team id
-        Error Codes:
-            500 - Could not create a team'''          
+    '''
+    Accepts an object of params to create a ```Team```
+        
+    **Example request**:
+        
+    .. code-block:: http
+            
+        POST  /api/teams/createTeam/
+        
+    .. code-block:: json
+    
+        {
+            "session": (id)
+            "mode": ""
+            "guest": (boolean),
+            "size": (integer),
+            "first_time": (boolean)
+        }
+        
+    **Example response**:
+        
+    .. code-block:: json
+        
+        {
+            "id": 1
+        }
+        
+     **Response Codes**:
+        
+    .. code-block:: http
+    
+        200 : Success
+        500 : Fail
+    '''          
     try:
         session = GameSession.objects.get(id=request.data['session'])
         mode = GameMode.objects.get(name=request.data['mode'])
@@ -112,6 +216,54 @@ serializer_class = RoleTokenObtainPairSerializer
 
 class GameViewSet(ViewSet):
     def list(self, request):
+        '''
+        Responds with all of the active and inactive ``Game`` objects. Including all the games ``Question`` and ``Option`` objects.
+
+        **Example request**:
+        
+        .. code-block:: http
+            
+            GET  /api/games/
+
+        **Example response**:
+        
+        .. code-block:: json
+        
+            [
+                {
+                    "title": "Example Game",
+                    "creator_id": 1,
+                    "code": 123456,
+                    "active": true,
+                    "questions": [
+                        {
+                            "id": 209,
+                            "value": "Ignore Result",
+                            "passcode": "123456",
+                            "chance": false,
+                            "game_id": 22,
+                            "chance_game": "NO_GAME"
+                        }
+                    ],
+                    "options": [
+                        {
+                            "id": 180,
+                            "value": "Ignore Crash",
+                            "weight": 1,
+                            "dest_question_id": 210,
+                            "source_question_id": 209
+                        }
+                    ]
+                }
+            ]
+            
+        **Response Codes**:
+        
+        .. code-block:: http
+        
+            200 : Success
+            501 : Fail
+        '''
         try:
             all_games = Game.objects.all() 
             response_data = []
@@ -123,6 +275,50 @@ class GameViewSet(ViewSet):
             return HttpResponse(status=501)
     
     def create(self, request):
+        '''
+        Creates a ```Game``` and all of the ```Question``` and ```Option``` objects that correspond with it. It uses "labels" to associate a ```Question``` with an ```Option```.
+        
+        Note -- A question does not need the ```chance_game``` field when request sent and this feild will default to ```NO_GAME```.
+        
+        **Example request**:
+        
+        .. code-block:: http
+            
+            POST  /api/games/
+        
+        ..code-block:: json
+        
+            {
+                "title": "example game title",
+                "active": (boolean),
+                "creator_id": (id),
+                "code": (integer),
+                "questions": [
+                    {
+                        "label" : "",
+                        "value" : "",
+                        "passcode" : "",
+                        "chance" : (boolean),
+                        "chance_game": ""
+                    }
+                ],
+                "options": [
+                    {
+                    "value": "",
+                    "source_label": "",
+                    "dest_label": "",
+                    "weight": (integer)
+                    }
+                ]
+            }
+            
+        **Response Codes**:
+        
+        .. code-block:: http
+        
+            200 : Success
+            501 : Fail
+        '''
         try:
             game_data = request.data
             questions = game_data['questions']
@@ -182,6 +378,50 @@ class GameViewSet(ViewSet):
             return HttpResponse(status=501)
     
     def update(self, request, pk=None):
+        '''
+        Updates an existing ```Game``` and all of the ```Question``` and ```Option``` objects that correspond with it. A query parameter is the ```Game``` ```id```.
+        
+         **Example request**:
+        
+        .. code-block:: http
+            
+            PUT  /api/games/{id}
+            
+        ..code-block:: json
+        
+            {
+                "title": "Example Game",
+                "creator_id": 1,
+                "code": 123456,
+                "active": true,
+                "questions": [
+                    {
+                        "id": 209,
+                        "value": "Ignore Result",
+                        "passcode": "123456",
+                        "chance": false,
+                        "game_id": 22,
+                        "chance_game": "NO_GAME"
+                    }
+                ],
+                "options": [
+                    {
+                        "id": 180,
+                        "value": "Ignore Crash",
+                        "weight": 1,
+                        "dest_question_id": 210,
+                        "source_question_id": 209
+                    }
+                ]
+            }
+        
+        **Response Codes**:
+        
+        .. code-block:: http
+        
+            200 : Success
+            501 : Fail
+        '''
         try:
             if (Game.objects.get(id=pk)):
                 game_data = request.data
@@ -228,6 +468,30 @@ class GameViewSet(ViewSet):
 
 class GameSessionAnswerViewSet(ViewSet):
     def create(self, request):
+        '''
+        API Route saves information about an ```Option``` a ```Team``` chose while playing a game. This allows the players to progress through the game and have their responses recorded.
+        
+        **Example request**:
+        
+        .. code-block:: http
+            
+            POST  /api/gameSession/answer/
+            
+        .. code-block:: json
+        
+            {
+                "option_id": (id),
+                "team_id": (id)
+            }
+            
+        **Response Codes**:
+        
+        .. code-block:: http
+        
+            200 : Success
+            400 : Fail (message will indicate whether team or option does not exist)
+            500 : Fail
+        '''
         try:
             answer_data = request.data
             try: 
@@ -252,10 +516,28 @@ class GameSessionAnswerViewSet(ViewSet):
         
 @api_view(['POST'])
 def toggle_active(request):
-    '''Expects an ID of the game from the frontend
-        returns -- an HTTP status:
-                                    200 -- The game was activated
-                                    500 -- There was a problem toggling the game'''
+    '''
+    Toggles the ```active``` status of a ```Game``` object.
+    
+    **Example request**:
+        
+    .. code-block:: http
+        
+        POST  /api/games/toggleActive/
+        
+    .. code-block:: json
+    
+        {
+            "id": (game id)
+        }
+    
+    **Response Codes**:
+        
+    .. code-block:: http
+        
+            200 : Success
+            500 : Fail
+    '''
     try:
         try:
             game = Game.objects.get(id=int(request.data['id']))
@@ -270,9 +552,40 @@ def toggle_active(request):
 
 @api_view(['POST'])
 def start_session(request):
-    '''Expects a game id, creator_id, notes, and a timeout(minutes)
-        Returns -- A game session id and gamecode (status 200) on success
-        Error -- Returns an error message (status 500)'''
+    '''
+    Starts a ```GameSession``` so a game can be played by users.
+    
+    **Example request**:
+        
+    .. code-block:: http
+            
+        POST  /api/games/startSession/
+        
+    .. code-block:: json
+
+        {
+            "id": (game id),
+            "creator_id": (id),
+            "notes": "",
+            "timeout": (integer minutes)
+        }
+        
+    **Example response**:
+    
+    .. code-block:: json
+        
+        {
+            "id": (game session id),
+            "code": (integer)
+        }
+        
+    **Response Codes**:
+    
+    .. code-block:: http
+        
+        200 : Success
+        500 : Fail    
+    '''
     try:
         base_game = Game.objects.get(id=int(request.data['id']))
     except Exception:
