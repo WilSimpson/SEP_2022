@@ -24,7 +24,7 @@ describe('<SideMenu />', () => {
   });
 
   describe('Dashboard Button', () => {
-    it('should have clickable dashboard button as an admin', () => {
+    it('should have clickable dashboard button', () => {
       const {getByTestId} = render(<SideMenu />);
       const dashboardLink = getByTestId('admin-dashboard-item');
       expect(dashboardLink).toBeInTheDocument();
@@ -152,15 +152,6 @@ describe('<SideMenu />', () => {
 
   it('should render the SideMenu component', () => {
     expect(shallow(<SideMenu />));
-  });
-
-  describe('Dashboard Button', () => {
-    it('should have clickable dashboard button as an faculty', () => {
-      const {getByTestId} = render(<SideMenu />);
-      const dashboardLink = getByTestId('faculty-dashboard-item');
-      expect(dashboardLink).toBeInTheDocument();
-      expect(dashboardLink).not.toBeDisabled();
-    });
   });
 
   describe('Game Management Button', () => {

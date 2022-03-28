@@ -55,7 +55,8 @@ export default function Register() {
             window.location.href = '/users';
           } else {
             setErrMsg(
-                'There was an issue handling your account registration. Please try again later.',
+                `There was an issue handling your account registration.
+                    Please try again later.`,
             );
           }
         },
