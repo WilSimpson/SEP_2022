@@ -142,10 +142,10 @@ export default function StartingSurvey() {
               mb: 3,
             }}
           >
-            {GamePlayService.gameInProgress() &&
-            (GamePlayService.getInProgressGame().state.code == state.code) ?
-            (<GameInProgressAlert />) :
-            (<div />)
+            {(GamePlayService.gameInProgress() &&
+            (GamePlayService.getInProgressGame().state.code == state.code)) ?
+            <GameInProgressAlert /> :
+            <div />
             }
             <Typography>
               {' '}

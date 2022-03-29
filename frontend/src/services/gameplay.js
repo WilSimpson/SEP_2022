@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {API_URL} from '../store/store';
 
+const IN_PROGRESS = 'inProgress';
+
 class GameService {
   joinGame(gameCode) {
     return axios
@@ -50,15 +52,15 @@ class GameService {
   }
 
   setInProgressGame(state) {
-    localStorage.setItem('inProgress', JSON.stringify(state));
+    localStorage.setItem(IN_PROGRESS, JSON.stringify(state));
   }
 
   getInProgressGame() {
-    return JSON.parse(localStorage.getItem('inProgress'));
+    return JSON.parse(localStorage.getItem(IN_PROGRESS));
   }
 
   gameInProgress() {
-    return localStorage.getItem('inProgress') !== null;
+    return localStorage.getItem(IN_PROGRESS) !== null;
   }
 
   updateCurrentQuestion(question) {
@@ -68,7 +70,7 @@ class GameService {
   }
 
   clearInProgressGame() {
-    localStorage.removeItem('inProgress');
+    localStorage.removeItem(IN_PROGRESS);
   }
 
   checkPasscode(pcd) {
