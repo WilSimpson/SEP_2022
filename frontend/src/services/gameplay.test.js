@@ -3,6 +3,41 @@ import gamePlayService from './gameplay';
 import axios from 'axios';
 
 jest.mock('axios');
+const inProgressGame = {
+  state: {
+    code: '123456',
+    currentQuestion: {
+      id: 1,
+      value: "Question 1",
+      passcode: "123456",
+      chance: false,
+      chance_game: "NO_GAME",
+      game: '1'
+    },
+    team_id: 1,
+    game: {
+      questions: [
+        {
+          id: 1,
+          value: "Question 1",
+          passcode: "123456",
+          chance: false,
+          chance_game: "NO_GAME",
+          game: '1'
+        },
+        {
+          id: 2,
+          value: "Question 2",
+          passcode: "123456",
+          chance: true,
+          chance_game: "NO_GAME",
+          game: '1'
+        },
+      ]
+    },
+  },
+};
+
 
 describe('Game Play Service', () => {
   describe('answerQuestion', () => {
@@ -118,6 +153,58 @@ describe('Game Play Service', () => {
 
       const result = await gamePlayService.teamCompleteGame(1);
       expect(result).toEqual(undefined);
+    });
+  });
+
+  describe('inProgressGame functions', () => {
+    beforeEach(() => {
+      localStorage.setItem('inProgress', JSON.stringify(inProgressGame));
+    });
+    afterEach(() => {
+      localStorage.removeItem('inProgress');
+    });
+    describe('setInProgressGame', () => {
+      it('should add in progress game to localStorage', () => {
+        localStorage.removeItem('inProgress');
+        expect(localStorage.getItem('inProgress')).toBeNull();
+        gamePlayService.setInProgressGame(inProgressGame);
+        expect(localStorage.getItem('inProgress')).not.toBeNull();
+      });
+    });
+    describe('getInProgressGame', () => {
+      it('should return the in progress game from localStorage', () => {
+        const localStorageGame = gamePlayService.getInProgressGame();
+        expect(localStorageGame).toEqual(inProgressGame);
+        expect(localStorageGame).toEqual(JSON.parse(localStorage.getItem('inProgress')));
+      });
+    });
+    describe('gameInProgress', () => {
+      it('should return TRUE when in progress game in localStorage', () => {
+        expect(localStorage.getItem('inProgress')).not.toBeNull();
+        expect(gamePlayService.gameInProgress()).toEqual(true);
+      });
+      it('should return FALSE when in progress game not in localStorage', () => {
+        localStorage.removeItem('inProgress');
+        expect(localStorage.getItem('inProgress')).toBeNull();
+        expect(gamePlayService.gameInProgress()).toEqual(false);
+      });
+    });
+    describe('updateCurrentQuestion', () => {
+      it('should update the current question in the game state', () => {
+        expect(localStorage.getItem('inProgress')).not.toBeNull();
+        const oldquestion = inProgressGame.state.currentQuestion;
+        const newQuestion = inProgressGame.state.game.questions[1];
+        expect(JSON.parse(localStorage.getItem('inProgress')).state.currentQuestion).toEqual(oldquestion);
+        gamePlayService.updateCurrentQuestion(newQuestion);
+        expect(JSON.parse(localStorage.getItem('inProgress')).state.currentQuestion).toEqual(newQuestion);
+      });
+    });
+    describe('clearInProgressGame', () => {
+      it('should remove the inProgress game from localStorage', () => {
+        expect(localStorage.getItem('inProgress')).not.toBeNull();
+        gamePlayService.clearInProgressGame();
+        expect(localStorage.getItem('inProgress')).toBeNull();
+      });
     });
   });
 });
