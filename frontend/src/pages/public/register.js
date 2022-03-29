@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {
   Alert,
@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 import AuthService from '../../services/auth';
 import validator from 'validator';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
+// import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import InputLabel from '@mui/material/InputLabel';
@@ -55,7 +55,8 @@ export default function Register() {
             window.location.href = '/users';
           } else {
             setErrMsg(
-                'There was an issue handling your account registration. Please try again later.',
+                `There was an issue handling your account registration.
+                    Please try again later.`,
             );
           }
         },
@@ -93,6 +94,11 @@ export default function Register() {
             onSubmit={handleSubmit}
             sx={{mt: 3}}
           >
+            {errMsg && (
+              <Alert severity="error" ref={errRef} data-testid="err-msg">
+                {errMsg}
+              </Alert>
+            )}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField // first name field
