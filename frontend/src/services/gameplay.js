@@ -60,12 +60,20 @@ class GameService {
         .then((response) => {});
   }
 
-  clearGame() {
-    localStorage.removeItem('gameObject');
+  setInProgressGame(state) {
+    localStorage.setItem('inProgress', JSON.stringify(state));
   }
 
-  clearTeam() {
-    localStorage.removeItem('teamObject');
+  getInProgressGame() {
+    return JSON.parse(localStorage.getItem('inProgress'));
+  }
+
+  gameInProgress() {
+    return localStorage.getItem('inProgress') !== null;
+  }
+
+  clearInProgressGame() {
+    localStorage.removeItem('inProgress');
   }
 
   checkPasscode(pcd) {

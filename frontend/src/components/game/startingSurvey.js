@@ -78,6 +78,20 @@ export default function StartingSurvey() {
           console.log(response);
           const path = `../gameSession`;
           const initialQ = initialQuestion(state.game);
+          const gameSessionState = {
+            state: {
+              // Carries the gameCode with the state
+              code: state.code,
+              // Initialize state with the response
+              // parsed as an array of questions
+              game: state.game,
+              // Carry the form data forward
+              formData: formValues,
+              team_id: response['id'],
+              currentQuestion: initialQ,
+            },
+          };
+          GamePlayService.setInProgressGame(gameSessionState);
           navigate(path, {
             state: {
             // Carries the gameCode with the state
