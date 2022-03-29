@@ -13,7 +13,9 @@ import {useNavigate} from 'react-router-dom';
 export default function GameSession() {
   const {state} = useLocation();
   const navigate = useNavigate();
-  const [currentQuestion, setQuestion] = useState(state.currentQuestion);
+  const [currentQuestion, setQuestion] = useState(
+      GamePlayService.getInProgressGame().state.currentQuestion,
+  );
   const [currentOptions, setOptions] = useState(
       state.game.options.filter(
           (option) => option.source_question == currentQuestion.id,
