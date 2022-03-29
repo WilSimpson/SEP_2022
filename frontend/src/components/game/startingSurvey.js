@@ -88,7 +88,7 @@ export default function StartingSurvey() {
               // Carry the form data forward
               formData: formValues,
               team_id: response['id'],
-              initialQuestion: initialQ,
+              currentQuestion: initialQ,
             },
           });
         },

@@ -17,7 +17,7 @@ jest.mock('react-router-dom', () => ({
     state: {
       pathname: 'localhost:3000/gameSession',
       code: '123456',
-      initialQuestion: {
+      currentQuestion: {
         id: 1,
         value: "Question 1",
         passcode: "123456",
