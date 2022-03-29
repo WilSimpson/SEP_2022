@@ -62,6 +62,7 @@ export default function GameSession() {
     GamePlayService.teamCompleteGame(state.team_id).then(
         (response) => {
           navigate(`../endGame`);
+          GamePlayService.clearInProgressGame();
         },
         (error) => {
           let errMessage = '';
