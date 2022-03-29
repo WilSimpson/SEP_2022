@@ -18,6 +18,7 @@ import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import Alert from '@mui/material/Alert';
+import GameInProgressAlert from './gameInProgressAlert';
 
 export default function StartingSurvey() {
   const defaultValues = {
@@ -141,6 +142,11 @@ export default function StartingSurvey() {
               mb: 3,
             }}
           >
+            {GamePlayService.gameInProgress() &&
+            (GamePlayService.getInProgressGame().state.code == state.code) ?
+            (<GameInProgressAlert />) :
+            (<div />)
+            }
             <Typography>
               {' '}
               {`Game Title: ${state ? state.game.title : 'Game is NULL'}`}{' '}

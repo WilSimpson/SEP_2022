@@ -5,6 +5,8 @@ import Container from '@mui/material/Container';
 import GameCode from '../../components/game/gameCode';
 import logoLarge from '../../images/logoLarge.png';
 import DefaultLayout from '../../components/layout/default.layout';
+import GameInProgressAlert from '../../components/game/gameInProgressAlert';
+import GamePlayService from '../../services/gameplay';
 
 export default function Home(props) {
   return (
@@ -20,6 +22,8 @@ export default function Home(props) {
           }}
         >
           <Container maxWidth="sm">
+            {GamePlayService.gameInProgress() ?
+              <GameInProgressAlert /> : <div />}
             <img
               src={logoLarge}
               alt="Ethics Adventure"

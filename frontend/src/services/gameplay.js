@@ -9,17 +9,6 @@ class GameService {
         })
         .then((response) => {
           if (response.data) {
-          // Expects a string format as JSON
-          // Should result in an array of keyed question objects. Ex:
-          // {"1": {'text': "You are a software engineer doing stuff
-          //                 with cars. Make Choices.",
-          //             'options': [{'text': "Ignore Result", 'link': "1A"},
-          //             {'text': "Technician Re-test", 'link': "2A"},
-          //             {'text': "Engineer Re-test", 'link': "5A"},
-          //             {'text': "Inform Manager", 'link': "4A"},
-          //             {'text': "Email CEO", 'link': "3A"}],
-          //              'password': "psw",
-          //              'only_chance': false}}
             localStorage.setItem('gameObject', response.data);
           }
           return response.data;
