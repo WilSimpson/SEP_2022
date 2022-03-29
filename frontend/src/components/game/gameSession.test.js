@@ -9,6 +9,41 @@ import GamePlayService from '../../services/gameplay';
 
 const TEAM_ID = 1;
 
+const inProgressGame = {
+  state: {
+    code: '123456',
+    currentQuestion: {
+      id: 1,
+      value: "Question 1",
+      passcode: "123456",
+      chance: false,
+      chance_game: "NO_GAME",
+      game: '1'
+    },
+    team_id: 1,
+    game: {
+      questions: [
+        {
+          id: 1,
+          value: "Question 1",
+          passcode: "123456",
+          chance: false,
+          chance_game: "NO_GAME",
+          game: '1'
+        },
+        {
+          id: 2,
+          value: "Question 2",
+          passcode: "123456",
+          chance: true,
+          chance_game: "NO_GAME",
+          game: '1'
+        },
+      ]
+    },
+  },
+};
+
 jest.mock('../../services/gameplay');
 
 jest.mock('react-router-dom', () => ({
@@ -99,6 +134,8 @@ let container = null;
 beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
+  GamePlayService.getInProgressGame.mockReturnValue(inProgressGame);
+  print(GamePlayService.getInProgressGame());
 });
 
 afterEach(() => {
@@ -180,6 +217,18 @@ describe('<GameSession />', () => {
       expect(container.textContent).toContain(
           'Question 2',
       );
+    });
+    it('should call updateCurrentQuestion when "Continue" button clicked', () => {
+      const promise = Promise.resolve();
+      GamePlayService.answerQuestion.mockResolvedValue({
+        response: jest.fn(() => promise),
+      });
+      GamePlayService.updateCurrentQuestion.mockResolvedValue({
+        response: jest.fn(),
+      });
+      fireEvent.click(option1);
+      fireEvent.click(continueButton);
+      expect(GamePlayService.updateCurrentQuestion).toHaveBeenCalled();
     });
   });
   
