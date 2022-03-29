@@ -31,7 +31,7 @@ export default function GameInProgressAlert(props) {
           size="large"
           onClick={joinInProgressGame}
           data-testid={'joinGame'}
-          >
+        >
           JOIN
         </Button>
       }
