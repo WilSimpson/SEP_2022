@@ -61,6 +61,12 @@ class GameService {
     return localStorage.getItem('inProgress') !== null;
   }
 
+  updateCurrentQuestion(question) {
+    const ipGame = this.getInProgressGame();
+    ipGame.state.currentQuestion = question;
+    this.setInProgressGame(ipGame);
+  }
+
   clearInProgressGame() {
     localStorage.removeItem('inProgress');
   }

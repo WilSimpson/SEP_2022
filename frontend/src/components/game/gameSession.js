@@ -53,6 +53,7 @@ export default function GameSession() {
     const question = (state.game.questions).find(
         (question) => question.id == selectedOption.dest_question,
     );
+    GamePlayService.updateCurrentQuestion(question);
     setQuestion(question);
     setSelectedOption(null);
   };
