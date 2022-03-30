@@ -124,9 +124,6 @@ def joinGame(request):
         session_json = game_session_serializer.data
         questions = Question.objects.filter(game=game_json['id'])
         options = Option.objects.filter(source_question__in=[q.id for q in questions])
-
-        print('options:', Option.objects.all())
-
         ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
                     'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':[QuestionSerializer(question).data for question
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
@@ -379,7 +376,6 @@ class GameViewSet(ViewSet):
             
             return Response()
         except Exception as e:
-            print(traceback.format_exc())
             return HttpResponse(status=501)
     
     def get(self, request, pk=None):
