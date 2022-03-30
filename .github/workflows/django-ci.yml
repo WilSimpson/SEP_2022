@@ -43,11 +43,3 @@ jobs:
         coverage run --source='.' manage.py test
         coverage report > backend_coverage.txt
         cd ..
-    
-    - name: Coverage comment
-      id: coverage_comment
-      uses: ewjoachim/python-coverage-comment-action@v2
-      if: github.event_name == 'pull_request'
-      with:
-        GITHUB_TOKEN: ${{ github.token }}
-        GITHUB_PR_RUN_ID: ${{ github.event.workflow_run.id }}
