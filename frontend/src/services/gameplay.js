@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {API_URL} from '../store/store';
 
+const IN_PROGRESS = 'inProgress';
+
 class GameService {
   joinGame(gameCode) {
     return axios
@@ -9,17 +11,6 @@ class GameService {
         })
         .then((response) => {
           if (response.data) {
-          // Expects a string format as JSON
-          // Should result in an array of keyed question objects. Ex:
-          // {"1": {'text': "You are a software engineer doing stuff
-          //                 with cars. Make Choices.",
-          //             'options': [{'text': "Ignore Result", 'link': "1A"},
-          //             {'text': "Technician Re-test", 'link': "2A"},
-          //             {'text': "Engineer Re-test", 'link': "5A"},
-          //             {'text': "Inform Manager", 'link': "4A"},
-          //             {'text': "Email CEO", 'link': "3A"}],
-          //              'password': "psw",
-          //              'only_chance': false}}
             localStorage.setItem('gameObject', response.data);
           }
           return response.data;
@@ -60,12 +51,26 @@ class GameService {
         .then((response) => {});
   }
 
-  clearGame() {
-    localStorage.removeItem('gameObject');
+  setInProgressGame(state) {
+    localStorage.setItem(IN_PROGRESS, JSON.stringify(state));
   }
 
-  clearTeam() {
-    localStorage.removeItem('teamObject');
+  getInProgressGame() {
+    return JSON.parse(localStorage.getItem(IN_PROGRESS));
+  }
+
+  gameInProgress() {
+    return localStorage.getItem(IN_PROGRESS) !== null;
+  }
+
+  updateCurrentQuestion(question) {
+    const ipGame = this.getInProgressGame();
+    ipGame.state.currentQuestion = question;
+    this.setInProgressGame(ipGame);
+  }
+
+  clearInProgressGame() {
+    localStorage.removeItem(IN_PROGRESS);
   }
 
   checkPasscode(pcd) {

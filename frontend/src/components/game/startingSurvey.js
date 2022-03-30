@@ -18,6 +18,7 @@ import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import Alert from '@mui/material/Alert';
+import GameInProgressAlert from './gameInProgressAlert';
 
 export default function StartingSurvey() {
   const defaultValues = {
@@ -78,6 +79,20 @@ export default function StartingSurvey() {
           console.log(response);
           const path = `../gameSession`;
           const initialQ = initialQuestion(state.game);
+          const gameSessionState = {
+            state: {
+              // Carries the gameCode with the state
+              code: state.code,
+              // Initialize state with the response
+              // parsed as an array of questions
+              game: state.game,
+              // Carry the form data forward
+              formData: formValues,
+              team_id: response['id'],
+              currentQuestion: initialQ,
+            },
+          };
+          GamePlayService.setInProgressGame(gameSessionState);
           navigate(path, {
             state: {
             // Carries the gameCode with the state
@@ -88,7 +103,7 @@ export default function StartingSurvey() {
               // Carry the form data forward
               formData: formValues,
               team_id: response['id'],
-              initialQuestion: initialQ,
+              currentQuestion: initialQ,
             },
           });
         },
@@ -127,6 +142,11 @@ export default function StartingSurvey() {
               mb: 3,
             }}
           >
+            {(GamePlayService.gameInProgress() &&
+            (GamePlayService.getInProgressGame().state.code == state.code)) ?
+            <GameInProgressAlert /> :
+            <div />
+            }
             <Typography>
               {' '}
               {`Game Title: ${state ? state.game.title : 'Game is NULL'}`}{' '}
