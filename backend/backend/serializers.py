@@ -85,9 +85,6 @@ class AnswersReportSerializer(ModelSerializer):
             .filter(created_at__lte=obj.created_at) \
             .order_by('-created_at')
 
-        print('Team created at:', obj.team.created_at)
-        print('Answered at:', obj.created_at)
-
         if len(all_answers) == 0: # Option A
             time = 0
         else:                     # Option B
