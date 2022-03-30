@@ -92,7 +92,7 @@ class UtilsTestCase(TestCase):
         option2 = Option.objects.create(value='Option2', weight=1, source_question_id=question2.id, dest_question_id=question.id)
         answer = GameSessionAnswer.objects.create(team=team, question=question, option_chosen=option)
         answer2 = GameSessionAnswer.objects.create(team=team, question=question2, option_chosen=option2)
-        self.assertEqual(get_time_for_answer(answer), 0)
+        self.assertGreater(get_time_for_answer(answer), timedelta(0))
         self.assertGreater(get_time_for_answer(answer2), timedelta(0))
         
     
