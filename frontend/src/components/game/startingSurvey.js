@@ -92,20 +92,9 @@ export default function StartingSurvey() {
               currentQuestion: initialQ,
             },
           };
+          console.log(gameSessionState);
           GamePlayService.setInProgressGame(gameSessionState);
-          navigate(path, {
-            state: {
-            // Carries the gameCode with the state
-              code: state.code,
-              // Initialize state with the response
-              // parsed as an array of questions
-              game: state.game,
-              // Carry the form data forward
-              formData: formValues,
-              team_id: response['id'],
-              currentQuestion: initialQ,
-            },
-          });
+          navigate(path, gameSessionState);
         },
         (error) => {
           if (error.response && error.response.status === 404) {
