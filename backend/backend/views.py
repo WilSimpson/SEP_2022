@@ -622,4 +622,22 @@ class CourseViewSet(ModelViewSet):
     delete returns -- 204 on success and 404 on failure'''
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+
+@api_view(['GET'])
+def get_games_sessions(request, game_id):
+    '''
+    Gets all game sessions using a game 
+    '''
+    try:
+        game = Game.objects.get(id=int(game_id))
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        sessions = GameSession.objects.filter(game=game.id)
+    except Exception:
+        return HttpResponseServerError('Error finding game sessions')
     
+    serializer = GameSessionSerializer(sessions, many=True)
+    return Response(serializer.data)

@@ -53,6 +53,7 @@ urlpatterns = [
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),
     re_path('^api/', include(router.urls)),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('api/games/<int:game_id>/sessions', views.get_games_sessions)
 ]
 
