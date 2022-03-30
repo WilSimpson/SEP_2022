@@ -511,6 +511,8 @@ class GameSessionAnswerViewSet(ViewSet):
                 question_id = question.id,
                 option_chosen_id = option.id
             )
+            if (isTimedOut(team.game_session_id, team)):
+                return HttpResponse(status=400, content="The Game has timed out. Please start a new Game.")
             answer.save()
             return Response()
         except Exception as e:

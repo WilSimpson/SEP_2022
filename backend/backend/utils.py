@@ -1,6 +1,7 @@
-from .models import Game, Question, Option
+from .models import Game, Question, Option, GameSession, GameSessionAnswer
 from django.http import HttpResponse
 from random import randint
+from datetime import datetime
 
 
 def get_game_data(id):
@@ -64,3 +65,18 @@ def get_chance_game(question):
     else:
         return Question.ChanceGame.NO_GAME
 
+# function checks the timeout in minutes of the gameSession and
+# finds the teams last answer to compare the time
+# returns true or false
+def isTimedOut(gameSessionID, team):
+    pass
+#     currentTime = datetime.now
+#     timeout = GameSession.objects.get(id=gameSessionID).timeout
+#     teamAnswers = GameSessionAnswer.objects.filter(team_id = team.id)
+#     if (len(teamAnswers) > 0):
+#         lastAnswer = teamAnswers.sort(key=lambda answer: answer.created_at, reverse=True)[0]
+#         minute_difference = (currentTime - lastAnswer.created_at).total_seconds()/60
+#     else:
+#         minute_difference = (currentTime - team.created_at).total_seconds()/60
+#     return minute_difference > timeout
+        
