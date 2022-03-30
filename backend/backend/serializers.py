@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer, CharField
+from rest_framework_csv.renderers import CSVRenderer
 from django.contrib.auth import get_user_model
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -84,3 +85,5 @@ class AnswersReportSerializer(ModelSerializer):
         base['time'] = get_time_for_answer(obj)
         return base
 
+class AnswersReportCSVSerializer(CSVRenderer):
+    headers = ['team', 'question', 'option_chosen', 'time']

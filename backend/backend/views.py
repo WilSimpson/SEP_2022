@@ -6,7 +6,7 @@ import rest_framework.generics
 from rest_framework.mixins import ListModelMixin
 
 from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
@@ -35,6 +35,9 @@ from datetime import datetime
 from random import randint
 
 from backend.utils import get_time_for_answer
+
+from rest_framework_csv.renderers import CSVRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 import traceback
 
@@ -670,6 +673,7 @@ def get_games_session(request, game_id, session_id):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@renderer_classes([JSONRenderer, BrowsableAPIRenderer, CSVRenderer])
 def get_games_session_report(request, game_id, session_id):
     '''Generate a report for the entire game session'''
     try:
@@ -742,6 +746,7 @@ def get_game_session_team(request, game_id, session_id, team_id):
     return Response(serializer.data)
 
 @api_view(['GET'])
+@renderer_classes([JSONRenderer, BrowsableAPIRenderer, CSVRenderer])
 def get_game_session_team_report(request, game_id, session_id, team_id):
     '''Generate a report for a specific team within a game session'''
     try:
