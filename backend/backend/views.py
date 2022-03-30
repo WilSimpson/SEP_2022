@@ -609,4 +609,40 @@ def start_session(request):
         return Response(data={'id':new_session.id, 'code':new_session.code}, status=200)
     except Exception:
         return HttpResponseServerError('There was a problem creating this session.')
-    
+
+
+@api_view(['POST'])
+def end_session(request):
+    '''
+    Ends a ```GameSession``` so a game can no longer be played by users.
+
+    **Example request**:
+
+    .. code-block:: http
+
+        POST  /api/games/endSession/
+
+    .. code-block:: json
+
+        {
+            "id": (game session id)
+        }
+
+    **Response Codes**:
+
+    .. code-block:: http
+
+            200 : Success
+            500 : Fail
+    '''
+    try:
+        try:
+            game = Game.objects.get(id=int(request.data['id']))
+        except Exception as e:
+            return HttpResponseServerError('This game session does not exist.')
+        game.active = not game.active
+        game.save()
+        return HttpResponse(status=200)
+    except Exception as e:
+        return HttpResponseServerError('Could not end Game Session')
+
