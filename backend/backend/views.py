@@ -641,3 +641,24 @@ def get_games_sessions(request, game_id):
     
     serializer = GameSessionSerializer(sessions, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def get_games_session(request, game_id, session_id):
+    '''
+    Gets all game sessions using a game 
+    '''
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to that game')
+
+    serializer = GameSessionSerializer(session)
+    return Response(serializer.data)
