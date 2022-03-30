@@ -10,9 +10,6 @@ class GameService {
           code: gameCode,
         })
         .then((response) => {
-          if (response.data) {
-            localStorage.setItem('gameObject', response.data);
-          }
           return response.data;
         });
   }
@@ -27,9 +24,6 @@ class GameService {
           first_time: firstTime,
         })
         .then((response) => {
-          if (response.data) {
-            localStorage.setItem('teamObject', response.data);
-          }
           return response.data;
         });
   }
@@ -48,7 +42,7 @@ class GameService {
           option_id: optionId,
           team_id: teamId,
         })
-        .then((response) => {});
+        .then();
   }
 
   setInProgressGame(state) {

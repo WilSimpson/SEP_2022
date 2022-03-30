@@ -101,7 +101,6 @@ beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
   GamePlayService.getInProgressGame.mockReturnValue(inProgressGame);
-  print(GamePlayService.getInProgressGame());
 });
 
 afterEach(() => {

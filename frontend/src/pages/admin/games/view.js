@@ -14,9 +14,8 @@ export default function ViewGamesPage() {
   const navigate = useNavigate();
 
   const handleAcceptConfirmDelete = (id) => {
-    gameService.deleteGame(confirmationDeleteID).then(
+    gameService.deleteGame(id).then(
         (success) => {
-          handleCloseConfirmation();
           alertService.alert({
             severity: alertSeverity.success,
             message: 'Game successfully deleted',
