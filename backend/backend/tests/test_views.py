@@ -385,7 +385,7 @@ class GameViewSetTestCase(TestCase):
         resp = self.client.post('/api/games/', self.create_data, content_type='application/json')
         self.assertEqual(Game.objects.all().count(), self.initial_game_count+1)
         self.assertEqual(Question.objects.all().count(), self.initial_question_count+2)
-        self.assertEqual(Option.objects.all().count(), self.initial_option_count+2)
+        self.assertEqual(Option.objects.all().count(), self.initial_option_count+1)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         games = Game.objects.all()
         for game in games:
@@ -598,4 +598,110 @@ class SessionViewTestCase(TestCase):
         }
         resp = self.client.post('/api/games/toggleActive/', data=data)
         self.assertEqual(resp.status_code, 500)
+
+class CourseViewSetTestCase(TestCase):
+    def setUp(self):
+        # create course
+        self.course = Course.objects.create(name='courseTest', section='A', department="CS", number=1042, userId=1)
+        self.initial_course_count = Course.objects.all().count()
+        self.data = {'name':'courseTest', 'section':'A', 'department':"CS", 'number':1042, 'userId':1}
+        
+    def test_get_valid_course(self):
+        resp = self.client.get('/api/courses/'+str(self.course.id)+'/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['name'], self.data['name'])
+        self.assertEqual(resp.data['section'], self.data['section'])
+        self.assertEqual(resp.data['department'], self.data['department'])
+        self.assertEqual(resp.data['number'], self.data['number'])
+        self.assertEqual(resp.data['userId'], self.data['userId'])
+        self.assertIsNotNone(resp.data['id'])
+        
+    def test_get_invalid_course(self):
+        resp = self.client.get('/api/courses/'+str(self.course.id + 1)+'/')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        
+    def test_delete_valid_course(self):
+        initial_course_count = Course.objects.all().count()
+        resp = self.client.delete('/api/courses/'+str(self.course.id)+'/')
+        self.assertEqual(Course.objects.all().count(), initial_course_count-1)
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_invalid_course(self):
+        resp = self.client.delete('/api/courses/'+str(self.course.id+1)+'/')
+        self.assertEqual(Course.objects.all().count(), self.initial_course_count)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_get_all_courses(self):
+        resp = self.client.get('/api/courses/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 1)
+        self.assertEqual(resp.data[0]['name'], self.data['name'])
+    
+    def test_get_all_courses_empty(self):
+        Course.objects.filter(id=self.course.id).delete()
+        resp = self.client.get('/api/courses/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, [])
+    
+    def test_create_course(self):
+        resp = self.client.post('/api/courses/', self.data, content_type='application/json')
+        self.assertEqual(Course.objects.all().count(), self.initial_course_count+1)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        courses = Course.objects.all()
+        newCourse = courses[1]
+        self.assertEqual(newCourse.name, self.data['name'])
+        self.assertEqual(newCourse.department, self.data['department'])
+        self.assertEqual(newCourse.number, self.data['number'])
+        self.assertEqual(newCourse.section, self.data['section'])
+        self.assertEqual(newCourse.userId, self.data['userId'])
+    def test_create_course_no_name(self):
+        new_course = self.data
+        new_course["name"] = None
+        resp = self.client.post('/api/courses/', new_course, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_create_course_no_department(self):
+        new_course = self.data
+        new_course["department"] = None
+        resp = self.client.post('/api/courses/', new_course, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_course_course_no_number(self):
+        new_course = self.data
+        new_course["number"] = None
+        resp = self.client.post('/api/courses/', new_course, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_create_course_no_section(self):
+        new_course = self.data
+        new_course["section"] = None
+        resp = self.client.post('/api/courses/', new_course, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_course_no_userId(self):
+        new_course = self.data
+        new_course["userId"] = None
+        resp = self.client.post('/api/courses/', new_course, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_update_course_values(self):
+        updated_course_data = self.data
+        updated_course_data["name"] = "TestGame 2"
+        updated_course_data["userId"] = 2
+        updated_course_data["department"] = "ECE"
+        updated_course_data["section"] = "B"
+        updated_course_data["number"] = 2048
+        resp = self.client.put('/api/courses/'+str(self.course.id)+'/', updated_course_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_course = Course.objects.get(id=self.course.id)
+        self.assertEqual(updated_course_data["name"], updated_course.name)
+        self.assertEqual(updated_course_data["userId"], updated_course.userId)
+        self.assertEqual(updated_course_data["section"], updated_course.section)
+        self.assertEqual(updated_course_data["department"], updated_course.department)
+        self.assertEqual(updated_course_data["number"], updated_course.number)
+        
+    def test_update_invalid_course(self):
+        resp = self.client.put('/api/courses/'+str(0)+'/', self.data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        
 

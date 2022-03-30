@@ -1,6 +1,9 @@
-from rest_framework.generics import CreateAPIView
-from rest_framework.viewsets import GenericViewSet, ViewSet
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import GenericViewSet, ViewSet, ModelViewSet
+from rest_framework.views import APIView
 from rest_framework import permissions
+import rest_framework.generics
+from rest_framework.mixins import ListModelMixin
 
 from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
@@ -19,6 +22,7 @@ from rest_framework.response import Response
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
+from backend.serializers import CourseSerializer
 
 from .models import Game
 
@@ -365,8 +369,7 @@ class GameViewSet(ViewSet):
                     if q_label == new_option[dest_q]:
                         option_obj.dest_question_id = q.id
                 option_obj.save()
-                    
-            return Response()
+                return Response()
         except Exception as e:
             return HttpResponse(status=501)
     
@@ -609,4 +612,14 @@ def start_session(request):
         return Response(data={'id':new_session.id, 'code':new_session.code}, status=200)
     except Exception:
         return HttpResponseServerError('There was a problem creating this session.')
+
+class CourseViewSet(ModelViewSet):
+    '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String}
+    It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
+    create returns -- 201 on success and 400 on failure
+    read returns -- 200 on success and 404 on failure
+    update returns -- 200 on success and 404 on failure
+    delete returns -- 204 on success and 404 on failure'''
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
     

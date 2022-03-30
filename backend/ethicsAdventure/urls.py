@@ -19,7 +19,7 @@ from django.urls import path, re_path, include
 from rest_framework.schemas import get_schema_view
 from django.views.generic import TemplateView
 
-from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet
+from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet, RoleTokenObtainPairView, CourseViewSet
 from django.contrib.auth.models import User
 
 from backend import views
@@ -28,13 +28,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView
 )
-from backend import views
-from backend.views import RoleTokenObtainPairView
-from backend import views
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
+router.register(r'courses', CourseViewSet, basename='course')
 
 urlpatterns = [
     path('api/openapi/', get_schema_view(
