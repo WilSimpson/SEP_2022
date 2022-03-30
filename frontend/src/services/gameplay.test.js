@@ -32,7 +32,7 @@ describe('Game Play Service', () => {
       axios.post.mockResolvedValue(response);
 
       const result = await gamePlayService.answerQuestion(1, 1);
-      expect(result).toEqual(undefined);
+      expect(result).toEqual(response);
     });
   });
 

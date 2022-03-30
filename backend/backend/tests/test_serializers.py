@@ -93,3 +93,20 @@ class CourseSerializerTest(TestCase):
         serializer = CourseSerializer(self.course)
         for k in ['name', 'section', 'department', 'number', 'userId']:
             self.assertEqual(serializer.data[k], getattr(self.course, k))
+
+class AnswersReportSerializerTest(TestCase):
+    def setUp(self):
+        self.game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        self.session = GameSession.objects.create(creator_id=999, game=self.game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        self.mode = GameMode.objects.create(name="Walking")
+        self.team = Team.objects.create(game_session = self.session, game_mode = self.mode, guest = True, size = 2, first_time = False, completed = False)
+        self.question = Question.objects.create(value='Question', game_id=self.game.id, passcode="psw", chance=False, chance_game="")
+        self.option = Option.objects.create(value='Option', weight=1, source_question_id=self.question.id, dest_question_id=self.question.id)
+        self.answer = GameSessionAnswer.objects.create(team=self.team, question=self.question, option_chosen=self.option)
+
+    def test_fields(self):
+        serializer = AnswersReportSerializer(self.answer)
+        self.assertIsNotNone(serializer.data['time'])
+        for k in ['team', 'question', 'option_chosen']:
+            self.assertEqual(serializer.data[k], getattr(self.answer, k).id)

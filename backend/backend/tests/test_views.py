@@ -384,8 +384,8 @@ class GameViewSetTestCase(TestCase):
     def test_create_game(self):
         resp = self.client.post('/api/games/', self.create_data, content_type='application/json')
         self.assertEqual(Game.objects.all().count(), self.initial_game_count+1)
-        self.assertEqual(Question.objects.all().count(), self.initial_question_count+2)
-        self.assertEqual(Option.objects.all().count(), self.initial_option_count+1)
+        self.assertEqual(Question.objects.all().count(), self.initial_question_count+len(self.create_data['questions']))
+        self.assertEqual(Option.objects.all().count(), self.initial_option_count+len(self.create_data['options']))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         games = Game.objects.all()
         for game in games:
@@ -704,4 +704,144 @@ class CourseViewSetTestCase(TestCase):
         resp = self.client.put('/api/courses/'+str(0)+'/', self.data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         
+class GameSessionTests(TestCase):
+    def setUp(self):
+        self.game = Game.objects.create(title='game', creator_id=999, code=999999, active=True)
+        self.game2 = Game.objects.create(title='game2', creator_id=999, code=999998, active=True)
+        self.session = GameSession.objects.create(creator_id=999, game=self.game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        self.session2 = GameSession.objects.create(creator_id=999, game=self.game2, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999998)
+        self.mode = GameMode.objects.create(name="Walking")
+        self.team = Team.objects.create(game_session = self.session, game_mode = self.mode, guest = True, size = 2, first_time = False, completed = False)
+        self.team2 = Team.objects.create(game_session = self.session2, game_mode = self.mode, guest = True, size = 2, first_time = False, completed = False)
+        self.question = Question.objects.create(value='Question', game_id=self.game.id, passcode="psw", chance=False, chance_game="")
+        self.question2 = Question.objects.create(value='Question2', game_id=self.game.id, passcode="psw", chance=False, chance_game="")
+        self.option = Option.objects.create(value='Option', weight=1, source_question_id=self.question.id, dest_question_id=self.question2.id)
+        self.option2 = Option.objects.create(value='Option2', weight=1, source_question_id=self.question2.id, dest_question_id=self.question.id)
+        self.answer = GameSessionAnswer.objects.create(team=self.team, question=self.question, option_chosen=self.option)
+        self.answer2 = GameSessionAnswer.objects.create(team=self.team, question=self.question2, option_chosen=self.option2)
+    
 
+
+
+    def test_get_games_sessions(self):
+        resp = self.client.get('/api/games/{}/sessions/'.format(self.game.id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), GameSession.objects.filter(game=self.game).count())
+
+    def test_get_games_sessions_no_game(self):
+        resp = self.client.get('/api/games/{}/sessions/'.format(0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+
+    def test_get_games_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/'.format(self.game.id, self.session.id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['id'], self.session.id)
+        self.assertEqual(resp.data['creator_id'], self.session.creator_id)
+        self.assertEqual(resp.data['notes'], self.session.notes)
+        self.assertEqual(resp.data['code'], self.session.code)
+        self.assertEqual(resp.data['game'], self.session.game.id)
+        self.assertEqual(resp.data['timeout'], self.session.timeout)
+        self.assertTrue('start_time' in resp.data)
+        self.assertTrue('end_time' in resp.data)
+        self.assertTrue('created_at' in resp.data)
+        self.assertTrue('updated_at' in resp.data)
+
+    def test_get_games_session_no_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/'.format(0, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_no_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/'.format(self.game.id, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_wrong_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/'.format(self.game2.id, self.session.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+
+    def test_get_games_session_report(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/report/'.format(self.game.id, self.session.id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_get_games_session_report_no_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/report/'.format(0, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_report_no_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/report/'.format(self.game.id, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_report_wrong_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/report/'.format(self.game2.id, self.session.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+    def test_get_games_session_teams(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/'.format(self.game.id, self.session.id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_get_games_session_teams_no_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/'.format(0, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_teams_no_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/'.format(self.game.id, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_teams_wrong_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/'.format(self.game2.id, self.session.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+
+    def test_get_games_session_team(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/'.format(self.game.id, self.session.id, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_get_games_session_team_no_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/'.format(0, 0, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_team_no_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/'.format(self.game.id, 0, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_team_wrong_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/'.format(self.game2.id, self.session.id, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_team_wrong_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/'.format(self.game.id, self.session2.id, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+
+    def test_get_games_session_team_report(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(self.game.id, self.session.id, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_get_games_session_team_report_no_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(0, 0, 0))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_team_report_no_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(self.game.id, 0, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_team_report_wrong_game(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(self.game2.id, self.session.id, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_games_session_team_report_wrong_session(self):
+        resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(self.game.id, self.session2.id, self.team.id))
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)

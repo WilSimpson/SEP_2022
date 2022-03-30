@@ -6,7 +6,7 @@ import rest_framework.generics
 from rest_framework.mixins import ListModelMixin
 
 from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
@@ -33,6 +33,11 @@ from rest_framework.response import Response
 import json
 from datetime import datetime
 from random import randint
+
+from backend.utils import get_time_for_answer
+
+from rest_framework_csv.renderers import CSVRenderer
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 import traceback
 
@@ -119,7 +124,6 @@ def joinGame(request):
         session_json = game_session_serializer.data
         questions = Question.objects.filter(game=game_json['id'])
         options = Option.objects.filter(source_question__in=[q.id for q in questions])
-
         ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
                     'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':[QuestionSerializer(question).data for question
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
@@ -329,14 +333,13 @@ class GameViewSet(ViewSet):
             options = game_data['options']
             question_label_reference = {}
             option_labels = []
-            option_i = 0
-            source_q = 1
-            dest_q = 2
             new_game = Game(
                 title       = game_data['title'], 
                 active      = game_data['active'], 
                 creator_id  = game_data['creator_id'], 
                 code        = game_data['code'])
+            new_game.save()
+
             for question in questions:
                 try:
                     chance_game = get_chance_game(question)
@@ -346,21 +349,22 @@ class GameViewSet(ViewSet):
                     value       = question['value'],
                     passcode    = question['passcode'],
                     chance      = question['chance'],
-                    chance_game = chance_game
+                    chance_game = chance_game,
+                    game_id     = new_game.id
                 )
+                new_question.save()
                 question_label_reference[question['label']] = new_question
+
             for option in options:
                 new_option = Option(
                     value               = option['value'],
                     weight              = option['weight']
                 )
-                option_labels.append([new_option, option['source_label'], option['dest_label']])
-            new_game.save()
+                option_labels.append([new_option, option['source_label'], option['dest_label']])                
             
-            for label, question in question_label_reference.items():
-                question.game_id = new_game.id
-                question.save()
-            
+            option_i = 0
+            source_q = 1
+            dest_q = 2
             for new_option in option_labels:
                 option_obj = new_option[option_i]
                 for q_label, q in question_label_reference.items():
@@ -369,7 +373,8 @@ class GameViewSet(ViewSet):
                     if q_label == new_option[dest_q]:
                         option_obj.dest_question_id = q.id
                 option_obj.save()
-                return Response()
+            
+            return Response()
         except Exception as e:
             return HttpResponse(status=501)
     
@@ -622,4 +627,139 @@ class CourseViewSet(ModelViewSet):
     delete returns -- 204 on success and 404 on failure'''
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+
+@api_view(['GET'])
+def get_games_sessions(request, game_id):
+    '''
+    Gets all game sessions using a game 
+    '''
+    try:
+        game = Game.objects.get(id=int(game_id))
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    sessions = GameSession.objects.filter(game=game.id)
     
+    serializer = GameSessionSerializer(sessions, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_games_session(request, game_id, session_id):
+    '''
+    Gets all game sessions using a game 
+    '''
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to that game')
+
+    serializer = GameSessionSerializer(session)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@renderer_classes([JSONRenderer, BrowsableAPIRenderer, CSVRenderer])
+def get_games_session_report(request, game_id, session_id):
+    '''Generate a report for the entire game session'''
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to that game')
+    
+    teams = Team.objects.filter(game_session_id=session.id).values_list('id', flat=True)
+    answers = GameSessionAnswer.objects.filter(team__in=teams)
+    serializer = AnswersReportSerializer(answers, many=True)
+    return Response(serializer.data)
+    
+@api_view(['GET'])
+def get_game_session_teams(request, game_id, session_id):
+    '''Get information about all teams for a game session'''
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to that game')
+
+    teams = Team.objects.filter(game_session_id=session.id)
+
+    serializer = TeamSerializer(teams, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_game_session_team(request, game_id, session_id, team_id):
+    '''Get information about a specific team'''
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to this game')
+
+    try:
+        team = Team.objects.get(id=team_id)
+    except Exception:
+        return HttpResponseServerError('Team does not exist')
+
+    if session.id != team.game_session.id:
+        return HttpResponseBadRequest('Team does not belong to this game session')
+
+    serializer = TeamSerializer(team)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@renderer_classes([JSONRenderer, BrowsableAPIRenderer, CSVRenderer])
+def get_game_session_team_report(request, game_id, session_id, team_id):
+    '''Generate a report for a specific team within a game session'''
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to this game')
+
+    try:
+        team = Team.objects.get(id=team_id)
+    except Exception:
+        return HttpResponseServerError('Team does not exist')
+
+    if session.id != team.game_session.id:
+        return HttpResponseBadRequest('Team does not belong to this game session')
+
+    answers = GameSessionAnswer.objects.filter(team_id=team.id)
+    serializer = AnswersReportSerializer(answers, many=True)
+    return Response(serializer.data)
