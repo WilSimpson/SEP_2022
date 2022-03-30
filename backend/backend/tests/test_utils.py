@@ -5,6 +5,8 @@ from django.conf import settings
 
 from ..utils import *
 
+from datetime import timedelta
+
 class UtilsTestCase(TestCase):
     def setUp(self):
         self.question = {
@@ -91,6 +93,6 @@ class UtilsTestCase(TestCase):
         answer = GameSessionAnswer.objects.create(team=team, question=question, option_chosen=option)
         answer2 = GameSessionAnswer.objects.create(team=team, question=question2, option_chosen=option2)
         self.assertEqual(get_time_for_answer(answer), 0)
-        self.assertGreater(get_time_for_answer(answer2), 0)
+        self.assertGreater(get_time_for_answer(answer2), timedelta(0))
         
     

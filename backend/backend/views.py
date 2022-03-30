@@ -643,10 +643,7 @@ def get_games_sessions(request, game_id):
     except Exception:
         return HttpResponseBadRequest('Game does not exist')
 
-    try:
-        sessions = GameSession.objects.filter(game=game.id)
-    except Exception:
-        return HttpResponseServerError('Error finding game sessions')
+    sessions = GameSession.objects.filter(game=game.id)
     
     serializer = GameSessionSerializer(sessions, many=True)
     return Response(serializer.data)
@@ -710,10 +707,7 @@ def get_game_session_teams(request, game_id, session_id):
     if session.game.id != game_id:
         return HttpResponseBadRequest('Session does not belong to that game')
 
-    try:
-        teams = Team.objects.filter(game_session_id=session.id)
-    except Exception:
-        return HttpResponseServerError('Error compiling teams from session')
+    teams = Team.objects.filter(game_session_id=session.id)
 
     serializer = TeamSerializer(teams, many=True)
     return Response(serializer.data)
