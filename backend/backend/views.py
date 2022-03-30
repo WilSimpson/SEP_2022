@@ -120,6 +120,8 @@ def joinGame(request):
         questions = Question.objects.filter(game=game_json['id'])
         options = Option.objects.filter(source_question__in=[q.id for q in questions])
 
+        print('options:', Option.objects.all())
+
         ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
                     'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':[QuestionSerializer(question).data for question
                     in questions], 'options':[OptionSerializer(option).data for option in options]}
@@ -329,14 +331,13 @@ class GameViewSet(ViewSet):
             options = game_data['options']
             question_label_reference = {}
             option_labels = []
-            option_i = 0
-            source_q = 1
-            dest_q = 2
             new_game = Game(
                 title       = game_data['title'], 
                 active      = game_data['active'], 
                 creator_id  = game_data['creator_id'], 
                 code        = game_data['code'])
+            new_game.save()
+
             for question in questions:
                 try:
                     chance_game = get_chance_game(question)
@@ -346,21 +347,22 @@ class GameViewSet(ViewSet):
                     value       = question['value'],
                     passcode    = question['passcode'],
                     chance      = question['chance'],
-                    chance_game = chance_game
+                    chance_game = chance_game,
+                    game_id     = new_game.id
                 )
+                new_question.save()
                 question_label_reference[question['label']] = new_question
+
             for option in options:
                 new_option = Option(
                     value               = option['value'],
                     weight              = option['weight']
                 )
-                option_labels.append([new_option, option['source_label'], option['dest_label']])
-            new_game.save()
+                option_labels.append([new_option, option['source_label'], option['dest_label']])                
             
-            for label, question in question_label_reference.items():
-                question.game_id = new_game.id
-                question.save()
-            
+            option_i = 0
+            source_q = 1
+            dest_q = 2
             for new_option in option_labels:
                 option_obj = new_option[option_i]
                 for q_label, q in question_label_reference.items():
@@ -369,8 +371,10 @@ class GameViewSet(ViewSet):
                     if q_label == new_option[dest_q]:
                         option_obj.dest_question_id = q.id
                 option_obj.save()
-                return Response()
+            
+            return Response()
         except Exception as e:
+            print(traceback.format_exc())
             return HttpResponse(status=501)
     
     def get(self, request, pk=None):
@@ -661,4 +665,24 @@ def get_games_session(request, game_id, session_id):
         return HttpResponseBadRequest('Session does not belong to that game')
 
     serializer = GameSessionSerializer(session)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_games_session_report(request, game_id, session_id):
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to that game')
+    
+    teams = Team.objects.filter(game_session_id=session.id).values_list('id', flat=True)
+    answers = GameSessionAnswer.objects.filter(team__in=teams)
+    serializer = AnswersReportSerializer(answers, many=True)
     return Response(serializer.data)

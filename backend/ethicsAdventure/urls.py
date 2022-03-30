@@ -55,6 +55,7 @@ urlpatterns = [
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/games/<int:game_id>/sessions/', views.get_games_sessions),
-    path('api/games/<int:game_id>/sessions/<int:session_id>/', views.get_games_session)
+    path('api/games/<int:game_id>/sessions/<int:session_id>/', views.get_games_session),
+    path('api/games/<int:game_id>/sessions/<int:session_id>/report/', views.get_games_session_report)
 ]
 

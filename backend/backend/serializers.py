@@ -65,4 +65,35 @@ class GameModeSerializer(ModelSerializer):
 class CourseSerializer(ModelSerializer):
     class Meta:
         model = Course
-        fields = '__all__'    
+        fields = '__all__'
+
+class AnswersReportSerializer(ModelSerializer):
+    class Meta:
+        model = GameSessionAnswer
+        fields = ('team', 'question', 'option_chosen')
+    
+    def to_representation(self, obj):
+        '''
+        Time to answer when:
+            A: First answer: currently no reference, need a new way to find out
+            B: NOT the first answer: difference between previous answer and this
+        '''
+        base = super().to_representation(obj)
+        all_answers = GameSessionAnswer.objects \
+            .exclude(id=obj.id) \
+            .filter(team=obj.team) \
+            .filter(created_at__lte=obj.created_at) \
+            .order_by('-created_at')
+
+        print('Team created at:', obj.team.created_at)
+        print('Answered at:', obj.created_at)
+
+        if len(all_answers) == 0: # Option A
+            time = 0
+        else:                     # Option B
+            time = obj.created_at - all_answers[0].created_at
+
+        base['time'] = time
+        return base
+
+        
