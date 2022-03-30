@@ -384,8 +384,8 @@ class GameViewSetTestCase(TestCase):
     def test_create_game(self):
         resp = self.client.post('/api/games/', self.create_data, content_type='application/json')
         self.assertEqual(Game.objects.all().count(), self.initial_game_count+1)
-        self.assertEqual(Question.objects.all().count(), self.initial_question_count+2)
-        self.assertEqual(Option.objects.all().count(), self.initial_option_count+1)
+        self.assertEqual(Question.objects.all().count(), self.initial_question_count+len(self.create_data['questions']))
+        self.assertEqual(Option.objects.all().count(), self.initial_option_count+len(self.create_data['options']))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         games = Game.objects.all()
         for game in games:
