@@ -72,6 +72,8 @@ def get_time_for_answer(answer):
             .order_by('-created_at')
     
     if len(all_answers) == 0:
-        return 0
+        previous_time = answer.team.created_at
+    else:
+        previous_time = all_answers[0].created_at
     
-    return answer.created_at - all_answers[0].created_at
+    return answer.created_at - previous_time
