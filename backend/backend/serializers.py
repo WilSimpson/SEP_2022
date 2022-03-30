@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import *
+from backend.utils import get_time_for_answer
 
 class UserSerializer(ModelSerializer):
     password = CharField(write_only=True)
@@ -79,18 +80,7 @@ class AnswersReportSerializer(ModelSerializer):
             B: NOT the first answer: difference between previous answer and this
         '''
         base = super().to_representation(obj)
-        all_answers = GameSessionAnswer.objects \
-            .exclude(id=obj.id) \
-            .filter(team=obj.team) \
-            .filter(created_at__lte=obj.created_at) \
-            .order_by('-created_at')
 
-        if len(all_answers) == 0: # Option A
-            time = 0
-        else:                     # Option B
-            time = obj.created_at - all_answers[0].created_at
-
-        base['time'] = time
+        base['time'] = get_time_for_answer(obj)
         return base
 
-        

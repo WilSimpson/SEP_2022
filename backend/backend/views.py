@@ -34,6 +34,8 @@ import json
 from datetime import datetime
 from random import randint
 
+from backend.utils import get_time_for_answer
+
 import traceback
 
 
@@ -685,4 +687,53 @@ def get_games_session_report(request, game_id, session_id):
     teams = Team.objects.filter(game_session_id=session.id).values_list('id', flat=True)
     answers = GameSessionAnswer.objects.filter(team__in=teams)
     serializer = AnswersReportSerializer(answers, many=True)
+    return Response(serializer.data)
+    
+@api_view(['GET'])
+def get_game_session_teams(request, game_id, session_id):
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to that game')
+
+    try:
+        teams = Team.objects.filter(game_session_id=session.id)
+    except Exception:
+        return HttpResponseServerError('Error compiling teams from session')
+
+    serializer = TeamSerializer(teams, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_game_session_team(request, game_id, session_id, team_id):
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to this game')
+
+    try:
+        team= Team.objects.get(id=team_id)
+    except Exception:
+        return HttpResponseServerError('Team does not exist')
+
+    if session.id != team.game_session.id:
+        return HttpResponseBadRequest('Team does not belong to this game session')
+
+    serializer = TeamSerializer(team)
     return Response(serializer.data)

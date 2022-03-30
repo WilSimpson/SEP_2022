@@ -1,4 +1,4 @@
-from .models import Game, Question, Option
+from .models import Game, Question, Option, GameSessionAnswer
 from django.http import HttpResponse
 from random import randint
 
@@ -64,3 +64,14 @@ def get_chance_game(question):
     else:
         return Question.ChanceGame.NO_GAME
 
+def get_time_for_answer(answer):
+    all_answers = GameSessionAnswer.objects \
+            .exclude(id=answer.id) \
+            .filter(team=answer.team) \
+            .filter(created_at__lte=answer.created_at) \
+            .order_by('-created_at')
+    
+    if len(all_answers) == 0:
+        return 0
+    
+    return answer.created_at - all_answers[0].created_at
