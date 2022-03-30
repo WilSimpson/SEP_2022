@@ -19,7 +19,7 @@ import Logout from './pages/public/logout';
 import FacultyDash from './pages/faculty/dashboard';
 import Passcode from './pages/game/passcode';
 import StartGameSession from './pages/faculty/games/startGameSession';
-import Register from './pages/public/register';
+import Register from './pages/admin/register';
 import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
