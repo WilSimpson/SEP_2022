@@ -7,43 +7,9 @@ import {fireEvent, getByTestId} from '@testing-library/react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
+import {inProgressGame} from '../../helpers/dummyData';
 
 let container = null;
-
-const inProgressGame = {
-  state: {
-    code: '123456',
-    currentQuestion: {
-      id: 1,
-      value: "Question 1",
-      passcode: "123456",
-      chance: false,
-      chance_game: "NO_GAME",
-      game: '1'
-    },
-    team_id: 1,
-    game: {
-      questions: [
-        {
-          id: 1,
-          value: "Question 1",
-          passcode: "123456",
-          chance: false,
-          chance_game: "NO_GAME",
-          game: '1'
-        },
-        {
-          id: 2,
-          value: "Question 2",
-          passcode: "123456",
-          chance: true,
-          chance_game: "NO_GAME",
-          game: '1'
-        },
-      ]
-    },
-  },
-};
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

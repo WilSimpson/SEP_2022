@@ -55,3 +55,37 @@ export const gameSessions = [
   ),
 ];
 
+export const inProgressGame = {
+    state: {
+      code: '123456',
+      currentQuestion: {
+        id: 1,
+        value: "Question 1",
+        passcode: "123456",
+        chance: false,
+        chance_game: "NO_GAME",
+        game: '1'
+      },
+      team_id: 1,
+      game: {
+        questions: [
+          {
+            id: 1,
+            value: "Question 1",
+            passcode: "123456",
+            chance: false,
+            chance_game: "NO_GAME",
+            game: '1'
+          },
+          {
+            id: 2,
+            value: "Question 2",
+            passcode: "123456",
+            chance: true,
+            chance_game: "NO_GAME",
+            game: '1'
+          },
+        ]
+      },
+    },
+  };
