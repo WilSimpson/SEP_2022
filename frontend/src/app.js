@@ -81,6 +81,16 @@ function App() {
 
               <Route
                 exact
+                path="/admin-dashboard/register"
+                element={
+                  <ProtectedRoute>
+                    <Register />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                exact
                 path="/admin-dashboard/games"
                 element={
                   <ProtectedRoute>

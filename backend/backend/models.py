@@ -130,7 +130,7 @@ class Option(models.Model):
     updated_at  = AutoDateTimeField(default=timezone.now)
 
 class GameSession(models.Model):
-    creator_id  = models.IntegerField()
+    creator_id = models.IntegerField()
     game = models.ForeignKey(Game, on_delete= models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
