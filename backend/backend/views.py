@@ -671,6 +671,7 @@ def get_games_session(request, game_id, session_id):
 
 @api_view(['GET'])
 def get_games_session_report(request, game_id, session_id):
+    '''Generate a report for the entire game session'''
     try:
         game = Game.objects.get(id=game_id)
     except Exception:
@@ -691,6 +692,7 @@ def get_games_session_report(request, game_id, session_id):
     
 @api_view(['GET'])
 def get_game_session_teams(request, game_id, session_id):
+    '''Get information about all teams for a game session'''
     try:
         game = Game.objects.get(id=game_id)
     except Exception:
@@ -714,6 +716,7 @@ def get_game_session_teams(request, game_id, session_id):
 
 @api_view(['GET'])
 def get_game_session_team(request, game_id, session_id, team_id):
+    '''Get information about a specific team'''
     try:
         game = Game.objects.get(id=game_id)
     except Exception:
@@ -728,7 +731,7 @@ def get_game_session_team(request, game_id, session_id, team_id):
         return HttpResponseBadRequest('Session does not belong to this game')
 
     try:
-        team= Team.objects.get(id=team_id)
+        team = Team.objects.get(id=team_id)
     except Exception:
         return HttpResponseServerError('Team does not exist')
 
@@ -736,4 +739,32 @@ def get_game_session_team(request, game_id, session_id, team_id):
         return HttpResponseBadRequest('Team does not belong to this game session')
 
     serializer = TeamSerializer(team)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_game_session_team_report(request, game_id, session_id, team_id):
+    '''Generate a report for a specific team within a game session'''
+    try:
+        game = Game.objects.get(id=game_id)
+    except Exception:
+        return HttpResponseBadRequest('Game does not exist')
+
+    try:
+        session = GameSession.objects.get(id=session_id)
+    except Exception:
+        return HttpResponseBadRequest('Session does not exist')
+    
+    if session.game.id != game_id:
+        return HttpResponseBadRequest('Session does not belong to this game')
+
+    try:
+        team = Team.objects.get(id=team_id)
+    except Exception:
+        return HttpResponseServerError('Team does not exist')
+
+    if session.id != team.game_session.id:
+        return HttpResponseBadRequest('Team does not belong to this game session')
+
+    answers = GameSessionAnswer.objects.filter(team_id=team.id)
+    serializer = AnswersReportSerializer(answers, many=True)
     return Response(serializer.data)
