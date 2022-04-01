@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {
   Alert,
@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 import AuthService from '../../services/auth';
 import validator from 'validator';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
+// import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import InputLabel from '@mui/material/InputLabel';
@@ -51,11 +51,12 @@ export default function Register() {
     setErrMsg('');
     AuthService.register(email, password, first, last, role).then(
         (response) => {
-          if (response.status === 200) {
-            window.location.href = '/users';
+          if (response.status === 201) {
+            window.location.href = '/admin-dashboard';
           } else {
             setErrMsg(
-                'There was an issue handling your account registration. Please try again later.',
+                `There was an issue handling your account registration.
+                    Please try again later.`,
             );
           }
         },
@@ -93,6 +94,11 @@ export default function Register() {
             onSubmit={handleSubmit}
             sx={{mt: 3}}
           >
+            {errMsg && (
+              <Alert severity="error" ref={errRef} data-testid="err-msg">
+                {errMsg}
+              </Alert>
+            )}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField // first name field
@@ -159,8 +165,8 @@ export default function Register() {
                   inputProps={{'data-testid': 'role-select'}}
                   onChange={(e) => setRole(e.target.value)}
                 >
-                  <MenuItem value={'Administrator'}>Administrator</MenuItem>
-                  <MenuItem value={'Faculty'}>Faculty</MenuItem>
+                  <MenuItem value={'ADMIN'}>Administrator</MenuItem>
+                  <MenuItem value={'FACULTY'}>Faculty</MenuItem>
                 </Select>
               </Grid>
             </Grid>

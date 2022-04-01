@@ -18,6 +18,8 @@ import {createBrowserHistory} from 'history';
 import Logout from './pages/public/logout';
 import FacultyDash from './pages/faculty/dashboard';
 import Passcode from './pages/game/passcode';
+import StartGameSession from './pages/faculty/games/startGameSession';
+import Register from './pages/admin/register';
 import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
@@ -39,6 +41,7 @@ function App() {
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/started" element={<Knowledge />} />
               <Route exact path="/logout" element={<Logout />} />
+              <Route exact path="/register" element={<Register />} />
               <Route exact path="/endGame" element={<EndGame />} />
               <Route
                 exact
@@ -83,6 +86,10 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <EditCourse />
+                path="/admin-dashboard/register"
+                element={
+                  <ProtectedRoute>
+                    <Register />
                   </ProtectedRoute>
                 }
               />
@@ -115,6 +122,25 @@ function App() {
                 }
               />
               <Route
+                exact
+                path="/faculty-dashboard/startSession"
+                element={
+                  <ProtectedRoute>
+                    <StartGameSession />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/admin-dashboard/startSession"
+                element={
+                  <ProtectedRoute>
+                    <StartGameSession />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
                 path="/generate-qr"
                 element={
                   <ProtectedRoute>
