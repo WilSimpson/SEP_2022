@@ -184,7 +184,12 @@ export function SideMenu(props) {
       </ListItemButton>
       <Collapse in={userManageOpen && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{pl: 4}} data-testid="user-create-item">
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="user-create-item"
+            component={Link}
+            href="/admin-dashboard/register"
+          >
             <ListItemText primary="Create Users" />
           </ListItemButton>
           <ListItemButton sx={{pl: 4}} data-testid="user-edit-item">

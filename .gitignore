@@ -138,6 +138,8 @@ data/
 
 selenium/node_modules/
 selenium/browsers
+
 node_modules
 frontend/package-lock.json
+
 

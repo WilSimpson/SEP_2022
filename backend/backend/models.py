@@ -59,7 +59,7 @@ class User(AbstractBaseUser):
     email      = models.CharField(max_length=100, unique=True)
     password   = models.CharField(max_length=100)
 
-    created_at  = AutoDateTimeField(default=timezone.now)
+    created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
@@ -100,7 +100,7 @@ class Game(models.Model):
     code        = models.IntegerField(validators=[MinValueValidator(0),
                                                    MaxValueValidator(999999)], default=0)
     active      = models.BooleanField()
-    created_at  = AutoDateTimeField(default=timezone.now)
+    created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 
 class Question(models.Model):
@@ -118,7 +118,7 @@ class Question(models.Model):
     passcode    = models.CharField(max_length=255)
     chance      = models.BooleanField()
     chance_game = models.CharField(max_length=50, choices=ChanceGame.choices)
-    created_at  = AutoDateTimeField(default=timezone.now)
+    created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
     
 class Option(models.Model):
@@ -126,11 +126,11 @@ class Option(models.Model):
     weight          = models.IntegerField()
     source_question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='source')
     dest_question   = models.ForeignKey(Question, on_delete= models.CASCADE, related_name='destination')
-    created_at  = AutoDateTimeField(default=timezone.now)
+    created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 
 class GameSession(models.Model):
-    creator_id  = models.IntegerField()
+    creator_id = models.IntegerField()
     game = models.ForeignKey(Game, on_delete= models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
@@ -139,12 +139,12 @@ class GameSession(models.Model):
     code = models.IntegerField(validators=[MinValueValidator(0),
                                 MaxValueValidator(999999)], default=0)
     active = models.BooleanField()
-    created_at  = AutoDateTimeField(default=timezone.now)
+    created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 
 class GameMode(models.Model):
     name = models.CharField(max_length=20)
-    created_at  = AutoDateTimeField(default=timezone.now)
+    created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 
 class Team(models.Model):
@@ -154,7 +154,7 @@ class Team(models.Model):
     size = models.IntegerField()
     first_time = models.BooleanField()
     completed = models.BooleanField()
-    created_at = AutoDateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = AutoDateTimeField(default=timezone.now)
 
 class GameSessionAnswer(models.Model):
@@ -162,5 +162,11 @@ class GameSessionAnswer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     option_chosen = models.ForeignKey(Option, on_delete=models.CASCADE)
     
-    created_at  = AutoDateTimeField(default=timezone.now)
+    created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
+class Course(models.Model):        
+    name       = models.TextField()
+    section        = models.CharField(max_length=32)
+    department    = models.CharField(max_length=32)
+    number      = models.IntegerField()
+    userId = models.IntegerField()

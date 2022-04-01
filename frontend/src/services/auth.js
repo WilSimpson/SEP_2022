@@ -59,13 +59,14 @@ class AuthService {
   }
 
   register(email, password, firstname, lastname, role) {
-    return axios.post(API_URL + '/users', {
-      email: email,
-      password: password,
-      first: firstname,
-      last: lastname,
-      role: role,
-    });
+    return axios
+        .post(API_URL + '/users/', {
+          email: email,
+          password: password,
+          first_name: firstname,
+          last_name: lastname,
+          role: role,
+        });
   }
 
   isLoggedIn() {
