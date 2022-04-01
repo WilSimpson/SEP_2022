@@ -26,11 +26,11 @@ class CourseService {
     // Sends a post request to api/courses/createCourse/
     // Content is keys: name, department, courseNumber,
     // sectionNumber, semester, and userId
-    return axios.post(API_URL + '/courses/createCourse', {
+    return axios.post(API_URL + '/courses/', {
       name: name,
       department: department,
-      courseNumber: courseNumber,
-      sectionNumber: sectionNumber,
+      number: courseNumber,
+      section: sectionNumber,
       semester: semester,
       userId: userId,
     });
@@ -43,12 +43,12 @@ class CourseService {
     // sectionNumber, semester, and userId
     // The userID should be used to make sure that someone is not
     // Editing another person's course
-    return axios.post(API_URL + '/courses/editCourse', {
+    return axios.post(API_URL + '/courses/update/', {
       id: id,
       name: name,
       department: department,
-      courseNumber: courseNumber,
-      sectionNumber: sectionNumber,
+      number: courseNumber,
+      section: sectionNumber,
       semester: semester,
       userId: userId,
     });

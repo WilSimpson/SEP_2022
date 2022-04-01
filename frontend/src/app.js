@@ -86,10 +86,6 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <EditCourse />
-                path="/admin-dashboard/register"
-                element={
-                  <ProtectedRoute>
-                    <Register />
                   </ProtectedRoute>
                 }
               />
