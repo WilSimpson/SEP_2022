@@ -52,6 +52,7 @@ urlpatterns = [
     path('api/games/startSession/', views.start_session, name='start_session'),
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
     path('api/games/endSession/', views.end_session, name='end_session'),
+
     path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),

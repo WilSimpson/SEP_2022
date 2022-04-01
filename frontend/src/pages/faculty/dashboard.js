@@ -5,6 +5,11 @@ import {
   Container,
   Grid,
   Paper,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Typography,
   Link,
   Table,
@@ -23,6 +28,7 @@ import {useEffect} from 'react';
 import {LinearProgress} from '@mui/material';
 import {Box} from '@mui/system';
 import AuthService from '../../services/auth';
+import {Cancel} from '@material-ui/icons';
 
 // interface GamesSessions {
 //   name: string;
@@ -33,7 +39,13 @@ import AuthService from '../../services/auth';
 
 function GameSessionTable() {
   const rows = gameSessionService.getGameSessions();
+  // const rows = props.data || [];
   const [filteredRows, setFilteredRows] = useState(rows);
+  const [confirmationEndID, setConfirmationEndID] = React.useState(null);
+
+  const handleCloseConfirmation = () => {
+    setConfirmationEndID(null);
+  };
 
   const requestSearch = (searchedVal) => {
     console.log(searchedVal);
@@ -44,6 +56,26 @@ function GameSessionTable() {
 
   return (
     <React.Fragment>
+      <Dialog open={confirmationEndID != null}>
+        <DialogTitle id="alert-dialog-title">
+          {'Are you sure you want to stop this game session?'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Ending a game session is permanent and this game session can no longer be used or viewed.
+            A hidden copy will be kept kept in the database for logging and
+            compilation of reports that used this game session.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => props.onConfirmEnd(confirmationEndID)}>
+            End Permanently
+          </Button>
+          <Button onClick={handleCloseConfirmation} autoFocus>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Typography component="h2" variant="h6" gutterBottom>
         Active Game Sessions
       </Typography>
@@ -60,6 +92,7 @@ function GameSessionTable() {
             <TableCell>End Time</TableCell>
             <TableCell>Game Code</TableCell>
             <TableCell>View Reports</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -78,6 +111,18 @@ function GameSessionTable() {
               <TableCell>{row.gamecode}</TableCell>
               <TableCell>
                 <Button variant="outlined">Reports</Button>
+              </TableCell>
+              <TableCell>
+                <Tooltip title="End Game Session">
+                  <IconButton
+                    aria-label="end"
+                    onClick={() => {
+                      setConfirmationEndID(session.id);
+                    }}
+                  >
+                    <Cancel />
+                  </IconButton>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}

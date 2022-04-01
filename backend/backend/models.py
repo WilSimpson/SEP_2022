@@ -138,6 +138,7 @@ class GameSession(models.Model):
     timeout = models.IntegerField()
     code = models.IntegerField(validators=[MinValueValidator(0),
                                 MaxValueValidator(999999)], default=0)
+    active = models.BooleanField()
     created_at  = AutoDateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 

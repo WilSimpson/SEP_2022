@@ -273,7 +273,7 @@ class GameViewSet(ViewSet):
             return Response(data=response_data)
         except Exception as e:
             return HttpResponse(status=501)
-    
+
     def create(self, request):
         '''
         Creates a ```Game``` and all of the ```Question``` and ```Option``` objects that correspond with it. It uses "labels" to associate a ```Question``` with an ```Option```.
@@ -466,6 +466,52 @@ class GameViewSet(ViewSet):
         except Exception as e:
             return HttpResponse(status=501)
 
+class SessionViewSet(ViewSet):
+    def list(self, request):
+        '''
+        Responds with all of the active and inactive ``GameSession`` objects.
+
+        **Example request**:
+
+        .. code-block:: http
+
+            GET  /api/gameSession/
+
+        **Example response**:
+
+        .. code-block:: json
+
+            [
+                {
+                    "creator_id": 1,
+                    "game": 1,
+                    "start_time": "2022-05-01",
+                    "end_time": "2022-05-01",
+                    "notes": "Hey Vsauce, Michael here...Where are your fingers?",
+                    "timeout": 45,
+                    "code": 123456,
+                    "active": true,
+                }
+            ]
+
+        **Response Codes**:
+
+        .. code-block:: http
+
+            200 : Success
+            501 : Fail
+        '''
+        try:
+            all_sessions = GameSession.objects.all()
+            response_data = []
+            for session in all_sessions:
+                session_data = get_session_data(session.id)
+                response_data.append(session_data)
+            return Response(data=response_data)
+        except Exception as e:
+            return HttpResponse(status=501)
+
+
 class GameSessionAnswerViewSet(ViewSet):
     def create(self, request):
         '''
@@ -637,11 +683,11 @@ def end_session(request):
     '''
     try:
         try:
-            game = Game.objects.get(id=int(request.data['id']))
+            session = GameSession.objects.get(id=int(request.data['id']))
         except Exception as e:
             return HttpResponseServerError('This game session does not exist.')
-        game.active = not game.active
-        game.save()
+        session.active = not session.active
+        session.save()
         return HttpResponse(status=200)
     except Exception as e:
         return HttpResponseServerError('Could not end Game Session')

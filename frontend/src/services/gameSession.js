@@ -1,11 +1,16 @@
 import axios from 'axios';
-import {gameSessions} from '../helpers/dummyData';
 import {API_URL} from '../store/store';
+import {gameSessions} from '../helpers/dummyData';
 
 class GameSessionService {
   getGameSessions() {
     // @TODO: Replace with api calls
+    // return axios.get(API_URL + '/gameSessions/');
     return gameSessions;
+  }
+
+  getGameSession(id) {
+    return axios.get(`${API_URL}/gameSessions/${id}/`);
   }
 
   createGameSession(creatorId, gameId, notes, timeout) {
@@ -15,6 +20,10 @@ class GameSessionService {
       notes: notes,
       timeout: parseInt(timeout),
     });
+  }
+
+  endSession(id) {
+    return axios.delete(`${API_URL}/gameSession/${id}/`);
   }
 }
 
