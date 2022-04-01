@@ -51,8 +51,8 @@ export default function Register() {
     setErrMsg('');
     AuthService.register(email, password, first, last, role).then(
         (response) => {
-          if (response.status === 200) {
-            window.location.href = '/users';
+          if (response.status === 201) {
+            window.location.href = '/admin-dashboard';
           } else {
             setErrMsg(
                 `There was an issue handling your account registration.
@@ -165,8 +165,8 @@ export default function Register() {
                   inputProps={{'data-testid': 'role-select'}}
                   onChange={(e) => setRole(e.target.value)}
                 >
-                  <MenuItem value={'Administrator'}>Administrator</MenuItem>
-                  <MenuItem value={'Faculty'}>Faculty</MenuItem>
+                  <MenuItem value={'ADMIN'}>Administrator</MenuItem>
+                  <MenuItem value={'FACULTY'}>Faculty</MenuItem>
                 </Select>
               </Grid>
             </Grid>
