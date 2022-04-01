@@ -581,3 +581,20 @@ class SessionViewTestCase(TestCase):
         resp = self.client.post('/api/games/toggleActive/', data=data)
         self.assertEqual(resp.status_code, 500)
 
+class PasswordResetTestCase(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects
+        self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
+        data = {
+            'email': 'test@test.com',
+            'password': 'testadmin'
+        }
+        self.resp = self.client.post('/api/token/', data=data)
+        self.refresh = self.resp.data['refresh']
+        self.access = self.resp.data['access']
+    def test_request_reset(self):
+        data = {
+            'email': 'test@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(resp.status_code, 200)
