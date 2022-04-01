@@ -23,6 +23,7 @@ import Register from './pages/admin/register';
 import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
+import ReportsPage from './pages/faculty/reports';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -140,6 +141,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <GenerateQRPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/reports"
+                element={
+                  <ProtectedRoute>
+                    <ReportsPage />
                   </ProtectedRoute>
                 }
               />
