@@ -64,21 +64,6 @@ def get_chance_game(question):
         raise Exception("The chance game '" + chance_game + "' does not exist.")
     else:
         return Question.ChanceGame.NO_GAME
-
-# function checks the timeout in minutes of the gameSession and
-# finds the teams last answer to compare the time
-# returns true or false
-def isTimedOut(gameSessionID, team):
-    pass
-#     currentTime = datetime.now
-#     timeout = GameSession.objects.get(id=gameSessionID).timeout
-#     teamAnswers = GameSessionAnswer.objects.filter(team_id = team.id)
-#     if (len(teamAnswers) > 0):
-#         lastAnswer = teamAnswers.sort(key=lambda answer: answer.created_at, reverse=True)[0]
-#         minute_difference = (currentTime - lastAnswer.created_at).total_seconds()/60
-#     else:
-#         minute_difference = (currentTime - team.created_at).total_seconds()/60
-#     return minute_difference > timeout
         
 def get_time_for_answer(answer):
     all_answers = GameSessionAnswer.objects \
@@ -93,3 +78,19 @@ def get_time_for_answer(answer):
         previous_time = all_answers[0].created_at
     
     return answer.created_at - previous_time
+
+def isTimedOut(gameSessionID, team):
+    tz_info = team.created_at.tzinfo
+    current_time = datetime.now(tz_info)
+    timeout = GameSession.objects.get(id=gameSessionID).timeout
+    all_team_answers = GameSessionAnswer.objects \
+                    .filter(team=team) \
+                    .order_by('-created_at')    
+    if (len(all_team_answers) > 0):
+        last_answer = all_team_answers[0]
+        minute_difference = (current_time - last_answer.created_at).total_seconds()/60
+        print("1:" + str(minute_difference))
+    else:
+        minute_difference = (current_time - team.created_at).total_seconds()/60
+        print("2:" + str(minute_difference))
+    return minute_difference > timeout
