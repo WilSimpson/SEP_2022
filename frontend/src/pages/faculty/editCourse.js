@@ -101,7 +101,7 @@ export default function EditCourse() {
             }}
           >
             <Typography>
-              `Edit ${state.name}`
+              Edit  {state.name}
             </Typography>
             <Box sx={{pb: 2}}>
               {err && <Alert severity="error">{err}</Alert>}
