@@ -171,7 +171,7 @@ function CoursesTable() {
                 <Tooltip title="Edit Course">
                   <div onClick={() => editThisCourse(row.id, row.name,
                       row.department,
-                      row.courseNumber, row.sectionNumber, row.semester)}>
+                      row.number, row.section, row.semester)}>
                     <IconButton>
                       <EditIcon />
                     </IconButton>
@@ -180,8 +180,8 @@ function CoursesTable() {
               </TableCell>
               <TableCell>{row.department}</TableCell>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.courseNumber}</TableCell>
-              <TableCell>{row.sectionNumber}</TableCell>
+              <TableCell>{row.number}</TableCell>
+              <TableCell>{row.section}</TableCell>
               <TableCell>{row.semester}</TableCell>
             </TableRow>
           ))}

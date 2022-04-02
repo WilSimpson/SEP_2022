@@ -29,8 +29,8 @@ class CourseService {
     return axios.post(API_URL + '/courses/', {
       name: name,
       department: department,
-      number: courseNumber,
-      section: sectionNumber,
+      number: parseInt(courseNumber),
+      section: parseInt(sectionNumber),
       semester: semester,
       userId: userId,
     });
