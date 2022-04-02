@@ -516,14 +516,11 @@ class GameSessionAnswerViewSet(ViewSet):
                 question_id = question.id,
                 option_chosen_id = option.id
             )
-            print("game_session: " + str(team.game_session_id))
-            print(isTimedOut(team.game_session_id, team))
             if (isTimedOut(team.game_session_id, team)):
-                return HttpResponse(status=400, content="The Game has timed out. Please start a new Game.")
+                return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
             answer.save()
             return Response()
         except Exception as e:
-            print (e)
             return HttpResponse(status=500)
         
 @api_view(['POST'])

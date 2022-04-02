@@ -82,15 +82,11 @@ def get_time_for_answer(answer):
 def isTimedOut(gameSessionID, team):
     tz_info = team.created_at.tzinfo
     current_time = datetime.now(tz_info)
-    timeout = GameSession.objects.get(id=gameSessionID).timeout
     all_team_answers = GameSessionAnswer.objects \
                     .filter(team=team) \
                     .order_by('-created_at')    
     if (len(all_team_answers) > 0):
-        last_answer = all_team_answers[0]
-        minute_difference = (current_time - last_answer.created_at).total_seconds()/60
-        print("1:" + str(minute_difference))
+        minute_difference = (current_time - all_team_answers[0].created_at).total_seconds()/60
     else:
         minute_difference = (current_time - team.created_at).total_seconds()/60
-        print("2:" + str(minute_difference))
-    return minute_difference > timeout
+    return minute_difference > GameSession.objects.get(id=gameSessionID).timeout
