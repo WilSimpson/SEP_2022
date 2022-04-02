@@ -497,7 +497,7 @@ class GameSessionAnswerViewSet(ViewSet):
         .. code-block:: http
         
             200 : Success
-            400 : Fail (message will indicate whether team or option does not exist)
+            400 : Fail (message will indicate whether team/option does not exist or game play has timed out)
             500 : Fail
         '''
         try:
@@ -516,10 +516,11 @@ class GameSessionAnswerViewSet(ViewSet):
                 question_id = question.id,
                 option_chosen_id = option.id
             )
+            if (isTimedOut(team.game_session_id, team)):
+                return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
             answer.save()
             return Response()
         except Exception as e:
-            print (e)
             return HttpResponse(status=500)
         
 @api_view(['POST'])
