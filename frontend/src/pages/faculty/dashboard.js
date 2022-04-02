@@ -121,7 +121,7 @@ function CoursesTable() {
 
   const searchCourses = (searchedVal) => {
     setFilteredRows(rows.filter((row) => {
-      return Object.values(row).some((e) => e.toLowerCase()
+      return Object.values(row).some((e) => String(e).toLowerCase()
           .includes(searchedVal.toLowerCase()));
     }));
   };
@@ -150,7 +150,7 @@ function CoursesTable() {
         {loading && <LinearProgress />}
       </Box>
       <TextField
-        label='Search by Course Name'
+        label='Search by Course'
         onChange={(event) => searchCourses(event.target.value)}
       />
       <Table data-testid="course_table" sx={{minWidth: 500}}>
