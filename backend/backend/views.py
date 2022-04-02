@@ -497,7 +497,7 @@ class GameSessionAnswerViewSet(ViewSet):
         .. code-block:: http
         
             200 : Success
-            400 : Fail (message will indicate whether team or option does not exist)
+            400 : Fail (message will indicate whether team/option does not exist or game play has timed out)
             500 : Fail
         '''
         try:
