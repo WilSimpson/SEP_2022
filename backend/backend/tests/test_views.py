@@ -539,6 +539,14 @@ class GameSessionAnswerViewSetTest(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
         
+    def test_answer_time_out(self):
+        self.gamesession.timeout = 0
+        self.gamesession.save()
+        resp = self.client.post('/api/gameSession/answer/', self.data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
+        
+        
 class SessionViewTestCase(TestCase):
     def setUp(self):
         self.game = Game.objects.create(title='test', creator_id=999, code=999999, active=True)
