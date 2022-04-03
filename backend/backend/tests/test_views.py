@@ -9,6 +9,8 @@ from backend.models import Game, Option, Question
 from .factories import UserFactory
 
 from ..models import *
+from ..signals import *
+from django.core import mail
 
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -598,3 +600,22 @@ class PasswordResetTestCase(TestCase):
         }
         resp = self.client.post('/api/password_reset/', data=data)
         self.assertEqual(resp.status_code, 200)
+    def test_request_reset_fail(self):
+        data = {
+            'email': 'fail@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(resp.status_code, 400)
+    def test_send_email(self):
+        data = {
+            'email': 'test@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Password Reset for Ethics Adventure')
+    def test_send_email_fail(self):
+        data = {
+            'email': 'fail@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(len(mail.outbox), 0)
