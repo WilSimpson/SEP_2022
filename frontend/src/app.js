@@ -23,8 +23,6 @@ import Register from './pages/admin/register';
 import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
-import GameTimeout from './pages/game/gameTimeout';
-
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
 
@@ -43,7 +41,6 @@ function App() {
               <Route exact path="/logout" element={<Logout />} />
               <Route exact path="/register" element={<Register />} />
               <Route exact path="/endGame" element={<EndGame />} />
-              <Route exact path="/timeout" element={<GameTimeout />} />
               <Route
                 exact
                 path="/pass"

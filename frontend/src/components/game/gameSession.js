@@ -11,6 +11,7 @@ import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
 import {useNavigate} from 'react-router-dom';
 import GamePlayTimeout from './gamePlayTimeout';
+import GameLayout from '../layout/game.layout';
 export default function GameSession() {
   const {state} = useLocation();
   const navigate = useNavigate();
@@ -145,91 +146,93 @@ export default function GameSession() {
   }
 
   return (
-    <div className='container'>
-      <CssBaseline />
-      <main>
-        {/* Hero unit */}
-        <Container maxWidth='xl'>
-          <Box
-            sx={{
-              pt: 0,
-              pb: 6,
-              borderRadius: 4,
-              mt: 3,
-              mb: 3,
-            }}
-            justify="center"
-            alignItems="center"
-          >
-            <Container maxWidth="sm">
-              <GamePlayTimeout open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
-              <Typography>
-                {currentQuestion ? currentQuestion.value : 'Game not found'}
-              </Typography>
-              <ButtonGroup
-                variant="contained"
-                alignItems="center"
-                justify="center"
-                orientation="vertical"
-                fullWidth={true}
-              >
-                {currentOptions.map((option) => (
-                  <Button
-                    key={option.id}
-                    variant=
-                      {selectedOption == option ? 'contained' : 'outlined'}
-                    sx={{marginTop: 5}}
-                    data-testid={'option'+ String(option.id)}
-                    onClick={() => setSelectedOption(option)}
-                    disabled={currentQuestion.chance}>
-                    {option.value}
-                  </Button>
-                ))}
-                { currentQuestion.chance ?
-                  <Button
-                    color='secondary'
-                    sx={{marginTop: 5}}
-                    data-testid='chance'
-                    onClick={() =>
-                      setSelectedOption(currentOptions[choiceClick()])
-                    }
-                    disabled={selectedOption}
-                  >
-                  Chance
-                  </Button> : null
-                }
-                {
-                  endGame ?
-                    (
-                      <Button
-                        color='secondary'
-                        sx={{marginTop: 5}}
-                        onClick={completeGame}
-                        inputProps={{'data-testid': 'complete'}}
-                        data-testid='complete'
-                      >
-                        Complete Game
-                      </Button>
-                    ) :
-                    (
-                      <Button
-                        color='secondary'
-                        sx={{marginTop: 5}}
-                        onClick={nextQuestion}
-                        inputProps={{'data-testid': 'continue'}}
-                        data-testid='continue'
-                        disabled={!selectedOption}
-                      >
-                        Continue
-                      </Button>
-                    )
-                }
+    <GameLayout>
+      <div className='container'>
+        <CssBaseline />
+        <main>
+          {/* Hero unit */}
+          <Container maxWidth='xl'>
+            <Box
+              sx={{
+                pt: 0,
+                pb: 6,
+                borderRadius: 4,
+                mt: 3,
+                mb: 3,
+              }}
+              justify="center"
+              alignItems="center"
+            >
+              <Container maxWidth="sm">
+                <GamePlayTimeout open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
+                <Typography>
+                  {currentQuestion ? currentQuestion.value : 'Game not found'}
+                </Typography>
+                <ButtonGroup
+                  variant="contained"
+                  alignItems="center"
+                  justify="center"
+                  orientation="vertical"
+                  fullWidth={true}
+                >
+                  {currentOptions.map((option) => (
+                    <Button
+                      key={option.id}
+                      variant=
+                        {selectedOption == option ? 'contained' : 'outlined'}
+                      sx={{marginTop: 5}}
+                      data-testid={'option'+ String(option.id)}
+                      onClick={() => setSelectedOption(option)}
+                      disabled={currentQuestion.chance}>
+                      {option.value}
+                    </Button>
+                  ))}
+                  { currentQuestion.chance ?
+                    <Button
+                      color='secondary'
+                      sx={{marginTop: 5}}
+                      data-testid='chance'
+                      onClick={() =>
+                        setSelectedOption(currentOptions[choiceClick()])
+                      }
+                      disabled={selectedOption}
+                    >
+                    Chance
+                    </Button> : null
+                  }
+                  {
+                    endGame ?
+                      (
+                        <Button
+                          color='secondary'
+                          sx={{marginTop: 5}}
+                          onClick={completeGame}
+                          inputProps={{'data-testid': 'complete'}}
+                          data-testid='complete'
+                        >
+                          Complete Game
+                        </Button>
+                      ) :
+                      (
+                        <Button
+                          color='secondary'
+                          sx={{marginTop: 5}}
+                          onClick={nextQuestion}
+                          inputProps={{'data-testid': 'continue'}}
+                          data-testid='continue'
+                          disabled={!selectedOption}
+                        >
+                          Continue
+                        </Button>
+                      )
+                  }
 
-              </ButtonGroup>
-            </Container>
-          </Box>
-        </Container>
-      </main>
-    </div>
+                </ButtonGroup>
+              </Container>
+            </Box>
+          </Container>
+        </main>
+      </div>
+    </GameLayout>
   );
 }
