@@ -10,9 +10,12 @@ import {ButtonGroup} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
 import {useNavigate} from 'react-router-dom';
+import GamePlayTimeout from './gamePlayTimeout';
 export default function GameSession() {
   const {state} = useLocation();
   const navigate = useNavigate();
+  const TIMEOUT_ERR_MSG = 'Your Game has timed out. Please start a new Game.';
+  const [timeoutOpen, setTimeoutOpen] = useState(false);
   const [currentQuestion, setQuestion] = useState(
       GamePlayService.getInProgressGame().state.currentQuestion,
   );
@@ -37,27 +40,43 @@ export default function GameSession() {
 
   const nextQuestion = () => {
     GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
-        (response) => {},
+        (response) => {
+          const question = (state.game.questions).find(
+              (question) => question.id == selectedOption.dest_question,
+          );
+          GamePlayService.updateCurrentQuestion(question);
+          setQuestion(question);
+          setSelectedOption(null);
+        },
         (error) => {
-          let errMessage = '';
-          if (error.response && error.response.data) {
-            errMessage = error.response.data;
-          } else {
-            errMessage = 'The server is currently unreachable. ' +
-            'Please try again later.';
+          // let errMessage = '';
+          console.log(error);
+          console.log('status');
+          console.log(error.response.status);
+          console.log('message: ');
+          console.log(error.response.data);
+          if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
+            console.log('reached');
+            handleTimeoutOpen();
+          // } else {
+          //   if (error.response && error.response.data) {
+          //     errMessage = error.response.data;
+          //   } else {
+          //     errMessage = 'The server is currently unreachable. ' +
+          //     'Please try again later.';
+          //   }
+          //   alertService.alert({
+          //     severity: alertSeverity.error,
+          //     message: errMessage,
+          //   });
           }
-          alertService.alert({
-            severity: alertSeverity.error,
-            message: errMessage,
-          });
         },
     );
-    const question = (state.game.questions).find(
-        (question) => question.id == selectedOption.dest_question,
-    );
-    GamePlayService.updateCurrentQuestion(question);
-    setQuestion(question);
-    setSelectedOption(null);
+  };
+
+  const handleTimeoutOpen = () => {
+    setTimeoutOpen(true);
+    GamePlayService.clearInProgressGame();
   };
 
   const completeGame = () => {
@@ -94,6 +113,15 @@ export default function GameSession() {
     const choice = GamePlayService.random(weights);
     return choice;
   }
+
+  function returnHome() {
+    navigate('/');
+  }
+
+  function newGame() {
+    navigate('/');
+  }
+
   return (
     <div className='container'>
       <CssBaseline />
@@ -112,6 +140,10 @@ export default function GameSession() {
             alignItems="center"
           >
             <Container maxWidth="sm">
+              {/* <Button variant='outlined' onClick={handleTimeoutOpen}>
+                Open timeout dialog
+              </Button> */}
+              <GamePlayTimeout open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
               <Typography>
                 {currentQuestion ? currentQuestion.value : 'Game not found'}
               </Typography>

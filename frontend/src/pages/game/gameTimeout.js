@@ -12,10 +12,6 @@ export default function EndGame() {
     setTimeoutOpen(true);
   };
 
-  const handleTimeoutClose = () => {
-    setTimeoutOpen(false);
-  };
-
   // function newGame() {
 
   // }
@@ -25,7 +21,7 @@ export default function EndGame() {
       <Button variant='outlined' onClick={handleTimeoutOpen}>
         Open timeout dialog
       </Button>
-      <GamePlayTimeout open={timeoutOpen} onclose={handleTimeoutClose}/>
+      <GamePlayTimeout open={timeoutOpen} />
     </div>
   );
 }

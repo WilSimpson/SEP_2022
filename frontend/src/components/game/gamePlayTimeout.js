@@ -12,7 +12,6 @@ export default function GamePlayTimeout(props) {
   return (
     <Dialog
       open={props.open}
-      onClose={props.onclose}
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
@@ -28,7 +27,7 @@ export default function GamePlayTimeout(props) {
       </DialogContent>
       <DialogActions>
         <Button onClick={props.returnHome}>Return Home</Button>
-        <Button onClick={props.startNewGame} autoFocus>Start New Game</Button>
+        <Button onClick={props.startNewGame} variant='contained' autoFocus>Start New Game</Button>
       </DialogActions>
     </Dialog>
   );
