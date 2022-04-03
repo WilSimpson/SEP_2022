@@ -27,7 +27,7 @@ export default function GamePlayTimeout(props) {
       </DialogContent>
       <DialogActions>
         <Button onClick={props.returnHome}>Return Home</Button>
-        <Button onClick={props.startNewGame} variant='contained' autoFocus>Start New Game</Button>
+        <Button onClick={props.newGame} variant='contained' autoFocus>Start New Game</Button>
       </DialogActions>
     </Dialog>
   );

@@ -26,7 +26,6 @@ export default function GameSession() {
   const [selectedOption, setSelectedOption] = useState();
   const [endGame, setEndGame] = useState(false);
 
-
   React.useEffect(() => {
     setOptions(
         state.game.options.filter(
@@ -49,26 +48,21 @@ export default function GameSession() {
           setSelectedOption(null);
         },
         (error) => {
-          // let errMessage = '';
-          console.log(error);
-          console.log('status');
-          console.log(error.response.status);
-          console.log('message: ');
-          console.log(error.response.data);
+          let errMessage = '';
           if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
             console.log('reached');
             handleTimeoutOpen();
-          // } else {
-          //   if (error.response && error.response.data) {
-          //     errMessage = error.response.data;
-          //   } else {
-          //     errMessage = 'The server is currently unreachable. ' +
-          //     'Please try again later.';
-          //   }
-          //   alertService.alert({
-          //     severity: alertSeverity.error,
-          //     message: errMessage,
-          //   });
+          } else {
+            if (error.response && error.response.data) {
+              errMessage = error.response.data;
+            } else {
+              errMessage = 'The server is currently unreachable. ' +
+              'Please try again later.';
+            }
+            alertService.alert({
+              severity: alertSeverity.error,
+              message: errMessage,
+            });
           }
         },
     );
@@ -119,7 +113,35 @@ export default function GameSession() {
   }
 
   function newGame() {
-    navigate('/');
+    GamePlayService.joinGame(state.code).then(
+        (response) => {
+          const path = `/startingSurvey`;
+          navigate(path, {
+            state: {
+              code: state.code,
+              game: response,
+            },
+          });
+        },
+        (error) => {
+          let errMessage = '';
+          if (error.response && error.response.status === 404) {
+            errMessage = 'There was an unexpected error reaching the server. ' +
+            'Please try again later.';
+          } else {
+            if (error.response && error.response.status === 500) {
+              errMessage = error.response.data;
+            } else {
+              errMessage = 'The server is currently unreachable. ' +
+              'Please try again later.';
+            }
+          }
+          alertService.alert({
+            severity: alertSeverity.error,
+            message: errMessage,
+          });
+        },
+    );
   }
 
   return (
@@ -140,9 +162,6 @@ export default function GameSession() {
             alignItems="center"
           >
             <Container maxWidth="sm">
-              {/* <Button variant='outlined' onClick={handleTimeoutOpen}>
-                Open timeout dialog
-              </Button> */}
               <GamePlayTimeout open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
               <Typography>
                 {currentQuestion ? currentQuestion.value : 'Game not found'}
