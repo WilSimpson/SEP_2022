@@ -3,17 +3,29 @@ import React from 'react';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import {TabContext, TabList, TabPanel} from '@mui/lab';
 
-const gameReports = (
-  <>
-    Game reports here
-  </>
-);
+export function GameReports() {
+  return (
+    <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <h4>Filters</h4>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
 
-const sessionReports = (
-  <>
-    Session reports here
-  </>
-);
+export function SessionReports() {
+  return (
+    <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <h4>Filters</h4>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
 
 export default function ReportsPage() {
   const [value, setValue] = React.useState('1');
@@ -48,8 +60,8 @@ export default function ReportsPage() {
                     <Tab label="Session Reports" value="2" />
                   </TabList>
                 </Box>
-                <TabPanel value="1">{gameReports}</TabPanel>
-                <TabPanel value="2">{sessionReports}</TabPanel>
+                <TabPanel value="1"><GameReports /></TabPanel>
+                <TabPanel value="2"><SessionReports /></TabPanel>
               </TabContext>
             </Paper>
           </Grid>
