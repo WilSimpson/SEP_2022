@@ -46,6 +46,11 @@ export default function GamesTable(props) {
     setConfirmationDeleteID(null);
   };
 
+  const onPermanentDelete = () => {
+    props.onConfirmDelete(confirmationDeleteID);
+    handleCloseConfirmation();
+  };
+
   return (
     <Grid container justifyContent="center" spacing={2}>
       <Dialog open={confirmationDeleteID != null}>
@@ -60,7 +65,7 @@ export default function GamesTable(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => props.onConfirmDelete(confirmationDeleteID)}>
+          <Button onClick={onPermanentDelete}>
             Delete Permanently
           </Button>
           <Button onClick={handleCloseConfirmation} autoFocus>

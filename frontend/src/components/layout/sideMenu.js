@@ -6,6 +6,7 @@ import {styled} from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -85,7 +86,8 @@ export function SideMenu(props) {
       disabled={!open}
       component={Link}
       data-testid="dashboard-item"
-      href="/admin-dashboard"
+      href={AuthService.currentUser().isAdmin() ?
+         '/admin-dashboard' : '/faculty-dashboard'}
     >
       <ListItemIcon>
         <DashboardIcon />
@@ -105,7 +107,20 @@ export function SideMenu(props) {
           <BarChartIcon />
         </ListItemIcon>
         <ListItemText primary="Game Sessions" />
+        {gameSessionManageOpen ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
+      <Collapse in={gameSessionManageOpen && open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="session-start-item"
+            component={Link}
+            href="/faculty-dashboard/startSession"
+          >
+            <ListItemText primary="Start Game Session" />
+          </ListItemButton>
+        </List>
+      </Collapse>
     </div>
   );
 
@@ -140,6 +155,14 @@ export function SideMenu(props) {
           >
             <ListItemText primary="View Games" />
           </ListItemButton>
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="session-start-item"
+            component={Link}
+            href="/admin-dashboard/startSession"
+          >
+            <ListItemText primary="Start Game Session" />
+          </ListItemButton>
         </List>
       </Collapse>
     </div>
@@ -161,7 +184,12 @@ export function SideMenu(props) {
       </ListItemButton>
       <Collapse in={userManageOpen && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{pl: 4}} data-testid="user-create-item">
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="user-create-item"
+            component={Link}
+            href="/admin-dashboard/register"
+          >
             <ListItemText primary="Create Users" />
           </ListItemButton>
           <ListItemButton sx={{pl: 4}} data-testid="user-edit-item">
@@ -186,6 +214,20 @@ export function SideMenu(props) {
         <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="Reports" />
+    </ListItemButton>
+  );
+
+  const generateQR = (
+    <ListItemButton
+      disabled={!open}
+      component={Link}
+      href="/generate-qr"
+      data-testid="generate-qr-item"
+    >
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Generate QR" />
     </ListItemButton>
   );
 
@@ -240,7 +282,7 @@ export function SideMenu(props) {
           }}
         >
           <IconButton onClick={toggleDrawer} data-testid="drawer-toggle">
-            <ChevronLeftIcon />
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </Toolbar>
         <Divider />
@@ -251,12 +293,14 @@ export function SideMenu(props) {
               {gameManagementItem}
               {userManagementItem}
               {reportsItem}
+              {generateQR}
             </React.Fragment>
           ) : (
             <React.Fragment>
               {dashboardItem}
               {gameSessionManagementItem}
               {reportsItem}
+              {generateQR}
             </React.Fragment>
           )}
           <Divider sx={{my: 1}} />
