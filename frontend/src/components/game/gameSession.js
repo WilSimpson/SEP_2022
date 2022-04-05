@@ -38,20 +38,12 @@ export default function GameSession() {
     setEndGame(currentOptions.length == 0);
   }, [currentOptions]);
 
-  const nextQuestion = () => {
+  const answerQuestionPromise = () => new Promise(() => {
     GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
-        (response) => {
-          const question = (state.game.questions).find(
-              (question) => question.id == selectedOption.dest_question,
-          );
-          GamePlayService.updateCurrentQuestion(question);
-          setQuestion(question);
-          setSelectedOption(null);
-        },
+        (response) => {},
         (error) => {
           let errMessage = '';
           if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
-            console.log('reached');
             handleTimeoutOpen();
           } else {
             if (error.response && error.response.data) {
@@ -67,6 +59,16 @@ export default function GameSession() {
           }
         },
     );
+  });
+
+  const handleQuestionUpdate = async () => {
+    await answerQuestionPromise();
+    const question = (state.game.questions).find(
+        (question) => question.id == selectedOption.dest_question,
+    );
+    GamePlayService.updateCurrentQuestion(question);
+    setQuestion(question);
+    setSelectedOption(null);
   };
 
   const handleTimeoutOpen = () => {
@@ -150,7 +152,6 @@ export default function GameSession() {
       <div className='container'>
         <CssBaseline />
         <main>
-          {/* Hero unit */}
           <Container maxWidth='xl'>
             <Box
               sx={{
@@ -161,7 +162,7 @@ export default function GameSession() {
                 mb: 3,
               }}
               justify="center"
-              alignItems="center"
+              align="center"
             >
               <Container maxWidth="sm">
                 <GamePlayTimeout open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
@@ -170,7 +171,7 @@ export default function GameSession() {
                 </Typography>
                 <ButtonGroup
                   variant="contained"
-                  alignItems="center"
+                  align="center"
                   justify="center"
                   orientation="vertical"
                   fullWidth={true}
@@ -207,7 +208,6 @@ export default function GameSession() {
                           color='secondary'
                           sx={{marginTop: 5}}
                           onClick={completeGame}
-                          inputProps={{'data-testid': 'complete'}}
                           data-testid='complete'
                         >
                           Complete Game
@@ -217,8 +217,7 @@ export default function GameSession() {
                         <Button
                           color='secondary'
                           sx={{marginTop: 5}}
-                          onClick={nextQuestion}
-                          inputProps={{'data-testid': 'continue'}}
+                          onClick={handleQuestionUpdate}
                           data-testid='continue'
                           disabled={!selectedOption}
                         >
