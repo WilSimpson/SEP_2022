@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "department": "Success",
         "name": "N/A",
         "courseNumber": "N/A",
@@ -7,6 +8,7 @@
         "semester": "N/A"
     },
     {
+        "id": 2,
         "department": "Success Still",
         "name": "N/A",
         "courseNumber": "N/A",
@@ -14,6 +16,7 @@
         "semester": "N/A"
     },
     {
+        "id": 3,
         "department": "Multiple Rows Work",
         "name": "N/A",
         "courseNumber": "N/A",
