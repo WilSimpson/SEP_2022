@@ -13,7 +13,7 @@ export default function GameNav() {
     <AppBar position="static" color="primary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <IconButton href="/" sx={{p: 0}} size="large">
+          <IconButton href="/" sx={{p: 0}} size="large" data-testid='home-button'>
             <Avatar alt="EA" src={logoSmall} variant="square" />
           </IconButton>
         </Toolbar>

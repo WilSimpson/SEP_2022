@@ -39,24 +39,22 @@ export default function GameSession() {
   }, [currentOptions]);
 
   const nextQuestion = () => {
-    let errMessage = '';
-    console.log('reached 0');
     GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
         (response) => {
-          console.log('reached 1');
-          // --------------------------------
           const question = (state.game.questions).find(
               (question) => question.id == selectedOption.dest_question,
           );
           GamePlayService.updateCurrentQuestion(question);
           setQuestion(question);
           setSelectedOption(null);
-          console.log('reached 2');
-          // -------------------------------------
-          
         },
         (error) => {
+          let errMessage = '';
+          console.log('reached');
+          console.log(error);
           if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
+            console.log('reached 300');
+            setTimeoutOpen(true);
             handleTimeoutOpen();
           } else {
             if (error.response && error.response.data) {
@@ -72,16 +70,10 @@ export default function GameSession() {
           }
         },
     );
-    // const question = (state.game.questions).find(
-    //     (question) => question.id == selectedOption.dest_question,
-    // );
-    // GamePlayService.updateCurrentQuestion(question);
-    // setQuestion(question);
-    // setSelectedOption(null);
   };
 
   const handleTimeoutOpen = () => {
-    setTimeoutOpen(true);
+    // setTimeoutOpen(true);
     GamePlayService.clearInProgressGame();
   };
 
