@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import GameSession from './gameSession';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
@@ -282,6 +282,26 @@ describe('<GameSession />', () => {
     it('should call random when chance is clicked', () => {
       fireEvent.click(chanceButton);
       expect(GamePlayService.random).toHaveBeenCalled();
+    });
+  });
+  describe('Timeout functionality', () => {
+    let wrapper;
+    beforeEach(() => {
+      wrapper = mount(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<GameSession/>} />
+          </Routes>
+        </BrowserRouter>
+      );
+    });
+    it('dialog should be rendered with component', () => {
+      const dialog = wrapper.find('GamePlayTimeout');
+      expect(dialog.getElement()).not.toBeNull();
+    });
+    it('dialog should have an open prop that is false initially', () => {
+      const dialog = wrapper.find('GamePlayTimeout');
+      expect(dialog.props().open).toBe(false);
     });
   });
 });

@@ -50,10 +50,7 @@ export default function GameSession() {
         },
         (error) => {
           let errMessage = '';
-          console.log('reached');
-          console.log(error);
           if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
-            console.log('reached 300');
             setTimeoutOpen(true);
             handleTimeoutOpen();
           } else {
@@ -166,7 +163,7 @@ export default function GameSession() {
               align="center"
             >
               <Container maxWidth="sm">
-                <GamePlayTimeout open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
+                <GamePlayTimeout id='timeout-dialog' open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
                 <Typography>
                   {currentQuestion ? currentQuestion.value : 'Game not found'}
                 </Typography>
