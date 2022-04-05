@@ -1,16 +1,23 @@
 import React from 'react';
+import '@testing-library/jest-dom';
 import GameSession from './gameSession';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
-import {fireEvent, getByTestId} from '@testing-library/react';
+import {findByTestId, fireEvent, getByTestId, waitFor} from '@testing-library/react';
 import {inProgressGame} from '../../helpers/dummyData';
 import GamePlayService from '../../services/gameplay';
+import GamePlayTimeout from './gamePlayTimeout';
 
 const TEAM_ID = 1;
 
 jest.mock('../../services/gameplay');
+
+// const mockSetTimeout = jest.fn();
+// jest.mock('react', () => ({
+//   useState: timeoutOpen => [timeoutOpen, mockSetTimeout]
+// }));
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -168,7 +175,7 @@ describe('<GameSession />', () => {
       expect(GamePlayService.answerQuestion).toHaveBeenCalled();
       await act(() => promise);
     });
-    it('should change the text on the screen when "Continue" button clicked', () => {
+    it('should change the text on the screen when "Continue" button clicked', async () => {
       expect(container.textContent).toContain(
           'Question 1',
       );
@@ -179,11 +186,13 @@ describe('<GameSession />', () => {
   
       fireEvent.click(option1);
       fireEvent.click(continueButton);
-      expect(container.textContent).toContain(
+      await waitFor(() => {
+        expect(container.textContent).toContain(
           'Question 2',
-      );
+        );
+      });
     });
-    it('should call updateCurrentQuestion when "Continue" button clicked', () => {
+    it('should call updateCurrentQuestion when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
       GamePlayService.answerQuestion.mockResolvedValue({
         response: jest.fn(() => promise),
@@ -193,22 +202,23 @@ describe('<GameSession />', () => {
       });
       fireEvent.click(option1);
       fireEvent.click(continueButton);
-      expect(GamePlayService.updateCurrentQuestion).toHaveBeenCalled();
+      await waitFor(() => {
+        expect(GamePlayService.updateCurrentQuestion).toHaveBeenCalled();
+      });
     });
   });
   
   describe('Complete Game', () => {
     let completeButton;
-    beforeEach(() => {
+    beforeEach(async () => {
       // to get to the last page
       const promise = Promise.resolve();
       GamePlayService.answerQuestion.mockResolvedValue({
         response: jest.fn(() => promise),
       });
-  
       fireEvent.click(option2);
       fireEvent.click(continueButton);
-      completeButton = getByTestId(container, 'complete');
+      completeButton = await findByTestId(container, 'complete');
     });
     it ('"Complete" button should exist when on final question page', () => {
       expect(container.textContent).toContain(
@@ -229,52 +239,69 @@ describe('<GameSession />', () => {
       await act(() => promise);
     });
   });
-});
-describe('<GameSession />', () => {
-  let continueButton;
-  let option1;
-  let option2;
-  let option3;
-  let option4;
-  let chanceButton;
-  beforeEach(() => {
-    act(() => {
-      render(
-          <BrowserRouter>
-            <Routes>
-              <Route path="*" element={<GameSession />} />
-            </Routes>
-          </BrowserRouter>,
-          container,
+  describe('<GameSession />', () => {
+    let continueButton;
+    let option1;
+    let option2;
+    let option3;
+    let option4;
+    let chanceButton;
+    beforeEach(async () => {
+      act(() => {
+        render(
+            <BrowserRouter>
+              <Routes>
+                <Route path="*" element={<GameSession />} />
+              </Routes>
+            </BrowserRouter>,
+            container,
+        );
+      });
+      const promise = Promise.resolve();
+      GamePlayService.answerQuestion.mockResolvedValue({
+        response: jest.fn(() => promise),
+      });
+      continueButton = getByTestId(container, 'continue');
+      option1 = getByTestId(container, 'option1');
+      option2 = getByTestId(container, 'option2');
+      fireEvent.click(option1);
+      fireEvent.click(continueButton);
+      chanceButton = await findByTestId(container, 'chance');
+      option3 = getByTestId(container, 'option3');
+      option4 = getByTestId(container, 'option4');
+    });
+    it('should have disabled "Continue" button when option not selected', () => {
+      expect(continueButton).toBeDisabled();
+    });
+    it('option3 should be disabled', () => {
+      expect(option3).toBeDisabled();
+    });
+    it('option4 should be disabled', () => {
+      expect(option4).toBeDisabled();
+    });
+    it('should call random when chance is clicked', () => {
+      fireEvent.click(chanceButton);
+      expect(GamePlayService.random).toHaveBeenCalled();
+    });
+  });
+  describe('Timeout functionality', () => {
+    let wrapper;
+    beforeEach(() => {
+      wrapper = mount(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<GameSession/>} />
+          </Routes>
+        </BrowserRouter>
       );
     });
-    const promise = Promise.resolve();
-    GamePlayService.answerQuestion.mockResolvedValue({
-      response: jest.fn(() => promise),
+    it('dialog should be rendered with component', () => {
+      const dialog = wrapper.find('GamePlayTimeout');
+      expect(dialog.getElement()).not.toBeNull();
     });
-    continueButton = getByTestId(container, 'continue');
-    option1 = getByTestId(container, 'option1');
-    option2 = getByTestId(container, 'option2');
-    fireEvent.click(option1);
-    fireEvent.click(continueButton);
-    chanceButton = getByTestId(container, 'chance')
-    option3 = getByTestId(container, 'option3');
-    option4 = getByTestId(container, 'option4');
-  });
-  it('should have disabled "Continue" button when option not selected', () => {
-    expect(continueButton).toBeDisabled();
-  });
-  it('option3 should be disabled', () => {
-    expect(option3).toBeDisabled();
-  });
-  it('option4 should be disabled', () => {
-    expect(option4).toBeDisabled();
-  });
-  it('should call random when chance is clicked', () => {
-    fireEvent.click(chanceButton);
-    expect(GamePlayService.random).toHaveBeenCalled();
+    it('dialog should have an open prop that is false initially', () => {
+      const dialog = wrapper.find('GamePlayTimeout');
+      expect(dialog.props().open).toBe(false);
+    });
   });
 });
-
-
-
