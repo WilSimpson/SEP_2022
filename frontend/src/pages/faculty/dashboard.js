@@ -23,6 +23,8 @@ import {useEffect} from 'react';
 import {LinearProgress} from '@mui/material';
 import {Box} from '@mui/system';
 import AuthService from '../../services/auth';
+import EditIcon from '@mui/icons-material/Edit';
+import {useNavigate} from 'react-router-dom';
 
 // interface GamesSessions {
 //   name: string;
@@ -92,6 +94,7 @@ function CoursesTable() {
   const [filteredRows, setFilteredRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     courseService.getMyCourses(AuthService.currentUser().id).then(
@@ -100,23 +103,42 @@ function CoursesTable() {
           setRows(response.data);
           setFilteredRows(response.data);
           setLoading(false);
-        }).catch( (error) => {
+        }).catch((error) => {
       console.log(`There was an error ${error}`);
-      setRows([{department: 'There was a problem',
-        name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
-        semester: 'N/A'}]);
-      setFilteredRows([{department: 'There was a problem',
-        name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
-        semester: 'N/A'}]);
+      setRows([{
+        department: 'There was a problem',
+        name: 'N/A', courseNumber: '000', sectionNumber: '000',
+        semester: 'N/A',
+      }]);
+      setFilteredRows([{
+        department: 'There was a problem',
+        name: 'N/A', courseNumber: '000', sectionNumber: '000',
+        semester: 'N/A',
+      }]);
       setLoading(false);
     });
   }, []);
 
   const searchCourses = (searchedVal) => {
     setFilteredRows(rows.filter((row) => {
-      return Object.values(row).some((e) => e.toLowerCase()
+      return Object.values(row).some((e) => String(e).toLowerCase()
           .includes(searchedVal.toLowerCase()));
     }));
+  };
+
+  const editThisCourse = (id, name, department, courseNumber,
+      sectionNumber, semester) => {
+    const path = `editCourse`;
+    navigate(path, {
+      state: {
+        id: id,
+        name: name,
+        department: department,
+        courseNumber: courseNumber,
+        sectionNumber: sectionNumber,
+        semester: semester,
+      },
+    });
   };
 
   return (
@@ -128,12 +150,13 @@ function CoursesTable() {
         {loading && <LinearProgress />}
       </Box>
       <TextField
-        label='Search by Course Name'
+        label='Search by Course'
         onChange={(event) => searchCourses(event.target.value)}
       />
       <Table data-testid="course_table" sx={{minWidth: 500}}>
         <TableHead>
           <TableRow>
+            <TableCell>Edit Course</TableCell>
             <TableCell>Department</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Course Number</TableCell>
@@ -144,10 +167,21 @@ function CoursesTable() {
         <TableBody>
           {filteredRows.map((row) => (
             <TableRow key={row.id}>
+              <TableCell>
+                <Tooltip title="Edit Course">
+                  <div onClick={() => editThisCourse(row.id, row.name,
+                      row.department,
+                      row.number, row.section, row.semester)}>
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </div>
+                </Tooltip>
+              </TableCell>
               <TableCell>{row.department}</TableCell>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.courseNumber}</TableCell>
-              <TableCell>{row.sectionNumber}</TableCell>
+              <TableCell>{row.number}</TableCell>
+              <TableCell>{row.section}</TableCell>
               <TableCell>{row.semester}</TableCell>
             </TableRow>
           ))}
@@ -257,8 +291,10 @@ export default function FacultyDash() {
           <Grid item xs={12}>
             <Paper
               elevation={7}
-              sx={{p: 2, display: 'flex', flexDirection: 'column',
-                overflowX: 'auto'}}
+              sx={{
+                p: 2, display: 'flex', flexDirection: 'column',
+                overflowX: 'auto',
+              }}
             >
               <GameSessionTable />
             </Paper>

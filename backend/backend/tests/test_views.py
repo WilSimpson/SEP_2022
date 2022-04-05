@@ -9,6 +9,8 @@ from backend.models import Game, Option, Question
 from .factories import UserFactory
 
 from ..models import *
+from ..signals import *
+from django.core import mail
 
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -607,6 +609,43 @@ class SessionViewTestCase(TestCase):
         resp = self.client.post('/api/games/toggleActive/', data=data)
         self.assertEqual(resp.status_code, 500)
 
+class PasswordResetTestCase(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects
+        self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
+        data = {
+            'email': 'test@test.com',
+            'password': 'testadmin'
+        }
+        self.resp = self.client.post('/api/token/', data=data)
+        self.refresh = self.resp.data['refresh']
+        self.access = self.resp.data['access']
+    def test_request_reset(self):
+        data = {
+            'email': 'test@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(resp.status_code, 200)
+    def test_request_reset_fail(self):
+        data = {
+            'email': 'fail@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(resp.status_code, 400)
+    def test_send_email(self):
+        data = {
+            'email': 'test@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Password Reset for Ethics Adventure')
+    def test_send_email_fail(self):
+        data = {
+            'email': 'fail@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(len(mail.outbox), 0)
+
 class CourseViewSetTestCase(TestCase):
     def setUp(self):
         # create course
@@ -853,3 +892,4 @@ class GameSessionTests(TestCase):
     def test_get_games_session_team_report_wrong_session(self):
         resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(self.game.id, self.session2.id, self.team.id))
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+

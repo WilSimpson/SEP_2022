@@ -51,6 +51,7 @@ urlpatterns = [
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
     path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
+    path(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls),
