@@ -38,11 +38,24 @@ export default function GameSession() {
     setEndGame(currentOptions.length == 0);
   }, [currentOptions]);
 
-  const answerQuestionPromise = () => new Promise(() => {
+  const nextQuestion = () => {
+    let errMessage = '';
+    console.log('reached 0');
     GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
-        (response) => {},
+        (response) => {
+          console.log('reached 1');
+          // --------------------------------
+          const question = (state.game.questions).find(
+              (question) => question.id == selectedOption.dest_question,
+          );
+          GamePlayService.updateCurrentQuestion(question);
+          setQuestion(question);
+          setSelectedOption(null);
+          console.log('reached 2');
+          // -------------------------------------
+          
+        },
         (error) => {
-          let errMessage = '';
           if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
             handleTimeoutOpen();
           } else {
@@ -59,16 +72,12 @@ export default function GameSession() {
           }
         },
     );
-  });
-
-  const handleQuestionUpdate = async () => {
-    await answerQuestionPromise();
-    const question = (state.game.questions).find(
-        (question) => question.id == selectedOption.dest_question,
-    );
-    GamePlayService.updateCurrentQuestion(question);
-    setQuestion(question);
-    setSelectedOption(null);
+    // const question = (state.game.questions).find(
+    //     (question) => question.id == selectedOption.dest_question,
+    // );
+    // GamePlayService.updateCurrentQuestion(question);
+    // setQuestion(question);
+    // setSelectedOption(null);
   };
 
   const handleTimeoutOpen = () => {
@@ -217,7 +226,7 @@ export default function GameSession() {
                         <Button
                           color='secondary'
                           sx={{marginTop: 5}}
-                          onClick={handleQuestionUpdate}
+                          onClick={nextQuestion}
                           data-testid='continue'
                           disabled={!selectedOption}
                         >
