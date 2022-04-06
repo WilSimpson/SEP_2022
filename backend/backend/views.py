@@ -477,19 +477,24 @@ class GameViewSet(ViewSet):
 class GameSessionAnswerViewSet(ViewSet):
     def create(self, request):
         '''
-        API Route saves information about an ```Option``` a ```Team``` chose while playing a game. This allows the players to progress through the game and have their responses recorded.
-        
+        API Endpoint allows a user to progress through the Game and works in two situations:
+           First: Passcode was entered and you POST to create a ```GameSessionAnswer``` without saving an ```Option```.
+            ```"option_id"``` should be null
+           Second: A passcode was not entered and you want to create a ```GameSessionAnswer``` for a ```Team``` with an ```Option```. 
+            ```"code_entered"```: should be null
         **Example request**:
         
         .. code-block:: http
             
-            POST  /api/gameSession/answer/
+            POST  /api/gameSession/passcodeAnswer/
             
         .. code-block:: json
         
             {
-                "option_id": (id),
-                "team_id": (id)
+                "option_id": (id) or null if passcode,
+                "team_id": (id),
+                "question_id": (id),
+                "code_entered": 123456 (int) or null if no passcode
             }
             
         **Response Codes**:
@@ -498,30 +503,80 @@ class GameSessionAnswerViewSet(ViewSet):
         
             200 : Success
             400 : Fail (message will indicate whether team/option does not exist or game play has timed out)
+            404 : Fail (code entered was incorrect)
             500 : Fail
         '''
         try:
             answer_data = request.data
             try: 
-                option = Option.objects.get(id=answer_data["option_id"])
-                question = Question.objects.get(id=option.source_question_id)
+                if (answer_data["option_id"]):
+                    # option will be present if user did not enter a passcode
+                    option = Option.objects.get(id=answer_data["option_id"])
+                    answer = GameSessionAnswer(option_chosen_id=answer_data["option_id"])
+                else:
+                    answer = GameSessionAnswer(passcode_entered=True)
+                question = Question.objects.get(id=answer_data["question"])
+                try:
+                    if(answer_data["code_entered"] and (str(answer_data["code_entered"]) != question.passcode)):
+                        raise Exception("Invalid passcode.")
+                except Exception as e:
+                    return HttpResponse(status=404, content=e)
             except Exception as e:
-                return HttpResponse(status=400, content="This option does not exist.")
+                return HttpResponse(status=400, content="This question or option does not exist.")
             try: 
                 team = Team.objects.get(id=answer_data["team_id"])
             except Exception as e:
                 return HttpResponse(status=400, content="This team does not exist.")
-            answer = GameSessionAnswer(
-                team = team,
-                question_id = question.id,
-                option_chosen_id = option.id
-            )
-            if (isTimedOut(team.game_session_id, team)):
-                return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
+            answer.team = team
+            answer.question_id = question.id            
+            # if (isTimedOut(team.game_session_id, team, answer)):
+            #     return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
             answer.save()
-            return Response()
+            return Response({"passcode_entered": answer.passcode_entered, "id":answer.id, "question_id": question.id, "team": team.id, "code_entered":answer_data["code_entered"]})
         except Exception as e:
             return HttpResponse(status=500)
+        
+    def record_answer(self, request, game_session_answer_id=None):
+        '''
+        API Endpoint allows for updating a ```GameSessionAnswer``` for a ```Team``` when they choose an ```Option```.
+        This route will be used during Walking or Limited Walking mode when a ```GameSessionAnswer``` has already been created due to entering a passcode.
+        **Example request**:
+        
+        .. code-block:: http
+            
+            PUT  /api/gameSession/answer/{game_session_answer_id}
+            PATCH  /api/gameSession/answer/{game_session_answer_id}
+            
+        .. code-block:: json
+        
+            {
+                "option_id": (id) or null if passcode,
+            }
+            
+        **Response Codes**:
+        
+        .. code-block:: http
+        
+            200 : Success
+            400 : Fail (message will indicate whether option does not exist or game play has timed out)
+            500 : Fail
+        '''
+        try:
+            answer_data = request.data
+            answer = GameSessionAnswer.objects.get(id=game_session_answer_id)
+            try:
+                option = Option.objects.get(id=answer_data["option_id"])
+            except Exception as e:
+                return HttpResponse(status=400, content="This option does not exist.")
+            team = Team.objects.get(id=answer.team.id)
+            answer.option_id = option.id
+            # if (isTimedOut(team.game_session_id, team, answer)):
+            #     return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
+            answer.save()
+            return Response({"passcode": answer.passcode_entered, "option": answer.option_id, "created_at": answer.created_at, "updated_at": answer.updated_at})
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=400, content='it didnt work')
         
 @api_view(['POST'])
 def toggle_active(request):
