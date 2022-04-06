@@ -254,6 +254,8 @@ export default function FacultyDash() {
               }}
             >
               <GameSessionsTable
+                reportButtons
+                qrCodes
                 gameSessions={sessions}
               />
             </Paper>

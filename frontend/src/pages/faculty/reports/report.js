@@ -1,4 +1,4 @@
-import {Container, FormGroup, FormLabel, Grid, Paper, TextField} from '@mui/material';
+import {Button, Container, FormGroup, FormLabel, Grid, Paper, Radio, TextField} from '@mui/material';
 import React from 'react';
 import {useParams} from 'react-router';
 import GameSessionsTable from '../../../components/faculty/gameSessionsTable.tsx';
@@ -8,8 +8,10 @@ import gameSessionService from '../../../services/gameSession';
 export default function ReportPage(props) {
   const {id} = useParams();
   const [sessions, setSessions] = React.useState([]);
-  // const [selectedSessions, setSelectedSessions] = React.useState([]);
-  // const [loading, setLoading] = React.useState(true);
+
+  const handleSessionSelectionChange = (ids) => {
+    console.log('ids:', ids);
+  };
 
   React.useEffect(() => {
     async function getSessions() {
@@ -49,8 +51,32 @@ export default function ReportPage(props) {
                 </Grid>
               </Grid>
               <GameSessionsTable
+                selectable
                 gameSessions={sessions}
+                onSessionSelectionChange={handleSessionSelectionChange}
               />
+              <Grid container spacing={2} sx={{pl: 2, pr: 2, pb: 2}}>
+                <Grid item xs={12}>
+                  <h4>Report Details</h4>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormGroup>
+                    <FormLabel>
+                      Label
+                    </FormLabel>
+                    <Radio />
+                  </FormGroup>
+                </Grid>
+              </Grid>
+              <Button
+                sx={{
+                  'width': '100%',
+                  'height': 'auto',
+                }}
+                variant='contained'
+              >
+                Generate Report
+              </Button>
             </Paper>
           </Grid>
         </Grid>
