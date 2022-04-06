@@ -630,7 +630,7 @@ class CourseViewSet(ModelViewSet):
     serializer_class = CourseSerializer
 
 class ContextHelpViewSet(ModelViewSet):
-    '''A view set for the context_help object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String}
+    '''A view set for the context_help object. It expects {title: string, body: string, question_id: int[]}
     It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
     create returns -- 201 on success and 400 on failure
     read returns -- 200 on success and 404 on failure
@@ -641,7 +641,9 @@ class ContextHelpViewSet(ModelViewSet):
 
 @api_view(['GET'])
 def get_contexts_by_question(request, question_id):
-    """Function to retrieve all contexts relating to a given question (by int id)"""
+    """Function to retrieve all contexts relating to a given question (by int id)
+    Returns -- 200 on success
+    Returns -- 404 on failure"""
     try:
         # Used to force the except case if the given question_id is NAN
         question_id = int(question_id)
