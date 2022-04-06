@@ -629,6 +629,16 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+class ContextHelpViewSet(ModelViewSet):
+    '''A view set for the context_help object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String}
+    It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
+    create returns -- 201 on success and 400 on failure
+    read returns -- 200 on success and 404 on failure
+    update returns -- 200 on success and 404 on failure
+    delete returns -- 204 on success and 404 on failure'''
+    queryset = ContextHelp.objects.all()
+    serializer_class = ContextHelpSerializer
+
 
 @api_view(['GET'])
 def get_games_sessions(request, game_id):
