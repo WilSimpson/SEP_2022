@@ -1,6 +1,7 @@
 import {Container, FormGroup, FormLabel, Grid, Paper, TextField} from '@mui/material';
 import React from 'react';
 import {useParams} from 'react-router';
+import GameSessionsTable from '../../../components/faculty/gameSessionsTable.tsx';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import gameSessionService from '../../../services/gameSession';
 
@@ -15,9 +16,7 @@ export default function ReportPage(props) {
       const resp = await gameSessionService.getSessions(id).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
       });
-      console.log('resp:', resp);
       setSessions(resp.data);
-      console.log('sessions:', sessions);
     }
     getSessions();
   }, []);
@@ -49,6 +48,9 @@ export default function ReportPage(props) {
                   </FormGroup>
                 </Grid>
               </Grid>
+              <GameSessionsTable
+                gameSessions={sessions}
+              />
             </Paper>
           </Grid>
         </Grid>
