@@ -10,6 +10,7 @@ import {ButtonGroup} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
 import {useNavigate} from 'react-router-dom';
+import HelpIcon from '@mui/icons-material/Help';
 export default function GameSession() {
   const {state} = useLocation();
   const navigate = useNavigate();
@@ -94,6 +95,9 @@ export default function GameSession() {
     const choice = GamePlayService.random(weights);
     return choice;
   }
+  // const currentHelpModal = {
+  //   Put stuff for the help menu here
+  // };
   return (
     <div className='container'>
       <CssBaseline />
@@ -113,7 +117,7 @@ export default function GameSession() {
           >
             <Container maxWidth="sm">
               <Typography>
-                {currentQuestion ? currentQuestion.value : 'Game not found'}
+                {currentQuestion ? <div>{currentQuestion.value} <HelpIcon /></div> : 'Game not found'}
               </Typography>
               <ButtonGroup
                 variant="contained"
