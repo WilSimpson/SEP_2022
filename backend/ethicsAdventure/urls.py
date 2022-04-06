@@ -54,6 +54,7 @@ urlpatterns = [
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
     path(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),
+    path('api/contextHelp/<int:question_id>/by_question', views.get_contexts_by_question, name='get_contexts_by_question'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/games/<int:game_id>/sessions/', views.get_games_sessions),

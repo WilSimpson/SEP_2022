@@ -639,6 +639,18 @@ class ContextHelpViewSet(ModelViewSet):
     queryset = ContextHelp.objects.all()
     serializer_class = ContextHelpSerializer
 
+@api_view(['GET'])
+def get_contexts_by_question(request, question_id):
+    """Function to retrieve all contexts relating to a given question (by int id)"""
+    try:
+        # Used to force the except case if the given question_id is NAN
+        question_id = int(question_id)
+        contexts = ContextHelp.objects.filter(questions__in=[question_id])
+        serializer = ContextHelpSerializer(contexts, many=True)
+        return Response(data=serializer.data)
+    except Exception:
+        return HttpResponseBadRequest("Question IDs must be integers.")
+
 
 @api_view(['GET'])
 def get_games_sessions(request, game_id):
