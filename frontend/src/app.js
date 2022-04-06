@@ -23,8 +23,9 @@ import Register from './pages/admin/register';
 import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
-import ReportsPage from './pages/faculty/reports';
+import ReportsPage from './pages/faculty/reports/reports';
 import EditCourse from './pages/faculty/editCourse';
+import ReportPage from './pages/faculty/reports/report';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -161,6 +162,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ReportsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/reports/:id"
+                element={
+                  <ProtectedRoute>
+                    <ReportPage />
                   </ProtectedRoute>
                 }
               />

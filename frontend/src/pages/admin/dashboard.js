@@ -21,6 +21,7 @@ import GamesTable from '../../components/admin/gamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import Loading from '../../components/layout/loading';
 import {alertService, alertSeverity} from '../../services/alert';
+import {useNavigate} from 'react-router';
 
 export function GameSessionTable() {
   return (
@@ -67,6 +68,7 @@ export function GameSessionTable() {
 export default function AdminDash() {
   const [games, setGames] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     async function getGames() {
@@ -94,7 +96,10 @@ export default function AdminDash() {
                   flexDirection: 'column',
                 }}
               >
-                <GamesTable data={games} />
+                <GamesTable
+                  data={games}
+                  onEdit={(id) => navigate(`/admin-dashboard/games/${id}`)}
+                />
               </Paper>
             </Grid>
             <Grid item xs={12} md={4} lg={3}>
