@@ -550,7 +550,7 @@ class GameSessionAnswerViewSet(ViewSet):
         .. code-block:: json
         
             {
-                "option_id": (id) or null if passcode,
+                "option_id": (id),
             }
             
         **Response Codes**:
