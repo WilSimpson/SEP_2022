@@ -486,7 +486,7 @@ class GameSessionAnswerViewSet(ViewSet):
         
         .. code-block:: http
             
-            POST  /api/gameSession/passcodeAnswer/
+            POST  /api/gameSession/createAnswer/
             
         .. code-block:: json
         
@@ -529,14 +529,14 @@ class GameSessionAnswerViewSet(ViewSet):
                 return HttpResponse(status=400, content="This team does not exist.")
             answer.team = team
             answer.question_id = question.id            
-            # if (isTimedOut(team.game_session_id, team, answer)):
-            #     return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
+            if (not answer.passcode_entered and isTimedOut(team.game_session_id, team, answer)):
+                return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
             answer.save()
-            return Response({"passcode_entered": answer.passcode_entered, "id":answer.id, "question_id": question.id, "team": team.id, "code_entered":answer_data["code_entered"]})
+            return Response({"id":answer.id})
         except Exception as e:
             return HttpResponse(status=500)
         
-    def record_answer(self, request, game_session_answer_id=None):
+    def update(self, request, game_session_answer_id=None):
         '''
         API Endpoint allows for updating a ```GameSessionAnswer``` for a ```Team``` when they choose an ```Option```.
         This route will be used during Walking or Limited Walking mode when a ```GameSessionAnswer``` has already been created due to entering a passcode.
@@ -544,8 +544,8 @@ class GameSessionAnswerViewSet(ViewSet):
         
         .. code-block:: http
             
-            PUT  /api/gameSession/answer/{game_session_answer_id}
-            PATCH  /api/gameSession/answer/{game_session_answer_id}
+            PUT  /api/gameSession/updateAnswer/{game_session_answer_id}
+            PATCH  /api/gameSession/updateAnswer/{game_session_answer_id}
             
         .. code-block:: json
         
@@ -570,13 +570,12 @@ class GameSessionAnswerViewSet(ViewSet):
                 return HttpResponse(status=400, content="This option does not exist.")
             team = Team.objects.get(id=answer.team.id)
             answer.option_id = option.id
-            # if (isTimedOut(team.game_session_id, team, answer)):
-            #     return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
+            if (isTimedOut(team.game_session_id, team, answer)):
+                return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
             answer.save()
-            return Response({"passcode": answer.passcode_entered, "option": answer.option_id, "created_at": answer.created_at, "updated_at": answer.updated_at})
+            return Response()
         except Exception as e:
-            print(e)
-            return HttpResponse(status=400, content='it didnt work')
+            return HttpResponse(status=500)
         
 @api_view(['POST'])
 def toggle_active(request):
