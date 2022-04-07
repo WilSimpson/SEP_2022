@@ -511,13 +511,13 @@ class GameSessionAnswerViewSet(ViewSet):
             try: 
                 if (answer_data["option_id"]):
                     # option will be present if user did not enter a passcode
-                    option = Option.objects.get(id=answer_data["option_id"])
+                    Option.objects.get(id=answer_data["option_id"])
                     answer = GameSessionAnswer(option_chosen_id=answer_data["option_id"])
                 else:
                     answer = GameSessionAnswer(passcode_entered=True)
                 question = Question.objects.get(id=answer_data["question"])
                 try:
-                    if(answer_data["code_entered"] and (str(answer_data["code_entered"]) != question.passcode)):
+                    if(answer_data["code_entered"] and (str(answer_data["code_entered"]) != str(question.passcode))):
                         raise Exception("Invalid passcode.")
                 except Exception as e:
                     return HttpResponse(status=404, content=e)
@@ -544,8 +544,8 @@ class GameSessionAnswerViewSet(ViewSet):
         
         .. code-block:: http
             
-            PUT  /api/gameSession/updateAnswer/{game_session_answer_id}
-            PATCH  /api/gameSession/updateAnswer/{game_session_answer_id}
+            PUT  /api/gameSession/updateAnswer/{game_session_answer_id}/
+            PATCH  /api/gameSession/updateAnswer/{game_session_answer_id}/
             
         .. code-block:: json
         
@@ -569,12 +569,13 @@ class GameSessionAnswerViewSet(ViewSet):
             except Exception as e:
                 return HttpResponse(status=400, content="This option does not exist.")
             team = Team.objects.get(id=answer.team.id)
-            answer.option_id = option.id
+            answer.option_chosen = option
             if (isTimedOut(team.game_session_id, team, answer)):
                 return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
             answer.save()
             return Response()
         except Exception as e:
+            print(e)
             return HttpResponse(status=500)
         
 @api_view(['POST'])
