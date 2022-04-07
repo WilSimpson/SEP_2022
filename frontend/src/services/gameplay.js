@@ -101,7 +101,11 @@ class GameService {
   }
 
   getLastAnswerId() {
-    localStorage.getItem(ANSWER_ID);
+    return localStorage.getItem(ANSWER_ID);
+  }
+
+  getGameMode() {
+    return this.getInProgressGame().state.formData.type;
   }
 
   random(options) { // {0:2, 1:1, 2:3}

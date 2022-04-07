@@ -18,7 +18,10 @@ export default function GameSession() {
   const navigate = useNavigate();
   const TIMEOUT_ERR_MSG = 'Your Game has timed out. Please start a new Game.';
   const [timeoutOpen, setTimeoutOpen] = useState(false);
-  const [showPasscode, setShowPasscode] = useState(false);
+  const [showPasscode, setShowPasscode] = useState(
+      GamePlayService.getInProgressGame().state.formData.type == WALKING ||
+      GamePlayService.getInProgressGame().state.formData.type == LIMITED_WALKING,
+  );
   const [currentQuestion, setQuestion] = useState(
       GamePlayService.getInProgressGame().state.currentQuestion,
   );
@@ -56,7 +59,7 @@ export default function GameSession() {
       handleTimeoutOpen();
       GamePlayService.clearInProgressGame();
     } else {
-      if (error.response && error.response.data && error.response.status != 404) {
+      if (error.response && error.response.data) {
         errMessage = error.response.data;
       } else {
         errMessage = 'The server is currently unreachable. ' +
@@ -70,8 +73,9 @@ export default function GameSession() {
   };
 
   const nextQuestion = () => {
-    if (state.formData.type == LIMITED_WALKING || state.formData.type == WALKING) {
-      GamePlayService.updateAnswer(selectedOption.id).then(
+    const mode = GamePlayService.getGameMode();
+    if ( mode == LIMITED_WALKING || mode == WALKING) {
+      GamePlayService.updateOption(selectedOption.id).then(
           (response) => {
             setShowPasscode(true);
             setNextQuestion();
@@ -82,12 +86,8 @@ export default function GameSession() {
       );
     } else {
       GamePlayService.createAnswer(selectedOption.id, currentQuestion.id, state.team_id, null).then(
-          (response) => {
-            setNextQuestion();
-          },
-          (error) => {
-            setError(error);
-          },
+          (response) => setNextQuestion(),
+          (error) => setError(error),
       );
     }
   };
@@ -98,19 +98,7 @@ export default function GameSession() {
           navigate(`../endGame`);
           GamePlayService.clearInProgressGame();
         },
-        (error) => {
-          let errMessage = '';
-          if (error.response && error.response.data) {
-            errMessage = error.response.data;
-          } else {
-            errMessage = 'The server is currently unreachable. ' +
-            'Please try again later.';
-          }
-          alertService.alert({
-            severity: alertSeverity.error,
-            message: errMessage,
-          });
-        },
+        (error) => setError(error),
     );
   };
   const weights = {};
@@ -162,6 +150,15 @@ export default function GameSession() {
         },
     );
   }
+
+  const submitPasscode = (pcd) => {
+    console.log(pcd);
+    console.log('hi');
+    GamePlayService.createAnswer(null, currentQuestion.id, state.team_id, pcd).then(
+        (response) => setShowPasscode(false),
+        (error) => setError(error),
+    );
+  };
 
   const GamePlay = (
     <Box
@@ -249,7 +246,7 @@ export default function GameSession() {
         <main>
           <Container maxWidth='xl'>
             {showPasscode ?
-              <Passcode data={{question: '/#', location: 'SC123'}} /> :
+              <Passcode data={{question: '/#', location: 'SC123'}} submitPasscode={submitPasscode}/> :
               GamePlay
             }
           </Container>
