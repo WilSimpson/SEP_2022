@@ -72,7 +72,7 @@ export default function GameSession() {
   const [selectedOption, setSelectedOption] = useState();
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
-  const [emails, setEmails] = useState([{title: 'Help 1', body: 'This is your first hint'}]);
+  const [emails, setEmails] = useState(currentQuestion.help);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -116,7 +116,7 @@ export default function GameSession() {
     GamePlayService.updateCurrentQuestion(question);
     setQuestion(question);
     setSelectedOption(null);
-    setEmails(emails);
+    setEmails(currentQuestion.help);
   };
 
   const completeGame = () => {
