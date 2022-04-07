@@ -88,6 +88,8 @@ def joinGame(request):
                     "chance": false,
                     "game_id": 22,
                     "chance_game": "NO_GAME"
+                    "help": [{"title": "Hint 1",
+                            "body": "This is some help for the question"}]
                 }
             ],
             "options": [
@@ -122,13 +124,19 @@ def joinGame(request):
         game_session_serializer = GameSessionSerializer(game_session)
         game_json = game_serializer.data
         session_json = game_session_serializer.data
-        questions = Question.objects.filter(game=game_json['id'])
-        options = Option.objects.filter(source_question__in=[q.id for q in questions])
+        questions = [QuestionSerializer(question).data for question
+                    in Question.objects.filter(game=game_json['id'])]
+        for question in questions:
+            # We are going to add an array of help objects directly to the question
+            contexts = ContextHelp.objects.filter(questions__in=[question["id"]])
+            serializer = ContextHelpSerializer(contexts, many=True)
+            question["help"] = serializer.data
+        options = Option.objects.filter(source_question__in=[q["id"] for q in questions])
         ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
-                    'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':[QuestionSerializer(question).data for question
-                    in questions], 'options':[OptionSerializer(option).data for option in options]}
+                    'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':questions, 'options':[OptionSerializer(option).data for option in options]}
         return Response(ret_json, status=200)
     except Exception as e:
+        print(e)
         return HttpResponseServerError('There was a problem accessing this game session. Please try again later.')
 
 @api_view(['POST'])
