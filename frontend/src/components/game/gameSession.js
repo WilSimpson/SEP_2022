@@ -156,8 +156,6 @@ export default function GameSession() {
   }
 
   const submitPasscode = (pcd) => {
-    console.log(pcd);
-    console.log('hi');
     GamePlayService.createAnswer(null, currentQuestion.id, state.team_id, pcd).then(
         (response) => {
           setShowPasscode(false);
