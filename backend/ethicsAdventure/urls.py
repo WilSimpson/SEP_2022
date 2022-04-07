@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from django.urls import path, re_path, include
+from rest_framework.schemas import get_schema_view
+from django.views.generic import TemplateView
 
-from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet
+from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet, RoleTokenObtainPairView, CourseViewSet
 from django.contrib.auth.models import User
 
 from backend import views
@@ -26,25 +28,39 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView
 )
-from backend import views
-from backend.views import RoleTokenObtainPairView
-from backend import views
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
+router.register(r'courses', CourseViewSet, basename='course')
 
 urlpatterns = [
+    path('api/openapi/', get_schema_view(
+        title="Ethics Adventure",
+        description="Documentation for the application APIs"
+    ), name='openapi-schema'),
+    path('api/docs/', TemplateView.as_view(
+        template_name='documentation.html',
+        extra_context={'schema_url':'openapi-schema'}
+    ), name='swagger-ui'),
     path('api/token/', RoleTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', TokenVerifyView.as_view(), name = 'token_verify'),
     path('api/games/toggleActive/', views.toggle_active, name='toggle_active'),
     path('api/games/startSession/', views.start_session, name='start_session'),
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
-    path('api/games/create/', GameViewSet.as_view({'post':'create'}), name='create_game'),
-    path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
+    path('api/gameSession/updateAnswer/<int:game_session_answer_id>/', GameSessionAnswerViewSet.as_view({'put': 'update', 'patch': 'update'}), name='update_answer'),
+    path('api/gameSession/createAnswer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='enter_passcode'),
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
+    path(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('api/teams/complete/', views.complete_team, name='completeTeam'),
     re_path('^api/', include(router.urls)),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('api/games/<int:game_id>/sessions/', views.get_games_sessions),
+    path('api/games/<int:game_id>/sessions/<int:session_id>/', views.get_games_session),
+    path('api/games/<int:game_id>/sessions/<int:session_id>/report/', views.get_games_session_report),
+    path('api/games/<int:game_id>/sessions/<int:session_id>/teams/', views.get_game_session_teams),
+    path('api/games/<int:game_id>/sessions/<int:session_id>/teams/<int:team_id>/', views.get_game_session_team),
+    path('api/games/<int:game_id>/sessions/<int:session_id>/teams/<int:team_id>/report/', views.get_game_session_team_report)
 ]
 

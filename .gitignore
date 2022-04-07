@@ -135,3 +135,7 @@ dmypy.json
 
 data/
 
+
+selenium/node_modules/
+selenium/browsers
+

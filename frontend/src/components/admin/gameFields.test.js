@@ -66,7 +66,7 @@ describe('<GameFields />', () => {
       expect(input.props().defaultValue).toEqual('[]');
     });
 
-    it('should have a submit button', () => {
+    it('should have a cancel button', () => {
       const found = false;
       const input = comp
           .find(Button)

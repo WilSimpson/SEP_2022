@@ -18,6 +18,8 @@ import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import Alert from '@mui/material/Alert';
+import GameInProgressAlert from './gameInProgressAlert';
+import GameLayout from '../layout/game.layout';
 
 export default function StartingSurvey() {
   const defaultValues = {
@@ -51,6 +53,18 @@ export default function StartingSurvey() {
     });
   };
 
+  const initialQuestion = (game) => {
+    const destinationQuestions = game.options.map(
+        (option) => option.dest_question,
+    );
+    const startingQuestions = game.questions.filter(
+        (question) => !destinationQuestions.includes(question.id),
+    );
+    const startQ =
+    startingQuestions[Math.floor(Math.random() * startingQuestions.length)];
+    return startQ;
+  };
+
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -65,9 +79,10 @@ export default function StartingSurvey() {
         (response) => {
           console.log(response);
           const path = `../gameSession`;
-          navigate(path, {
+          const initialQ = initialQuestion(state.game);
+          const gameSessionState = {
             state: {
-            // Carries the gameCode with the state
+              // Carries the gameCode with the state
               code: state.code,
               // Initialize state with the response
               // parsed as an array of questions
@@ -75,18 +90,23 @@ export default function StartingSurvey() {
               // Carry the form data forward
               formData: formValues,
               team_id: response['id'],
+              currentQuestion: initialQ,
+              enteredPasscode: false,
             },
-          });
+          };
+          console.log(gameSessionState);
+          GamePlayService.setInProgressGame(gameSessionState);
+          navigate(path, gameSessionState);
         },
         (error) => {
-          if (error.resonse && error.response.status === 404) {
+          if (error.response && error.response.status === 404) {
             setErr(
                 'There was an unexpected error reaching the server. ' +
                 'Please try again later.',
             );
           } else {
             if (error.response && error.response.status === 500) {
-              setErr(error.resonse.data);
+              setErr(error.response.data);
             } else {
               setErr(
                   'The server is unreachable at this time. ' +
@@ -99,162 +119,169 @@ export default function StartingSurvey() {
   };
 
   return (
-    <div className="container">
-      <CssBaseline />
-      <main>
-        {/* Hero unit */}
-        <Container maxWidth="xl">
-          <Box
-            sx={{
-              pt: 0,
-              pb: 6,
-              borderRadius: 4,
-              mt: 3,
-              mb: 3,
-            }}
-          >
-            <Typography>
-              {' '}
-              {`Game Title: ${state ? state.game.title : 'Game is NULL'}`}{' '}
-            </Typography>
-            <Box sx={{pb: 2}}>
-              {err && <Alert severity="error">{err}</Alert>}
-            </Box>
-            <form onSubmit={handleSubmit}>
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                direction="column"
-              >
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <TextField
-                      id="team-size"
-                      name="size"
-                      label="size"
-                      type="number"
-                      InputProps={{inputProps: {min: 1}}}
-                      value={formValues.size}
-                      onChange={handleInputChange}
-                      data-testid="size"
-                      required
-                    />
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <FormControl>
-                      <FormLabel>
-                        Is this your first time playing this game?
-                      </FormLabel>
-                      <RadioGroup
-                        name="first"
-                        defaultValue="yes"
-                        value={formValues.first}
-                        onChange={handleInputChange}
-                        row
-                      >
-                        <FormControlLabel
-                          key="yes"
-                          value="yes"
-                          control={<Radio size="small" />}
-                          label="Yes"
-                          selected
-                        />
-                        <FormControlLabel
-                          key="no"
-                          value="no"
-                          control={<Radio size="small" />}
-                          label="No"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <FormControl>
-                      <FormLabel>Are you a guest in this building?</FormLabel>
-                      <RadioGroup
-                        name="guest"
-                        defaultValue="yes"
-                        value={formValues.guest}
-                        onChange={handleInputChange}
-                        row
-                      >
-                        <FormControlLabel
-                          key="yes"
-                          value="yes"
-                          control={<Radio size="small" />}
-                          label="Yes"
-                          selected
-                        />
-                        <FormControlLabel
-                          key="no"
-                          value="no"
-                          control={<Radio size="small" />}
-                          label="No"
-                        />
-                      </RadioGroup>
-                    </FormControl>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <FormControl>
-                      <FormLabel>
-                        Which version of the game would you like to play?
-                      </FormLabel>
-                      <Select
-                        name="type"
-                        value={formValues.type}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <MenuItem key="Walking" value="Walking">
-                          Walking
-                        </MenuItem>
-                        <MenuItem key="Limited Walking" value="Limited Walking">
-                          Limited Walking
-                        </MenuItem>
-                        <MenuItem key="No Walking" value="No Walking">
-                          No Walking
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <TextField
-                      id="team-name"
-                      name="name"
-                      label="Team Name"
-                      type="text"
-                      autoComplete="off"
-                      value={formValues.name}
-                      onChange={handleInputChange}
-                      data-testid="name"
-                      inputProps={{'data-testid': 'name'}}
-                      required
-                    />
-                  </Box>
-                </Grid>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  type="submit"
-                  data-testid="submit"
-                  disabled={submitDisabled}
+    <GameLayout>
+      <div className="container">
+        <CssBaseline />
+        <main>
+          {/* Hero unit */}
+          <Container maxWidth="xl">
+            <Box
+              sx={{
+                pt: 0,
+                pb: 6,
+                borderRadius: 4,
+                mt: 3,
+                mb: 3,
+              }}
+            >
+              {(GamePlayService.gameInProgress() &&
+              (GamePlayService.getInProgressGame().state.code == state.code)) ?
+              <GameInProgressAlert /> :
+              <div />
+              }
+              <Typography>
+                {' '}
+                {`Game Title: ${state ? state.game.title : 'Game is NULL'}`}{' '}
+              </Typography>
+              <Box sx={{pb: 2}}>
+                {err && <Alert severity="error">{err}</Alert>}
+              </Box>
+              <form onSubmit={handleSubmit}>
+                <Grid
+                  container
+                  alignItems="center"
+                  justifyContent="center"
+                  direction="column"
                 >
-                  Submit
-                </Button>
-              </Grid>
-            </form>
-          </Box>
-        </Container>
-      </main>
-    </div>
+                  <Grid item>
+                    <Box sx={{pb: 2}}>
+                      <TextField
+                        id="team-size"
+                        name="size"
+                        label="size"
+                        type="number"
+                        InputProps={{inputProps: {min: 1}}}
+                        value={formValues.size}
+                        onChange={handleInputChange}
+                        data-testid="size"
+                        required
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Box sx={{pb: 2}}>
+                      <FormControl>
+                        <FormLabel>
+                          Is this your first time playing this game?
+                        </FormLabel>
+                        <RadioGroup
+                          name="first"
+                          defaultValue="yes"
+                          value={formValues.first}
+                          onChange={handleInputChange}
+                          row
+                        >
+                          <FormControlLabel
+                            key="yes"
+                            value="yes"
+                            control={<Radio size="small" />}
+                            label="Yes"
+                            selected
+                          />
+                          <FormControlLabel
+                            key="no"
+                            value="no"
+                            control={<Radio size="small" />}
+                            label="No"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Box sx={{pb: 2}}>
+                      <FormControl>
+                        <FormLabel>Are you a guest in this building?</FormLabel>
+                        <RadioGroup
+                          name="guest"
+                          defaultValue="yes"
+                          value={formValues.guest}
+                          onChange={handleInputChange}
+                          row
+                        >
+                          <FormControlLabel
+                            key="yes"
+                            value="yes"
+                            control={<Radio size="small" />}
+                            label="Yes"
+                            selected
+                          />
+                          <FormControlLabel
+                            key="no"
+                            value="no"
+                            control={<Radio size="small" />}
+                            label="No"
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Box sx={{pb: 2}}>
+                      <FormControl>
+                        <FormLabel>
+                          Which version of the game would you like to play?
+                        </FormLabel>
+                        <Select
+                          name="type"
+                          value={formValues.type}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          <MenuItem key="Walking" value="Walking">
+                            Walking
+                          </MenuItem>
+                          <MenuItem key="Limited Walking" value="Limited Walking">
+                            Limited Walking
+                          </MenuItem>
+                          <MenuItem key="No Walking" value="No Walking">
+                            No Walking
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Box sx={{pb: 2}}>
+                      <TextField
+                        id="team-name"
+                        name="name"
+                        label="Team Name"
+                        type="text"
+                        autoComplete="off"
+                        value={formValues.name}
+                        onChange={handleInputChange}
+                        data-testid="name"
+                        inputProps={{'data-testid': 'name'}}
+                        required
+                      />
+                    </Box>
+                  </Grid>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    type="submit"
+                    data-testid="submit"
+                    disabled={submitDisabled}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </form>
+            </Box>
+          </Container>
+        </main>
+      </div>
+    </GameLayout>
   );
 }

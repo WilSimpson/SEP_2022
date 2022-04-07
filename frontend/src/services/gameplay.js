@@ -1,6 +1,12 @@
 import axios from 'axios';
 import {API_URL} from '../store/store';
 
+const IN_PROGRESS = 'inProgress';
+const ANSWER_ID = 'answerId';
+export const WALKING = 'Walking';
+export const LIMITED_WALKING = 'Limited Walking';
+export const NO_WALKING = 'No Walking';
+
 class GameService {
   joinGame(gameCode) {
     return axios
@@ -8,20 +14,6 @@ class GameService {
           code: gameCode,
         })
         .then((response) => {
-          if (response.data) {
-          // Expects a string format as JSON
-          // Should result in an array of keyed question objects. Ex:
-          // {"1": {'text': "You are a software engineer doing stuff
-          //                 with cars. Make Choices.",
-          //             'options': [{'text': "Ignore Result", 'link': "1A"},
-          //             {'text': "Technician Re-test", 'link': "2A"},
-          //             {'text': "Engineer Re-test", 'link': "5A"},
-          //             {'text': "Inform Manager", 'link': "4A"},
-          //             {'text': "Email CEO", 'link': "3A"}],
-          //              'password': "psw",
-          //              'only_chance': false}}
-            localStorage.setItem('gameObject', response.data);
-          }
           return response.data;
         });
   }
@@ -36,28 +28,75 @@ class GameService {
           first_time: firstTime,
         })
         .then((response) => {
-          if (response.data) {
-            localStorage.setItem('teamObject', response.data);
-          }
           return response.data;
         });
   }
 
-  answerQuestion(optionId, teamId) {
+  teamCompleteGame(teamId) {
     return axios
-        .post(API_URL + '/gameSession/answer/', {
-          option_id: optionId,
-          team_id: teamId,
+        .post(API_URL + '/teams/complete/', {
+          team: teamId,
         })
         .then((response) => {});
   }
 
-  clearGame() {
-    localStorage.removeItem('gameObject');
+  createAnswer(optionId, questionId, teamId, passcodeEntered) {
+    return axios
+        .post(API_URL + '/gameSession/createAnswer/', {
+          code_entered: passcodeEntered,
+          question: questionId,
+          option_id: optionId,
+          team_id: teamId,
+        })
+        .then(
+            (response) => {
+              if (response.status === 200) {
+                this.setLastAnswerId(response.data.id);
+              }
+              return response;
+            },
+        );
   }
 
-  clearTeam() {
-    localStorage.removeItem('teamObject');
+  updateOption(optionId) {
+    return axios
+        .put(API_URL + `/gameSession/updateAnswer/${this.getLastAnswerId()}/`, {
+          option_id: optionId,
+        })
+        .then();
+  }
+
+  setInProgressGame(state) {
+    localStorage.setItem(IN_PROGRESS, JSON.stringify(state));
+  }
+
+  getInProgressGame() {
+    return JSON.parse(localStorage.getItem(IN_PROGRESS));
+  }
+
+  gameInProgress() {
+    return localStorage.getItem(IN_PROGRESS) !== null;
+  }
+
+  updateCurrentQuestion(question) {
+    const ipGame = this.getInProgressGame();
+    ipGame.state.currentQuestion = question;
+    this.setInProgressGame(ipGame);
+  }
+
+  setEnteredPasscode(hasEntered) {
+    const ipGame = this.getInProgressGame();
+    ipGame.state.enteredPasscode = hasEntered;
+    this.setInProgressGame(ipGame);
+  }
+
+  hasEnteredPasscode() {
+    const ipGame = this.getInProgressGame();
+    return ipGame.state.enteredPasscode;
+  }
+
+  clearInProgressGame() {
+    localStorage.removeItem(IN_PROGRESS);
   }
 
   checkPasscode(pcd) {
@@ -70,6 +109,41 @@ class GameService {
           response: {status: 401, data: {detail: 'wrong passcode'}},
         },
       };
+    }
+  }
+
+  setLastAnswerId(answerId) {
+    localStorage.setItem(ANSWER_ID, answerId);
+  }
+
+  getLastAnswerId() {
+    return localStorage.getItem(ANSWER_ID);
+  }
+
+  getGameMode() {
+    return this.getInProgressGame().state.formData.type;
+  }
+
+  random(options) { // {0:2, 1:1, 2:3}
+    let i;
+    let total = 0;
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        total += options[i];
+      }
+    }
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        options[i] = options[i]/total;
+      }
+    }
+    let sum = 0;
+    const r=Math.random();
+    for (i in options) {
+      if (options.hasOwnProperty(i)) {
+        sum += options[i];
+        if (r <= sum) return i;
+      }
     }
   }
 }

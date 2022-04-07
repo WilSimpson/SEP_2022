@@ -1,9 +1,11 @@
 from django.test import TestCase, RequestFactory
-from backend.models import Game, Option, Question
+from backend.models import *
 from .factories import UserFactory
 from django.conf import settings
 
-from ..utils import get_chance_game
+from ..utils import *
+
+from datetime import timedelta
 
 class UtilsTestCase(TestCase):
     def setUp(self):
@@ -77,4 +79,82 @@ class UtilsTestCase(TestCase):
         invalid_name = 'Spin_Wheel'
         self.question['chance_game'] = invalid_name
         self.assertRaisesRegex(Exception, "The chance game '" + invalid_name + "' does not exist.")
-    
+
+    def test_get_time_for_answer(self):
+        game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        session = GameSession.objects.create(creator_id=999, game=game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        mode = GameMode.objects.create(name="Walking")
+        team = Team.objects.create(game_session = session, game_mode = mode, guest = True, size = 2, first_time = False, completed = False)
+        question = Question.objects.create(value='Question', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        question2 = Question.objects.create(value='Question2', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        option = Option.objects.create(value='Option', weight=1, source_question_id=question.id, dest_question_id=question2.id)
+        option2 = Option.objects.create(value='Option2', weight=1, source_question_id=question2.id, dest_question_id=question.id)
+        answer = GameSessionAnswer.objects.create(team=team, question=question, option_chosen=option)
+        answer2 = GameSessionAnswer.objects.create(team=team, question=question2, option_chosen=option2)
+        self.assertGreater(get_time_for_answer(answer), timedelta(0))
+        self.assertGreater(get_time_for_answer(answer2), timedelta(0))
+        
+    def test_is_timed_out_no_previous_false(self): 
+        game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        session = GameSession.objects.create(creator_id=999, game=game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        mode = GameMode.objects.create(name="Walking")
+        team = Team.objects.create(game_session = session, game_mode = mode, guest = True, size = 2, first_time = False, completed = False)
+        answer=GameSessionAnswer(team=team)
+        self.assertEqual(isTimedOut(session.id, team, answer), False)
+
+    def test_is_timed_out_yes_previous_false(self): 
+        game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        session = GameSession.objects.create(creator_id=999, game=game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        mode = GameMode.objects.create(name="Walking")
+        team = Team.objects.create(game_session = session, game_mode = mode, guest = True, size = 2, first_time = False, completed = False)
+        question = Question.objects.create(value='Question', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        question2 = Question.objects.create(value='Question2', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        option = Option.objects.create(value='Option', weight=1, source_question_id=question.id, dest_question_id=question2.id)
+        GameSessionAnswer.objects.create(team=team, question=question2, option_chosen=option)
+        answer=GameSessionAnswer(team=team, question=question)
+        self.assertEqual(isTimedOut(session.id, team, answer), False)
+
+    def test_is_timed_out_no_previous_true(self): 
+        game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        session = GameSession.objects.create(creator_id=999, game=game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 0, code = 999999)
+        mode = GameMode.objects.create(name="Walking")
+        team = Team.objects.create(game_session = session, game_mode = mode, guest = True, size = 2, first_time = False, completed = False)
+        answer=GameSessionAnswer(team=team)
+        self.assertEqual(isTimedOut(session.id, team, answer), True)
+
+    def test_is_timed_out_yes_previous_true(self): 
+        game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        session = GameSession.objects.create(creator_id=999, game=game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 0, code = 999999)
+        mode = GameMode.objects.create(name="Walking")
+        team = Team.objects.create(game_session = session, game_mode = mode, guest = True, size = 2, first_time = False, completed = False)
+        question = Question.objects.create(value='Question', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        question2 = Question.objects.create(value='Question2', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        option = Option.objects.create(value='Option', weight=1, source_question_id=question.id, dest_question_id=question2.id)
+        GameSessionAnswer.objects.create(team=team, question=question2, option_chosen=option)
+        answer=GameSessionAnswer(team=team, question=question)
+        self.assertEqual(isTimedOut(session.id, team, answer), True)
+
+    def test_is_timed_out_yes_passcode_true(self): 
+        game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        session = GameSession.objects.create(creator_id=999, game=game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 0, code = 999999)
+        mode = GameMode.objects.create(name="Walking")
+        team = Team.objects.create(game_session = session, game_mode = mode, guest = True, size = 2, first_time = False, completed = False)
+        question = Question.objects.create(value='Question', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        answer = GameSessionAnswer.objects.create(team=team, question=question, passcode_entered=True)
+        self.assertEqual(isTimedOut(session.id, team, answer), True)
+        
+    def test_is_timed_out_yes_passcode_false(self): 
+        game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)
+        session = GameSession.objects.create(creator_id=999, game=game, start_time=datetime.now(), end_time = None,
+            notes = "", timeout = 5, code = 999999)
+        mode = GameMode.objects.create(name="Walking")
+        team = Team.objects.create(game_session = session, game_mode = mode, guest = True, size = 2, first_time = False, completed = False)
+        question = Question.objects.create(value='Question', game_id=game.id, passcode="psw", chance=False, chance_game="")
+        answer = GameSessionAnswer.objects.create(team=team, question=question, passcode_entered=True)
+        self.assertEqual(isTimedOut(session.id, team, answer), False)

@@ -4,7 +4,9 @@ import Passcode from './passcode';
 import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent} from '@testing-library/react';
-import gamePlayService from '../../services/gameplay';
+// import gamePlayService from '../../services/gameplay';
+import {Button} from '@mui/material';
+
 
 jest.mock('../../services/gameplay');
 
@@ -50,14 +52,17 @@ describe('<Passcode />', () => {
       expect(submitButton).toBeInTheDocument();
     });
 
-    it('should call gameServices GameService when clicked', () => {
-      gamePlayService.checkPasscode.mockResolvedValue({
-        response: [{status: 200}],
+    it('should call prop function when clicked', () => {
+      const myFunc = jest.fn();
+      let wrapper = shallow(<Passcode data={{question: '/#', location: 'SC123'}} submitPasscode={myFunc} />);
+      const input = wrapper
+      .find(Button)
+      .filterWhere((i) => i.prop('children') == 'Continue');
+      expect(input.getElement()).not.toBeNull();
+      input.simulate('click', {
+        preventDefault: () => {}
       });
-
-      fireEvent.change(passwordField, {target: {value: 'correct'}});
-      fireEvent.click(submitButton);
-      expect(gamePlayService.checkPasscode).toHaveBeenCalled();
+      expect(myFunc).toHaveBeenCalled();
     });
   });
 });
