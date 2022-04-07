@@ -118,10 +118,12 @@ export default function GameSession() {
   }
 
   function returnHome() {
+    GamePlayService.clearInProgressGame();
     navigate('/');
   }
 
   function newGame() {
+    GamePlayService.clearInProgressGame();
     GamePlayService.joinGame(state.code).then(
         (response) => {
           const path = `/startingSurvey`;
