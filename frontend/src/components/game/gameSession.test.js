@@ -6,18 +6,13 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 import {findByTestId, fireEvent, getByTestId, waitFor} from '@testing-library/react';
-import {inProgressGame} from '../../helpers/dummyData';
+import {inProgressGame, inProgressGamePasscodeRequired} from '../../helpers/dummyData';
 import GamePlayService from '../../services/gameplay';
-import GamePlayTimeout from './gamePlayTimeout';
+import {Typography} from'@mui/material';
 
 const TEAM_ID = 1;
 
 jest.mock('../../services/gameplay');
-
-// const mockSetTimeout = jest.fn();
-// jest.mock('react', () => ({
-//   useState: timeoutOpen => [timeoutOpen, mockSetTimeout]
-// }));
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -136,7 +131,6 @@ describe('<GameSession />', () => {
     continueButton = getByTestId(container, 'continue');
     option1 = getByTestId(container, 'option1');
     option2 = getByTestId(container, 'option2');
-    
   });
   describe('Game Play', () => {
     it('should render', () => {
@@ -164,15 +158,15 @@ describe('<GameSession />', () => {
       fireEvent.click(option2);
       expect(continueButton).not.toBeDisabled();
     });
-    it('should call answerQuestion when "Continue" button clicked', async () => {
+    it('should call createAnswer when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
   
       fireEvent.click(option1);
       fireEvent.click(continueButton);
-      expect(GamePlayService.answerQuestion).toHaveBeenCalled();
+      expect(GamePlayService.createAnswer).toHaveBeenCalled();
       await act(() => promise);
     });
     it('should change the text on the screen when "Continue" button clicked', async () => {
@@ -180,7 +174,7 @@ describe('<GameSession />', () => {
           'Question 1',
       );
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
   
@@ -194,7 +188,7 @@ describe('<GameSession />', () => {
     });
     it('should call updateCurrentQuestion when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
       GamePlayService.updateCurrentQuestion.mockResolvedValue({
@@ -213,7 +207,7 @@ describe('<GameSession />', () => {
     beforeEach(async () => {
       // to get to the last page
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
       fireEvent.click(option2);
@@ -258,7 +252,7 @@ describe('<GameSession />', () => {
         );
       });
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
       continueButton = getByTestId(container, 'continue');
@@ -302,6 +296,39 @@ describe('<GameSession />', () => {
     it('dialog should have an open prop that is false initially', () => {
       const dialog = wrapper.find('GamePlayTimeout');
       expect(dialog.props().open).toBe(false);
+    });
+  });
+  describe('Passcode method calls', () => {
+    let wrapper;
+    beforeEach(() => {
+      localStorage.setItem('inProgress', inProgressGamePasscodeRequired);
+    });
+    afterEach(() => {
+      localStorage.removeItem('inProgress');
+    })
+    it('should call getGameMode initially', () => {
+      wrapper = shallow(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<GameSession/>} />
+          </Routes>
+        </BrowserRouter>
+      );
+      let spy = jest.spyOn(GamePlayService, 'getGameMode').mockResolvedValue('Walking');
+      expect(spy).toHaveBeenCalled();
+      spy.mockRestore();
+    });
+    it('should call getInProgressGame initially', () => {
+      wrapper = shallow(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<GameSession/>} />
+          </Routes>
+        </BrowserRouter>
+      );
+      let spy = jest.spyOn(GamePlayService, 'getInProgressGame').mockResolvedValue(inProgressGamePasscodeRequired);
+      expect(spy).toHaveBeenCalled();
+      spy.mockRestore();
     });
   });
 });

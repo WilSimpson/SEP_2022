@@ -2,6 +2,10 @@ import axios from 'axios';
 import {API_URL} from '../store/store';
 
 const IN_PROGRESS = 'inProgress';
+const ANSWER_ID = 'answerId';
+export const WALKING = 'Walking';
+export const LIMITED_WALKING = 'Limited Walking';
+export const NO_WALKING = 'No Walking';
 
 class GameService {
   joinGame(gameCode) {
@@ -36,11 +40,28 @@ class GameService {
         .then((response) => {});
   }
 
-  answerQuestion(optionId, teamId) {
+  createAnswer(optionId, questionId, teamId, passcodeEntered) {
     return axios
-        .post(API_URL + '/gameSession/answer/', {
+        .post(API_URL + '/gameSession/createAnswer/', {
+          code_entered: passcodeEntered,
+          question: questionId,
           option_id: optionId,
           team_id: teamId,
+        })
+        .then(
+            (response) => {
+              if (response.status === 200) {
+                this.setLastAnswerId(response.data.id);
+              }
+              return response;
+            },
+        );
+  }
+
+  updateOption(optionId) {
+    return axios
+        .put(API_URL + `/gameSession/updateAnswer/${this.getLastAnswerId()}/`, {
+          option_id: optionId,
         })
         .then();
   }
@@ -63,6 +84,17 @@ class GameService {
     this.setInProgressGame(ipGame);
   }
 
+  setEnteredPasscode(hasEntered) {
+    const ipGame = this.getInProgressGame();
+    ipGame.state.enteredPasscode = hasEntered;
+    this.setInProgressGame(ipGame);
+  }
+
+  hasEnteredPasscode() {
+    const ipGame = this.getInProgressGame();
+    return ipGame.state.enteredPasscode;
+  }
+
   clearInProgressGame() {
     localStorage.removeItem(IN_PROGRESS);
   }
@@ -79,6 +111,19 @@ class GameService {
       };
     }
   }
+
+  setLastAnswerId(answerId) {
+    localStorage.setItem(ANSWER_ID, answerId);
+  }
+
+  getLastAnswerId() {
+    return localStorage.getItem(ANSWER_ID);
+  }
+
+  getGameMode() {
+    return this.getInProgressGame().state.formData.type;
+  }
+
   random(options) { // {0:2, 1:1, 2:3}
     let i;
     let total = 0;

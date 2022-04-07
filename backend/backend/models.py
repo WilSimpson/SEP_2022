@@ -159,8 +159,8 @@ class Team(models.Model):
 class GameSessionAnswer(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
-    option_chosen = models.ForeignKey(Option, on_delete=models.CASCADE)
-    
+    option_chosen = models.ForeignKey(Option, on_delete=models.CASCADE, blank=True, null=True)
+    passcode_entered = models.BooleanField(default=False)
     created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 class Course(models.Model):        
