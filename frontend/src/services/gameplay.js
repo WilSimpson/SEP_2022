@@ -79,6 +79,17 @@ class GameService {
     this.setInProgressGame(ipGame);
   }
 
+  setEnteredPasscode(hasEntered) {
+    const ipGame = this.getInProgressGame();
+    ipGame.state.enteredPasscode = hasEntered;
+    this.setInProgressGame(ipGame);
+  }
+
+  hasEnteredPasscode() {
+    const ipGame = this.getInProgressGame();
+    return ipGame.state.enteredPasscode;
+  }
+
   clearInProgressGame() {
     localStorage.removeItem(IN_PROGRESS);
   }

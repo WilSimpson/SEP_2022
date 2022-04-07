@@ -91,6 +91,7 @@ export default function StartingSurvey() {
               formData: formValues,
               team_id: response['id'],
               currentQuestion: initialQ,
+              enteredPasscode: false,
             },
           };
           console.log(gameSessionState);

@@ -19,8 +19,9 @@ export default function GameSession() {
   const TIMEOUT_ERR_MSG = 'Your Game has timed out. Please start a new Game.';
   const [timeoutOpen, setTimeoutOpen] = useState(false);
   const [showPasscode, setShowPasscode] = useState(
-      GamePlayService.getInProgressGame().state.formData.type == WALKING ||
-      GamePlayService.getInProgressGame().state.formData.type == LIMITED_WALKING,
+      (GamePlayService.getGameMode() == WALKING ||
+      GamePlayService.getGameMode() == LIMITED_WALKING) &&
+      !(GamePlayService.hasEnteredPasscode()),
   );
   const [currentQuestion, setQuestion] = useState(
       GamePlayService.getInProgressGame().state.currentQuestion,
@@ -78,6 +79,7 @@ export default function GameSession() {
       GamePlayService.updateOption(selectedOption.id).then(
           (response) => {
             setShowPasscode(true);
+            GamePlayService.setEnteredPasscode(false);
             setNextQuestion();
           },
           (error) => {
@@ -155,7 +157,10 @@ export default function GameSession() {
     console.log(pcd);
     console.log('hi');
     GamePlayService.createAnswer(null, currentQuestion.id, state.team_id, pcd).then(
-        (response) => setShowPasscode(false),
+        (response) => {
+          setShowPasscode(false);
+          GamePlayService.setEnteredPasscode(true);
+        },
         (error) => setError(error),
     );
   };
