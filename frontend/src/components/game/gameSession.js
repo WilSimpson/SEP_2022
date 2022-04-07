@@ -7,7 +7,7 @@ import {useLocation} from 'react-router-dom';
 import {useState} from 'react';
 import {Button} from '@mui/material';
 import {ButtonGroup} from '@mui/material';
-import GamePlayService from '../../services/gameplay';
+import GamePlayService, {LIMITED_WALKING, WALKING} from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
 import {useNavigate} from 'react-router-dom';
 import GamePlayTimeout from './gamePlayTimeout';
@@ -40,40 +40,56 @@ export default function GameSession() {
     setEndGame(currentOptions.length == 0);
   }, [currentOptions]);
 
-  const nextQuestion = () => {
-    GamePlayService.createAnswer(selectedOption.id, currentQuestion.id, state.team_id, null).then(
-        (response) => {
-          const question = (state.game.questions).find(
-              (question) => question.id == selectedOption.dest_question,
-          );
-          GamePlayService.updateCurrentQuestion(question);
-          setQuestion(question);
-          setSelectedOption(null);
-        },
-        (error) => {
-          let errMessage = '';
-          if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
-            setTimeoutOpen(true);
-            handleTimeoutOpen();
-          } else {
-            if (error.response && error.response.data) {
-              errMessage = error.response.data;
-            } else {
-              errMessage = 'The server is currently unreachable. ' +
-              'Please try again later.';
-            }
-            alertService.alert({
-              severity: alertSeverity.error,
-              message: errMessage,
-            });
-          }
-        },
+  const setNextQuestion = () => {
+    const question = (state.game.questions).find(
+        (question) => question.id == selectedOption.dest_question,
     );
+    GamePlayService.updateCurrentQuestion(question);
+    setQuestion(question);
+    setSelectedOption(null);
   };
 
-  const handleTimeoutOpen = () => {
-    // setTimeoutOpen(true);
-    GamePlayService.clearInProgressGame();
+  const setError = (error) => {
+    let errMessage = '';
+    if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
+      setTimeoutOpen(true);
+      handleTimeoutOpen();
+      GamePlayService.clearInProgressGame();
+    } else {
+      if (error.response && error.response.data && error.response.status != 404) {
+        errMessage = error.response.data;
+      } else {
+        errMessage = 'The server is currently unreachable. ' +
+        'Please try again later.';
+      }
+      alertService.alert({
+        severity: alertSeverity.error,
+        message: errMessage,
+      });
+    }
+  };
+
+  const nextQuestion = () => {
+    if (state.formData.type == LIMITED_WALKING || state.formData.type == WALKING) {
+      GamePlayService.updateAnswer(selectedOption.id).then(
+          (response) => {
+            setShowPasscode(true);
+            setNextQuestion();
+          },
+          (error) => {
+            setError(error);
+          },
+      );
+    } else {
+      GamePlayService.createAnswer(selectedOption.id, currentQuestion.id, state.team_id, null).then(
+          (response) => {
+            setNextQuestion();
+          },
+          (error) => {
+            setError(error);
+          },
+      );
+    }
   };
 
   const completeGame = () => {
