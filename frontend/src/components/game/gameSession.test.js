@@ -14,11 +14,6 @@ const TEAM_ID = 1;
 
 jest.mock('../../services/gameplay');
 
-// const mockSetTimeout = jest.fn();
-// jest.mock('react', () => ({
-//   useState: timeoutOpen => [timeoutOpen, mockSetTimeout]
-// }));
-
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({

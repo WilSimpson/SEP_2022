@@ -49,7 +49,12 @@ class GameService {
           team_id: teamId,
         })
         .then(
-            (response) => this.setLastAnswerId(response.data.id),
+            (response) => {
+              if (response.status === 200) {
+                this.setLastAnswerId(response.data.id);
+              }
+              return response;
+            },
         );
   }
 
