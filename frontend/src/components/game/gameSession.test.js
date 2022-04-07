@@ -164,15 +164,15 @@ describe('<GameSession />', () => {
       fireEvent.click(option2);
       expect(continueButton).not.toBeDisabled();
     });
-    it('should call answerQuestion when "Continue" button clicked', async () => {
+    it('should call createAnswer when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
   
       fireEvent.click(option1);
       fireEvent.click(continueButton);
-      expect(GamePlayService.answerQuestion).toHaveBeenCalled();
+      expect(GamePlayService.createAnswer).toHaveBeenCalled();
       await act(() => promise);
     });
     it('should change the text on the screen when "Continue" button clicked', async () => {
@@ -180,7 +180,7 @@ describe('<GameSession />', () => {
           'Question 1',
       );
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
   
@@ -194,7 +194,7 @@ describe('<GameSession />', () => {
     });
     it('should call updateCurrentQuestion when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
       GamePlayService.updateCurrentQuestion.mockResolvedValue({
@@ -213,7 +213,7 @@ describe('<GameSession />', () => {
     beforeEach(async () => {
       // to get to the last page
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
       fireEvent.click(option2);
@@ -258,7 +258,7 @@ describe('<GameSession />', () => {
         );
       });
       const promise = Promise.resolve();
-      GamePlayService.answerQuestion.mockResolvedValue({
+      GamePlayService.createAnswer.mockResolvedValue({
         response: jest.fn(() => promise),
       });
       continueButton = getByTestId(container, 'continue');

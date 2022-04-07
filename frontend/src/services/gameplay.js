@@ -2,6 +2,9 @@ import axios from 'axios';
 import {API_URL} from '../store/store';
 
 const IN_PROGRESS = 'inProgress';
+export const WALKING = 'Walking';
+export const LIMITED_WALKING = 'Limited Walking';
+export const NO_WALKING = 'No Walking';
 
 class GameService {
   joinGame(gameCode) {
@@ -36,9 +39,11 @@ class GameService {
         .then((response) => {});
   }
 
-  answerQuestion(optionId, teamId) {
+  createAnswer(optionId, questionId, teamId, passcodeEntered) {
     return axios
-        .post(API_URL + '/gameSession/answer/', {
+        .post(API_URL + '/gameSession/createAnswer/', {
+          code_entered: passcodeEntered,
+          question: questionId,
           option_id: optionId,
           team_id: teamId,
         })

@@ -6,7 +6,7 @@ import {inProgressGame} from '../helpers/dummyData';
 jest.mock('axios');
 
 describe('Game Play Service', () => {
-  describe('answerQuestion', () => {
+  describe('createAnswer', () => {
     it('should return status 200 on success', () => {
       const response = {
         response: [
@@ -17,7 +17,7 @@ describe('Game Play Service', () => {
       };
       axios.post.mockResolvedValue(response);
 
-      const result = gamePlayService.answerQuestion(1, 1);
+      const result = gamePlayService.createAnswer(1, 1, 1, null);
       expect(result).toEqual(Promise.resolve(response));
     });
 
@@ -31,7 +31,7 @@ describe('Game Play Service', () => {
       };
       axios.post.mockResolvedValue(response);
 
-      const result = await gamePlayService.answerQuestion(1, 1);
+      const result = await gamePlayService.createAnswer(1, 1, 1, null);
       expect(result).toEqual(response);
     });
   });

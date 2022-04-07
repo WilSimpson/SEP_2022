@@ -493,7 +493,7 @@ class GameSessionAnswerViewSet(ViewSet):
             {
                 "option_id": (id) or null if passcode,
                 "team_id": (id),
-                "question_id": (id),
+                "question": (id),
                 "code_entered": 123456 (int) or null if no passcode
             }
             

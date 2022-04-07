@@ -39,7 +39,7 @@ export default function GameSession() {
   }, [currentOptions]);
 
   const nextQuestion = () => {
-    GamePlayService.answerQuestion(selectedOption.id, state.team_id).then(
+    GamePlayService.createAnswer(selectedOption.id, currentQuestion.id, state.team_id, null).then(
         (response) => {
           const question = (state.game.questions).find(
               (question) => question.id == selectedOption.dest_question,
