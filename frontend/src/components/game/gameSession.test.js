@@ -6,9 +6,9 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 import {findByTestId, fireEvent, getByTestId, waitFor} from '@testing-library/react';
-import {inProgressGame} from '../../helpers/dummyData';
+import {inProgressGame, inProgressGamePasscodeRequired} from '../../helpers/dummyData';
 import GamePlayService from '../../services/gameplay';
-import GamePlayTimeout from './gamePlayTimeout';
+import {Typography} from'@mui/material';
 
 const TEAM_ID = 1;
 
@@ -131,7 +131,6 @@ describe('<GameSession />', () => {
     continueButton = getByTestId(container, 'continue');
     option1 = getByTestId(container, 'option1');
     option2 = getByTestId(container, 'option2');
-    
   });
   describe('Game Play', () => {
     it('should render', () => {
@@ -297,6 +296,39 @@ describe('<GameSession />', () => {
     it('dialog should have an open prop that is false initially', () => {
       const dialog = wrapper.find('GamePlayTimeout');
       expect(dialog.props().open).toBe(false);
+    });
+  });
+  describe('Passcode method calls', () => {
+    let wrapper;
+    beforeEach(() => {
+      localStorage.setItem('inProgress', inProgressGamePasscodeRequired);
+    });
+    afterEach(() => {
+      localStorage.removeItem('inProgress');
+    })
+    it('should call getGameMode initially', () => {
+      wrapper = shallow(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<GameSession/>} />
+          </Routes>
+        </BrowserRouter>
+      );
+      let spy = jest.spyOn(GamePlayService, 'getGameMode').mockResolvedValue('Walking');
+      expect(spy).toHaveBeenCalled();
+      spy.mockRestore();
+    });
+    it('should call getInProgressGame initially', () => {
+      wrapper = shallow(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<GameSession/>} />
+          </Routes>
+        </BrowserRouter>
+      );
+      let spy = jest.spyOn(GamePlayService, 'getInProgressGame').mockResolvedValue(inProgressGamePasscodeRequired);
+      expect(spy).toHaveBeenCalled();
+      spy.mockRestore();
     });
   });
 });
