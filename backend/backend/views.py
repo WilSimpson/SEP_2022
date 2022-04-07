@@ -516,11 +516,8 @@ class GameSessionAnswerViewSet(ViewSet):
                 else:
                     answer = GameSessionAnswer(passcode_entered=True)
                 question = Question.objects.get(id=answer_data["question"])
-                try:
-                    if(answer_data["code_entered"] and (str(answer_data["code_entered"]) != str(question.passcode))):
-                        raise Exception("Invalid passcode.")
-                except Exception as e:
-                    return HttpResponse(status=404, content=e)
+                if(answer_data["code_entered"] and (str(answer_data["code_entered"]) != str(question.passcode))):
+                    return HttpResponse(status=404, content="Invalid passcode.")                    
             except Exception as e:
                 return HttpResponse(status=400, content="This question or option does not exist.")
             try: 
