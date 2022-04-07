@@ -575,7 +575,6 @@ class GameSessionAnswerViewSet(ViewSet):
             answer.save()
             return Response()
         except Exception as e:
-            print(e)
             return HttpResponse(status=500)
         
 @api_view(['POST'])
