@@ -11,6 +11,57 @@ import GamePlayService from '../../services/gameplay';
 import {alertService, alertSeverity} from '../../services/alert';
 import {useNavigate} from 'react-router-dom';
 import HelpIcon from '@mui/icons-material/Help';
+import PropTypes from 'prop-types';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+
+//const emails = [{title: 'Hint 1:', body: 'This is a hint nhlingkuybgkuybgnoyugbnoiuhnoiubgnlibgykuybgiuygbiuygbiuybgiyubgkuybgouygboyugboiuhgnoiunh!'},
+//  {title: 'Hint 2:', body: 'This is also a hint'}];
+const emails = 
+
+function SimpleDialog(props) {
+  const {onClose, selectedValue, open} = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = (value) => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog onClose={handleClose} open={open} sx={{overflow: 'hidden'}}>
+      <DialogTitle>Help</DialogTitle>
+      <List sx={{pt: 0}}>
+        {emails.map((email) => (
+          <Box key={email}>
+            <ListItem key={email.title}>
+              <ListItemText primary={email.title} />
+            </ListItem>
+            <ListItem key={email.body}>
+              <ListItemText primary={email.body} />
+            </ListItem>
+          </Box>
+        ))}
+
+        <ListItem autoFocus button onClick={() => handleListItemClick('close')}>
+          <ListItemText primary="Close" />
+        </ListItem>
+      </List>
+    </Dialog>
+  );
+}
+
+SimpleDialog.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  selectedValue: PropTypes.string.isRequired,
+};
+
 export default function GameSession() {
   const {state} = useLocation();
   const navigate = useNavigate();
@@ -23,7 +74,17 @@ export default function GameSession() {
       ));
   const [selectedOption, setSelectedOption] = useState();
   const [endGame, setEndGame] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(emails[1]);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
 
   React.useEffect(() => {
     setOptions(
@@ -117,8 +178,13 @@ export default function GameSession() {
           >
             <Container maxWidth="sm">
               <Typography>
-                {currentQuestion ? <div>{currentQuestion.value} <HelpIcon /></div> : 'Game not found'}
+                {currentQuestion ? <div>{currentQuestion.value} <HelpIcon onClick={handleClickOpen} /></div> : 'Game not found'}
               </Typography>
+              <SimpleDialog
+                selectedValue={selectedValue}
+                open={open}
+                onClose={handleClose}
+              />
               <ButtonGroup
                 variant="contained"
                 alignItems="center"
