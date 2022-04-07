@@ -12,11 +12,13 @@ import {alertService, alertSeverity} from '../../services/alert';
 import {useNavigate} from 'react-router-dom';
 import GamePlayTimeout from './gamePlayTimeout';
 import GameLayout from '../layout/game.layout';
+import Passcode from '../../pages/game/passcode';
 export default function GameSession() {
   const {state} = useLocation();
   const navigate = useNavigate();
   const TIMEOUT_ERR_MSG = 'Your Game has timed out. Please start a new Game.';
   const [timeoutOpen, setTimeoutOpen] = useState(false);
+  const [showPasscode, setShowPasscode] = useState(false);
   const [currentQuestion, setQuestion] = useState(
       GamePlayService.getInProgressGame().state.currentQuestion,
   );
@@ -145,88 +147,95 @@ export default function GameSession() {
     );
   }
 
+  const GamePlay = (
+    <Box
+      sx={{
+        pt: 0,
+        pb: 6,
+        borderRadius: 4,
+        mt: 3,
+        mb: 3,
+      }}
+      justify="center"
+      align="center"
+    >
+      <Container maxWidth="sm">
+        <GamePlayTimeout id='timeout-dialog' open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
+        <Typography>
+          {currentQuestion ? currentQuestion.value : 'Game not found'}
+        </Typography>
+        <ButtonGroup
+          variant="contained"
+          align="center"
+          justify="center"
+          orientation="vertical"
+          fullWidth={true}
+        >
+          {currentOptions.map((option) => (
+            <Button
+              key={option.id}
+              variant=
+                {selectedOption == option ? 'contained' : 'outlined'}
+              sx={{marginTop: 5}}
+              data-testid={'option'+ String(option.id)}
+              onClick={() => setSelectedOption(option)}
+              disabled={currentQuestion.chance}>
+              {option.value}
+            </Button>
+          ))}
+          { currentQuestion.chance ?
+            <Button
+              color='secondary'
+              sx={{marginTop: 5}}
+              data-testid='chance'
+              onClick={() =>
+                setSelectedOption(currentOptions[choiceClick()])
+              }
+              disabled={selectedOption}
+            >
+            Chance
+            </Button> : null
+          }
+          {
+            endGame ?
+              (
+                <Button
+                  color='secondary'
+                  sx={{marginTop: 5}}
+                  onClick={completeGame}
+                  data-testid='complete'
+                >
+                  Complete Game
+                </Button>
+              ) :
+              (
+                <Button
+                  color='secondary'
+                  sx={{marginTop: 5}}
+                  onClick={nextQuestion}
+                  data-testid='continue'
+                  disabled={!selectedOption}
+                >
+                  Continue
+                </Button>
+              )
+          }
+
+        </ButtonGroup>
+      </Container>
+    </Box>
+  );
+
   return (
     <GameLayout>
       <div className='container'>
         <CssBaseline />
         <main>
           <Container maxWidth='xl'>
-            <Box
-              sx={{
-                pt: 0,
-                pb: 6,
-                borderRadius: 4,
-                mt: 3,
-                mb: 3,
-              }}
-              justify="center"
-              align="center"
-            >
-              <Container maxWidth="sm">
-                <GamePlayTimeout id='timeout-dialog' open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
-                <Typography>
-                  {currentQuestion ? currentQuestion.value : 'Game not found'}
-                </Typography>
-                <ButtonGroup
-                  variant="contained"
-                  align="center"
-                  justify="center"
-                  orientation="vertical"
-                  fullWidth={true}
-                >
-                  {currentOptions.map((option) => (
-                    <Button
-                      key={option.id}
-                      variant=
-                        {selectedOption == option ? 'contained' : 'outlined'}
-                      sx={{marginTop: 5}}
-                      data-testid={'option'+ String(option.id)}
-                      onClick={() => setSelectedOption(option)}
-                      disabled={currentQuestion.chance}>
-                      {option.value}
-                    </Button>
-                  ))}
-                  { currentQuestion.chance ?
-                    <Button
-                      color='secondary'
-                      sx={{marginTop: 5}}
-                      data-testid='chance'
-                      onClick={() =>
-                        setSelectedOption(currentOptions[choiceClick()])
-                      }
-                      disabled={selectedOption}
-                    >
-                    Chance
-                    </Button> : null
-                  }
-                  {
-                    endGame ?
-                      (
-                        <Button
-                          color='secondary'
-                          sx={{marginTop: 5}}
-                          onClick={completeGame}
-                          data-testid='complete'
-                        >
-                          Complete Game
-                        </Button>
-                      ) :
-                      (
-                        <Button
-                          color='secondary'
-                          sx={{marginTop: 5}}
-                          onClick={nextQuestion}
-                          data-testid='continue'
-                          disabled={!selectedOption}
-                        >
-                          Continue
-                        </Button>
-                      )
-                  }
-
-                </ButtonGroup>
-              </Container>
-            </Box>
+            {showPasscode ?
+              <Passcode data={{question: '/#', location: 'SC123'}} /> :
+              GamePlay
+            }
           </Container>
         </main>
       </div>
