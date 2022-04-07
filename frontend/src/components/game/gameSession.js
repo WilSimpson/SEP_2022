@@ -18,21 +18,18 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 
-//const emails = [{title: 'Hint 1:', body: 'This is a hint nhlingkuybgkuybgnoyugbnoiuhnoiubgnlibgykuybgiuygbiuygbiuybgiyubgkuybgouygboyugboiuhgnoiunh!'},
-//  {title: 'Hint 2:', body: 'This is also a hint'}];
-const emails = 
-
 function SimpleDialog(props) {
-  const {onClose, selectedValue, open} = props;
+  const {onClose, open, emails} = props;
 
   const handleClose = () => {
-    onClose(selectedValue);
+    onClose();
   };
 
   const handleListItemClick = (value) => {
     onClose(value);
   };
 
+  console.log(emails);
   return (
     <Dialog onClose={handleClose} open={open} sx={{overflow: 'hidden'}}>
       <DialogTitle>Help</DialogTitle>
@@ -59,7 +56,7 @@ function SimpleDialog(props) {
 SimpleDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.string.isRequired,
+  emails: PropTypes.array.isRequired,
 };
 
 export default function GameSession() {
@@ -75,7 +72,9 @@ export default function GameSession() {
   const [selectedOption, setSelectedOption] = useState();
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(emails[1]);
+  const [emails, setEmails] = useState(GamePlayService.getQuestionContext(1).then(
+      (response) => response.data,
+  ).catch(() => console.log('Error')));
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -83,7 +82,6 @@ export default function GameSession() {
 
   const handleClose = (value) => {
     setOpen(false);
-    setSelectedValue(value);
   };
 
   React.useEffect(() => {
@@ -120,6 +118,7 @@ export default function GameSession() {
     GamePlayService.updateCurrentQuestion(question);
     setQuestion(question);
     setSelectedOption(null);
+    setEmails(GamePlayService.getQuestionContext(1));
   };
 
   const completeGame = () => {
@@ -181,9 +180,9 @@ export default function GameSession() {
                 {currentQuestion ? <div>{currentQuestion.value} <HelpIcon onClick={handleClickOpen} /></div> : 'Game not found'}
               </Typography>
               <SimpleDialog
-                selectedValue={selectedValue}
                 open={open}
                 onClose={handleClose}
+                emails={emails}
               />
               <ButtonGroup
                 variant="contained"
