@@ -2,6 +2,7 @@ import axios from 'axios';
 import {API_URL} from '../store/store';
 
 const IN_PROGRESS = 'inProgress';
+const ANSWER_ID = 'answerId';
 export const WALKING = 'Walking';
 export const LIMITED_WALKING = 'Limited Walking';
 export const NO_WALKING = 'No Walking';
@@ -47,6 +48,16 @@ class GameService {
           option_id: optionId,
           team_id: teamId,
         })
+        .then(
+            (response) => this.setLastAnswerId(response.data.id),
+        );
+  }
+
+  updateOption(optionId) {
+    return axios
+        .put(API_URL + `/gameSession/updateAnswer/${this.getLastAnswerId()}/`, {
+          option_id: optionId,
+        })
         .then();
   }
 
@@ -84,6 +95,15 @@ class GameService {
       };
     }
   }
+
+  setLastAnswerId(answerId) {
+    localStorage.setItem(ANSWER_ID, answerId);
+  }
+
+  getLastAnswerId() {
+    localStorage.getItem(ANSWER_ID);
+  }
+
   random(options) { // {0:2, 1:1, 2:3}
     let i;
     let total = 0;
