@@ -73,11 +73,25 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
   // Set of selected game session
   const [selectedSet, setSelectedSet] = React.useState(props.selectedSessions || new Set<number>());
 
+  // Force rerender
+  const [, updateState] = React.useState();
+
   // Number of empty rows
   const emptyRows =
       page > 0 ?
         Math.max(0, (1 + page) * pageSize - props.gameSessions.length) :
         0;
+
+  // Calculates the number of active columns
+  const colSize = 4 +
+      (props.qrCodes ? 1 : 0) +
+      (props.reportButtons ? 1 : 0) +
+      (props.selectable ? 1 : 0);
+
+  // The current sessions shown in the table
+  const shownSessions = pageSize > 0 ?
+      props.gameSessions.slice(page * pageSize, page * pageSize + pageSize) :
+      props.gameSessions;
 
   // Handles when the page size selection changes
   const handleChangePageSize = (event) => {
@@ -90,31 +104,68 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
     setPage(newPage);
   };
 
-  // Update the set by adding the id to the set if it isn't there,
-  // or removing it is there.
+  /**
+   * Update the set by adding the id to the set if it isn't there,
+   * or removing it is there.
+   * @param {number} id game session id to toggle
+   */
   const handleCheckboxChange = (id: number) => {
-    let newSet: Set<number>;
+    let selected = new Set<number>([...selectedSet]);
 
     if (selectedSet.has(id)) {
-      newSet = new Set([...selectedSet].filter((i) => i != id));
-      setSelectedSet(newSet);
+      selected = new Set([...selectedSet].filter((i) => i != id));
     } else {
-      newSet = selectedSet.add(id);
-      setSelectedSet(newSet);
+      selected = selectedSet.add(id);
     }
 
-    props.onSessionSelectionChange(selectedSet);
+    setSelectedSet(selected);
+    props.onSessionSelectionChange(selected);
+    updateState({});
+  };
+
+  const handleMainCheckboxChange = (event) => {
+    let selected = new Set<number>([...selectedSet]);
+
+    for (const session of shownSessions) {
+      if (event.target.checked) {
+        selected = selectedSet.add(session.id);
+      } else {
+        selected.delete(session.id);
+      }
+    }
+
+    setSelectedSet(selected);
+    props.onSessionSelectionChange(selected);
+    updateState({});
+  };
+
+  const asdfasdf = () => {
+    for (const session of shownSessions) {
+      if (!selectedSet.has(session.id)) {
+        return false;
+      }
+    }
+
+    return true;
   };
 
   return (
     <React.Fragment>
-      <Typography component="h2" variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         Game Sessions
       </Typography>
       <Table data-testid="active-game-sessions">
         <TableHead>
           <TableRow>
-            {props.selectable ? <TableCell></TableCell> : null}
+            {props.selectable ?
+              <TableCell>
+                <Checkbox
+                  onChange={handleMainCheckboxChange}
+                  checked={asdfasdf()}
+                />
+              </TableCell> :
+              null
+            }
             {props.qrCodes ? <TableCell>QR Code</TableCell> : null}
             <TableCell>ID</TableCell>
             <TableCell>Start Time</TableCell>
@@ -124,12 +175,12 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.gameSessions.map((row, index) => (
+          {shownSessions.map((row) => (
             <TableRow key={row.id}>
               {props.selectable ?
                 <Checkbox
                   onChange={() => handleCheckboxChange(row.id)}
-                  defaultChecked={selectedSet.has(row.id)}
+                  checked={selectedSet.has(row.id)}
                 /> : null
               }
               {props.qrCodes ?
@@ -170,7 +221,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
           <TableRow className="game-session-pagination">
             <TablePagination
               rowsPerPageOptions={[5, 15, 30, {label: 'All', value: -1}]}
-              colSpan={3}
+              colSpan={colSize}
               count={props.gameSessions.length}
               rowsPerPage={pageSize}
               page={page}
