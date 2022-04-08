@@ -4,11 +4,17 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.core.mail import send_mail  
 from django_rest_passwordreset.signals import reset_password_token_created
+import os
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-    email_plaintext_message = "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+    if os.environ['EA_MODE'] == 'dev':
+        url = "localhost:3000"
+    else:
+        url = "sep22.forever.dev"
+
+    email_plaintext_message = url + "/changePassword#{}".format(reset_password_token.key)
 
     send_mail(
         # title:
@@ -16,7 +22,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         # message:
         email_plaintext_message,
         # from:
-        "noreply@somehost.local",
+        "noreplyEthicsAdventure@gmail.com",
         # to:
         [reset_password_token.user.email]
     )
