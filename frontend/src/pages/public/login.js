@@ -8,11 +8,13 @@ import {
   Button,
   TextField,
   Typography,
+  Link,
 } from '@mui/material';
 import AuthService from '../../services/auth';
 import validator from 'validator';
 import DefaultLayout from '../../components/layout/default.layout';
 import authService from '../../services/auth';
+import {FE_URL} from '../../store/store';
 
 export default function Login() {
   const userRef = useRef();
@@ -133,6 +135,12 @@ export default function Login() {
             Sign In
           </Button>
         </Box>
+        <Link
+          data-testid="forgot-link"
+          href={FE_URL + '/forgot'}
+        >
+        Forgot Password
+        </Link>
       </Box>
     </DefaultLayout>
   );
