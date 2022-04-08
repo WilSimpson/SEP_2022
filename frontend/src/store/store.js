@@ -12,6 +12,11 @@ export const API_URL =
   'http://localhost:8000/api' :
   'https://sep22.forever.dev/api';
 
+export const FE_URL =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ?
+    'http://localhost:3000' :
+    'https://sep22.forever.dev';
+
 const createNoopStorage = () => {
   return {
     getItem(_key) {
