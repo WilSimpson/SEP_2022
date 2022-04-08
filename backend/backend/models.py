@@ -174,4 +174,4 @@ class Course(models.Model):
 class ContextHelp(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
-    questions = models.ManyToManyField(Question)
+    questions = models.ManyToManyField(Question, default=None)

@@ -893,3 +893,66 @@ class GameSessionTests(TestCase):
         resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(self.game.id, self.session2.id, self.team.id))
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
+
+class ContextHelpViewSetTestCase(TestCase):
+    def setUp(self):
+        # create context
+        self.context = ContextHelp.objects.create(title="Test 1", body="Body text for context hint 1")
+        self.initial_context_count = ContextHelp.objects.all().count()
+        self.data = {"title":"Test 1", "body": "Body text for context hint 1", "questions": [1]}
+        
+    def test_get_valid_context(self):
+        resp = self.client.get('/api/contextHelp/'+str(self.context.id)+'/')
+        for value in ['title', 'body']:
+            self.assertEqual(resp.data.get(value), self.data.get(value))
+        
+    def test_get_invalid_context(self):
+        resp = self.client.get('/api/courses/'+str(self.context.id + 1)+'/')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        
+    def test_delete_valid_context(self):
+        initial_context_count = ContextHelp.objects.all().count()
+        resp = self.client.delete('/api/contextHelp/'+str(self.context.id)+'/')
+        self.assertEqual(ContextHelp.objects.all().count(), initial_context_count-1)
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_invalid_context(self):
+        resp = self.client.delete('/api/contextHelp/'+str(self.context.id+1)+'/')
+        self.assertEqual(ContextHelp.objects.all().count(), self.initial_context_count)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_get_all_contexts(self):
+        resp = self.client.get('/api/contextHelp/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 1)
+        for value in ['title', 'body']:
+            self.assertEqual(resp.data[0][value], self.data[value])
+    
+    def test_get_all_courses_empty(self):
+        ContextHelp.objects.filter(id=self.context.id).delete()
+        resp = self.client.get('/api/contextHelp/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, [])
+
+    def test_create_context_no_title(self):
+        new_context = self.data
+        new_context["title"] = None
+        resp = self.client.post('/api/contextHelp/', new_context, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_create_context_no_body(self):
+        new_context = self.data
+        new_context["body"] = None
+        resp = self.client.post('/api/contextHelp/', new_context, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_context_context_no_questions(self):
+        new_context = self.data
+        new_context["questions"] = None
+        resp = self.client.post('/api/contextHelp/', new_context, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_update_invalid_context(self):
+        resp = self.client.put('/api/contextHelp/'+str(0)+'/', self.data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+    
