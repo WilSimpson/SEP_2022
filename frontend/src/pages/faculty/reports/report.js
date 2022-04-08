@@ -83,6 +83,9 @@ export default function ReportPage(props) {
                     defaultValue={startDateRefDefault}
                     name='start-time-reference'
                     onChange={(event) => setStartDateRef(event.target.value)}
+                    sx={{
+                      'justifyContent': 'center',
+                    }}
                   >
                     <FormControlLabel value='before' control={<Radio />} label='Before' />
                     <FormControlLabel value='after' control={<Radio />} label='After' />
@@ -104,6 +107,9 @@ export default function ReportPage(props) {
                     defaultValue={endDateRefDefault}
                     name='end-time-reference'
                     onChange={(event) => setEndDateRef(event.target.value)}
+                    sx={{
+                      'justifyContent': 'center',
+                    }}
                   >
                     <FormControlLabel value='before' control={<Radio />} label='Before' />
                     <FormControlLabel value='after' control={<Radio />} label='After' />
@@ -151,7 +157,11 @@ export default function ReportPage(props) {
                 </Grid>
 
                 <Grid item xs={12} md={6} lg={3}>
-                  <FormGroup>
+                  <FormGroup
+                    sx={{
+                      'alignContent': 'center',
+                    }}
+                  >
                     <FormLabel>
                       Report Format
                     </FormLabel>
@@ -168,13 +178,20 @@ export default function ReportPage(props) {
                 </Grid>
 
                 <Grid item xs={12} md={6} lg={3}>
-                  <FormGroup>
+                  <FormGroup
+                    sx={{
+                      'alignContent': 'center',
+                    }}
+                  >
                     <FormLabel>
                       Include Survey
                     </FormLabel>
                     <Switch
                       checked={shouldIncludeSurvey}
                       onChange={(event) => setShouldIncludeSurvey(event.target.checked)}
+                      sx={{
+                        'alignSelf': 'center',
+                      }}
                     />
                   </FormGroup>
                 </Grid>
@@ -188,6 +205,9 @@ export default function ReportPage(props) {
                     <Switch
                       checked={shouldCalculateTime}
                       onChange={(event) => setShouldCalculateTime(event.target.checked)}
+                      sx={{
+                        'alignSelf': 'center',
+                      }}
                     />
                   </FormGroup>
                 </Grid>
@@ -201,15 +221,23 @@ export default function ReportPage(props) {
                     <Switch
                       checked={shouldIncludeTimestamps}
                       onChange={(event) => setShouldIncludeTimestamps(event.target.checked)}
+                      sx={{
+                        'alignSelf': 'center',
+                      }}
                     />
                   </FormGroup>
                 </Grid>
 
                 <Grid item xs={12} md={6} lg={3}>
-                  <FormGroup>
-                    <FormLabel>
-                      Include Walking Modes
-                    </FormLabel>
+                  <FormLabel>
+                    Include Walking Modes
+                  </FormLabel>
+                  <FormGroup
+                    row
+                    sx={{
+                      'alignContent': 'center',
+                    }}
+                  >
                     <FormControlLabel
                       label="Walking"
                       control={<Checkbox checked={includeWalking} onChange={(event) => setIncludeWalking(event.target.checked)} />}
