@@ -5,6 +5,7 @@ import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent, act} from '@testing-library/react';
 import AuthService from '../../services/auth';
+import ForgotPassword from '../faculty/forgotPassword';
 
 jest.mock('../../services/auth');
 
@@ -12,6 +13,7 @@ describe('<Login />', () => {
   let emailField;
   let passwordField;
   let submitButton;
+  let forgot;
 
   it('should render the Login component', () => {
     const shallowWrapper = shallow(<Login />);
@@ -99,6 +101,22 @@ describe('<Login />', () => {
 
       expect(AuthService.login).toHaveBeenCalled();
       await act(() => promise);
+    });
+  });
+  describe('Forgot password', () => {
+    beforeEach(() => {
+      const {getByTestId} = render(<Login />);
+      forgot = getByTestId('forgot-link');
+    });
+
+    it('should exist', () => {
+      expect(forgot).toBeInTheDocument();
+    });
+
+    it('go to forgot password page', () => {
+      fireEvent.click(forgot);
+      const shallowWrapper = shallow(<ForgotPassword />);
+      expect(shallowWrapper);
     });
   });
 });

@@ -519,35 +519,79 @@ class GameSessionAnswerViewSetTest(TestCase):
         self.gamesession = GameSession.objects.create(creator_id=1, start_time='2022-01-01 10:00:00', notes='notes', timeout=20, code='123456', game_id=self.game.id)
         self.gamemode = GameMode.objects.create(name='Walking')
         self.team = Team.objects.create(guest=True, size=1, first_time=True, completed=False, game_mode_id=self.gamemode.id, game_session_id=self.gamesession.id)
-        self.data = {"option_id": self.o1.id, "team_id": self.team.id}
+        self.create_data_option = {"code_entered": None, "team_id": self.team.id, "question": self.q1.id, "option_id": self.o1.id}
+        self.create_data_no_option = {"code_entered": self.q1.passcode, "team_id": self.team.id, "question": self.q1.id, "option_id": None}
+        self.update_data = {"option_id": self.o1.id}
         self.initial_gamesessionanswer_count = GameSessionAnswer.objects.all().count()
         
-    def test_valid_answer(self):
-        resp = self.client.post('/api/gameSession/answer/', self.data, content_type='application/json')
+    def test_valid_answer_w_option(self):
+        resp = self.client.post('/api/gameSession/createAnswer/', self.create_data_option, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count + 1)
     
     def test_answer_invalid_option(self):
-        invalid_data = self.data
-        invalid_data["option_id"] = 0
-        resp = self.client.post('/api/gameSession/answer/', invalid_data, content_type='application/json')
+        invalid_data = self.create_data_option
+        invalid_data["option_id"] = 9999
+        resp = self.client.post('/api/gameSession/createAnswer/', invalid_data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
         
     def test_answer_invalid_team(self):
-        invalid_data = self.data
+        invalid_data = self.create_data_option
         invalid_data["team_id"] = 0
-        resp = self.client.post('/api/gameSession/answer/', invalid_data, content_type='application/json')
+        resp = self.client.post('/api/gameSession/createAnswer/', invalid_data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
         
     def test_answer_time_out(self):
         self.gamesession.timeout = 0
         self.gamesession.save()
-        resp = self.client.post('/api/gameSession/answer/', self.data, content_type='application/json')
+        resp = self.client.post('/api/gameSession/createAnswer/', self.create_data_option, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
         
+    def test_valid_answer_wo_option(self):
+        resp = self.client.post('/api/gameSession/createAnswer/', self.create_data_no_option, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count + 1)
+    
+    def test_answer_passcode_invalid(self):
+        invalid_pass = self.create_data_no_option
+        invalid_pass["code_entered"] = 654321
+        resp = self.client.post('/api/gameSession/createAnswer/', invalid_pass, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
+        
+    def test_update_answer_PUT_valid(self):
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        resp = self.client.put('/api/gameSession/updateAnswer/' + str(answer.id) + '/', self.update_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(GameSessionAnswer.objects.get(id=answer.id).option_chosen, self.o1)
+        
+    def test_update_answer_PATCH_valid(self):
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        resp = self.client.patch('/api/gameSession/updateAnswer/' + str(answer.id) + '/', self.update_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(GameSessionAnswer.objects.get(id=answer.id).option_chosen, self.o1)
+    
+    def test_update_answer_time_out(self):
+        self.gamesession.timeout = 0
+        self.gamesession.save()
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        resp = self.client.put('/api/gameSession/updateAnswer/' + str(answer.id) + '/', self.update_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsNone(GameSessionAnswer.objects.get(id=answer.id).option_chosen)
+        
+    def test_update_answer_invalid_option(self):
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        invalid_option_data = {"option_id": 9999}
+        resp = self.client.put('/api/gameSession/updateAnswer/' + str(answer.id) + '/', invalid_option_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsNone(GameSessionAnswer.objects.get(id=answer.id).option_chosen)
         
 class SessionViewTestCase(TestCase):
     def setUp(self):
