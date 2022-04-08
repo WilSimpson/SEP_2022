@@ -19,7 +19,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 
 function SimpleDialog(props) {
-  const {onClose, open, emails} = props;
+  const {onClose, open, hints} = props;
 
   const handleClose = () => {
     onClose();
@@ -29,18 +29,17 @@ function SimpleDialog(props) {
     onClose(value);
   };
 
-  console.log(emails);
   return (
     <Dialog onClose={handleClose} open={open} sx={{overflow: 'hidden'}}>
       <DialogTitle>Help</DialogTitle>
       <List sx={{pt: 0}}>
-        {emails.map((email) => (
-          <Box key={email}>
-            <ListItem key={email.title}>
-              <ListItemText primary={email.title} />
+        {hints.map((hint) => (
+          <Box key={hint}>
+            <ListItem key={hint.title}>
+              <ListItemText primary={hint.title} />
             </ListItem>
-            <ListItem key={email.body}>
-              <ListItemText primary={email.body} />
+            <ListItem key={hint.body}>
+              <ListItemText primary={hint.body} />
             </ListItem>
           </Box>
         ))}
@@ -56,7 +55,7 @@ function SimpleDialog(props) {
 SimpleDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  emails: PropTypes.array.isRequired,
+  hints: PropTypes.array.isRequired,
 };
 
 export default function GameSession() {
@@ -72,7 +71,8 @@ export default function GameSession() {
   const [selectedOption, setSelectedOption] = useState();
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
-  const [emails, setEmails] = useState(currentQuestion.help);
+  const [hints, setHints] = useState(currentQuestion.help);
+  console.log(currentQuestion);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -116,7 +116,7 @@ export default function GameSession() {
     GamePlayService.updateCurrentQuestion(question);
     setQuestion(question);
     setSelectedOption(null);
-    setEmails(currentQuestion.help);
+    setHints(currentQuestion.help);
   };
 
   const completeGame = () => {
@@ -180,7 +180,7 @@ export default function GameSession() {
               <SimpleDialog
                 open={open}
                 onClose={handleClose}
-                emails={emails}
+                hints={hints}
               />
               <ButtonGroup
                 variant="contained"

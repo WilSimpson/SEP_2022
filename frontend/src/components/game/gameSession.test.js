@@ -24,7 +24,8 @@ jest.mock('react-router-dom', () => ({
         passcode: "123456",
         chance: false,
         chance_game: "NO_GAME",
-        game: '1'
+        game: '1',
+        help: []
       },
       team_id: TEAM_ID,
       game: {
@@ -40,7 +41,8 @@ jest.mock('react-router-dom', () => ({
               passcode: "123456",
               chance: false,
               chance_game: "NO_GAME",
-              game: '1'
+              game: '1',
+              help: []
             },
             {
               id: 2,
@@ -48,7 +50,8 @@ jest.mock('react-router-dom', () => ({
               passcode: "123456",
               chance: true,
               chance_game: "NO_GAME",
-              game: '1'
+              game: '1',
+              help: []
             },
             {
               id: 3,
@@ -56,7 +59,8 @@ jest.mock('react-router-dom', () => ({
               passcode: "123456",
               chance: false,
               chance_game: "NO_GAME",
-              game: '1'
+              game: '1',
+              help: []
             },
           ],
           options: [
