@@ -1,4 +1,4 @@
-import {Autocomplete, Button, Container, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField} from '@mui/material';
+import {Autocomplete, Button, Checkbox, Container, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, Switch, TextField, Typography} from '@mui/material';
 import React from 'react';
 import {useParams} from 'react-router';
 import GameSessionsTable from '../../../components/faculty/gameSessionsTable.tsx';
@@ -23,6 +23,17 @@ export default function ReportPage(props) {
   const [, setGameCode] = React.useState();
 
   const [, setCreatedBy] = React.useState();
+
+  const reportFormatDefault = 'csv';
+  const [, setReportFormat] = React.useState(reportFormatDefault);
+
+  const [shouldIncludeSurvey, setShouldIncludeSurvey] = React.useState(true);
+  const [shouldCalculateTime, setShouldCalculateTime] = React.useState(true);
+  const [shouldIncludeTimestamps, setShouldIncludeTimestamps] = React.useState(false);
+
+  const [includeWalking, setIncludeWalking] = React.useState(true);
+  const [includeLimitedWalking, setIncludeLimitedWalking] = React.useState(true);
+  const [includeNonWalking, setIncludeNonWalking] = React.useState(true);
 
   const handleSessionSelectionChange = (ids) => {
     console.log('ids:', ids);
@@ -79,7 +90,7 @@ export default function ReportPage(props) {
                 </Grid>
 
 
-                <Grid item xs={12} md={6} lg={3} textAlign='center'>
+                <Grid item xs={12} md={6} lg={3}>
                   <LocalizationProvider dateAdapter={DateAdapter}>
                     <MobileDatePicker
                       label="End Date"
@@ -134,14 +145,83 @@ export default function ReportPage(props) {
               />
               <Grid container spacing={2} sx={{pl: 2, pr: 2, pb: 2}}>
                 <Grid item xs={12}>
-                  <h4>Report Details</h4>
+                  <Typography variant="h6" sx={{pt: 2}}>
+                    Report Details
+                  </Typography>
                 </Grid>
-                <Grid item xs={12}>
+
+                <Grid item xs={12} md={6} lg={3}>
                   <FormGroup>
                     <FormLabel>
-                      Label
+                      Report Format
                     </FormLabel>
-                    <Radio />
+                    <RadioGroup
+                      row
+                      defaultValue={reportFormatDefault}
+                      name='end-time-reference'
+                      onChange={(event) => setReportFormat(event.target.value)}
+                    >
+                      <FormControlLabel value='csv' control={<Radio />} label='CSV' />
+                      <FormControlLabel value='json' control={<Radio />} label='JSON' />
+                    </RadioGroup>
+                  </FormGroup>
+                </Grid>
+
+                <Grid item xs={12} md={6} lg={3}>
+                  <FormGroup>
+                    <FormLabel>
+                      Include Survey
+                    </FormLabel>
+                    <Switch
+                      checked={shouldIncludeSurvey}
+                      onChange={(event) => setShouldIncludeSurvey(event.target.checked)}
+                    />
+                  </FormGroup>
+                </Grid>
+
+
+                <Grid item xs={12} md={6} lg={3}>
+                  <FormGroup>
+                    <FormLabel>
+                      Calculate Time Between Answers
+                    </FormLabel>
+                    <Switch
+                      checked={shouldCalculateTime}
+                      onChange={(event) => setShouldCalculateTime(event.target.checked)}
+                    />
+                  </FormGroup>
+                </Grid>
+
+
+                <Grid item xs={12} md={6} lg={3}>
+                  <FormGroup>
+                    <FormLabel>
+                      Include Timestamps
+                    </FormLabel>
+                    <Switch
+                      checked={shouldIncludeTimestamps}
+                      onChange={(event) => setShouldIncludeTimestamps(event.target.checked)}
+                    />
+                  </FormGroup>
+                </Grid>
+
+                <Grid item xs={12} md={6} lg={3}>
+                  <FormGroup>
+                    <FormLabel>
+                      Include Walking Modes
+                    </FormLabel>
+                    <FormControlLabel
+                      label="Walking"
+                      control={<Checkbox checked={includeWalking} onChange={(event) => setIncludeWalking(event.target.checked)} />}
+                    />
+                    <FormControlLabel
+                      label="Limited Walking"
+                      control={<Checkbox checked={includeLimitedWalking} onChange={(event) => setIncludeLimitedWalking(event.target.checked)} />}
+                    />
+                    <FormControlLabel
+                      label="Non Walking"
+                      control={<Checkbox checked={includeNonWalking} onChange={(event) => setIncludeNonWalking(event.target.checked)} />}
+                    />
                   </FormGroup>
                 </Grid>
               </Grid>
