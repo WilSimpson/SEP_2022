@@ -4,6 +4,7 @@ import Home from './pages/public/home';
 import StartingSurvey from './components/game/startingSurvey';
 import GameSession from './components/game/gameSession';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import EditPassword from './pages/faculty/editPassword';
 import ForgotPassword from './pages/faculty/forgotPassword';
 import Login from './pages/public/login';
 import Knowledge from './pages/public/knowledge';
@@ -45,6 +46,7 @@ function App() {
               <Route exact path="/register" element={<Register />} />
               <Route exact path="/endGame" element={<EndGame />} />
               <Route exact path="/forgot" element={<ForgotPassword />} />
+              <Route exact path="/changePassword" element={<EditPassword />} />
               <Route
                 exact
                 path="/pass"
