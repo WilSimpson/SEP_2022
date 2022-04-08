@@ -213,7 +213,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
 
           {emptyRows > 0 && (
             <TableRow>
-              <TableCell colSpan={5} />
+              <TableCell colSpan={colSize} />
             </TableRow>
           )}
         </TableBody>
