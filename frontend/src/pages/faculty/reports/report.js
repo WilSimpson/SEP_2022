@@ -1,13 +1,28 @@
-import {Button, Container, FormGroup, FormLabel, Grid, Paper, Radio, TextField} from '@mui/material';
+import {Autocomplete, Button, Container, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField} from '@mui/material';
 import React from 'react';
 import {useParams} from 'react-router';
 import GameSessionsTable from '../../../components/faculty/gameSessionsTable.tsx';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import gameSessionService from '../../../services/gameSession';
+import DateAdapter from '@mui/lab/AdapterDayjs';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import MobileDatePicker from '@mui/lab/MobileDatePicker';
 
 export default function ReportPage(props) {
   const {id} = useParams();
   const [sessions, setSessions] = React.useState([]);
+
+  const startDateRefDefault = 'after';
+  const [, setStartDateRef] = React.useState();
+  const [startDate, setStartDate] = React.useState();
+
+  const endDateRefDefault = 'before';
+  const [, setEndDateRef] = React.useState();
+  const [endDate, setEndDate] = React.useState();
+
+  const [, setGameCode] = React.useState();
+
+  const [, setCreatedBy] = React.useState();
 
   const handleSessionSelectionChange = (ids) => {
     console.log('ids:', ids);
@@ -41,13 +56,75 @@ export default function ReportPage(props) {
                 <Grid item xs={12}>
                   <h4>Filters</h4>
                 </Grid>
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <FormLabel>
-                      Label
-                    </FormLabel>
-                    <TextField />
-                  </FormGroup>
+
+
+                <Grid item xs={12} md={6} lg={3}>
+                  <LocalizationProvider dateAdapter={DateAdapter}>
+                    <MobileDatePicker
+                      label="Start Date"
+                      value={startDate}
+                      onChange={(newValue) => setStartDate(newValue)}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+                  <RadioGroup
+                    row
+                    defaultValue={startDateRefDefault}
+                    name='start-time-reference'
+                    onChange={(event) => setStartDateRef(event.target.value)}
+                  >
+                    <FormControlLabel value='before' control={<Radio />} label='Before' />
+                    <FormControlLabel value='after' control={<Radio />} label='After' />
+                  </RadioGroup>
+                </Grid>
+
+
+                <Grid item xs={12} md={6} lg={3} textAlign='center'>
+                  <LocalizationProvider dateAdapter={DateAdapter}>
+                    <MobileDatePicker
+                      label="End Date"
+                      value={endDate}
+                      onChange={(newValue) => setEndDate(newValue)}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+                  <RadioGroup
+                    row
+                    defaultValue={endDateRefDefault}
+                    name='end-time-reference'
+                    onChange={(event) => setEndDateRef(event.target.value)}
+                  >
+                    <FormControlLabel value='before' control={<Radio />} label='Before' />
+                    <FormControlLabel value='after' control={<Radio />} label='After' />
+                  </RadioGroup>
+                </Grid>
+
+
+                <Grid item xs={12} md={6} lg={3}>
+                  <Autocomplete
+                    disablePortal
+                    freeSolo
+                    id="created-by-search"
+                    options={sessions.filter(
+                        (value, index, self) =>
+                          self.findIndex((v) => v.creator_id === value.creator_id) === index)
+                    }
+                    getOptionLabel={(s) => s.creator_id.toString()}
+                    renderInput={(params) => <TextField {...params} label="Created By" />}
+                    onChange={(event, selected) => setCreatedBy(selected)}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6} lg={3}>
+                  <Autocomplete
+                    disablePortal
+                    freeSolo
+                    id="gamecode-search"
+                    options={sessions}
+                    getOptionLabel={(s) => s.code.toString()}
+                    renderInput={(params) => <TextField {...params} label="Gamecode" />}
+                    onChange={(event, selected) => setGameCode(selected)}
+                  />
                 </Grid>
               </Grid>
               <GameSessionsTable
