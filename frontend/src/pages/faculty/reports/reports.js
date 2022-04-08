@@ -5,6 +5,7 @@ import Loading from '../../../components/layout/loading';
 import gameService from '../../../services/game';
 import GamesTable from '../../../components/admin/gamesTable';
 import {useNavigate} from 'react-router';
+import {alertService, alertSeverity} from '../../../services/alert';
 
 export default function ReportsPage() {
   const [games, setGames] = React.useState([]);

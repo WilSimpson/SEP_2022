@@ -7,6 +7,7 @@ import gameSessionService from '../../../services/gameSession';
 import DateAdapter from '@mui/lab/AdapterDayjs';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
+import {alertService, alertSeverity} from '../../../services/alert';
 
 export default function ReportPage(props) {
   const {id} = useParams();

@@ -72,7 +72,7 @@ class CourseSerializer(ModelSerializer):
 class AnswersReportSerializer(ModelSerializer):
     class Meta:
         model = GameSessionAnswer
-        fields = ('team', 'question', 'option_chosen')
+        fields = ('id', 'team', 'question', 'option_chosen')
     
     def to_representation(self, obj):
         '''
@@ -86,7 +86,7 @@ class AnswersReportSerializer(ModelSerializer):
         return base
 
 class AnswersReportCSVSerializer(CSVRenderer):
-    headers = ['team', 'question', 'option_chosen', 'time']
+    headers = ['id', 'team', 'question', 'option_chosen', 'time']
 
 class DynamicSerializerMixin:
         """

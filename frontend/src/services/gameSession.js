@@ -25,6 +25,12 @@ class GameSessionService {
       timeout: parseInt(timeout),
     });
   }
+
+  getReport(gameId, sessionId, csv = true) {
+    return axios.get(`${API_URL}/games/${gameId}/sessions/${sessionId}/report/`, {headers: {
+      'accept': csv ? 'text/csv' : 'application/json',
+    }});
+  }
 }
 
 export default new GameSessionService();

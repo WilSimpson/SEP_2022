@@ -26,6 +26,7 @@ import GenerateQRPage from './pages/faculty/generateQR';
 import ReportsPage from './pages/faculty/reports/reports';
 import EditCourse from './pages/faculty/editCourse';
 import ReportPage from './pages/faculty/reports/report';
+import ViewReportPage from './pages/faculty/reports/view.tsx';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -171,6 +172,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ReportPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/reports/:id/view"
+                element={
+                  <ProtectedRoute>
+                    <ViewReportPage />
                   </ProtectedRoute>
                 }
               />

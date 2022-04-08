@@ -1,4 +1,4 @@
-interface GameSession {
+export default interface GameSession {
   id: number;
   creator_id: number;
   game: number;
