@@ -158,9 +158,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
         <TableHead>
           <TableRow>
             {props.selectable ?
-              <TableCell
-                align='center'
-              >
+              <TableCell>
                 <Checkbox
                   onChange={handleMainCheckboxChange}
                   checked={asdfasdf()}
@@ -180,10 +178,12 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
           {shownSessions.map((row) => (
             <TableRow key={row.id}>
               {props.selectable ?
-                <Checkbox
-                  onChange={() => handleCheckboxChange(row.id)}
-                  checked={selectedSet.has(row.id)}
-                /> : null
+                <TableCell>
+                  <Checkbox
+                    onChange={() => handleCheckboxChange(row.id)}
+                    checked={selectedSet.has(row.id)}
+                  />
+                </TableCell> : null
               }
               {props.qrCodes ?
                 <TableCell>
