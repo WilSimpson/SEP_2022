@@ -158,7 +158,9 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
         <TableHead>
           <TableRow>
             {props.selectable ?
-              <TableCell>
+              <TableCell
+                align='center'
+              >
                 <Checkbox
                   onChange={handleMainCheckboxChange}
                   checked={asdfasdf()}
