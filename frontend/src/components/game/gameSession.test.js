@@ -199,6 +199,9 @@ describe('<GameSession />', () => {
       fireEvent.click(continueButton);
       expect(GamePlayService.updateCurrentQuestion).toHaveBeenCalled();
     });
+    it('should have a help button', () => {
+      expect(getByTestId(container, 'helpButton')).not.toBeNull();
+    });
   });
   
   describe('Complete Game', () => {

@@ -72,7 +72,6 @@ export default function GameSession() {
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
   const [hints, setHints] = useState(currentQuestion.help);
-  console.log(currentQuestion);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -175,7 +174,7 @@ export default function GameSession() {
           >
             <Container maxWidth="sm">
               <Typography>
-                {currentQuestion ? <div>{currentQuestion.value} <HelpIcon onClick={handleClickOpen} /></div> : 'Game not found'}
+                {currentQuestion ? <div>{currentQuestion.value} <HelpIcon onClick={handleClickOpen} data-testid='helpButton' /></div> : 'Game not found'}
               </Typography>
               <SimpleDialog
                 open={open}
