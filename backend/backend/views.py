@@ -88,6 +88,8 @@ def joinGame(request):
                     "chance": false,
                     "game_id": 22,
                     "chance_game": "NO_GAME"
+                    "help": [{"title": "Hint 1",
+                            "body": "This is some help for the question"}]
                 }
             ],
             "options": [
@@ -122,13 +124,19 @@ def joinGame(request):
         game_session_serializer = GameSessionSerializer(game_session)
         game_json = game_serializer.data
         session_json = game_session_serializer.data
-        questions = Question.objects.filter(game=game_json['id'])
-        options = Option.objects.filter(source_question__in=[q.id for q in questions])
+        questions = [QuestionSerializer(question).data for question
+                    in Question.objects.filter(game=game_json['id'])]
+        for question in questions:
+            # We are going to add an array of help objects directly to the question
+            contexts = ContextHelp.objects.filter(questions__in=[question["id"]])
+            serializer = ContextHelpSerializer(contexts, many=True)
+            question["help"] = serializer.data
+        options = Option.objects.filter(source_question__in=[q["id"] for q in questions])
         ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
-                    'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':[QuestionSerializer(question).data for question
-                    in questions], 'options':[OptionSerializer(option).data for option in options]}
+                    'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':questions, 'options':[OptionSerializer(option).data for option in options]}
         return Response(ret_json, status=200)
     except Exception as e:
+        print(e)
         return HttpResponseServerError('There was a problem accessing this game session. Please try again later.')
 
 @api_view(['POST'])
@@ -679,6 +687,30 @@ class CourseViewSet(ModelViewSet):
     delete returns -- 204 on success and 404 on failure'''
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+class ContextHelpViewSet(ModelViewSet):
+    '''A view set for the context_help object. It expects {title: string, body: string, question_id: int[]}
+    It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
+    create returns -- 201 on success and 400 on failure
+    read returns -- 200 on success and 404 on failure
+    update returns -- 200 on success and 404 on failure
+    delete returns -- 204 on success and 404 on failure'''
+    queryset = ContextHelp.objects.all()
+    serializer_class = ContextHelpSerializer
+
+@api_view(['GET'])
+def get_contexts_by_question(request, question_id):
+    """Function to retrieve all contexts relating to a given question (by int id)
+    Returns -- 200 on success
+    Returns -- 404 on failure"""
+    try:
+        # Used to force the except case if the given question_id is NAN
+        question_id = int(question_id)
+        contexts = ContextHelp.objects.filter(questions__in=[question_id])
+        serializer = ContextHelpSerializer(contexts, many=True)
+        return Response(data=serializer.data)
+    except Exception:
+        return HttpResponseBadRequest("Question IDs must be integers.")
 
 
 @api_view(['GET'])

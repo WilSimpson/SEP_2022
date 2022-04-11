@@ -94,6 +94,15 @@ class CourseSerializerTest(TestCase):
         for k in ['name', 'section', 'department', 'number', 'userId']:
             self.assertEqual(serializer.data[k], getattr(self.course, k))
 
+class ContextHelpSerializerTest(TestCase):
+    def setUp(self):
+        self.context = ContextHelp.objects.create(title="Test 1", body="This is the hint body")
+
+    def test_fields(self):
+        serializer = ContextHelpSerializer(self.context)
+        for k in ['title', 'body']:
+            self.assertEqual(serializer.data[k], getattr(self.context, k))
+
 class AnswersReportSerializerTest(TestCase):
     def setUp(self):
         self.game = Game.objects.create(title='sirializerTest', creator_id=999, code=999999, active=True)

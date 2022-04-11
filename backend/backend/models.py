@@ -170,3 +170,8 @@ class Course(models.Model):
     number      = models.IntegerField()
     semester    = models.CharField(max_length=32, default="No Semester Set")
     userId = models.IntegerField()
+
+class ContextHelp(models.Model):
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+    questions = models.ManyToManyField(Question, default=None)

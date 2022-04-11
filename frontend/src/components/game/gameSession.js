@@ -13,6 +13,54 @@ import {useNavigate} from 'react-router-dom';
 import GamePlayTimeout from './gamePlayTimeout';
 import GameLayout from '../layout/game.layout';
 import Passcode from '../../pages/game/passcode';
+import HelpIcon from '@mui/icons-material/Help';
+import PropTypes from 'prop-types';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+
+function SimpleDialog(props) {
+  const {onClose, open, hints} = props;
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  const handleListItemClick = (value) => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog onClose={handleClose} open={open} sx={{overflow: 'hidden'}}>
+      <DialogTitle>Help</DialogTitle>
+      <List sx={{pt: 0}}>
+        {hints.map((hint) => (
+          <Box key={hint}>
+            <ListItem key={hint.title}>
+              <ListItemText primary={hint.title} />
+            </ListItem>
+            <ListItem key={hint.body}>
+              <ListItemText primary={hint.body} />
+            </ListItem>
+          </Box>
+        ))}
+
+        <ListItem autoFocus button onClick={() => handleListItemClick('close')}>
+          <ListItemText primary="Close" />
+        </ListItem>
+      </List>
+    </Dialog>
+  );
+}
+
+SimpleDialog.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  hints: PropTypes.array.isRequired,
+};
+
 export default function GameSession() {
   const {state} = useLocation();
   const navigate = useNavigate();
@@ -32,6 +80,16 @@ export default function GameSession() {
       ));
   const [selectedOption, setSelectedOption] = useState();
   const [endGame, setEndGame] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [hints, setHints] = useState(currentQuestion.help);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
 
   React.useEffect(() => {
     setOptions(
@@ -51,6 +109,7 @@ export default function GameSession() {
     GamePlayService.updateCurrentQuestion(question);
     setQuestion(question);
     setSelectedOption(null);
+    setHints(currentQuestion.help);
   };
 
   const setError = (error) => {
@@ -180,8 +239,13 @@ export default function GameSession() {
       <Container maxWidth="sm">
         <GamePlayTimeout id='timeout-dialog' open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
         <Typography>
-          {currentQuestion ? currentQuestion.value : 'Game not found'}
+          {currentQuestion ? <div>{currentQuestion.value} <HelpIcon onClick={handleClickOpen} data-testid='helpButton' /></div> : 'Game not found'}
         </Typography>
+        <SimpleDialog
+          open={open}
+          onClose={handleClose}
+          hints={hints}
+        />
         <ButtonGroup
           variant="contained"
           align="center"

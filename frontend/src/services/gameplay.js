@@ -40,6 +40,10 @@ class GameService {
         .then((response) => {});
   }
 
+  getQuestionContext(questionId) {
+    return axios.get(API_URL + '/contextHelp/' + String(questionId) + '/by_question');
+  }
+
   createAnswer(optionId, questionId, teamId, passcodeEntered) {
     return axios
         .post(API_URL + '/gameSession/createAnswer/', {
