@@ -218,10 +218,11 @@ def create_team(request):
         new_team = Team.objects.create(
                 game_session = session, 
                 game_mode = mode,
-                guest = True if request.data['first_time'] == "yes" else False,
+                guest = session.is_guest,
                 size = request.data['size'],
                 first_time = True if request.data['first_time'] == "yes" else False,
                 completed = False)
+        print(new_team.guest)
         return Response({'id':new_team.id}, status=200)
     except Exception as e:
         return HttpResponseServerError('A team could not be created. Please try again later.')
