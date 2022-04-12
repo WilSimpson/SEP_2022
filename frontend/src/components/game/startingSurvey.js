@@ -25,7 +25,6 @@ export default function StartingSurvey() {
     size: '',
     first: '',
     type: '',
-    guest: '',
   };
 
   // a null gamecode will not allow page to load
@@ -179,34 +178,6 @@ export default function StartingSurvey() {
                           name="first"
                           defaultValue="yes"
                           value={formValues.first}
-                          onChange={handleInputChange}
-                          row
-                        >
-                          <FormControlLabel
-                            key="yes"
-                            value="yes"
-                            control={<Radio size="small" />}
-                            label="Yes"
-                            selected
-                          />
-                          <FormControlLabel
-                            key="no"
-                            value="no"
-                            control={<Radio size="small" />}
-                            label="No"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Box sx={{pb: 2}}>
-                      <FormControl>
-                        <FormLabel>Are you a guest in this building?</FormLabel>
-                        <RadioGroup
-                          name="guest"
-                          defaultValue="yes"
-                          value={formValues.guest}
                           onChange={handleInputChange}
                           row
                         >
