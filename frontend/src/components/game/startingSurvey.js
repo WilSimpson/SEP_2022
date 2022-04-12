@@ -11,8 +11,6 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
@@ -235,22 +233,33 @@ export default function StartingSurvey() {
                         <FormLabel>
                           Which version of the game would you like to play?
                         </FormLabel>
-                        <Select
+                        <RadioGroup
                           name="type"
+                          defaultValue="Walking"
                           value={formValues.type}
                           onChange={handleInputChange}
-                          required
+                          row
                         >
-                          <MenuItem key="Walking" value="Walking">
-                            Walking
-                          </MenuItem>
-                          <MenuItem key="Limited Walking" value="Limited Walking">
-                            Limited Walking
-                          </MenuItem>
-                          <MenuItem key="No Walking" value="No Walking">
-                            No Walking
-                          </MenuItem>
-                        </Select>
+                          <FormControlLabel
+                            key="Walking"
+                            value="Walking"
+                            control={<Radio size="small" />}
+                            label="Walking"
+                            selected
+                          />
+                          <FormControlLabel
+                            key="Limited Walking"
+                            value="Limited Walking"
+                            control={<Radio size="small" />}
+                            label="Limited Walking"
+                          />
+                          <FormControlLabel
+                            key="No Walking"
+                            value="No Walking"
+                            control={<Radio size="small" />}
+                            label="No Walking"
+                          />
+                        </RadioGroup>
                       </FormControl>
                     </Box>
                   </Grid>
