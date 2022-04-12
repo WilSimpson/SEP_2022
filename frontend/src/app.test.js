@@ -8,7 +8,6 @@ describe('<App />', () => {
   describe('child components it renders', () => {
     it ('should render <Router/>', () => {
       const wrapper = shallow(<App />);
-      console.log(wrapper.debug());
       expect(wrapper.find(BrowserRouter)).toHaveLength(1);
     });
   });
