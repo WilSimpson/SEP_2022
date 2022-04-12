@@ -24,7 +24,7 @@ import GameLayout from '../layout/game.layout';
 export default function StartingSurvey() {
   const defaultValues = {
     name: '',
-    size: 1,
+    size: '',
     first: '',
     type: '',
     guest: '',
@@ -43,15 +43,18 @@ export default function StartingSurvey() {
       ...formValues,
       [name]: value,
     });
+  };
+
+  React.useEffect(() => {
     let disableSubmit = false;
     Object.entries(formValues).map(([key, value]) => {
-      if (value === defaultValues[key] && key !== 'size') {
+      if (value === defaultValues[key]) {
         disableSubmit = true;
       }
       setSubmitDisabled(disableSubmit);
       return true;
     });
-  };
+  }, [formValues]);
 
   const initialQuestion = (game) => {
     const destinationQuestions = game.options.map(
