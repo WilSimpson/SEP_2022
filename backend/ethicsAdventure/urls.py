@@ -50,15 +50,12 @@ urlpatterns = [
     path('api/games/toggleActive/', views.toggle_active, name='toggle_active'),
     path('api/games/startSession/', views.start_session, name='start_session'),
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
-<<<<<<< HEAD
     path('api/games/endSession/<int:id>/', views.end_session, name='end_session'),
     path('api/gameSession/', views.get_all_game_sessions, name='active_sessions'),
     path('api/gameSession/<int:creator_id>/', views.get_user_sessions, name='user_sessions'),
     path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
-=======
     path('api/gameSession/updateAnswer/<int:game_session_answer_id>/', GameSessionAnswerViewSet.as_view({'put': 'update', 'patch': 'update'}), name='update_answer'),
     path('api/gameSession/createAnswer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='enter_passcode'),
->>>>>>> 59eecccc16f1cb25afe253d0e4f4de7fffce848f
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
     path(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),
