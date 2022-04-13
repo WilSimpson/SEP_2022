@@ -88,6 +88,8 @@ def joinGame(request):
                     "chance": false,
                     "game_id": 22,
                     "chance_game": "NO_GAME"
+                    "help": [{"title": "Hint 1",
+                            "body": "This is some help for the question"}]
                 }
             ],
             "options": [
@@ -122,13 +124,19 @@ def joinGame(request):
         game_session_serializer = GameSessionSerializer(game_session)
         game_json = game_serializer.data
         session_json = game_session_serializer.data
-        questions = Question.objects.filter(game=game_json['id'])
-        options = Option.objects.filter(source_question__in=[q.id for q in questions])
+        questions = [QuestionSerializer(question).data for question
+                    in Question.objects.filter(game=game_json['id'])]
+        for question in questions:
+            # We are going to add an array of help objects directly to the question
+            contexts = ContextHelp.objects.filter(questions__in=[question["id"]])
+            serializer = ContextHelpSerializer(contexts, many=True)
+            question["help"] = serializer.data
+        options = Option.objects.filter(source_question__in=[q["id"] for q in questions])
         ret_json = {'id':session_json['id'], 'title':game_json['title'], 'creator_id':session_json['creator_id'],
-                    'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':[QuestionSerializer(question).data for question
-                    in questions], 'options':[OptionSerializer(option).data for option in options]}
+                    'code':session_json['code'], 'timeout':session_json['timeout'], 'questions':questions, 'options':[OptionSerializer(option).data for option in options]}
         return Response(ret_json, status=200)
     except Exception as e:
+        print(e)
         return HttpResponseServerError('There was a problem accessing this game session. Please try again later.')
 
 @api_view(['POST'])
@@ -477,19 +485,24 @@ class GameViewSet(ViewSet):
 class GameSessionAnswerViewSet(ViewSet):
     def create(self, request):
         '''
-        API Route saves information about an ```Option``` a ```Team``` chose while playing a game. This allows the players to progress through the game and have their responses recorded.
-        
+        API Endpoint allows a user to progress through the Game and works in two situations:
+           First: Passcode was entered and you POST to create a ```GameSessionAnswer``` without saving an ```Option```.
+            ```"option_id"``` should be null
+           Second: A passcode was not entered and you want to create a ```GameSessionAnswer``` for a ```Team``` with an ```Option```. 
+            ```"code_entered"```: should be null
         **Example request**:
         
         .. code-block:: http
             
-            POST  /api/gameSession/answer/
+            POST  /api/gameSession/createAnswer/
             
         .. code-block:: json
         
             {
-                "option_id": (id),
-                "team_id": (id)
+                "option_id": (id) or null if passcode,
+                "team_id": (id),
+                "question": (id),
+                "code_entered": 123456 (int) or null if no passcode
             }
             
         **Response Codes**:
@@ -498,25 +511,71 @@ class GameSessionAnswerViewSet(ViewSet):
         
             200 : Success
             400 : Fail (message will indicate whether team/option does not exist or game play has timed out)
+            404 : Fail (code entered was incorrect)
             500 : Fail
         '''
         try:
             answer_data = request.data
             try: 
-                option = Option.objects.get(id=answer_data["option_id"])
-                question = Question.objects.get(id=option.source_question_id)
+                if (answer_data["option_id"]):
+                    # option will be present if user did not enter a passcode
+                    Option.objects.get(id=answer_data["option_id"])
+                    answer = GameSessionAnswer(option_chosen_id=answer_data["option_id"])
+                else:
+                    answer = GameSessionAnswer(passcode_entered=True)
+                question = Question.objects.get(id=answer_data["question"])
+                if(answer_data["code_entered"] and (str(answer_data["code_entered"]) != str(question.passcode))):
+                    return HttpResponse(status=404, content="Invalid passcode.")                    
             except Exception as e:
-                return HttpResponse(status=400, content="This option does not exist.")
+                return HttpResponse(status=400, content="This question or option does not exist.")
             try: 
                 team = Team.objects.get(id=answer_data["team_id"])
             except Exception as e:
                 return HttpResponse(status=400, content="This team does not exist.")
-            answer = GameSessionAnswer(
-                team = team,
-                question_id = question.id,
-                option_chosen_id = option.id
-            )
-            if (isTimedOut(team.game_session_id, team)):
+            answer.team = team
+            answer.question_id = question.id            
+            if (not answer.passcode_entered and isTimedOut(team.game_session_id, team, answer)):
+                return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
+            answer.save()
+            return Response({"id":answer.id})
+        except Exception as e:
+            return HttpResponse(status=500)
+        
+    def update(self, request, game_session_answer_id=None):
+        '''
+        API Endpoint allows for updating a ```GameSessionAnswer``` for a ```Team``` when they choose an ```Option```.
+        This route will be used during Walking or Limited Walking mode when a ```GameSessionAnswer``` has already been created due to entering a passcode.
+        **Example request**:
+        
+        .. code-block:: http
+            
+            PUT  /api/gameSession/updateAnswer/{game_session_answer_id}/
+            PATCH  /api/gameSession/updateAnswer/{game_session_answer_id}/
+            
+        .. code-block:: json
+        
+            {
+                "option_id": (id),
+            }
+            
+        **Response Codes**:
+        
+        .. code-block:: http
+        
+            200 : Success
+            400 : Fail (message will indicate whether option does not exist or game play has timed out)
+            500 : Fail
+        '''
+        try:
+            answer_data = request.data
+            answer = GameSessionAnswer.objects.get(id=game_session_answer_id)
+            try:
+                option = Option.objects.get(id=answer_data["option_id"])
+            except Exception as e:
+                return HttpResponse(status=400, content="This option does not exist.")
+            team = Team.objects.get(id=answer.team.id)
+            answer.option_chosen = option
+            if (isTimedOut(team.game_session_id, team, answer)):
                 return HttpResponse(status=400, content="Your Game has timed out. Please start a new Game.")
             answer.save()
             return Response()
@@ -628,6 +687,30 @@ class CourseViewSet(ModelViewSet):
     delete returns -- 204 on success and 404 on failure'''
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+class ContextHelpViewSet(ModelViewSet):
+    '''A view set for the context_help object. It expects {title: string, body: string, question_id: int[]}
+    It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
+    create returns -- 201 on success and 400 on failure
+    read returns -- 200 on success and 404 on failure
+    update returns -- 200 on success and 404 on failure
+    delete returns -- 204 on success and 404 on failure'''
+    queryset = ContextHelp.objects.all()
+    serializer_class = ContextHelpSerializer
+
+@api_view(['GET'])
+def get_contexts_by_question(request, question_id):
+    """Function to retrieve all contexts relating to a given question (by int id)
+    Returns -- 200 on success
+    Returns -- 404 on failure"""
+    try:
+        # Used to force the except case if the given question_id is NAN
+        question_id = int(question_id)
+        contexts = ContextHelp.objects.filter(questions__in=[question_id])
+        serializer = ContextHelpSerializer(contexts, many=True)
+        return Response(data=serializer.data)
+    except Exception:
+        return HttpResponseBadRequest("Question IDs must be integers.")
 
 
 @api_view(['GET'])

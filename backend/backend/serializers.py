@@ -64,9 +64,15 @@ class GameModeSerializer(ModelSerializer):
     class Meta:
         model = GameMode
         fields = '__all__'    
+
 class CourseSerializer(ModelSerializer):
     class Meta:
         model = Course
+        fields = '__all__'
+
+class ContextHelpSerializer(ModelSerializer):
+    class Meta:
+        model = ContextHelp
         fields = '__all__'
 
 class AnswersReportSerializer(ModelSerializer):

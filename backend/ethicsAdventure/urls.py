@@ -19,7 +19,7 @@ from django.urls import path, re_path, include
 from rest_framework.schemas import get_schema_view
 from django.views.generic import TemplateView
 
-from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet, RoleTokenObtainPairView, CourseViewSet
+from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet, RoleTokenObtainPairView, CourseViewSet, ContextHelpViewSet
 from django.contrib.auth.models import User
 
 from backend import views
@@ -33,6 +33,7 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
 router.register(r'courses', CourseViewSet, basename='course')
+router.register(r'contextHelp', ContextHelpViewSet, basename='context_help')
 
 urlpatterns = [
     path('api/openapi/', get_schema_view(
@@ -49,9 +50,12 @@ urlpatterns = [
     path('api/games/toggleActive/', views.toggle_active, name='toggle_active'),
     path('api/games/startSession/', views.start_session, name='start_session'),
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
-    path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
+    path('api/gameSession/updateAnswer/<int:game_session_answer_id>/', GameSessionAnswerViewSet.as_view({'put': 'update', 'patch': 'update'}), name='update_answer'),
+    path('api/gameSession/createAnswer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='enter_passcode'),
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
+    path(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),
+    path('api/contextHelp/<int:question_id>/by_question', views.get_contexts_by_question, name='get_contexts_by_question'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/games/<int:game_id>/sessions/', views.get_games_sessions),
