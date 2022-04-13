@@ -14,11 +14,12 @@ export default function ReportsPage() {
 
   useEffect(() => {
     async function getGames() {
-      const resp = await gameService.getGames().catch((error) => {
+      gameService.getGames().then((resp) => {
+        setGames([...resp.data]);
+        setLoading(false);
+      }).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
       });
-      setGames([...resp.data]);
-      setLoading(false);
     }
     getGames();
   }, []);

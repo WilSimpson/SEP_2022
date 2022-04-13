@@ -80,7 +80,7 @@ export default function ReportPage(props) {
                       label="Start Date"
                       value={startDate}
                       onChange={(newValue) => setStartDate(newValue)}
-                      renderInput={(params) => <TextField {...params} />}
+                      renderInput={(params) => <TextField testid='start-date-textfield' {...params} />}
                     />
                   </LocalizationProvider>
                   <RadioGroup
@@ -115,6 +115,7 @@ export default function ReportPage(props) {
                     sx={{
                       'justifyContent': 'center',
                     }}
+                    id='end-date-ref'
                   >
                     <FormControlLabel value='before' control={<Radio />} label='Before' />
                     <FormControlLabel value='after' control={<Radio />} label='After' />
@@ -173,7 +174,7 @@ export default function ReportPage(props) {
                     <RadioGroup
                       row
                       defaultValue={reportFormatDefault}
-                      name='end-time-reference'
+                      name='report-format'
                       onChange={(event) => setReportFormat(event.target.value)}
                     >
                       <FormControlLabel value='csv' control={<Radio />} label='CSV' />

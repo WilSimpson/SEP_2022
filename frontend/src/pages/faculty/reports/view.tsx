@@ -79,13 +79,13 @@ export default function ViewReportPage(props: ViewReportPageProps) {
      * after a response from the server is received.
      */
     async function addSessionReport(sessionId: number, lastReport: boolean = true): Promise<void> {
-      await gameSessionService.getReport(id, sessionId, false).catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error.message});
-      }).then((resp) => {
+      await gameSessionService.getReport(id, sessionId, false).then((resp) => {
         if (resp && resp.data.length > 0) {
           setReports([...reports, ...resp.data]);
         }
         console.log(reports);
+      }).catch((error) => {
+        alertService.alert({severity: alertSeverity.error, message: error.message});
       }).finally(() => setLoading(lastReport));
     }
 
@@ -104,10 +104,10 @@ export default function ViewReportPage(props: ViewReportPageProps) {
     if (ids) {
       addSessionReports(ids);
     } else {
-      gameSessionService.getSessions(parseInt(id)).catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      }).then((resp) => {
+      gameSessionService.getSessions(parseInt(id)).then((resp) => {
         addSessionReports(resp.data.map((s: GameSession) => s.id));
+      }).catch((error) => {
+        alertService.alert({severity: alertSeverity.error, message: error});
       });
     }
   }, []);

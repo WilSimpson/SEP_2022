@@ -1,9 +1,12 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import {mount} from 'enzyme';
 import ViewReportPage from './view';
-import { User } from '../../../models/user';
-import { BrowserRouter } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
+import {User} from '../../../models/user';
+import {BrowserRouter} from 'react-router-dom';
+import {act} from 'react-dom/test-utils';
+import axios from 'axios';
+import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
+import {alertService} from '../../../services/alert';
 
 const user = new User(
   'email@example.com',
@@ -14,6 +17,8 @@ const user = new User(
   1,
 );
 
+jest.mock('axios');
+
 beforeEach(() => {
   localStorage.setItem('user', JSON.stringify(user));
 });
@@ -23,11 +28,55 @@ afterEach(() => {
 });
 
 describe('<ViewReportPage />', () => {
-  it('should render', () => {
-    let mount;
-    act(() => {
-      mount = shallow(<BrowserRouter><ViewReportPage /></BrowserRouter>);
+  let wrapper;
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  })
+
+  describe('successful response data', () => {
+    beforeEach(async () => {
+      const resp = {data: []};
+      axios.get.mockResolvedValue(resp);
+      await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <ViewReportPage />
+            </BrowserRouter>,
+          );
+      });
     });
-    expect(mount);
+
+    it('should render', () => {
+      expect(wrapper);
+    });
+  
+    it('should have navigation', () => {
+      expect(wrapper.find(AuthenticatedLayout).length).toEqual(1);
+    });
+  
+    it('has correct components', () => {
+      expect(wrapper.text()).toContain('Viewing Report');
+    });
   });
+
+  describe('invalid response data', () => {
+    it('should show errors', async () => {
+      const err = new Error('test error');
+      axios.get.mockRejectedValue(err);
+      const spy = jest.spyOn(alertService, 'alert');
+      await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <ViewReportPage />
+            </BrowserRouter>,
+          );
+      });
+
+      expect(spy).toBeCalledTimes(1);
+    });
+  })
 });

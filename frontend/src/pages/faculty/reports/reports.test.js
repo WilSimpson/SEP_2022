@@ -1,10 +1,13 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import {mount} from 'enzyme';
 import ReportsPage from './reports';
-import { User } from '../../../models/user';
-import { act } from 'react-dom/test-utils';
-import { BrowserRouter } from 'react-router-dom';
+import {User} from '../../../models/user';
+import {act} from 'react-dom/test-utils';
+import {BrowserRouter} from 'react-router-dom';
 import axios from 'axios';
+import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
+import {alertService} from '../../../services/alert';
+
 
 const user = new User(
   'email@example.com',
@@ -29,11 +32,55 @@ afterEach(() => {
 });
 
 describe('<ReportsPage />', () => {
-  it('should render', () => {
-    let mount;
-    act(() => {
-      mount = shallow(<BrowserRouter><ReportsPage /></BrowserRouter>);
+  let wrapper;
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  })
+
+  describe('successful response data', () => {
+    beforeEach(async () => {
+      const resp = {data: []};
+      axios.get.mockResolvedValue(resp);
+      await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <ReportsPage />
+            </BrowserRouter>,
+          );
+      });
     });
-    expect(mount);
-  });
+  
+    it('should render', () => {
+      expect(wrapper);
+    });
+  
+    it('should have navigation', () => {
+      expect(wrapper.find(AuthenticatedLayout).length).toEqual(1);
+    });
+  
+    it('has correct components', () => {
+      expect(wrapper.text()).toContain('Select Game');
+    });
+  })
+
+  describe('invalid response data', () => {
+    it('should show errors', async () => {
+      const err = new Error('test error');
+      axios.get.mockRejectedValue(err);
+      const spy = jest.spyOn(alertService, 'alert');
+      await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <ReportsPage />
+            </BrowserRouter>,
+          );
+      });
+
+      expect(spy).toBeCalledTimes(1);
+    });
+  })
 });
