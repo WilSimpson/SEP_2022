@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import {ReportsPage} from './reports';
+import ReportsPage from './reports';
 import { User } from '../../../models/user';
 import { act } from 'react-dom/test-utils';
 import { BrowserRouter } from 'react-router-dom';
