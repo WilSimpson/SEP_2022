@@ -117,7 +117,7 @@ export default function GameSession() {
               </Typography>
               <ButtonGroup
                 variant="contained"
-                alignItems="center"
+                // alignItems="center"
                 justify="center"
                 orientation="vertical"
                 fullWidth={true}
@@ -154,7 +154,7 @@ export default function GameSession() {
                         color='secondary'
                         sx={{marginTop: 5}}
                         onClick={completeGame}
-                        inputProps={{'data-testid': 'complete'}}
+                        // inputProps={{'data-testid': 'complete'}}
                         data-testid='complete'
                       >
                         Complete Game
@@ -165,7 +165,7 @@ export default function GameSession() {
                         color='secondary'
                         sx={{marginTop: 5}}
                         onClick={nextQuestion}
-                        inputProps={{'data-testid': 'continue'}}
+                        // inputProps={{'data-testid': 'continue'}}
                         data-testid='continue'
                         disabled={!selectedOption}
                       >

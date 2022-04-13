@@ -76,10 +76,12 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
   // Force rerender
   const [, updateState] = React.useState();
 
+  const gameSessions = props.gameSessions || [];
+
   // Number of empty rows
   const emptyRows =
       page > 0 ?
-        Math.max(0, (1 + page) * pageSize - props.gameSessions.length) :
+        Math.max(0, (1 + page) * pageSize - gameSessions.length) :
         0;
 
   // Calculates the number of active columns
@@ -90,8 +92,8 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
 
   // The current sessions shown in the table
   const shownSessions = pageSize > 0 ?
-      props.gameSessions.slice(page * pageSize, page * pageSize + pageSize) :
-      props.gameSessions;
+      gameSessions.slice(page * pageSize, page * pageSize + pageSize) :
+      gameSessions;
 
   // Handles when the page size selection changes
   const handleChangePageSize = (event) => {
@@ -224,7 +226,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
             <TablePagination
               rowsPerPageOptions={[5, 15, 30, {label: 'All', value: -1}]}
               colSpan={colSize}
-              count={props.gameSessions.length}
+              count={gameSessions.length}
               rowsPerPage={pageSize}
               page={page}
               SelectProps={{

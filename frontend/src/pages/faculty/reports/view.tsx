@@ -84,8 +84,6 @@ export default function ViewReportPage(props: ViewReportPageProps) {
       }).then((resp) => {
         if (resp && resp.data.length > 0) {
           setReports([...reports, ...resp.data]);
-          // console.log('new Reports:', [...reports, ...resp.data]);
-          // setReports(reports);
         }
         console.log(reports);
       }).finally(() => setLoading(lastReport));

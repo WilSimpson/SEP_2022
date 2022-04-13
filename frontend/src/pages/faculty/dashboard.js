@@ -35,7 +35,6 @@ function CoursesTable() {
   useEffect(() => {
     courseService.getMyCourses(AuthService.currentUser().id).then(
         (response) => {
-          console.log(response.data);
           setRows(response.data);
           setFilteredRows(response.data);
           setLoading(false);

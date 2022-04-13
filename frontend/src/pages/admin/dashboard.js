@@ -23,20 +23,22 @@ export default function AdminDash() {
 
   React.useEffect(() => {
     async function getGames() {
-      const resp = await gameService.getGames().catch((error) => {
+      gameService.getGames().catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
+      }).then((resp) => {
+        const games = [...resp.data];
+        setGames(games);
+        getSessions(games);
       });
-      const games = [...resp.data];
-      setGames(games);
-      getSessions(games);
     }
 
     async function getSessions(games) {
       for (const game of games) {
-        const resp = await gameSessionService.getSessions(game.id).catch((error) => {
+        gameSessionService.getSessions(game.id).catch((error) => {
           alertService.alert({severity: alertSeverity.error, message: error});
+        }).then((resp) => {
+          setSessions((oldSessions) => [...oldSessions, ...resp.data]);
         });
-        setSessions((oldSessions) => [...oldSessions, ...resp.data]);
       }
 
       setLoading(false);
