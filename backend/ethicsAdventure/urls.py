@@ -19,7 +19,7 @@ from django.urls import path, re_path, include
 from rest_framework.schemas import get_schema_view
 from django.views.generic import TemplateView
 
-from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet, RoleTokenObtainPairView, CourseViewSet
+from backend.views import GameViewSet, UserViewSet, GameSessionAnswerViewSet, RoleTokenObtainPairView, CourseViewSet, ContextHelpViewSet
 from django.contrib.auth.models import User
 
 from backend import views
@@ -33,6 +33,7 @@ router = DefaultRouter()
 router.register(r'users', UserViewSet, basename="user")
 router.register(r'games', GameViewSet, basename='game')
 router.register(r'courses', CourseViewSet, basename='course')
+router.register(r'contextHelp', ContextHelpViewSet, basename='context_help')
 
 urlpatterns = [
     path('api/openapi/', get_schema_view(
@@ -49,12 +50,19 @@ urlpatterns = [
     path('api/games/toggleActive/', views.toggle_active, name='toggle_active'),
     path('api/games/startSession/', views.start_session, name='start_session'),
     path('api/games/joinGame/', views.joinGame, name='joinGame'),
+<<<<<<< HEAD
     path('api/games/endSession/<int:id>/', views.end_session, name='end_session'),
     path('api/gameSession/', views.get_all_game_sessions, name='active_sessions'),
     path('api/gameSession/<int:creator_id>/', views.get_user_sessions, name='user_sessions'),
     path('api/gameSession/answer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='record_answer'),
+=======
+    path('api/gameSession/updateAnswer/<int:game_session_answer_id>/', GameSessionAnswerViewSet.as_view({'put': 'update', 'patch': 'update'}), name='update_answer'),
+    path('api/gameSession/createAnswer/', GameSessionAnswerViewSet.as_view({'post':'create'}), name='enter_passcode'),
+>>>>>>> 59eecccc16f1cb25afe253d0e4f4de7fffce848f
     path('api/teams/createTeam/', views.create_team, name='createTeam'),
+    path(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     path('api/teams/complete/', views.complete_team, name='completeTeam'),
+    path('api/contextHelp/<int:question_id>/by_question', views.get_contexts_by_question, name='get_contexts_by_question'),
     re_path('^api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/games/<int:game_id>/sessions/', views.get_games_sessions),

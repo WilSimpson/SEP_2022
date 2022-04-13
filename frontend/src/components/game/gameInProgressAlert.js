@@ -16,6 +16,7 @@ export default function GameInProgressAlert(props) {
         formData: ipState.state.formValues,
         team_id: ipState.state.team_id,
         currentQuestion: ipState.state.currentQuestion,
+        enteredPasscode: ipState.state.enteredPasscode,
       },
     });
   };

@@ -9,6 +9,8 @@ from backend.models import Game, Option, Question
 from .factories import UserFactory
 
 from ..models import *
+from ..signals import *
+from django.core import mail
 
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -517,27 +519,79 @@ class GameSessionAnswerViewSetTest(TestCase):
         self.gamesession = GameSession.objects.create(creator_id=1, start_time='2022-01-01 10:00:00', notes='notes', timeout=20, code='123456', game_id=self.game.id)
         self.gamemode = GameMode.objects.create(name='Walking')
         self.team = Team.objects.create(guest=True, size=1, first_time=True, completed=False, game_mode_id=self.gamemode.id, game_session_id=self.gamesession.id)
-        self.data = {"option_id": self.o1.id, "team_id": self.team.id}
+        self.create_data_option = {"code_entered": None, "team_id": self.team.id, "question": self.q1.id, "option_id": self.o1.id}
+        self.create_data_no_option = {"code_entered": self.q1.passcode, "team_id": self.team.id, "question": self.q1.id, "option_id": None}
+        self.update_data = {"option_id": self.o1.id}
         self.initial_gamesessionanswer_count = GameSessionAnswer.objects.all().count()
         
-    def test_valid_answer(self):
-        resp = self.client.post('/api/gameSession/answer/', self.data, content_type='application/json')
+    def test_valid_answer_w_option(self):
+        resp = self.client.post('/api/gameSession/createAnswer/', self.create_data_option, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count + 1)
     
     def test_answer_invalid_option(self):
-        invalid_data = self.data
-        invalid_data["option_id"] = 0
-        resp = self.client.post('/api/gameSession/answer/', invalid_data, content_type='application/json')
+        invalid_data = self.create_data_option
+        invalid_data["option_id"] = 9999
+        resp = self.client.post('/api/gameSession/createAnswer/', invalid_data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
         
     def test_answer_invalid_team(self):
-        invalid_data = self.data
+        invalid_data = self.create_data_option
         invalid_data["team_id"] = 0
-        resp = self.client.post('/api/gameSession/answer/', invalid_data, content_type='application/json')
+        resp = self.client.post('/api/gameSession/createAnswer/', invalid_data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
+        
+    def test_answer_time_out(self):
+        self.gamesession.timeout = 0
+        self.gamesession.save()
+        resp = self.client.post('/api/gameSession/createAnswer/', self.create_data_option, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
+        
+    def test_valid_answer_wo_option(self):
+        resp = self.client.post('/api/gameSession/createAnswer/', self.create_data_no_option, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count + 1)
+    
+    def test_answer_passcode_invalid(self):
+        invalid_pass = self.create_data_no_option
+        invalid_pass["code_entered"] = 654321
+        resp = self.client.post('/api/gameSession/createAnswer/', invalid_pass, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(GameSessionAnswer.objects.all().count(), self.initial_gamesessionanswer_count)
+        
+    def test_update_answer_PUT_valid(self):
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        resp = self.client.put('/api/gameSession/updateAnswer/' + str(answer.id) + '/', self.update_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(GameSessionAnswer.objects.get(id=answer.id).option_chosen, self.o1)
+        
+    def test_update_answer_PATCH_valid(self):
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        resp = self.client.patch('/api/gameSession/updateAnswer/' + str(answer.id) + '/', self.update_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(GameSessionAnswer.objects.get(id=answer.id).option_chosen, self.o1)
+    
+    def test_update_answer_time_out(self):
+        self.gamesession.timeout = 0
+        self.gamesession.save()
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        resp = self.client.put('/api/gameSession/updateAnswer/' + str(answer.id) + '/', self.update_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsNone(GameSessionAnswer.objects.get(id=answer.id).option_chosen)
+        
+    def test_update_answer_invalid_option(self):
+        answer = GameSessionAnswer.objects.create(team=self.team, question=self.q1, option_chosen=None, passcode_entered=True)
+        self.assertIsNone(answer.option_chosen)
+        invalid_option_data = {"option_id": 9999}
+        resp = self.client.put('/api/gameSession/updateAnswer/' + str(answer.id) + '/', invalid_option_data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsNone(GameSessionAnswer.objects.get(id=answer.id).option_chosen)
         
 class SessionViewTestCase(TestCase):
     def setUp(self):
@@ -619,6 +673,43 @@ class SessionViewTestCase(TestCase):
         }
         resp = self.client.post('/api/games/toggleActive/', data=data)
         self.assertEqual(resp.status_code, 500)
+
+class PasswordResetTestCase(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects
+        self.testUser = self.user.create_user('test@test.com', 'test', 'test', 'testadmin')
+        data = {
+            'email': 'test@test.com',
+            'password': 'testadmin'
+        }
+        self.resp = self.client.post('/api/token/', data=data)
+        self.refresh = self.resp.data['refresh']
+        self.access = self.resp.data['access']
+    def test_request_reset(self):
+        data = {
+            'email': 'test@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(resp.status_code, 200)
+    def test_request_reset_fail(self):
+        data = {
+            'email': 'fail@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(resp.status_code, 400)
+    def test_send_email(self):
+        data = {
+            'email': 'test@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Password Reset for Ethics Adventure')
+    def test_send_email_fail(self):
+        data = {
+            'email': 'fail@test.com'
+        }
+        resp = self.client.post('/api/password_reset/', data=data)
+        self.assertEqual(len(mail.outbox), 0)
 
 class CourseViewSetTestCase(TestCase):
     def setUp(self):
@@ -870,3 +961,66 @@ class GameSessionTests(TestCase):
     def test_get_user_active_sessions(self):
         resp = self.client.get('/api/gameSession/{}'.format(self.session.creator_id))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+class ContextHelpViewSetTestCase(TestCase):
+    def setUp(self):
+        # create context
+        self.context = ContextHelp.objects.create(title="Test 1", body="Body text for context hint 1")
+        self.initial_context_count = ContextHelp.objects.all().count()
+        self.data = {"title":"Test 1", "body": "Body text for context hint 1", "questions": [1]}
+        
+    def test_get_valid_context(self):
+        resp = self.client.get('/api/contextHelp/'+str(self.context.id)+'/')
+        for value in ['title', 'body']:
+            self.assertEqual(resp.data.get(value), self.data.get(value))
+        
+    def test_get_invalid_context(self):
+        resp = self.client.get('/api/courses/'+str(self.context.id + 1)+'/')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        
+    def test_delete_valid_context(self):
+        initial_context_count = ContextHelp.objects.all().count()
+        resp = self.client.delete('/api/contextHelp/'+str(self.context.id)+'/')
+        self.assertEqual(ContextHelp.objects.all().count(), initial_context_count-1)
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_invalid_context(self):
+        resp = self.client.delete('/api/contextHelp/'+str(self.context.id+1)+'/')
+        self.assertEqual(ContextHelp.objects.all().count(), self.initial_context_count)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_get_all_contexts(self):
+        resp = self.client.get('/api/contextHelp/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 1)
+        for value in ['title', 'body']:
+            self.assertEqual(resp.data[0][value], self.data[value])
+    
+    def test_get_all_courses_empty(self):
+        ContextHelp.objects.filter(id=self.context.id).delete()
+        resp = self.client.get('/api/contextHelp/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, [])
+
+    def test_create_context_no_title(self):
+        new_context = self.data
+        new_context["title"] = None
+        resp = self.client.post('/api/contextHelp/', new_context, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_create_context_no_body(self):
+        new_context = self.data
+        new_context["body"] = None
+        resp = self.client.post('/api/contextHelp/', new_context, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_context_context_no_questions(self):
+        new_context = self.data
+        new_context["questions"] = None
+        resp = self.client.post('/api/contextHelp/', new_context, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    def test_update_invalid_context(self):
+        resp = self.client.put('/api/contextHelp/'+str(0)+'/', self.data, content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
