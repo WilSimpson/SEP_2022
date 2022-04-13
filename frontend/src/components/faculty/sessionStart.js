@@ -1,5 +1,12 @@
 import React from 'react';
-import {Button, TextField, Grid} from '@mui/material';
+import {
+  Button,
+  TextField,
+  Grid,
+  FormControlLabel,
+  Switch,
+  Autocomplete,
+} from '@mui/material';
 import AuthService from '../../services/auth';
 
 export default function SessionStart(props) {
@@ -7,6 +14,9 @@ export default function SessionStart(props) {
   const [notes, setNotes] = React.useState(null);
   const [timeout, setTimeout] = React.useState(null);
   const [gameId, setGameId] = React.useState(null);
+  const [isGuest, setIsGuest] = React.useState(false);
+  const [courseID, setCourseID] = React.useState(null);
+  const courses = JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id})));
 
   return (
     <Grid container spacing={3}>
@@ -32,6 +42,14 @@ export default function SessionStart(props) {
         />
       </Grid>
       <Grid item xs={12}>
+        <FormControlLabel control={<Switch />} label="For a Class" color="primary" onChange={() => setIsGuest(!isGuest)} />
+      </Grid>
+      <Grid item xs={12}>
+        {isGuest && <Autocomplete id='courses' options={courses} onChange={(e, v) => setCourseID(v.id)}
+          renderInput={(params) => <TextField {...params} label="Select Course" />}
+        />}
+      </Grid>
+      <Grid item xs={12}>
         <TextField
           multiline
           required
@@ -49,12 +67,7 @@ export default function SessionStart(props) {
         <Button
           variant="contained"
           onClick={() => {
-            props.onSubmit(
-                creatorId,
-                gameId,
-                notes,
-                timeout,
-            );
+            props.onSubmit(creatorId, gameId, notes, timeout, courseID);
           }}
         >
           Submit

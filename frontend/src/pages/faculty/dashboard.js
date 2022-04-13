@@ -25,6 +25,7 @@ import {Box} from '@mui/system';
 import AuthService from '../../services/auth';
 import EditIcon from '@mui/icons-material/Edit';
 import {useNavigate} from 'react-router-dom';
+import sessionStorage from 'redux-persist/es/storage/session';
 
 // interface GamesSessions {
 //   name: string;
@@ -99,9 +100,9 @@ function CoursesTable() {
   useEffect(() => {
     courseService.getMyCourses(AuthService.currentUser().id).then(
         (response) => {
-          console.log(response.data);
           setRows(response.data);
           setFilteredRows(response.data);
+          sessionStorage.setItem('courses', JSON.stringify(response.data));
           setLoading(false);
         }).catch((error) => {
       console.log(`There was an error ${error}`);

@@ -8,12 +8,13 @@ class GameSessionService {
     return gameSessions;
   }
 
-  createGameSession(creatorId, gameId, notes, timeout) {
+  createGameSession(creatorId, gameId, notes, timeout, courseID) {
     return axios.post(API_URL + '/games/startSession/', {
       creator_id: parseInt(creatorId),
       id: parseInt(gameId),
       notes: notes,
       timeout: parseInt(timeout),
+      courseID: parseInt(courseID),
     });
   }
 }
