@@ -129,6 +129,14 @@ class Option(models.Model):
     created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 
+class Course(models.Model):        
+    name       = models.TextField()
+    section        = models.CharField(max_length=32)
+    department    = models.CharField(max_length=32)
+    number      = models.IntegerField()
+    semester    = models.CharField(max_length=32, default="No Semester Set")
+    userId = models.IntegerField()
+
 class GameSession(models.Model):
     creator_id = models.IntegerField()
     game = models.ForeignKey(Game, on_delete= models.CASCADE)
@@ -136,6 +144,7 @@ class GameSession(models.Model):
     end_time = models.DateTimeField(blank=True, null=True)
     notes = models.TextField()
     is_guest = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, on_delete= models.CASCADE, null=True, default=None)
     timeout = models.IntegerField()
     code = models.IntegerField(validators=[MinValueValidator(0),
                                 MaxValueValidator(999999)], default=0)
@@ -164,13 +173,6 @@ class GameSessionAnswer(models.Model):
     passcode_entered = models.BooleanField(default=False)
     created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
-class Course(models.Model):        
-    name       = models.TextField()
-    section        = models.CharField(max_length=32)
-    department    = models.CharField(max_length=32)
-    number      = models.IntegerField()
-    semester    = models.CharField(max_length=32, default="No Semester Set")
-    userId = models.IntegerField()
 
 class ContextHelp(models.Model):
     title = models.CharField(max_length=255)

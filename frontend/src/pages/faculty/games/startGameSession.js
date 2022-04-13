@@ -20,9 +20,9 @@ export default function StartGameSession(props) {
       navigate('/faculty-dashboard');
   }
 
-  function handleSubmit(creatorId, gameId, notes, timeout, courseID) {
+  function handleSubmit(creatorId, gameId, notes, timeout, courseID, isGuest) {
     gameSessionService
-        .createGameSession(creatorId, gameId, notes, timeout, courseID)
+        .createGameSession(creatorId, gameId, notes, timeout, courseID, isGuest)
         .then(
             (success) => {
               console.log('success:', success);

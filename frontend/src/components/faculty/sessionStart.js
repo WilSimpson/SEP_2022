@@ -67,7 +67,7 @@ export default function SessionStart(props) {
         <Button
           variant="contained"
           onClick={() => {
-            props.onSubmit(creatorId, gameId, notes, timeout, courseID);
+            props.onSubmit(creatorId, gameId, notes, timeout, courseID, !isGuest);
           }}
         >
           Submit
