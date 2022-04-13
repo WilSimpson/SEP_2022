@@ -1,6 +1,6 @@
 import {Autocomplete, Button, Checkbox, Container, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, Switch, TextField, Typography} from '@mui/material';
 import React from 'react';
-import {useParams} from 'react-router';
+import {useNavigate, useParams} from 'react-router';
 import GameSessionsTable from '../../../components/faculty/gameSessionsTable.tsx';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import gameSessionService from '../../../services/gameSession';
@@ -10,6 +10,8 @@ import MobileDatePicker from '@mui/lab/MobileDatePicker';
 import {alertService, alertSeverity} from '../../../services/alert';
 
 export default function ReportPage(props) {
+  const navigate = useNavigate();
+
   const {id} = useParams();
   const [sessions, setSessions] = React.useState([]);
 
@@ -36,8 +38,10 @@ export default function ReportPage(props) {
   const [includeLimitedWalking, setIncludeLimitedWalking] = React.useState(true);
   const [includeNonWalking, setIncludeNonWalking] = React.useState(true);
 
+  const [selectedIds, setSelectedIds] = React.useState([]);
+
   const handleSessionSelectionChange = (ids) => {
-    console.log('ids:', ids);
+    setSelectedIds([...ids]);
   };
 
   React.useEffect(() => {
@@ -260,6 +264,7 @@ export default function ReportPage(props) {
                   'height': 'auto',
                 }}
                 variant='contained'
+                onClick={() => navigate(`/reports/${id}/view${selectedIds.length == 0 ? '' : `?ids=${selectedIds.join(',')}`}`)}
               >
                 Generate Report
               </Button>
