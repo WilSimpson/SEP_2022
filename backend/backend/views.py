@@ -567,7 +567,13 @@ class GameSessionAnswerViewSet(ViewSet):
         except Exception as e:
             print (e)
             return HttpResponse(status=500)
-        
+
+@api_view(['GET'])
+def get_all_game_sessions(request):
+    sessions = GameSession.objects.all()
+    serializer = GameSessionSerializer(sessions, many=True)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 def toggle_active(request):
     '''
@@ -666,8 +672,8 @@ def start_session(request):
 
 
 
-@api_view(['POST'])
-def end_session(request):
+@api_view(['PUT'])
+def end_session(request, id):
     '''
     Ends a ```GameSession``` so a game can no longer be played by users.
 
@@ -675,7 +681,7 @@ def end_session(request):
 
     .. code-block:: http
 
-        POST  /api/games/endSession/
+        POST  /api/games/endSession/${id}/
 
     .. code-block:: json
 
@@ -692,7 +698,7 @@ def end_session(request):
     '''
     try:
         try:
-            session = GameSession.objects.get(id=int(request.data['id']))
+            session = GameSession.objects.get(id=id)
         except Exception as e:
             return HttpResponseServerError('This game session does not exist.')
         session.active = not session.active
@@ -701,6 +707,19 @@ def end_session(request):
     except Exception as e:
         return HttpResponseServerError('Could not end Game Session')
 
+
+@api_view(['GET'])
+def get_user_sessions(request, creator_id):
+    '''
+    Gets all active game sessions using a creator_id
+    '''
+    try:
+        sessions = GameSession.objects.filter(creator_id=int(creator_id)).filter(active=bool(True))
+    except Exception:
+        return HttpResponseBadRequest(creator_id)
+
+    serializer = GameSessionSerializer(sessions, many=True)
+    return Response(serializer.data)
 
 class CourseViewSet(ModelViewSet):
     '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String}

@@ -38,20 +38,45 @@ import {Cancel} from '@material-ui/icons';
 // }
 
 function GameSessionTable() {
-  const rows = gameSessionService.getGameSessions();
-  // const rows = props.data || [];
-  const [filteredRows, setFilteredRows] = useState(rows);
+  const [filteredRows, setFilteredRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState([]);
   const [confirmationEndID, setConfirmationEndID] = React.useState(null);
+
+  useEffect(() => {
+    gameSessionService.getMyActiveSessions(AuthService.currentUser().id).then(
+        (response) => {
+          console.log(response.data);
+          setRows(response.data);
+          setFilteredRows(response.data);
+          setLoading(false);
+        }).catch( (error) => {
+      console.log(`There was an error ${error}`);
+      setRows([]);
+      setFilteredRows([]);
+      setLoading(false);
+    });
+  }, []);
+
+  const searchSession = (searchedVal) => {
+    setFilteredRows(rows.filter((row) => {
+      return Object.values(row).some((e) => e.toLowerCase()
+          .includes(searchedVal.toLowerCase()));
+    }));
+  };
 
   const handleCloseConfirmation = () => {
     setConfirmationEndID(null);
   };
 
-  const requestSearch = (searchedVal) => {
-    console.log(searchedVal);
-    setFilteredRows(rows.filter((row) => {
-      return row.gamecode.includes(searchedVal);
-    }));
+  const onConfirmEnd = () => {
+    gameSessionService.endSession(confirmationEndID).then(
+        (response) => {
+          console.log(response.data);
+        }).catch( (error) => {
+      console.log(`There was an error ${error}`);
+    });
+    setConfirmationEndID(null);
   };
 
   return (
@@ -68,7 +93,7 @@ function GameSessionTable() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => props.onConfirmEnd(confirmationEndID)}>
+          <Button onClick={() => onConfirmEnd(confirmationEndID)} autoFocus>
             End Permanently
           </Button>
           <Button onClick={handleCloseConfirmation} autoFocus>
@@ -79,15 +104,18 @@ function GameSessionTable() {
       <Typography component="h2" variant="h6" gutterBottom>
         Active Game Sessions
       </Typography>
+      <Box sx={{pb: 2}}>
+        {loading && <LinearProgress />}
+      </Box>
       <TextField
         label='Search by Session Code'
-        onChange={(event) => requestSearch(event.target.value)}
+        onChange={(event) => searchSession(event.target.value)}
       />
       <Table size="small" data-testid="active-game-sessions">
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
-            <TableCell>Name</TableCell>
+            <TableCell>ID</TableCell>
             <TableCell>Start Time</TableCell>
             <TableCell>End Time</TableCell>
             <TableCell>Game Code</TableCell>
@@ -105,10 +133,10 @@ function GameSessionTable() {
                   </IconButton>
                 </Tooltip>
               </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.starttime}</TableCell>
-              <TableCell>{row.endtime}</TableCell>
-              <TableCell>{row.gamecode}</TableCell>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.start_time}</TableCell>
+              <TableCell>{row.end_time}</TableCell>
+              <TableCell>{row.code}</TableCell>
               <TableCell>
                 <Button variant="outlined">Reports</Button>
               </TableCell>
@@ -117,7 +145,7 @@ function GameSessionTable() {
                   <IconButton
                     aria-label="end"
                     onClick={() => {
-                      setConfirmationEndID(session.id);
+                      setConfirmationEndID(row.id);
                     }}
                   >
                     <Cancel />
