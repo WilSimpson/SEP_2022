@@ -141,16 +141,6 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
     updateState({});
   };
 
-  const asdfasdf = () => {
-    for (const session of shownSessions) {
-      if (!selectedSet.has(session.id)) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -163,7 +153,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               <TableCell>
                 <Checkbox
                   onChange={handleMainCheckboxChange}
-                  checked={asdfasdf()}
+                  checked={shownSessions.every((s: GameSession) => selectedSet.has(s.id))}
                 />
               </TableCell> :
               null
