@@ -1,82 +1,49 @@
 import * as React from 'react';
 import {
   Container,
-  Button,
-  Tooltip,
   Grid,
+  Link,
   Paper,
   Typography,
-  Link,
-  Table,
-  IconButton,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
 } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
-import {gameSessions} from '../../helpers/dummyData';
 import gameService from '../../services/game';
+import gameSessionService from '../../services/gameSession';
 import GamesTable from '../../components/admin/gamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import Loading from '../../components/layout/loading';
 import {alertService, alertSeverity} from '../../services/alert';
-
-export function GameSessionTable() {
-  return (
-    <React.Fragment>
-      <Typography component="h2" variant="h6" gutterBottom>
-        Active Game Sessions
-      </Typography>
-      <Table size="small" data-testid="active-game-sessions">
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Start Time</TableCell>
-            <TableCell>End Time</TableCell>
-            <TableCell>Game Code</TableCell>
-            <TableCell>View Reports</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {gameSessions.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>
-                <Tooltip title="Download QR Code">
-                  <IconButton size="large">
-                    <DownloadIcon />
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.starttime}</TableCell>
-              <TableCell>{row.endtime}</TableCell>
-              <TableCell>{row.gamecode}</TableCell>
-              <TableCell>
-                <Button variant="outlined">Reports</Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </React.Fragment>
-  );
-}
+import {useNavigate} from 'react-router';
+import GameSessionsTable from '../../components/faculty/gameSessionsTable.tsx';
 
 export default function AdminDash() {
   const [games, setGames] = React.useState([]);
+  const [sessions, setSessions] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     async function getGames() {
-      const resp = await gameService.getGames().catch((error) => {
+      gameService.getGames().catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
+      }).then((resp) => {
+        const games = [...resp.data];
+        setGames(games);
+        getSessions(games);
       });
-      const games = [...resp.data];
-      setGames(games);
+    }
+
+    async function getSessions(games) {
+      for (const game of games) {
+        gameSessionService.getSessions(game.id).catch((error) => {
+          alertService.alert({severity: alertSeverity.error, message: error});
+        }).then((resp) => {
+          setSessions((oldSessions) => [...oldSessions, ...resp.data]);
+        });
+      }
+
       setLoading(false);
     }
+
     getGames();
   }, []);
 
@@ -94,7 +61,10 @@ export default function AdminDash() {
                   flexDirection: 'column',
                 }}
               >
-                <GamesTable data={games} />
+                <GamesTable
+                  data={games}
+                  onEdit={(id) => navigate(`/admin-dashboard/games/${id}`)}
+                />
               </Paper>
             </Grid>
             <Grid item xs={12} md={4} lg={3}>
@@ -133,7 +103,11 @@ export default function AdminDash() {
                 elevation={7}
                 sx={{p: 2, display: 'flex', flexDirection: 'column'}}
               >
-                <GameSessionTable />
+                <GameSessionsTable
+                  reportButtons
+                  qrCodes
+                  gameSessions={sessions}
+                />
               </Paper>
             </Grid>
           </Grid>
