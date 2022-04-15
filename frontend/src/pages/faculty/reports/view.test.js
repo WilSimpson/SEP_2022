@@ -7,6 +7,7 @@ import {act} from 'react-dom/test-utils';
 import axios from 'axios';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import {alertService} from '../../../services/alert';
+import '../../../setupTests';
 
 const user = new User(
   'email@example.com',
