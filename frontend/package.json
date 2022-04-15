@@ -2,16 +2,6 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "branches": 1,
-        "functions": 1,
-        "lines": 1,
-        "statements": 1
-      }
-    }
-  },
   "dependencies": {
     "@date-io/dayjs": "^2.13.1",
     "@emotion/react": "^11.8.1",
