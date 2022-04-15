@@ -23,7 +23,7 @@ class GameCode extends React.Component {
     this.state = {
       value: props.joinCode ? props.joinCode : '',
       errMsg: '',
-      submitDisabled: props.joinCode?.length == 6 ? false : true,
+      submitDisabled: props.joinCode ? (props.joinCode.length == 6 ? false : true) : true,
       loading: false,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -32,7 +32,7 @@ class GameCode extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.joinCode.length == 6) {
+    if (this.props.joinCode && this.props.joinCode.length == 6) {
       console.log('joining game');
       this.submitCode();
     }
