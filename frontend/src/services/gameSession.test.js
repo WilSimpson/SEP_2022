@@ -39,5 +39,15 @@ describe('GameSessionService', () => {
       expect(spy).toHaveBeenCalledWith(`${API_URL}/games/startSession/`, gameSessionJSON);
     });
   });
+  describe('getReport', () => {
+    it ('should make GET request', () => {
+      let spy = jest.spyOn(axios, 'get');
+      GameSessionService.getReport(1, 1, true);
+      expect(spy).toHaveBeenCalledWith(
+        `${API_URL}/games/1/sessions/1/report/`,
+        {headers: {'accept': 'text/csv'}}
+      )
+    });
+  });
 
 });
