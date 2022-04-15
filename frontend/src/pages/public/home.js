@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import GameCode from '../../components/game/gameCode';
-import logoLarge from '../../images/logoLarge.png';
 import DefaultLayout from '../../components/layout/default.layout';
 import GameInProgressAlert from '../../components/game/gameInProgressAlert';
 import GamePlayService from '../../services/gameplay';
@@ -29,7 +28,7 @@ export default function Home(props) {
             {GamePlayService.gameInProgress() ?
               <GameInProgressAlert /> : <div />}
             <img
-              src={logoLarge}
+              src='/images/logoLarge.png'
               alt="Ethics Adventure"
               style={{flex: 1, width: '100%', height: undefined}}
             />

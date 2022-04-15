@@ -25,35 +25,8 @@ jobs:
         path: "frontend/node_modules"
         key: node-modules-${{ hashFiles('frontend/package.json') }}
 
-    - run: npm ci
-      working-directory: ./frontend
-
-    - name: Generate Coverage
-      working-directory: ./frontend
-      run: |
-        npm run test -- --coverage --watchAll=false
-
-    - name: Upload main coverage artifact
-      if: github.event_name == 'push'
-      uses: actions/upload-artifact@v3
-      with:
-        working-directory: ./frontend
-        name: main-react-coverage
-        path: ./coverage/coverage-final.json
-
-    # - name: Download main coverage artifact
-    #   if: github.event_name == 'pull_request'
-    #   uses: actions/download-artifact@v3
-    #   with:
-    #     name: main-react-coverage
-    #     working-directory: ./frontend
-    #     path: ./coverage/main-coverage-final.json
-
     - name: Test & Upload Results
-      uses: ArtiomTr/jest-coverage-report-action@v2.0.6
+      uses: artiomtr/jest-coverage-report-action@v2
       if: github.event_name == 'pull_request'
       with:
         working-directory: ./frontend
-        coverage-file: ./coverage/coverage-final.json
-        base-coverage-file: ./coverage/coverage-final.json
-        skip-step: install

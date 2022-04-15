@@ -8,6 +8,7 @@ module.exports = async () => {
         lines: 0,
         statements: 0,
       }
-    }
+    },
+    testEnvironment: 'jsdom',
   };
 };
