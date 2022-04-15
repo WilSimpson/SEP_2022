@@ -7,36 +7,7 @@ import {API_URL} from '../store/store';
 jest.mock('axios');
 
 describe('Game Play Service', () => {
-  describe('createAnswer', () => {
-    it('should return response on success', async () => {
-      const response = {
-        response: [
-          {
-            status: 200,
-            data: {
-              id: 1
-            },
-          },
-        ],
-      };
-      axios.post.mockResolvedValue(response);
-      const result = await gamePlayService.createAnswer(1, 1, 1, null);
-      expect(result).toEqual(response);
-    });
-    it('returns response on failure', async () => {
-      const response = {
-        response: [
-          {
-            status: 404,
-          },
-        ],
-      };
-      axios.post.mockResolvedValue(response);
-
-      const result = await gamePlayService.createAnswer(1, 1, 1, null);
-      expect(result).toEqual(response);
-    });
-  });
+  
 
   describe('joinGame', () => {
     it('should return a game object on success', () => {
@@ -352,6 +323,46 @@ describe('Game Play Service', () => {
         let spy = jest.spyOn(axios, 'get');
         gamePlayService.getQuestionContext(1);
         expect(spy).toHaveBeenCalledWith(`${API_URL}/contextHelp/1/by_question`); 
+      });
+    });
+    describe('createAnswer', () => {
+      it('should return response on success', async () => {
+        const response = {
+          response: [
+            {
+              status: 200,
+              data: {
+                id: 1
+              },
+            },
+          ],
+        };
+        axios.post.mockResolvedValue(response);
+        const result = await gamePlayService.createAnswer(1, 1, 1, null);
+        expect(result).toEqual(response);
+      });
+      it('returns response on failure', async () => {
+        const response = {
+          response: [
+            {
+              status: 404,
+            },
+          ],
+        };
+        axios.post.mockResolvedValue(response);
+  
+        const result = await gamePlayService.createAnswer(1, 1, 1, null);
+        expect(result).toEqual(response);
+      });
+      it('calls setLastAnswerId', async () => {
+        gamePlayService.setLastAnswerId = jest.fn();
+        axios.post.mockResolvedValue({status: 200, data: {id: 1}});
+        await gamePlayService.createAnswer(1, 1, 1, null);
+        expect(axios.post).toHaveBeenCalledWith(
+          API_URL + '/gameSession/createAnswer/',
+          {code_entered: null, question: 1, option_id: 1, team_id: 1}
+        );
+        expect(gamePlayService.setLastAnswerId).toHaveBeenCalledWith(1);
       });
     });
   });
