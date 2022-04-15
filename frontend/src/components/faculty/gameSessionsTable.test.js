@@ -26,6 +26,8 @@ const sessions = [
     'start_time': "2022-03-30T07:41:32.908204Z",
     'timeout': 30,
     'updated_at': "2022-03-30T07:41:32.910",
+    'courseID': 1,
+    'isGuest': false,
   }
 ]
 
