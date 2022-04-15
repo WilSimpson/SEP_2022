@@ -1,20 +1,11 @@
 import {Container, Grid, Paper, Typography} from '@mui/material';
 import React from 'react';
-import {useLocation, useParams} from 'react-router';
+import {useParams} from 'react-router';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import gameSessionService from '../../../services/gameSession';
 import {alertService, alertSeverity} from '../../../services/alert';
 import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-
-/**
- * Uses the current URL location to get a url search param
- * @return {URLSearchParams} url search param for the current url
- */
-function useQuery() {
-  const {search} = useLocation();
-
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
+import {useQuery} from '../../../helpers/query';
 
 /**
  * Columns for the reports
