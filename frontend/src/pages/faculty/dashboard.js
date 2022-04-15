@@ -11,13 +11,11 @@ import {
   IconButton,
   TextField,
 } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
 import {TableHead, TableRow, TableCell, TableBody} from '@mui/material';
 import {useState} from 'react';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import GamesTable from '../../components/admin/gamesTable';
 import gameService from '../../services/game';
-import gameSessionService from '../../services/gameSession';
 import courseService from '../../services/courses';
 import {useEffect} from 'react';
 import {LinearProgress} from '@mui/material';
@@ -25,71 +23,8 @@ import {Box} from '@mui/system';
 import AuthService from '../../services/auth';
 import EditIcon from '@mui/icons-material/Edit';
 import {useNavigate} from 'react-router-dom';
-// import sessionStorage from 'redux-persist/es/storage/session';
-
-// interface GamesSessions {
-//   name: string;
-//   starttime: date;
-//   endtime: date;
-//   gamecode: number;
-// }
-
-function GameSessionTable() {
-  const rows = gameSessionService.getGameSessions();
-  const [filteredRows, setFilteredRows] = useState(rows);
-
-  const requestSearch = (searchedVal) => {
-    console.log(searchedVal);
-    setFilteredRows(rows.filter((row) => {
-      return row.gamecode.includes(searchedVal);
-    }));
-  };
-
-  return (
-    <React.Fragment>
-      <Typography component="h2" variant="h6" gutterBottom>
-        Active Game Sessions
-      </Typography>
-      <TextField
-        label='Search by Session Code'
-        onChange={(event) => requestSearch(event.target.value)}
-      />
-      <Table size="small" data-testid="active-game-sessions">
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Start Time</TableCell>
-            <TableCell>End Time</TableCell>
-            <TableCell>Game Code</TableCell>
-            <TableCell>View Reports</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {filteredRows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>
-                <Tooltip title="Download QR Code">
-                  <IconButton size="large">
-                    <DownloadIcon />
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.starttime}</TableCell>
-              <TableCell>{row.endtime}</TableCell>
-              <TableCell>{row.gamecode}</TableCell>
-              <TableCell>
-                <Button variant="outlined">Reports</Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </React.Fragment>
-  );
-}
-
+import GameSessionsTable from '../../components/faculty/gameSessionsTable.tsx';
+import gameSessionService from '../../services/gameSession';
 
 function CoursesTable() {
   const [filteredRows, setFilteredRows] = useState([]);
@@ -193,6 +128,27 @@ function CoursesTable() {
 }
 
 export default function FacultyDash() {
+  const [sessions, setSessions] = React.useState([]);
+
+  useEffect(() => {
+    async function getSessions(games) {
+      for (const game of games) {
+        const resp = await gameSessionService.getSessions(game.id).catch((error) => {
+          alertService.alert({severity: alertSeverity.error, message: error});
+        });
+        setSessions((oldSessions) => [...oldSessions, ...resp.data]);
+      }
+    }
+
+    async function getGames() {
+      const resp = await gameService.getGames().catch((error) => {
+        alertService.alert({severity: alertSeverity.error, message: error});
+      });
+      getSessions(resp.data);
+    }
+    getGames();
+  }, []);
+
   return (
     <AuthenticatedLayout>
       <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
@@ -297,7 +253,11 @@ export default function FacultyDash() {
                 overflowX: 'auto',
               }}
             >
-              <GameSessionTable />
+              <GameSessionsTable
+                reportButtons
+                qrCodes
+                gameSessions={sessions}
+              />
             </Paper>
           </Grid>
         </Grid>
