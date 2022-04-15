@@ -26,7 +26,6 @@ export default function CreateGamePage() {
       questionsJSON,
       optionsJSON,
   ) {
-    console.log('code', code);
     gameService
         .createGame(title, active, creatorId, code, questionsJSON, optionsJSON)
         .then(

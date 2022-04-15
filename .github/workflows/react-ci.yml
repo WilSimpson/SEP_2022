@@ -7,13 +7,9 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-test:
     # runs-on: self-hosted
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        node-version: [14.x, 16.x]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -32,11 +28,33 @@ jobs:
     - run: npm ci
       working-directory: ./frontend
 
-    - name: Run Tests
-      run: make test-frontend
-
     - name: Generate Coverage
       working-directory: ./frontend
       run: |
         npm install
         npm run test -- --coverage --watchAll=false
+
+    # - name: Upload main coverage artifact
+    #   if: github.event_name == 'push'
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     working-directory: ./frontend
+    #     name: main-react-coverage
+    #     path: ./coverage/coverage-final.json
+
+    # - name: Download main coverage artifact
+    #   if: github.event_name == 'pull_request'
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: main-react-coverage
+    #     working-directory: ./frontend
+    #     path: ./coverage/main-coverage-final.json
+
+    - name: Test & Upload Results
+      uses: ArtiomTr/jest-coverage-report-action@v2.0.6
+      if: github.event_name == 'pull_request'
+      with:
+        working-directory: ./frontend
+        coverage-file: ./coverage/coverage-final.json
+        base-coverage-file: ./coverage/coverage-final.json
+        skip-step: install

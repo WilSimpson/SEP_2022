@@ -7,8 +7,12 @@ import logoLarge from '../../images/logoLarge.png';
 import DefaultLayout from '../../components/layout/default.layout';
 import GameInProgressAlert from '../../components/game/gameInProgressAlert';
 import GamePlayService from '../../services/gameplay';
+import {useQuery} from '../../helpers/query';
 
 export default function Home(props) {
+  const query = useQuery();
+  const joinCode = query.get('joinCode');
+
   return (
     <DefaultLayout>
       <Container maxWidth="xl">
@@ -32,7 +36,7 @@ export default function Home(props) {
             <Typography variant="h5" align="center" paragraph>
               To join a game, enter your 6-digit game code:
             </Typography>
-            <GameCode />
+            <GameCode joinCode={joinCode} test='test' />
           </Container>
         </Box>
       </Container>
