@@ -135,7 +135,6 @@ describe('AuthService', () => {
     });
 
     it('should call handleLogin helper function', async () => {
-      // const waitForPromises = () => new Promise(process.nextTick);
       AuthService.handleLogin = jest.fn();
       axios.post.mockResolvedValue({status: 200});
       await AuthService.login('valid@email.com', 'morethan6');
