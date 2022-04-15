@@ -33,7 +33,6 @@ class GameCode extends React.Component {
 
   componentDidMount() {
     if (this.props.joinCode && this.props.joinCode.length == 6) {
-      console.log('joining game');
       this.submitCode();
     }
   }

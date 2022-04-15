@@ -13,8 +13,6 @@ export default function Home(props) {
   const query = useQuery();
   const joinCode = query.get('joinCode');
 
-  console.log('joinCode:', joinCode);
-
   return (
     <DefaultLayout>
       <Container maxWidth="xl">

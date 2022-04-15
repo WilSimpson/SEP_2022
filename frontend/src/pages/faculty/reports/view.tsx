@@ -74,7 +74,6 @@ export default function ViewReportPage(props: ViewReportPageProps) {
         if (resp && resp.data.length > 0) {
           setReports([...reports, ...resp.data]);
         }
-        console.log(reports);
       }).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error.message});
       }).finally(() => setLoading(lastReport));

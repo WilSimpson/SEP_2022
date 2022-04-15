@@ -77,7 +77,6 @@ export default function StartingSurvey() {
         formValues.first,
     ).then(
         (response) => {
-          console.log(response);
           const path = `../gameSession`;
           const initialQ = initialQuestion(state.game);
           const gameSessionState = {
@@ -94,7 +93,6 @@ export default function StartingSurvey() {
               enteredPasscode: false,
             },
           };
-          console.log(gameSessionState);
           GamePlayService.setInProgressGame(gameSessionState);
           navigate(path, gameSessionState);
         },
