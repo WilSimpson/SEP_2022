@@ -2,6 +2,18 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json", "node"],
+    "coverageThreshold": {
+      "global": {
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
+      }
+    }
+  },
   "dependencies": {
     "@date-io/dayjs": "^2.13.1",
     "@emotion/react": "^11.8.1",
