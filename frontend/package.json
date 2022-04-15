@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "jest": {
-    "verbose": true,
-    "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json", "node"],
     "coverageThreshold": {
       "global": {
         "branches": 0,
