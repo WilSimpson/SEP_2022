@@ -55,5 +55,5 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         working-directory: ./frontend
-        # coverage-file: ./coverage/coverage-final.json
+        coverage-file: ./coverage/coverage-final.json
         # base-coverage-file: ./coverage/main-coverage-final.json
