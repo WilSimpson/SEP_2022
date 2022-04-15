@@ -173,14 +173,6 @@ class GameSessionAnswer(models.Model):
     passcode_entered = models.BooleanField(default=False)
     created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
-    
-class Course(models.Model):        
-    name       = models.TextField()
-    section        = models.CharField(max_length=32)
-    department    = models.CharField(max_length=32)
-    number      = models.IntegerField()
-    semester    = models.CharField(max_length=32, default="No Semester Set")
-    userId = models.IntegerField()
 
 class ContextHelp(models.Model):
     title = models.CharField(max_length=255)
