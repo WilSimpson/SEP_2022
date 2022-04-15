@@ -46,8 +46,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: main-react-coverage
-        working-directory: ./frontend
-        path: ./coverage/main-coverage-final.json
+        path: ./frontend/coverage/main-coverage-final.json
 
     - name: Test & Upload Results
       uses: ArtiomTr/jest-coverage-report-action@v2.0.6
