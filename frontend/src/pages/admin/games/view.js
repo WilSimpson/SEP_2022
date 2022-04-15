@@ -32,6 +32,10 @@ export default function ViewGamesPage() {
     );
   };
 
+  const handleGameSelected = (id) => {
+    navigate('/admin-dashboard/games/'+id);
+  };
+
   useEffect(() => {
     async function getGames() {
       const resp = await gameService.getGames().catch((error) => {
@@ -51,9 +55,11 @@ export default function ViewGamesPage() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12} component={Paper}>
               <GamesTable
+                editable
                 data={games}
                 onConfirmDelete={handleAcceptConfirmDelete}
                 onEdit={(id) => navigate(`/admin-dashboard/games/${id}`)}
+                onGameSelected={handleGameSelected}
               />
             </Grid>
           </Grid>
