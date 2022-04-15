@@ -51,9 +51,10 @@ jobs:
     #     path: ./coverage/main-coverage-final.json
 
     - name: Upload Results
-      uses: ArtiomTr/jest-coverage-report-action@v2
+      uses: ArtiomTr/jest-coverage-report-action@v2.0.6
       if: github.event_name == 'pull_request'
       with:
         working-directory: ./frontend
         coverage-file: ./coverage/coverage-final.json
         base-coverage-file: ./coverage/coverage-final.json
+        skip-step: install
