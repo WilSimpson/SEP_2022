@@ -209,6 +209,7 @@ export function SideMenu(props) {
       disabled={!open}
       component={Link}
       data-testid="reports-item"
+      href="/reports"
     >
       <ListItemIcon>
         <BarChartIcon />
