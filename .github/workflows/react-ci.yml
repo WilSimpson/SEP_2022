@@ -9,6 +9,9 @@ on:
 jobs:
   build-test:
     # runs-on: self-hosted
+    permissions:
+      checks: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
