@@ -33,13 +33,13 @@ jobs:
       run: |
         npm run test -- --coverage --watchAll=false
 
-    # - name: Upload main coverage artifact
-    #   if: github.event_name == 'push'
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     working-directory: ./frontend
-    #     name: main-react-coverage
-    #     path: ./coverage/coverage-final.json
+    - name: Upload main coverage artifact
+      if: github.event_name == 'push'
+      uses: actions/upload-artifact@v3
+      with:
+        working-directory: ./frontend
+        name: main-react-coverage
+        path: ./coverage/coverage-final.json
 
     # - name: Download main coverage artifact
     #   if: github.event_name == 'pull_request'
