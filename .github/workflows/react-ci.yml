@@ -9,9 +9,6 @@ on:
 jobs:
   build-test:
     # runs-on: self-hosted
-    permissions:
-      checks: write
-      pull-requests: write
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -37,13 +34,13 @@ jobs:
         npm install
         npm run test -- --coverage --watchAll=false
 
-    - name: Upload main coverage artifact
-      if: github.event_name == 'push'
-      uses: actions/upload-artifact@v3
-      with:
-        working-directory: ./frontend
-        name: main-react-coverage
-        path: ./coverage/coverage-final.json
+    # - name: Upload main coverage artifact
+    #   if: github.event_name == 'push'
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     working-directory: ./frontend
+    #     name: main-react-coverage
+    #     path: ./coverage/coverage-final.json
 
     # - name: Download main coverage artifact
     #   if: github.event_name == 'pull_request'
@@ -53,11 +50,11 @@ jobs:
     #     working-directory: ./frontend
     #     path: ./coverage/main-coverage-final.json
 
-    - name: Upload Results
+    - name: Test & Upload Results
       uses: ArtiomTr/jest-coverage-report-action@v2.0.6
       if: github.event_name == 'pull_request'
       with:
         working-directory: ./frontend
-        coverage-file: ./coverage/coverage-final.json
-        base-coverage-file: ./coverage/coverage-final.json
+        # coverage-file: ./coverage/coverage-final.json
+        # base-coverage-file: ./coverage/coverage-final.json
         skip-step: install
