@@ -18,8 +18,8 @@ import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import Alert from '@mui/material/Alert';
-import GameInProgressAlert from './gameInProgressAlert';
-import GameLayout from '../layout/game.layout';
+import GameInProgressAlert from '../../components/game/gameInProgressAlert';
+import GameLayout from '../../components/layout/game.layout';
 
 export default function StartingSurvey() {
   const defaultValues = {
