@@ -668,7 +668,7 @@ def start_session(request):
         req_notes = request.data['notes']
         req_timeout = int(request.data['timeout'])
         req_is_guest = bool(request.data['isGuest'])
-        req_course_id = int(request.data['courseID'])
+        req_course_id = int(request.data['courseID']) if request.data['courseID'] else request.data['courseID']
         sessions = GameSession.objects.all()
         new_session = GameSession.objects.create(
             creator_id  = req_creator_id,
