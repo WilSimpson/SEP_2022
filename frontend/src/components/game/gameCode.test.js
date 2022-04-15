@@ -1,10 +1,11 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 import GameCode from './gameCode';
 import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent} from '@testing-library/react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 describe('<GameCode />', () => {
   it('should render the GameCode component', () => {
@@ -112,4 +113,20 @@ describe('<GameCode />', () => {
     fireEvent.change(codeBox, {target: {value: '12345'}});
     expect(submit.disabled).toBe(true);
   });
+
+  it('should pass joinCode correctly', async () => {
+    let wrapper;
+    let joinCode = 123456;
+    await act(async () => {
+      wrapper = mount(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<GameCode joinCode={joinCode}/>} />
+          </Routes>
+        </BrowserRouter>,
+      );
+    });
+
+    expect(wrapper.find('#gameCode').hostNodes().props().value).toEqual(joinCode);
+  })
 });

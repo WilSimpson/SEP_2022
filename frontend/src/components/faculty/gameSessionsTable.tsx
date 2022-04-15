@@ -186,7 +186,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               {props.qrCodes ?
                 <TableCell>
                   <Tooltip title="Download QR Code">
-                    <IconButton size="large" onClick={() => props.onQRCodeButtonClicked(row.code)}>
+                    <IconButton size="large" onClick={() => props.onQRCodeButtonClicked(row.code)} data-testid={`qrcode-download-button-${row.id}`}>
                       <DownloadIcon />
                     </IconButton>
                   </Tooltip>
