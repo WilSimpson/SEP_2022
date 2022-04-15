@@ -16,7 +16,7 @@ export default function SessionStart(props) {
   const [gameId, setGameId] = React.useState(null);
   const [isGuest, setIsGuest] = React.useState(false);
   const [courseID, setCourseID] = React.useState(null);
-  const courses = JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id})));
+  const courses = sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))) : [];
 
   return (
     <Grid container spacing={3}>
