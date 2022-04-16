@@ -1,7 +1,7 @@
 import React from 'react';
 import './app.css';
 import Home from './pages/public/home';
-import StartingSurvey from './components/game/startingSurvey';
+import StartingSurvey from './pages/game/startingSurvey';
 import GameSession from './components/game/gameSession';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import EditPassword from './pages/faculty/editPassword';

@@ -5,6 +5,7 @@ import {mount} from 'enzyme';
 import ResponsiveAppBar from './nav';
 import authService from '../../services/auth';
 import {Backdrop, Menu} from '@mui/material';
+import '../../setupTests';
 
 jest.mock('../../services/auth');
 

@@ -4,6 +4,7 @@ import {shallow} from 'enzyme';
 import {afterEach, beforeEach, expect, jest} from '@jest/globals';
 import {User} from '../../models/user';
 import {Button, TextField} from '@mui/material';
+import '../../setupTests';
 
 const user = new User(
     'email@example.com',

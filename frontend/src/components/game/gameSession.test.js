@@ -9,6 +9,7 @@ import {findByTestId, fireEvent, getByTestId, waitFor} from '@testing-library/re
 import {inProgressGame, inProgressGamePasscodeRequired} from '../../helpers/dummyData';
 import GamePlayService from '../../services/gameplay';
 import {Typography} from'@mui/material';
+import '../../setupTests';
 
 const TEAM_ID = 1;
 

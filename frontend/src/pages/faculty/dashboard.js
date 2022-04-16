@@ -128,6 +128,11 @@ function CoursesTable() {
 
 export default function FacultyDash() {
   const [sessions, setSessions] = React.useState([]);
+  const navigate = useNavigate();
+
+  const handleQRCodeButtonClicked = (joinCode) => {
+    navigate(`/generate-qr?joinCode=${joinCode}`);
+  };
 
   useEffect(() => {
     async function getSessions(games) {
@@ -255,6 +260,7 @@ export default function FacultyDash() {
               <GameSessionsTable
                 reportButtons
                 qrCodes
+                onQRCodeButtonClicked={handleQRCodeButtonClicked}
                 gameSessions={sessions}
               />
             </Paper>

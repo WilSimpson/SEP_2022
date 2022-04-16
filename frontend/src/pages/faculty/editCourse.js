@@ -61,7 +61,6 @@ export default function EditCourse() {
         AuthService.currentUser().id,
     ).then(
         (response) => {
-          console.log(response);
           const path = `../faculty-dashboard`;
           navigate(path);
         },
