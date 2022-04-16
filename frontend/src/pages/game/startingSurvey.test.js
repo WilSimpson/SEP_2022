@@ -72,7 +72,7 @@ describe('<StartingSurvey />', () => {
         act(() => {wrapper.find('form').simulate('submit', event)});
         await act(() => promise);
         expect(event.preventDefault).toHaveBeenCalled();
-        expect(MockGamePlayService.sendTeamInit).toHaveBeenCalledTimes(1);
+        expect(MockGamePlayService.sendTeamInit).toHaveBeenCalled();
       });
       it('should call setInProgressGame in GamePlayService', async () => {
         const event = { preventDefault: () => {} };
@@ -94,7 +94,7 @@ describe('<StartingSurvey />', () => {
         act(() => {wrapper.find('form').simulate('submit', event)});
         await act(() => promise);
         expect(event.preventDefault).toHaveBeenCalled();
-        expect(mockedNavigate).toHaveBeenCalledTimes(1);
+        expect(mockedNavigate).toHaveBeenCalled();
       });  
     });
     describe('on fail', () => {

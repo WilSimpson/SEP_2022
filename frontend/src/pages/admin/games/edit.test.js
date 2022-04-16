@@ -1,3 +1,4 @@
+import React from 'react';
 import EditGame from './edit';
 import GameFields from '../../../components/admin/gameFields';
 import {mount, shallow} from 'enzyme';

@@ -1,4 +1,5 @@
 import '../../../setupTests';
+import React from 'react';
 import StartGameSessionPage from './startGameSession';
 import SessionStart from '../../../components/faculty/sessionStart';
 import {User} from '../../../models/user';
