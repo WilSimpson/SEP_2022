@@ -1,7 +1,7 @@
 import React from 'react';
+import '../../setupTests';
 import {shallow} from 'enzyme';
 import Login from './login';
-import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent, act} from '@testing-library/react';
 import AuthService from '../../services/auth';

@@ -1,10 +1,10 @@
 import React from 'react';
+import '../../setupTests';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {getByTestId} from '@testing-library/react';
 import GameInProgressAlert from './gameInProgressAlert';
-import '../../setupTests';
 
 let container = null;
 

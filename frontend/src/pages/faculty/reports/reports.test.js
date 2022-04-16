@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../../setupTests';
 import {mount} from 'enzyme';
 import ReportsPage from './reports';
 import {User} from '../../../models/user';
@@ -7,7 +8,6 @@ import {BrowserRouter} from 'react-router-dom';
 import axios from 'axios';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import {alertService} from '../../../services/alert';
-import '../../../setupTests';
 
 
 const user = new User(

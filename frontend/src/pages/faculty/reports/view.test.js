@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../../setupTests';
 import {mount} from 'enzyme';
 import ViewReportPage from './view';
 import {User} from '../../../models/user';
@@ -7,7 +8,6 @@ import {act} from 'react-dom/test-utils';
 import axios from 'axios';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import {alertService} from '../../../services/alert';
-import '../../../setupTests';
 
 const user = new User(
   'email@example.com',

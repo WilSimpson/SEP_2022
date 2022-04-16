@@ -1,7 +1,6 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import {expect, jest} from '@jest/globals';
-import {Subject, Observable} from 'rxjs';
+import '../setupTests';
+import {Subject} from 'rxjs';
 import {alertService, alertSeverity} from './alert';
 
 jest.mock('rxjs');

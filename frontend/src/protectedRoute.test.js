@@ -1,3 +1,5 @@
+import React from 'react';
+import './setupTests';
 import {expect, jest} from '@jest/globals';
 import ProtectedRoute from './protectedRoute';
 import AdminDash from './pages/admin/dashboard';

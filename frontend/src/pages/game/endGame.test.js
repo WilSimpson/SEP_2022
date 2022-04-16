@@ -1,6 +1,6 @@
-import { ExpansionPanelActions } from "@material-ui/core";
+import React from 'react';
+import '../../setupTests';
 import { mount } from "enzyme";
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import EndGamePlay from "../../components/game/endGamePlay";
 import EndGame from "./endGame";
 

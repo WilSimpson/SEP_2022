@@ -1,3 +1,4 @@
+import React from 'react';
 import '../setupTests';
 import AuthService, {authHeader} from './auth';
 import axios from 'axios';

@@ -1,5 +1,7 @@
+import React from 'react';
+import '../../setupTests';
 import Knowledge from "./knowledge";
-import {render, shallow} from 'enzyme';
+import {render} from 'enzyme';
 
 
 describe('<Knowledge />', () => {

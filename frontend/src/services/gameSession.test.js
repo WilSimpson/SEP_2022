@@ -1,3 +1,4 @@
+import React from 'react';
 import '../setupTests';
 import GameSessionService from './gameSession';
 import axios from 'axios';

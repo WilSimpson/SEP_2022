@@ -1,14 +1,10 @@
-/**
- * @jest-environment jsdom
- */
-
 import React from 'react';
+import '../../setupTests';
 import GameSessionsTable from './gameSessionsTable';
 import {mount} from 'enzyme';
 import {User} from '../../models/user';
 import {act} from 'react-dom/test-utils';
 import {BrowserRouter} from 'react-router-dom';
-import '../../setupTests';
 
 const user = new User(
     'email@example.com',

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../../setupTests';
 import { mount } from 'enzyme';
 import ReportPage from './report';
 import { User } from '../../../models/user';
@@ -7,7 +8,6 @@ import { act } from 'react-dom/test-utils';
 import axios from 'axios';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
-import '../../../setupTests';
 
 const user = new User(
   'email@example.com',

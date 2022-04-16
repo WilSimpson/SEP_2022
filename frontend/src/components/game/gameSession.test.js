@@ -1,5 +1,5 @@
 import React from 'react';
-import '@testing-library/jest-dom';
+import '../../setupTests';
 import GameSession from './gameSession';
 import {mount, shallow} from 'enzyme';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
@@ -8,8 +8,6 @@ import {act} from 'react-dom/test-utils';
 import {findByTestId, fireEvent, getByTestId, waitFor} from '@testing-library/react';
 import {inProgressGame, inProgressGamePasscodeRequired} from '../../helpers/dummyData';
 import GamePlayService from '../../services/gameplay';
-import {Typography} from'@mui/material';
-import '../../setupTests';
 
 const TEAM_ID = 1;
 

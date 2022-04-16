@@ -1,3 +1,4 @@
+import React from 'react';
 import '../setupTests';
 import UserService from './user';
 import axios from 'axios';

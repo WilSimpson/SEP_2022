@@ -1,7 +1,7 @@
 import React from 'react';
+import '../../setupTests';
 import {shallow, mount} from 'enzyme';
 import GameCode from './gameCode';
-import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
