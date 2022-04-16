@@ -1,3 +1,4 @@
+import React from 'react';
 import '../setupTests';
 import CourseService from './courses';
 import axios from 'axios';

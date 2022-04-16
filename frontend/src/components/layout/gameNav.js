@@ -5,7 +5,6 @@ import {
   Container,
   IconButton,
   Toolbar} from '@mui/material';
-import logoSmall from '../../images/logoSmall.png';
 
 
 export default function GameNav() {
@@ -14,7 +13,7 @@ export default function GameNav() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <IconButton href="/" sx={{p: 0}} size="large" data-testid='home-button'>
-            <Avatar alt="EA" src={logoSmall} variant="square" />
+            <Avatar alt="EA" src='/images/logoSmall.png' variant="square" />
           </IconButton>
         </Toolbar>
       </Container>

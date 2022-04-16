@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../setupTests';
 import {shallow} from 'enzyme';
 import {CircularProgress} from '@mui/material';
 import Loading from './loading';

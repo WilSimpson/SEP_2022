@@ -21,14 +21,20 @@ class GameCode extends React.Component {
     super(props);
 
     this.state = {
-      value: '',
+      value: props.joinCode ? props.joinCode : '',
       errMsg: '',
-      submitDisabled: true,
+      submitDisabled: props.joinCode ? (props.joinCode.length == 6 ? false : true) : true,
       loading: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.submitCode = this.submitCode.bind(this);
     this.toggleLoading = this.toggleLoading.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.joinCode && this.props.joinCode.length == 6) {
+      this.submitCode();
+    }
   }
 
   toggleLoading() {
@@ -148,7 +154,7 @@ class GameCode extends React.Component {
 
 function WithNavigate(props) {
   const navigate = useNavigate();
-  return <GameCode navigate={navigate} />;
+  return <GameCode navigate={navigate} {...props} />;
 }
 
 export default withStyles(styles)(WithNavigate);

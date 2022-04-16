@@ -1,4 +1,5 @@
-import {expect} from '@jest/globals';
+import React from 'react';
+import '../setupTests';
 import { User } from "./user";
 
 describe('User model', () => {

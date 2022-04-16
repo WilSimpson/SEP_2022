@@ -1,10 +1,11 @@
 import React from 'react';
+import '../../setupTests';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 import {mount} from 'enzyme';
 import ResponsiveAppBar from './nav';
 import authService from '../../services/auth';
-import {Backdrop, Menu} from '@mui/material';
+import { Backdrop, Menu } from '@mui/material';
 
 jest.mock('../../services/auth');
 

@@ -1,5 +1,6 @@
+import React from 'react';
+import '../../setupTests';
 import authService from '../../services/auth';
-import alertService from '../../services/alert';
 import Logout from './logout';
 import {render} from 'enzyme';
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import {mount} from 'enzyme';
 import '../../setupTests';
+import {mount} from 'enzyme';
 import '@testing-library/jest-dom/extend-expect';
 import {User} from '../../models/user';
 import FacultyDash from './dashboard';

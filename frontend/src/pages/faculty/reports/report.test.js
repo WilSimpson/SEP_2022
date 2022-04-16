@@ -1,15 +1,13 @@
 import React from 'react';
+import '../../../setupTests';
 import { mount } from 'enzyme';
 import ReportPage from './report';
 import { User } from '../../../models/user';
 import {Routes, Route, MemoryRouter} from 'react-router-dom';
 import { act } from 'react-dom/test-utils';
 import axios from 'axios';
-import '../../../setupTests';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
-import {fireEvent} from '@testing-library/react';
-import { Dialog, TextField } from '@mui/material';
 
 const user = new User(
   'email@example.com',

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../../setupTests';
 import {mount} from 'enzyme';
 import ReportsPage from './reports';
 import {User} from '../../../models/user';

@@ -1,10 +1,12 @@
 import React from 'react';
+import '../../setupTests';
 import {shallow} from 'enzyme';
 import {render} from 'react-dom';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {act} from 'react-dom/test-utils';
 import EndGamePlay from './endGamePlay';
 import {getByTestId} from '@testing-library/react';
+
 
 let container = null;
 

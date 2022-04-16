@@ -1,3 +1,5 @@
+import React from 'react';
+import '../../setupTests';
 import { mount } from "enzyme";
 import EndGamePlay from "../../components/game/endGamePlay";
 import EndGame from "./endGame";

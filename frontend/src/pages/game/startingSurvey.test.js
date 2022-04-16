@@ -1,7 +1,7 @@
 import React from 'react';
+import '../../setupTests';
 import {shallow} from 'enzyme';
 import StartingSurvey from './startingSurvey';
-import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
 import {fireEvent, getByTestId} from '@testing-library/react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';

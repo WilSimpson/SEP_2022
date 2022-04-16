@@ -32,7 +32,6 @@ export default function StartGameSession(props) {
         .createGameSession(creatorId, gameId, notes, timeout)
         .then(
             (success) => {
-              console.log('success:', success);
               alertService.alert({
                 severity: alertSeverity.success,
                 message: `Game Session Started,
