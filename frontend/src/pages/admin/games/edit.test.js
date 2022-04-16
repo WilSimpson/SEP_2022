@@ -1,13 +1,11 @@
 import EditGame from './edit';
 import GameFields from '../../../components/admin/gameFields';
 import {mount, shallow} from 'enzyme';
-import AuthMock from '../../../services/auth';
 import {User} from '../../../models/user';
 import MockGameService from '../../../services/game';
 import {act} from 'react-dom/test-utils';
-import { alertService } from '../../../services/alert';
-import axios from 'axios';
-import {BrowserRouter} from 'react-router-dom';
+import {alertService} from '../../../services/alert';
+import '../../../setupTests';
 
 const mockedNavigate = jest.fn();
 
