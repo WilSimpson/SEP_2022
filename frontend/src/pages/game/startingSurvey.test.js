@@ -83,7 +83,7 @@ describe('<StartingSurvey />', () => {
         act(() => {wrapper.find('form').simulate('submit', event)});
         await act(() => promise);
         expect(event.preventDefault).toHaveBeenCalled();
-        expect(MockGamePlayService.setInProgressGame).toHaveBeenCalledTimes(1);
+        expect(MockGamePlayService.setInProgressGame).toHaveBeenCalled();
       });
       it('should navigate to /gameSession', async () => {
         const event = { preventDefault: () => {} };
@@ -144,7 +144,7 @@ describe('<StartingSurvey />', () => {
       let mapSpy = jest.spyOn(Object, 'entries');
       let wrapper = mount(<BrowserRouter><StartingSurvey /></BrowserRouter>);
       act(() => {wrapper.find('#team-size').hostNodes().simulate('change', event)});
-      expect(mapSpy).toHaveBeenCalledTimes(1);
+      expect(mapSpy).toHaveBeenCalled();
     });
   });
 });

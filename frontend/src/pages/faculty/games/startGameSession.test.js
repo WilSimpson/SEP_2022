@@ -70,7 +70,7 @@ describe('<StartGameSessionPage />', () => {
       it ('should call alert Service onCancel', () => {
         let alertSpy = jest.spyOn(alertService, 'alert');
         act(() => {wrapper.find(SessionStart).first().props().onCancel()});
-        expect(alertSpy).toHaveBeenCalledTimes(1);
+        expect(alertSpy).toHaveBeenCalled();
       });
     });
 
@@ -106,7 +106,7 @@ describe('<StartGameSessionPage />', () => {
           MockGameSessionService.createGameSession.mockResolvedValue({data: {code: 123456}});
           act(() => {wrapper.find(SessionStart).props().onSubmit()});
           await act(() => promise);
-          expect(alertSpy).toHaveBeenCalledTimes(1);
+          expect(alertSpy).toHaveBeenCalled();
         });
       });
       describe('on Failure', () => {

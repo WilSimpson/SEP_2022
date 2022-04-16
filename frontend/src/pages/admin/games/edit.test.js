@@ -122,7 +122,7 @@ describe('<EditGame />', () => {
           );
       });
       expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
-      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalled();
     });
   });
   describe('valid response data', () => {
@@ -136,7 +136,7 @@ describe('<EditGame />', () => {
               <EditGame />
             );
         });
-        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalled();
       });
       it('should navigate to /admin-dashboard/games', async () => {
         let wrapper;
