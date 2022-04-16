@@ -137,17 +137,26 @@ describe('<Login />', () => {
       expect(mockedNavigate).toHaveBeenCalledWith('/faculty-dashboard');
       spy.mockRestore();
     });
-    // it ('should display error message when incorrect login', async () => {
-    //   let wrapper = mount(<Login />);
-    //   AuthService.login.mockResolvedValue(new Error({status:401}));
-    //   fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
-    //   fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
-    //   fireEvent.click(submitButton);
-    //   expect(AuthService.login).toHaveBeenCalledWith('valid@email.com', 'wrongpassword');
-    //   await act(() => Promise.resolve());
-    //   let errMsg = wrapper.find({"data-testid": "err-msg"});
-    //   expect(errMsg).toBeInTheDocument();
-    // });
+    it ('should display error message when incorrect login', async () => {
+      const {getByTestId} = render(<Login />);
+      AuthService.login.mockRejectedValue({response: {status:401, data: {detail: 'error'}}});
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
+      fireEvent.click(submitButton);
+      await act(() => Promise.resolve());
+      let errMsg = getByTestId("err-msg");
+      expect(errMsg).toBeInTheDocument();
+    });
+    it ('should display error message when an unknown error occured', async () => {
+      const {getByTestId} = render(<Login />);
+      AuthService.login.mockRejectedValue({response: {status:500, data: {detail: 'error'}}});
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
+      fireEvent.click(submitButton);
+      await act(() => Promise.resolve());
+      let errMsg = getByTestId("err-msg");
+      expect(errMsg).toBeInTheDocument();
+    });
   });
   describe('Forgot password', () => {
     beforeEach(() => {

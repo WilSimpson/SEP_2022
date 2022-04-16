@@ -82,5 +82,5 @@ describe('<ReportsPage />', () => {
 
       expect(spy).toBeCalledTimes(1);
     });
-  })
+  });
 });

@@ -15,18 +15,22 @@ export default function EditGamePage(props) {
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
-    async function getGame() {
-      const resp = await gameService.getGame(id).catch(() => {
+    function getGame() {
+      gameService.getGame(id)
+      .then(
+        (resp) => {
+          const game = resp.data;
+          if (game === null) {
+            notFound();
+          }
+          setGame(game);
+          setLoading(false);
+        }
+      )
+      .catch(() => {
         notFound();
       });
-      const game = resp.data;
-
-      if (game === null) {
-        notFound();
-      }
-
-      setGame(game);
-      setLoading(false);
+     
     }
     getGame();
   }, []);

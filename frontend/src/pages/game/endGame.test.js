@@ -1,6 +1,4 @@
-import { ExpansionPanelActions } from "@material-ui/core";
 import { mount } from "enzyme";
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import EndGamePlay from "../../components/game/endGamePlay";
 import EndGame from "./endGame";
 
@@ -18,7 +16,7 @@ describe('<EndGame />', () => {
   });
   it ('should call navigate function on return home', () => {
     const wrapper = mount(<EndGame />);
-      wrapper.find(EndGamePlay).props().returnHome();
-      expect(mockedNavigate).toHaveBeenCalled();
+    wrapper.find(EndGamePlay).props().returnHome();
+    expect(mockedNavigate).toHaveBeenCalled();
   });
 });
