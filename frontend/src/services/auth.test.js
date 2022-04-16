@@ -1,4 +1,4 @@
-import '../setupTests';
+import React from 'react';
 import AuthService from './auth';
 import axios from 'axios';
 

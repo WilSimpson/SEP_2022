@@ -42,6 +42,12 @@ interface GameSessionTableProps {
   qrCodes: boolean;
 
   /**
+   * Callback for when a qr code button was clicked.
+   * @param {number} joinCode session join code for the button that was clicked
+   */
+  onQRCodeButtonClicked(joinCode: number): void;
+
+  /**
    * Whether to have a column for selecting a row
    */
   selectable: boolean;
@@ -180,7 +186,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               {props.qrCodes ?
                 <TableCell>
                   <Tooltip title="Download QR Code">
-                    <IconButton size="large">
+                    <IconButton size="large" onClick={() => props.onQRCodeButtonClicked(row.code)} data-testid={`qrcode-download-button-${row.id}`}>
                       <DownloadIcon />
                     </IconButton>
                   </Tooltip>

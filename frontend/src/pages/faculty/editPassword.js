@@ -29,7 +29,6 @@ export default function EditPassword() {
         },
         (error) => {
           if (error.response.status === 400) {
-            console.log(error.response.data.password);
             let message = '';
             error.response.data.password.forEach(function cat(e) {
               message += ' ' + e;
