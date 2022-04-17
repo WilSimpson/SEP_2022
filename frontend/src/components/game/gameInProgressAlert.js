@@ -28,6 +28,7 @@ export default function GameInProgressAlert(props) {
       variant="outlined"
       action={
         <Button
+          id='joinGame'
           color="success"
           variant="contained"
           size="large"

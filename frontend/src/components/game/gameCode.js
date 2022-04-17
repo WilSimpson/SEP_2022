@@ -34,6 +34,11 @@ class GameCode extends React.Component {
   componentDidMount() {
     if (this.props.joinCode && this.props.joinCode.length == 6) {
       this.submitCode();
+    }else {
+      this.setState({
+        errMsg:
+          'This Gamecode is not valid. Gamecodes must be six digits long.',
+      });
     }
   }
 
@@ -92,19 +97,11 @@ class GameCode extends React.Component {
           },
       );
     } else {
-      // There is a problem; display an error message
-      if (code.length < 6) {
-        this.setState({
-          errMsg:
-            'This Gamecode is not valid. Gamecodes must be six digits long.',
-        });
-      } else {
-        this.setState({
-          errMsg:
-            'This Gamecode is not valid. ' +
-            'Gamecodes must contain only number values.',
-        });
-      }
+      this.setState({
+        errMsg:
+          'This Gamecode is not valid. ' +
+          'Gamecodes must contain only number values.',
+      });
     }
     this.toggleLoading();
   }
