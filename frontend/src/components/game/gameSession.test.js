@@ -8,8 +8,13 @@ import {act} from 'react-dom/test-utils';
 import {findByTestId, fireEvent, getByTestId, waitFor} from '@testing-library/react';
 import {inProgressGame, inProgressGamePasscodeRequired} from '../../helpers/dummyData';
 import GamePlayService from '../../services/gameplay';
+import GamePlayTimeout from './gamePlayTimeout';
+import {alertService} from '../../services/alert';
+import Passcode from '../../pages/game/passcode';
 
 const TEAM_ID = 1;
+
+const mockedNavigate = jest.fn();
 
 jest.mock('../../services/gameplay');
 
@@ -98,6 +103,7 @@ jest.mock('react-router-dom', () => ({
       formValue: null,
     },
   }),
+  useNavigate: () => mockedNavigate,
 }));
 
 let container = null;
@@ -172,6 +178,15 @@ describe('<GameSession />', () => {
       expect(GamePlayService.createAnswer).toHaveBeenCalled();
       await act(() => promise);
     });
+    it('should call alert service on createAnswer fail', async () => {
+      let alertSpy = jest.spyOn(alertService, 'alert');
+      const promise = Promise.resolve();
+      GamePlayService.createAnswer.mockRejectedValue({response: {status: 404}});
+      fireEvent.click(option1);
+      fireEvent.click(continueButton);
+      await act(() => promise);
+      expect(alertSpy).toHaveBeenCalled();
+    });
     it('should change the text on the screen when "Continue" button clicked', async () => {
       expect(container.textContent).toContain(
           'Question 1',
@@ -238,6 +253,33 @@ describe('<GameSession />', () => {
       expect(GamePlayService.teamCompleteGame).toHaveBeenCalledWith(TEAM_ID);
       await act(() => promise);
     });
+    describe('teamCompleteGame on success', () => {
+      it('should navigate', async () => {
+        const promise = Promise.resolve();
+        GamePlayService.teamCompleteGame.mockResolvedValue({});
+        fireEvent.click(completeButton);
+        await act(() => promise);
+        expect(mockedNavigate).toHaveBeenCalledWith('../endGame');
+      });
+      it('should clear in progress Game', async () => {
+        let clearInProgressSpy = jest.spyOn(GamePlayService, 'clearInProgressGame');
+        const promise = Promise.resolve();
+        GamePlayService.teamCompleteGame.mockResolvedValue({});
+        fireEvent.click(completeButton);
+        await act(() => promise);
+        expect(clearInProgressSpy).toHaveBeenCalled();
+      });
+    });
+    describe('teamCompleteGame on fail', () => {
+      it('should call alert service', async () => {
+        let alertSpy = jest.spyOn(alertService, 'alert');
+        const promise = Promise.resolve();
+        GamePlayService.teamCompleteGame.mockRejectedValue({response: {status: 404}});
+        fireEvent.click(completeButton);
+        await act(() => promise);
+        expect(alertSpy).toHaveBeenCalled();
+      });
+    });
   });
   describe('<GameSession />', () => {
     let continueButton;
@@ -284,14 +326,12 @@ describe('<GameSession />', () => {
       expect(GamePlayService.random).toHaveBeenCalled();
     });
   });
-  describe('Timeout functionality', () => {
+  describe('Timeout Dialog functionality', () => {
     let wrapper;
     beforeEach(() => {
       wrapper = mount(
         <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameSession/>} />
-          </Routes>
+          <GameSession />
         </BrowserRouter>
       );
     });
@@ -303,38 +343,324 @@ describe('<GameSession />', () => {
       const dialog = wrapper.find('GamePlayTimeout');
       expect(dialog.props().open).toBe(false);
     });
+    describe('returnHome prop function', () => {
+      it('should navigate home', () => {
+        act(() => {wrapper.find(GamePlayTimeout).props().returnHome()});
+        expect(mockedNavigate).toHaveBeenCalledWith('/');
+      });
+      it ('should call clearInProgressGame in game play service', () => {
+        act(() => {wrapper.find(GamePlayTimeout).props().returnHome()});
+        let clearInProgressSpy = jest.spyOn(GamePlayService, 'clearInProgressGame');
+        expect(clearInProgressSpy).toHaveBeenCalled();
+      });
+    });
+    describe('newGame prop function', () => {
+      it ('should call clear inProgressGame', async () => {
+        const promise = Promise.resolve();
+        let clearInProgressSpy = jest.spyOn(GamePlayService, 'clearInProgressGame');
+        GamePlayService.joinGame.mockResolvedValue({});
+        act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
+        await act(() => promise);
+        expect(clearInProgressSpy).toHaveBeenCalled();
+      });        
+      it ('should call joinGame in game play service', async () => {
+        const promise = Promise.resolve();
+        GamePlayService.joinGame.mockResolvedValue({});
+        act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
+        await act(() => promise);
+        expect(GamePlayService.joinGame).toHaveBeenCalled();
+      }); 
+      describe('on success', () => {
+        it('should navigate', async () => {
+          const promise = Promise.resolve();
+          GamePlayService.joinGame.mockResolvedValue({});
+          act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
+          await act(() => promise);
+          expect(mockedNavigate).toHaveBeenCalled();
+        });
+      });
+      describe('on fail', () => {
+        it('should display error message with alert service on status 404', async () => {
+          let alertSpy = jest.spyOn(alertService, 'alert');
+          const promise = Promise.resolve();
+          GamePlayService.joinGame.mockRejectedValue({response: {status: 404}});
+          act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
+          await act(() => promise);
+          expect(alertSpy).toHaveBeenCalled();
+        });
+        it('should display error message with alert service on status 500', async () => {
+          let alertSpy = jest.spyOn(alertService, 'alert');
+          let err = 'test-err';
+          let alertError = {
+            message: err, 
+            severity: "error"
+          }
+          const promise = Promise.resolve();
+          GamePlayService.joinGame.mockRejectedValue({response: {status: 500, data: err}});
+          act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
+          await act(() => promise);
+          expect(alertSpy).toHaveBeenCalledWith(alertError);
+        });
+        it('should display error message with alert service on unknown status', async () => {
+          let alertSpy = jest.spyOn(alertService, 'alert');
+          let alertError = { 
+            message: 'The server is currently unreachable. ' +
+            'Please try again later.', 
+            severity: "error"
+          }
+          const promise = Promise.resolve();
+          GamePlayService.joinGame.mockRejectedValue({response: {status: 700}});
+          act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
+          await act(() => promise);
+          expect(alertSpy).toHaveBeenCalledWith(alertError);
+        });
+      });
+    });
   });
-  describe('Passcode method calls', () => {
-    let wrapper;
+  describe('WALKING MODE', () => {
     beforeEach(() => {
       localStorage.setItem('inProgress', inProgressGamePasscodeRequired);
+      jest.spyOn(GamePlayService, 'getGameMode').mockImplementation(
+        () => 'Walking');
+      jest.spyOn(GamePlayService, 'getInProgressGame').mockImplementation(
+        () => inProgressGamePasscodeRequired);
     });
     afterEach(() => {
       localStorage.removeItem('inProgress');
-    })
-    it('should call getGameMode initially', () => {
-      wrapper = shallow(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameSession/>} />
-          </Routes>
-        </BrowserRouter>
-      );
-      let spy = jest.spyOn(GamePlayService, 'getGameMode').mockResolvedValue('Walking');
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
     });
-    it('should call getInProgressGame initially', () => {
-      wrapper = shallow(
+    describe('Passcode method calls', () => {
+      let wrapper;
+      it('should call getGameMode initially', () => {
+        wrapper = shallow(
+          <BrowserRouter>
+            <GameSession />
+          </BrowserRouter>
+        );
+        let spy = jest.spyOn(GamePlayService, 'getGameMode').mockResolvedValue('Walking');
+        expect(spy).toHaveBeenCalled();
+        spy.mockRestore();
+      });
+      it('should call getInProgressGame initially', () => {
+        wrapper = shallow(
+          <BrowserRouter>
+            <GameSession />
+          </BrowserRouter>
+        );
+        let spy = jest.spyOn(GamePlayService, 'getInProgressGame').mockResolvedValue(inProgressGamePasscodeRequired);
+        expect(spy).toHaveBeenCalled();
+        spy.mockRestore();
+      });
+      it ('should be in document when in walking mode', async () => {
+        await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <GameSession />
+            </BrowserRouter>
+          );
+        });
+        expect(wrapper.find(Passcode).getElement()).not.toBeNull();
+      });
+      describe('submitPasscode()', () => {
+        it ('should call createAnswer in gameplay service', async () => {
+          await act(async () => {
+            wrapper = mount(
+              <BrowserRouter>
+                <GameSession />
+              </BrowserRouter>
+            );
+          });
+          const promise = Promise.resolve();
+          GamePlayService.createAnswer.mockResolvedValue({});
+          act(() => {wrapper.find(Passcode).props().submitPasscode()})
+          await act(() => promise);
+          expect(GamePlayService.createAnswer).toHaveBeenCalled();
+        });
+        describe('on success', () => {
+          it('should call setEnteredPasscode in game play service', async () => {
+            let setEnteredPasscodeSpy = jest.spyOn(GamePlayService, 'setEnteredPasscode');
+            await act(async () => {wrapper = mount(
+                <BrowserRouter>
+                  <GameSession />
+                </BrowserRouter>
+              );
+            });
+            const promise = Promise.resolve();
+            GamePlayService.createAnswer.mockResolvedValue({});
+            act(() => {wrapper.find(Passcode).props().submitPasscode()})
+            await act(() => promise);
+            expect(setEnteredPasscodeSpy).toHaveBeenCalled();
+          });
+          it ('should take passcode screen off of the game session', async () => {
+            await act(async () => {wrapper = mount(
+              <BrowserRouter>
+                <GameSession />
+              </BrowserRouter>
+              );
+            });
+            const promise = Promise.resolve();
+            GamePlayService.createAnswer.mockResolvedValue({});
+            expect(wrapper.find('#passcode-screen').exists()).toBeTruthy();
+            act(() => {wrapper.find(Passcode).props().submitPasscode()})
+            await act(() => promise);
+            wrapper.update();
+            expect(wrapper.find('#passcode-screen').exists()).toBeFalsy();
+          });
+        });
+        describe('on fail', () => {
+          it('should call alert service if response data', async () => {
+            let alertSpy = jest.spyOn(alertService, 'alert');
+            let msg = 'test-err';
+            let error = {
+              message: msg, 
+              severity: "error"}
+            await act(async () => {wrapper = mount(
+              <BrowserRouter>
+                <GameSession />
+              </BrowserRouter>
+              );
+            });
+            const promise = Promise.resolve();
+            GamePlayService.createAnswer.mockRejectedValue({response: {status: 400, data: msg}});
+            act(() => {wrapper.find(Passcode).props().submitPasscode()})
+            await act(() => promise);
+            expect(alertSpy).toHaveBeenCalledWith(error);
+          });
+          it ('should call alert service if no response data', async () => {
+            let alertSpy = jest.spyOn(alertService, 'alert');
+            let error = {
+              message: 'The server is currently unreachable. ' +
+              'Please try again later.', 
+              severity: "error"}
+            await act(async () => {wrapper = mount(
+              <BrowserRouter>
+                <GameSession />
+              </BrowserRouter>
+              );
+            });
+            const promise = Promise.resolve();
+            GamePlayService.createAnswer.mockRejectedValue({response: {status: 400}});
+            act(() => {wrapper.find(Passcode).props().submitPasscode()})
+            await act(() => promise);
+            expect(alertSpy).toHaveBeenCalledWith(error);
+          });
+        });
+      });  
+    });
+
+    describe('nextQuestion()', () => {
+      let wrapper;
+      beforeEach(async () => {
+        await act(async () => {wrapper = mount(
+          <BrowserRouter>
+            <GameSession />
+          </BrowserRouter>
+          );
+        });
+        const promise = Promise.resolve();
+        GamePlayService.createAnswer.mockResolvedValue({});
+        expect(wrapper.find('#passcode-screen').exists()).toBeTruthy();
+        act(() => {wrapper.find(Passcode).props().submitPasscode()})
+        await act(() => promise);
+        wrapper.update();
+        expect(wrapper.find('#passcode-screen').exists()).toBeFalsy();
+      });
+   
+      it ('should call updateOption in game play services', async () => {
+        wrapper.update();
+        const promise = Promise.resolve();
+        GamePlayService.updateOption.mockResolvedValue({});
+        act(() => {wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click')});
+        act(() => {wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click')});
+        await act(() => promise);
+        expect(GamePlayService.updateOption).toHaveBeenCalled();
+      });
+
+      describe('updateOption on success', () => {
+        it('should show passcode screen', async () => {
+          wrapper.update();
+          const promise = Promise.resolve();
+          GamePlayService.updateOption.mockResolvedValue({});
+          act(() => {wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click')});
+          act(() => {wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click')});
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find('#passcode-screen').exists()).toBeTruthy();
+        });
+        it('should call setEnteredPasscode in game play service', async () => {
+          wrapper.update();
+          let setEnteredPasscodeSpy = jest.spyOn(GamePlayService, 'setEnteredPasscode');
+          const promise = Promise.resolve();
+          GamePlayService.updateOption.mockResolvedValue({});
+          act(() => {wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click')});
+          act(() => {wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click')});
+          await act(() => promise);
+          expect(setEnteredPasscodeSpy).toHaveBeenCalled();
+        });
+      });
+      describe('updateOption on fail', () => {
+        it ('should call alert service', async () => {
+          wrapper.update();
+          let alertSpy = jest.spyOn(alertService, 'alert');
+          const promise = Promise.resolve();
+          GamePlayService.updateOption.mockRejectedValue({response: {status: 404}});
+          act(() => {wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click')});
+          act(() => {wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click')});
+          await act(() => promise);
+          expect(alertSpy).toHaveBeenCalled();
+        });
+        it ('should set Timeout Dialog open if status 404 with timeout message', async () => {
+          wrapper.update();
+          let timeoutMessage = 'Your Game has timed out. Please start a new Game.';
+          const promise = Promise.resolve();
+          GamePlayService.updateOption.mockRejectedValue({response: {status: 400, data: timeoutMessage}});
+          act(() => {wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click')});
+          act(() => {wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click')});
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find(GamePlayTimeout).props().open).toBe(true);
+        });
+        it ('should clear in progress if status 404 with timeout message', async () => {
+          wrapper.update();
+          let clearInProgressSpy = jest.spyOn(GamePlayService, 'clearInProgressGame');
+          let timeoutMessage = 'Your Game has timed out. Please start a new Game.';
+          const promise = Promise.resolve();
+          GamePlayService.updateOption.mockRejectedValue({response: {status: 400, data: timeoutMessage}});
+          act(() => {wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click')});
+          act(() => {wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click')});
+          await act(() => promise);
+          wrapper.update();
+          expect(clearInProgressSpy).toHaveBeenCalled();
+        });
+      });
+    });
+  });
+  describe('Help Dialog', () => {
+    it('should open when help dialog clicked', async () => {
+      let wrapper;
+      await act(async () => {wrapper = mount(
         <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameSession/>} />
-          </Routes>
+          <GameSession />
         </BrowserRouter>
-      );
-      let spy = jest.spyOn(GamePlayService, 'getInProgressGame').mockResolvedValue(inProgressGamePasscodeRequired);
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
+        );
+      });
+      expect(wrapper.find('SimpleDialog').props().open).toBe(false);
+      wrapper.find({'data-testid': 'helpButton'}).hostNodes().simulate('click');
+      wrapper.update();
+      expect(wrapper.find('SimpleDialog').props().open).toBe(true);
+    });
+    it('should close when close function runs', async () => {
+      let wrapper;
+      await act(async () => {wrapper = mount(
+        <BrowserRouter>
+          <GameSession />
+        </BrowserRouter>
+        );
+      });
+      wrapper.find({'data-testid': 'helpButton'}).hostNodes().simulate('click');
+      expect(wrapper.find('SimpleDialog').props().open).toBe(true);
+      act(() => {wrapper.find('SimpleDialog').props().onClose()});
+      wrapper.update();
+      expect(wrapper.find('SimpleDialog').props().open).toBe(false);
     });
   });
 });
