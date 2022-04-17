@@ -143,122 +143,83 @@ describe('<GameSession />', () => {
     option2 = getByTestId(container, 'option2');
   });
   describe('Game Play', () => {
+    let wrapper;
+    beforeEach( async () => {
+      await act(async () => {wrapper = mount(
+        <BrowserRouter>
+          <GameSession />
+        </BrowserRouter>
+        );
+      });
+    });
     it('should render', () => {
       shallow(
           <BrowserRouter>
-            <Routes>
-              <Route path="*" element={<GameSession />} />
-            </Routes>
+            <GameSession />
           </BrowserRouter>,
       );
     });
-    it('should have correct text content', () => {
-      expect(container.textContent).toContain(
-          'Question 1',
-      );
-    });
-    it('should have disabled "Continue" button when option not selected', () => {
-      expect(continueButton).toBeDisabled();
-    });
-    it('should not have disabled "Continue" button after option1 selected', () => {
-      fireEvent.click(option1);
-      expect(continueButton).not.toBeDisabled();
-    });
-    it('should not have disabled "Continue" button after option2 selected', () => {
-      fireEvent.click(option2);
-      expect(continueButton).not.toBeDisabled();
-    });
     it('should call createAnswer when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
-      GamePlayService.createAnswer.mockResolvedValue({
-        response: jest.fn(() => promise),
-      });
-  
-      fireEvent.click(option1);
-      fireEvent.click(continueButton);
-      expect(GamePlayService.createAnswer).toHaveBeenCalled();
+      GamePlayService.createAnswer.mockResolvedValue({});
+      wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click');
+      wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
       await act(() => promise);
+      expect(GamePlayService.createAnswer).toHaveBeenCalled();
     });
     it('should call alert service on createAnswer fail', async () => {
       let alertSpy = jest.spyOn(alertService, 'alert');
       const promise = Promise.resolve();
       GamePlayService.createAnswer.mockRejectedValue({response: {status: 404}});
-      fireEvent.click(option1);
-      fireEvent.click(continueButton);
+      wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click');
+      wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
       await act(() => promise);
       expect(alertSpy).toHaveBeenCalled();
     });
-    it('should change the text on the screen when "Continue" button clicked', async () => {
-      expect(container.textContent).toContain(
-          'Question 1',
-      );
-      const promise = Promise.resolve();
-      GamePlayService.createAnswer.mockResolvedValue({
-        response: jest.fn(() => promise),
-      });
-  
-      fireEvent.click(option1);
-      fireEvent.click(continueButton);
-      await waitFor(() => {
-        expect(container.textContent).toContain(
-          'Question 2',
-        );
-      });
-    });
     it('should call updateCurrentQuestion when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
-      GamePlayService.createAnswer.mockResolvedValue({
-        response: jest.fn(() => promise),
-      });
-      GamePlayService.updateCurrentQuestion.mockResolvedValue({
-        response: jest.fn(),
-      });
-      fireEvent.click(option1);
-      fireEvent.click(continueButton);
-      await waitFor(() => {
-        expect(GamePlayService.updateCurrentQuestion).toHaveBeenCalled();
-      });
+      GamePlayService.createAnswer.mockResolvedValue({});
+      GamePlayService.updateCurrentQuestion.mockResolvedValue({});
+      wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click');
+      wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
+      await act(() => promise);
+      expect(GamePlayService.updateCurrentQuestion).toHaveBeenCalled();
     });
-    it('should have a help button', () => {
-      expect(getByTestId(container, 'helpButton')).not.toBeNull();
+    it('should have a help button', async () => {
+      expect(wrapper.find({'data-testid': 'helpButton'}).exists()).toBe(true);
     });
   });
   
   describe('Complete Game', () => {
-    let completeButton;
+    let wrapper;
     beforeEach(async () => {
       // to get to the last page
-      const promise = Promise.resolve();
-      GamePlayService.createAnswer.mockResolvedValue({
-        response: jest.fn(() => promise),
+      await act(async () => {wrapper = mount(
+        <BrowserRouter>
+          <GameSession />
+        </BrowserRouter>
+        );
       });
-      fireEvent.click(option2);
-      fireEvent.click(continueButton);
-      completeButton = await findByTestId(container, 'complete');
-    });
-    it ('"Complete" button should exist when on final question page', () => {
-      expect(container.textContent).toContain(
-        'Complete',
-      );
-    });
-    it('"Complete" button should not be disabled', () => {
-      expect(completeButton).not.toBeDisabled();
+      const promise = Promise.resolve();
+      GamePlayService.createAnswer.mockResolvedValue({});
+      wrapper.find({'data-testid': 'option2'}).hostNodes().simulate('click');
+      wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
+      await act(() => promise);
     });
     it('should call teamCompleteGame when "Complete" button clicked', async () => {
       const promise = Promise.resolve();
-      GamePlayService.teamCompleteGame.mockResolvedValue({
-        response: jest.fn(() => promise),
-      });
-  
-      fireEvent.click(completeButton);
-      expect(GamePlayService.teamCompleteGame).toHaveBeenCalledWith(TEAM_ID);
+      GamePlayService.teamCompleteGame.mockResolvedValue({});
+      wrapper.update();
+      wrapper.find({'data-testid': 'complete'}).hostNodes().simulate('click');
       await act(() => promise);
+      expect(GamePlayService.teamCompleteGame).toHaveBeenCalledWith(TEAM_ID);
     });
     describe('teamCompleteGame on success', () => {
       it('should navigate', async () => {
         const promise = Promise.resolve();
         GamePlayService.teamCompleteGame.mockResolvedValue({});
-        fireEvent.click(completeButton);
+        wrapper.update();
+        wrapper.find({'data-testid': 'complete'}).hostNodes().simulate('click');
         await act(() => promise);
         expect(mockedNavigate).toHaveBeenCalledWith('../endGame');
       });
@@ -266,7 +227,8 @@ describe('<GameSession />', () => {
         let clearInProgressSpy = jest.spyOn(GamePlayService, 'clearInProgressGame');
         const promise = Promise.resolve();
         GamePlayService.teamCompleteGame.mockResolvedValue({});
-        fireEvent.click(completeButton);
+        wrapper.update();
+        wrapper.find({'data-testid': 'complete'}).hostNodes().simulate('click');
         await act(() => promise);
         expect(clearInProgressSpy).toHaveBeenCalled();
       });
@@ -276,54 +238,32 @@ describe('<GameSession />', () => {
         let alertSpy = jest.spyOn(alertService, 'alert');
         const promise = Promise.resolve();
         GamePlayService.teamCompleteGame.mockRejectedValue({response: {status: 404}});
-        fireEvent.click(completeButton);
+        wrapper.update();
+        wrapper.find({'data-testid': 'complete'}).hostNodes().simulate('click');
         await act(() => promise);
         expect(alertSpy).toHaveBeenCalled();
       });
     });
   });
   describe('<GameSession />', () => {
-    let continueButton;
-    let option1;
-    let option2;
-    let option3;
-    let option4;
-    let chanceButton;
+    let wrapper;
     beforeEach(async () => {
-      act(() => {
-        render(
-            <BrowserRouter>
-              <Routes>
-                <Route path="*" element={<GameSession />} />
-              </Routes>
-            </BrowserRouter>,
-            container,
+      await act(async () => {
+        wrapper = mount(
+        <BrowserRouter>
+          <GameSession />
+        </BrowserRouter>
         );
       });
       const promise = Promise.resolve();
-      GamePlayService.createAnswer.mockResolvedValue({
-        response: jest.fn(() => promise),
-      });
-      continueButton = getByTestId(container, 'continue');
-      option1 = getByTestId(container, 'option1');
-      option2 = getByTestId(container, 'option2');
-      fireEvent.click(option1);
-      fireEvent.click(continueButton);
-      chanceButton = await findByTestId(container, 'chance');
-      option3 = getByTestId(container, 'option3');
-      option4 = getByTestId(container, 'option4');
-    });
-    it('should have disabled "Continue" button when option not selected', () => {
-      expect(continueButton).toBeDisabled();
-    });
-    it('option3 should be disabled', () => {
-      expect(option3).toBeDisabled();
-    });
-    it('option4 should be disabled', () => {
-      expect(option4).toBeDisabled();
+      GamePlayService.createAnswer.mockResolvedValue({});
+      wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click');
+      wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
+      await act(() => promise);
     });
     it('should call random when chance is clicked', () => {
-      fireEvent.click(chanceButton);
+      wrapper.update();
+      wrapper.find({'data-testid': 'chance'}).hostNodes().simulate('click');
       expect(GamePlayService.random).toHaveBeenCalled();
     });
   });
@@ -514,9 +454,6 @@ describe('<GameSession />', () => {
           it('should call alert service if response data', async () => {
             let alertSpy = jest.spyOn(alertService, 'alert');
             let msg = 'test-err';
-            let error = {
-              message: msg, 
-              severity: "error"}
             await act(async () => {wrapper = mount(
               <BrowserRouter>
                 <GameSession />
@@ -532,10 +469,6 @@ describe('<GameSession />', () => {
           });
           it ('should call alert service if no response data', async () => {
             let alertSpy = jest.spyOn(alertService, 'alert');
-            let error = {
-              message: 'The server is currently unreachable. ' +
-              'Please try again later.', 
-              severity: "error"}
             await act(async () => {wrapper = mount(
               <BrowserRouter>
                 <GameSession />
