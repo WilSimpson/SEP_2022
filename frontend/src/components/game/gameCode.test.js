@@ -23,110 +23,9 @@ afterEach(() => {
 });
 
 describe('<GameCode />', () => {
+  
   it('should render the GameCode component', () => {
-    expect(shallow(<GameCode />));
-  });
-
-  it('should accept a valid gamecode', () => {
-    const {getByTestId} = render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameCode />} />
-          </Routes>
-        </BrowserRouter>,
-    );
-    const codeBox = getByTestId('codeBox');
-
-    expect(codeBox).toBeInTheDocument();
-    expect(codeBox.value).toBe('');
-    fireEvent.change(codeBox, {target: {value: '123456'}});
-    expect(codeBox.value).toBe('123456');
-  });
-
-  it('should have a disabled button', () => {
-    render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameCode />} />
-          </Routes>
-        </BrowserRouter>,
-    );
-    const submit = document.querySelector('[data-testid=submit]');
-
-    expect(submit).toBeInTheDocument();
-    expect(submit.disabled).toBe(true);
-  });
-
-  it('should enable button with valid code', () => {
-    const {getByTestId} = render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameCode />} />
-          </Routes>
-        </BrowserRouter>,
-    );
-    const codeBox = getByTestId('codeBox');
-    const submit = document.querySelector('[data-testid=submit]');
-
-    expect(submit).toBeInTheDocument();
-    expect(submit.disabled).toBe(true);
-
-    fireEvent.change(codeBox, {target: {value: '123456'}});
-    expect(submit.disabled).toBe(false);
-  });
-
-  it('should not enable with no input', () => {
-    const {getByTestId} = render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameCode />} />
-          </Routes>
-        </BrowserRouter>,
-    );
-    const codeBox = getByTestId('codeBox');
-    const submit = document.querySelector('[data-testid=submit]');
-
-    expect(submit).toBeInTheDocument();
-    expect(submit.disabled).toBe(true);
-
-    fireEvent.change(codeBox, {target: {value: ''}});
-    expect(submit.disabled).toBe(true);
-  });
-
-  it('should not enable non-numerical input', () => {
-    const {getByTestId} = render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameCode />} />
-          </Routes>
-        </BrowserRouter>,
-    );
-    const codeBox = getByTestId('codeBox');
-    const submit = document.querySelector('[data-testid=submit]');
-
-    expect(submit).toBeInTheDocument();
-    expect(submit.disabled).toBe(true);
-
-    fireEvent.change(codeBox, {target: {value: 'Hello'}});
-    expect(submit.disabled).toBe(true);
-  });
-
-  it('should not enable with input shorter than 6', () => {
-    const {getByTestId} = render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<GameCode />} />
-          </Routes>
-        </BrowserRouter>,
-    );
-    const codeBox = getByTestId('codeBox');
-    const submit = document.querySelector('[data-testid=submit]');
-
-    expect(submit).toBeInTheDocument();
-    expect(submit.disabled).toBe(true);
-
-    fireEvent.change(codeBox, {target: {value: '12345'}});
-    expect(submit.disabled).toBe(true);
+    expect(shallow(<GameCode joinGame={123456} />));
   });
 
   describe('join game with 6 digit code', () => {
@@ -223,21 +122,6 @@ describe('<GameCode />', () => {
     });
   });
   describe('join game with 6 non-digits or less than 6 digits', () => {
-    it('should NOT call joinGame if join code is 6 non-digits', async () => {
-      let wrapper;
-      let joinCode = 'gohawk';
-      const promise = Promise.resolve();
-      MockGamePlayService.joinGame.mockResolvedValue({});
-      await act(async () => {
-        wrapper = mount(
-          <BrowserRouter>
-            <GameCode joinCode={joinCode} />
-          </BrowserRouter>
-        );
-      });
-      await act(() => promise);
-      expect(MockGamePlayService.joinGame).not.toHaveBeenCalled(); 
-    });
     it('should display error message if code 6 non-digits', async () => {
       let wrapper;
       let joinCode = 'gohawk';
@@ -273,5 +157,24 @@ describe('<GameCode />', () => {
       );
     });
   });
-
+  describe('onChange', () => {
+    it('should change value of text prop', async () => {
+      const event = {
+        preventDefault() {},
+        target: { value: '123456' }
+      };
+      let wrapper;
+      await act(async () => {
+        wrapper = mount(
+          <BrowserRouter>
+            <GameCode joinCode={123456} />
+          </BrowserRouter>
+        );
+      });
+      wrapper.update();
+      wrapper.find('#gameCode').hostNodes().simulate('change', event);
+      wrapper.update();
+      expect(wrapper.find('#gameCode').hostNodes().props().value).toEqual('123456');
+    });
+  });
 });
