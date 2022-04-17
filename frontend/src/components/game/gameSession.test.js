@@ -566,7 +566,7 @@ describe('<GameSession />', () => {
         </BrowserRouter>
         );
       });
-      await act(() => promise);
+      wrapper.update();
       expect(wrapper.find('SimpleDialog').props().open).toBe(false);
       wrapper.find({'data-testid': 'helpButton'}).hostNodes().simulate('click');
       wrapper.update();
@@ -581,7 +581,7 @@ describe('<GameSession />', () => {
         </BrowserRouter>
         );
       });
-      await act(() => promise);
+      wrapper.update();
       wrapper.find({'data-testid': 'helpButton'}).hostNodes().simulate('click');
       expect(wrapper.find('SimpleDialog').props().open).toBe(true);
       act(() => {wrapper.find('SimpleDialog').props().onClose()});
