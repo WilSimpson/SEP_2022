@@ -1,12 +1,20 @@
 import React from 'react';
 import '../../setupTests';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 import Register from './register';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent, act} from '@testing-library/react';
 import AuthService from '../../services/auth';
+import { BrowserRouter } from 'react-router-dom';
+import { Alert } from '@mui/material';
+
+const mockedNavigate = jest.fn();
 
 jest.mock('../../services/auth');
+jest.mock("react-router-dom", () => ({
+  ...(jest.requireActual("react-router-dom")), 
+  useNavigate: () => mockedNavigate,
+}));
 
 describe('<Register />', () => {
   let emailField;
@@ -139,18 +147,74 @@ describe('<Register />', () => {
       expect(submitButton).not.toBeDisabled();
     });
 
-    it('should call AuthService register when clicked', async () => {
-      const promise = Promise.resolve();
-      AuthService.register.mockResolvedValue({
-        response: jest.fn(() => promise),
+    describe('AuthService.register', () => {
+      let wrapper;
+      beforeEach(async () => {
+        await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <Register />
+            </BrowserRouter>
+          );
+        });
+        wrapper.find('#first').hostNodes().simulate('change', {target:{value:'Hello'}});
+        wrapper.find('#last').hostNodes().simulate('change', {target:{value:'Hello'}});
+        wrapper.find('#email').hostNodes().simulate('change', {target:{value:'example@email.com'}});
+        wrapper.find('#password').hostNodes().simulate('change', {target:{value:'HelloW'}});
+        wrapper.find('#role').last().simulate('change', {target:{value:'Faculty'}});
       });
-
-      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
-      fireEvent.change(passwordField, {target: {value: 'morethan6'}});
-      fireEvent.click(submitButton);
-
-      expect(AuthService.register).toHaveBeenCalled();
-      await act(() => promise);
+      it('should call register when submit button clicked', async () => {
+        AuthService.register.mockResolvedValue({});
+        wrapper.update();
+        const promise = Promise.resolve();
+        wrapper.find({'data-testid': 'submit-button'}).hostNodes().simulate('click', {target:{value:'hi'}});
+        await act(() => promise);
+        expect(AuthService.register).toHaveBeenCalled();
+      });
+      describe('register on success', () => {
+        it('should navigate to admin-dashboard when status 201', async () => {
+          AuthService.register.mockResolvedValue({status: 201});
+          wrapper.update();
+          const promise = Promise.resolve();
+          wrapper.find({'data-testid': 'submit-button'}).hostNodes().simulate('click', {target:{value:'hi'}});
+          await act(() => promise);
+          expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard');
+        }); 
+        it ('should display error message when other status', async () => {
+          AuthService.register.mockResolvedValue({status: 700});
+          wrapper.update();
+          const promise = Promise.resolve();
+          wrapper.find({'data-testid': 'submit-button'}).hostNodes().simulate('click', {target:{value:'hi'}});
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find(Alert).prop('children')).toEqual(
+            `There was an issue handling your account registration. ` + 
+                `Please try again later.`
+          );
+        });       
+      });
+      describe('register on fail', () => {
+        it('should display error message when status 401', async () => {
+          AuthService.register.mockRejectedValue({response: {data: {detail: 'error'},status: 401}});
+          wrapper.update();
+          const promise = Promise.resolve();
+          wrapper.find({'data-testid': 'submit-button'}).hostNodes().simulate('click', {target:{value:'hi'}});
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find(Alert).prop('children')).toEqual('error');
+        });
+        it('should display error message when other status', async () => {
+          AuthService.register.mockRejectedValue({response: {data: {detail: 'error'},status: 700}});
+          wrapper.update();
+          const promise = Promise.resolve();
+          wrapper.find({'data-testid': 'submit-button'}).hostNodes().simulate('click', {target:{value:'hi'}});
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find(Alert).prop('children')).toEqual(
+            'There was an unexpected error. Please try again later.'
+          );
+        });
+      });
     });
   });
 });

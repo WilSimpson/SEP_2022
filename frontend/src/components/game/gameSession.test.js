@@ -559,12 +559,14 @@ describe('<GameSession />', () => {
   describe('Help Dialog', () => {
     it('should open when help dialog clicked', async () => {
       let wrapper;
+      let promise;
       await act(async () => {wrapper = mount(
         <BrowserRouter>
           <GameSession />
         </BrowserRouter>
         );
       });
+      await act(() => promise);
       expect(wrapper.find('SimpleDialog').props().open).toBe(false);
       wrapper.find({'data-testid': 'helpButton'}).hostNodes().simulate('click');
       wrapper.update();
@@ -572,12 +574,14 @@ describe('<GameSession />', () => {
     });
     it('should close when close function runs', async () => {
       let wrapper;
+      let promise = Promise.resolve();
       await act(async () => {wrapper = mount(
         <BrowserRouter>
           <GameSession />
         </BrowserRouter>
         );
       });
+      await act(() => promise);
       wrapper.find({'data-testid': 'helpButton'}).hostNodes().simulate('click');
       expect(wrapper.find('SimpleDialog').props().open).toBe(true);
       act(() => {wrapper.find('SimpleDialog').props().onClose()});
