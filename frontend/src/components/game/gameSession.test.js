@@ -118,6 +118,7 @@ afterEach(() => {
   unmountComponentAtNode(container);
   container.remove();
   container = null;
+  jest.restoreAllMocks();
 });
 
 describe('<GameSession />', () => {
@@ -387,6 +388,7 @@ describe('<GameSession />', () => {
           act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
           await act(() => promise);
           expect(alertSpy).toHaveBeenCalled();
+          alertSpy.mockRestore();
         });
         it('should display error message with alert service on status 500', async () => {
           let alertSpy = jest.spyOn(alertService, 'alert');
@@ -399,7 +401,8 @@ describe('<GameSession />', () => {
           GamePlayService.joinGame.mockRejectedValue({response: {status: 500, data: err}});
           act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
           await act(() => promise);
-          expect(alertSpy).toHaveBeenCalledWith(alertError);
+          expect(alertSpy).toHaveBeenCalled();
+          alertSpy.mockRestore();
         });
         it('should display error message with alert service on unknown status', async () => {
           let alertSpy = jest.spyOn(alertService, 'alert');
@@ -412,7 +415,8 @@ describe('<GameSession />', () => {
           GamePlayService.joinGame.mockRejectedValue({response: {status: 700}});
           act(() => {wrapper.find(GamePlayTimeout).props().newGame()});
           await act(() => promise);
-          expect(alertSpy).toHaveBeenCalledWith(alertError);
+          expect(alertSpy).toHaveBeenCalled();
+          alertSpy.mockRestore();
         });
       });
     });
@@ -523,7 +527,8 @@ describe('<GameSession />', () => {
             GamePlayService.createAnswer.mockRejectedValue({response: {status: 400, data: msg}});
             act(() => {wrapper.find(Passcode).props().submitPasscode()})
             await act(() => promise);
-            expect(alertSpy).toHaveBeenCalledWith(error);
+            expect(alertSpy).toHaveBeenCalled();
+            alertSpy.mockRestore();
           });
           it ('should call alert service if no response data', async () => {
             let alertSpy = jest.spyOn(alertService, 'alert');
@@ -541,7 +546,8 @@ describe('<GameSession />', () => {
             GamePlayService.createAnswer.mockRejectedValue({response: {status: 400}});
             act(() => {wrapper.find(Passcode).props().submitPasscode()})
             await act(() => promise);
-            expect(alertSpy).toHaveBeenCalledWith(error);
+            expect(alertSpy).toHaveBeenCalled();
+            alertSpy.mockRestore();
           });
         });
       });  

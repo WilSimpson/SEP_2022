@@ -18,6 +18,10 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedNavigate,
 }));
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 describe('<GameCode />', () => {
   it('should render the GameCode component', () => {
     expect(shallow(<GameCode />));
