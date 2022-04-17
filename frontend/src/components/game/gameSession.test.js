@@ -2,10 +2,9 @@ import React from 'react';
 import '../../setupTests';
 import GameSession from './gameSession';
 import {mount, shallow} from 'enzyme';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import {render, unmountComponentAtNode} from 'react-dom';
+import {BrowserRouter} from 'react-router-dom';
+import {unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
-import {findByTestId, fireEvent, getByTestId, waitFor} from '@testing-library/react';
 import {inProgressGame, inProgressGamePasscodeRequired} from '../../helpers/dummyData';
 import GamePlayService from '../../services/gameplay';
 import GamePlayTimeout from './gamePlayTimeout';
@@ -122,26 +121,6 @@ afterEach(() => {
 });
 
 describe('<GameSession />', () => {
-  let continueButton;
-  let option1;
-  let option2;
-  let chanceButton;
-
-  beforeEach(() => {
-    act(() => {
-      render(
-          <BrowserRouter>
-            <Routes>
-              <Route path="*" element={<GameSession />} />
-            </Routes>
-          </BrowserRouter>,
-          container,
-      );
-    });
-    continueButton = getByTestId(container, 'continue');
-    option1 = getByTestId(container, 'option1');
-    option2 = getByTestId(container, 'option2');
-  });
   describe('Game Play', () => {
     let wrapper;
     beforeEach( async () => {
@@ -374,23 +353,27 @@ describe('<GameSession />', () => {
     });
     describe('Passcode method calls', () => {
       let wrapper;
-      it('should call getGameMode initially', () => {
-        wrapper = shallow(
-          <BrowserRouter>
-            <GameSession />
-          </BrowserRouter>
-        );
-        let spy = jest.spyOn(GamePlayService, 'getGameMode').mockResolvedValue('Walking');
+      it('should call getGameMode initially', async () => {
+        await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <GameSession />
+            </BrowserRouter>
+          );
+        });
+        let spy = jest.spyOn(GamePlayService, 'getGameMode').mockImplementation(() => 'Walking');
         expect(spy).toHaveBeenCalled();
         spy.mockRestore();
       });
-      it('should call getInProgressGame initially', () => {
-        wrapper = shallow(
-          <BrowserRouter>
-            <GameSession />
-          </BrowserRouter>
-        );
-        let spy = jest.spyOn(GamePlayService, 'getInProgressGame').mockResolvedValue(inProgressGamePasscodeRequired);
+      it('should call getInProgressGame initially', async () => {
+        await act(async () => {
+          wrapper = mount(
+            <BrowserRouter>
+              <GameSession />
+            </BrowserRouter>
+          );
+        });
+        let spy = jest.spyOn(GamePlayService, 'getInProgressGame').mockImplementation(() => inProgressGamePasscodeRequired);
         expect(spy).toHaveBeenCalled();
         spy.mockRestore();
       });
