@@ -6,6 +6,7 @@ import {act} from 'react-dom/test-utils';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {Button} from '@mui/material';
+import '../../setupTests';
 
 let container = null;
 

@@ -1,8 +1,11 @@
+import React from 'react';
 import {afterAll, afterEach, beforeEach, expect} from '@jest/globals';
 import {mount} from 'enzyme';
 import {User} from '../../models/user';
 import GamesTable from './gamesTable';
 import {TableContainer, TableRow} from '@mui/material';
+import '../../setupTests';
+
 
 const mockUseNavigate = jest.fn();
 const mockUseParams = jest.fn();

@@ -21,6 +21,10 @@ export default function AdminDash() {
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
 
+  const handleQRCodeButtonClicked = (joinCode) => {
+    navigate(`/generate-qr?joinCode=${joinCode}`);
+  };
+
   React.useEffect(() => {
     async function getGames() {
       gameService.getGames().catch((error) => {
@@ -120,6 +124,7 @@ export default function AdminDash() {
                   reportButtons
                   qrCodes
                   onConfirmEnd = {onConfirmEnd}
+                  onQRCodeButtonClicked={handleQRCodeButtonClicked}
                   gameSessions={sessions}
                 />
               </Paper>

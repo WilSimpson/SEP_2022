@@ -11,8 +11,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import accountIcon from '../../images/accountIcon.png';
-import logoSmall from '../../images/logoSmall.png';
 import {ButtonGroup} from '@mui/material';
 import authService from '../../services/auth';
 
@@ -55,7 +53,7 @@ const ResponsiveAppBar = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <IconButton href="/" sx={{p: 0}} size="large">
-            <Avatar alt="EA" src={logoSmall} variant="square" />
+            <Avatar alt="EA" src='/images/logoSmall.png' variant="square" />
           </IconButton>
           <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
             <IconButton
@@ -121,7 +119,7 @@ const ResponsiveAppBar = () => {
                     sx={{p: 0}}
                     size="large"
                   >
-                    <Avatar src={accountIcon} alt="User" />
+                    <Avatar src='/images/accountIcon.png' alt="User" />
                   </IconButton>
                 </Tooltip>
                 <Menu
