@@ -54,7 +54,7 @@ export default function GamesTable(props) {
   return (
     <Grid container justifyContent="center" spacing={2}>
       {props.editable ?
-        <Dialog open={confirmationDeleteID != null}>
+        <Dialog id='confirm-dialog' open={(confirmationDeleteID != null) || false}>
           <DialogTitle id="alert-dialog-title">
             {'Are you sure you want to delete this game?'}
           </DialogTitle>
@@ -66,10 +66,10 @@ export default function GamesTable(props) {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={onPermanentDelete}>
+            <Button id='permanentDelete' onClick={onPermanentDelete}>
               Delete Permanently
             </Button>
-            <Button onClick={handleCloseConfirmation} autoFocus>
+            <Button id='close-dialog' onClick={handleCloseConfirmation} autoFocus>
               Cancel
             </Button>
           </DialogActions>
@@ -136,6 +136,7 @@ export default function GamesTable(props) {
                         aria-label="edit delete game button group"
                       >
                         <IconButton
+                          id={`edit${game.id}`}
                           aria-label="edit"
                           onClick={() => {
                             props.onEdit(game.id);
@@ -144,6 +145,7 @@ export default function GamesTable(props) {
                           <Edit />
                         </IconButton>
                         <IconButton
+                          id={`delete${game.id}`}
                           aria-label="delete"
                           onClick={() => {
                             setConfirmationDeleteID(game.id);
