@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, TextField, Grid, Switch} from '@mui/material';
+import {Button, TextField, Grid, Switch, InputLabel} from '@mui/material';
 import authService from '../../services/auth';
 import {alertService} from '../../services/alert';
 
@@ -56,10 +56,13 @@ export default function GameFields(props) {
 
         setTitle(content['title']);
         setCode(content['code']);
-        setQuestonsJSON(content['questsions']);
+        setQuestonsJSON(content['questions']);
         setOptionsJSON(content['options']);
         console.log('uploaded!');
         console.log('title:', content['title']);
+        console.log('code:', content['code']);
+        console.log('questions:', content['questions']);
+        console.log('options:', content['options']);
       } catch (error) {
         alertService.error('Error: File is not JSON format.');
         console.log('error:', error);
@@ -85,12 +88,11 @@ export default function GameFields(props) {
       </Grid>
 
       <Grid item xs={12} md={6} lg={3} sx={editDisplay}>
-        {active ? 'Active' : 'Inactive'}{' '}
+        <InputLabel>{active ? 'Active' : 'Inactive'}</InputLabel>
         <Switch
           label="Active"
           checked={active}
           onChange={() => setActive(!active)}
-          sx={{width: '100%'}}
         />
       </Grid>
 
