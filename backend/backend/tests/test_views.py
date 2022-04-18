@@ -829,14 +829,14 @@ class GameSessionTests(TestCase):
         data = {
             'id': self.session.id,
         }
-        resp = self.client.post('/api/games/endSession/'+str(self.session.id)+'/', data=data)
+        resp = self.client.put('/api/games/endSession/'+str(self.session.id)+'/', data=data)
         self.assertEqual(resp.status_code, 200)
 
     def test_session_end_no_game(self):
         data = {
             'id': 9999999,
         }
-        resp = self.client.post('/api/games/endSession/9999999/', data=data)
+        resp = self.client.put('/api/games/endSession/9999999/', data=data)
         self.assertEqual(resp.status_code, 500)
 
 
