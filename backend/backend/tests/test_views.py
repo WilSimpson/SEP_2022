@@ -638,27 +638,6 @@ class SessionViewTestCase(TestCase):
         resp = self.client.post('/api/games/startSession/', data=data)
         self.assertEqual(resp.status_code, 500)
 
-    def test_session_end_active_game(self):
-        data = {
-            'id': self.game.id,
-        }
-        resp = self.client.post('/api/games/endSession/'+str(self.game.id)+'/', data=data)
-        self.assertEqual(resp.status_code, 200)
-
-    def test_session_end_inactive_game(self):
-        data = {
-            'id': self.inactive_game.id,
-        }
-        resp = self.client.post('/api/games/endSession/'+str(self.inactive_game.id)+'/', data=data)
-        self.assertEqual(resp.status_code, 500)
-
-    def test_session_end_no_game(self):
-        data = {
-            'id': 9999999,
-        }
-        resp = self.client.post('/api/games/endSession/9999999/', data=data)
-        self.assertEqual(resp.status_code, 500)
-
     def test_toggle_valid(self):
         state = self.game.active
         data = {
@@ -846,7 +825,19 @@ class GameSessionTests(TestCase):
         resp = self.client.get('/api/games/{}/sessions/'.format(0))
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_session_end_active_game(self):
+        data = {
+            'id': self.session.id,
+        }
+        resp = self.client.post('/api/games/endSession/'+str(self.session.id)+'/', data=data)
+        self.assertEqual(resp.status_code, 200)
 
+    def test_session_end_no_game(self):
+        data = {
+            'id': 9999999,
+        }
+        resp = self.client.post('/api/games/endSession/9999999/', data=data)
+        self.assertEqual(resp.status_code, 500)
 
 
     def test_get_games_session(self):
@@ -959,7 +950,7 @@ class GameSessionTests(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_user_active_sessions(self):
-        resp = self.client.get('/api/gameSession/{}'.format(self.session.creator_id))
+        resp = self.client.get('/api/gameSession/{}/'.format(self.session.creator_id))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
 class ContextHelpViewSetTestCase(TestCase):
