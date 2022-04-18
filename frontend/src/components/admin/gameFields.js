@@ -17,58 +17,71 @@ export default function GameFields(props) {
   const [optionsJSON, setOptionsJSON] = React.useState(
     isEditing ? JSON.stringify(props.game.options) : '[]',
   );
+
   const creatorID = isEditing ?
     props.game.creator_id :
     authService.currentUser().id;
 
   const editDisplay = isEditing ? {} : {display: 'none'};
 
-  const handleFileUpload = (event) => {
-    console.log('loaded file:', event.target.files[0]);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const content = JSON.parse(e.target.result);
 
-        if (content['title'] == null) {
-          alertService.error('No title');
-          console.log('no title');
-          return;
+  const handleFileUpload = async (event) => {
+    const promise = new Promise((resolve, reject) => {
+      console.log('promise');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = JSON.parse(e.target.result);
+          resolve(content);
+        } catch (error) {
+          reject(new Error('Invalid file format'));
         }
+      };
 
-        if (content['code'] == null) {
-          alertService.error('No code');
-          console.log('no code');
-          return;
-        }
+      reader.onerror = reject;
+      console.log('loading file:', event.target.files[0]);
+      reader.readAsText(event.target.files[0]);
+    });
 
-        if (content['options'] == null) {
-          alertService.error('No options');
-          console.log('no options');
-          return;
-        }
-
-        if (content['questions'] == null) {
-          alertService.error('No questions');
-          console.log('no questions');
-          return;
-        }
-
-        setTitle(content['title']);
-        setCode(content['code']);
-        setQuestonsJSON(content['questions']);
-        setOptionsJSON(content['options']);
-        console.log('uploaded!');
-        console.log('title:', content['title']);
-        console.log('code:', content['code']);
-        console.log('questions:', content['questions']);
-        console.log('options:', content['options']);
-      } catch (error) {
-        alertService.error('Error: File is not JSON format.');
-        console.log('error:', error);
+    await promise.then((content) => {
+      if (content['title'] == null) {
+        alertService.error('No title');
+        console.log('no title');
+        return;
       }
-    };
-    reader.readAsText(event.target.files[0]);
+
+      if (content['code'] == null) {
+        alertService.error('No code');
+        console.log('no code');
+        return;
+      }
+
+      if (content['options'] == null) {
+        alertService.error('No options');
+        console.log('no options');
+        return;
+      }
+
+      if (content['questions'] == null) {
+        alertService.error('No questions');
+        console.log('no questions');
+        return;
+      }
+
+      updateFromFile(content);
+    }, (error) => {
+      alertService.error(error.message);
+      console.log('error:', error);
+    });
+  };
+
+  const updateFromFile = (content) => {
+    setTitle(content['title']);
+    setCode(content['code']);
+    setQuestonsJSON(content['questions']);
+    setOptionsJSON(content['options']);
+    setTitle('testing');
+    console.log('set states');
   };
 
   return (
