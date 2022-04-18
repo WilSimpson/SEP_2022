@@ -1,12 +1,10 @@
 import React from 'react';
+import '../../setupTests';
 import GamePlayTimeout from './gamePlayTimeout';
 import {shallow} from 'enzyme';
 import {expect, jest} from '@jest/globals';
-import {act} from 'react-dom/test-utils';
-import {render, unmountComponentAtNode} from 'react-dom';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {unmountComponentAtNode} from 'react-dom';
 import {Button} from '@mui/material';
-import '../../setupTests';
 
 let container = null;
 

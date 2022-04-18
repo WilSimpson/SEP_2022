@@ -12,7 +12,7 @@ import GamesTable from '../../components/admin/gamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import Loading from '../../components/layout/loading';
 import {alertService, alertSeverity} from '../../services/alert';
-import {useNavigate} from 'react-router';
+import {useNavigate} from 'react-router-dom';
 import GameSessionsTable from '../../components/faculty/gameSessionsTable.tsx';
 
 export default function AdminDash() {
@@ -27,24 +27,26 @@ export default function AdminDash() {
 
   React.useEffect(() => {
     async function getGames() {
-      gameService.getGames().catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      }).then((resp) => {
+      gameService.getGames().then((resp) => {
         const games = [...resp.data];
         setGames(games);
         getSessions(games);
+      })
+      .catch((error) => {
+        alertService.alert({severity: alertSeverity.error, message: error});
       });
     }
 
     async function getSessions(games) {
       for (const game of games) {
-        gameSessionService.getSessions(game.id).catch((error) => {
-          alertService.alert({severity: alertSeverity.error, message: error});
-        }).then((resp) => {
+        gameSessionService.getSessions(game.id).then((resp) => {
           const filteredSessions = resp.data.filter(function(el) {// sets filteredSessions to all sessions in the response that have the "active" parameter set to true
             return el.active == true;
           });
           setSessions((oldSessions) => [...oldSessions, ...filteredSessions]);
+        })
+        .catch((error) => {
+          alertService.alert({severity: alertSeverity.error, message: error});
         });
       }
 
@@ -57,11 +59,12 @@ export default function AdminDash() {
   const onConfirmEnd = (id) => {
     gameSessionService.endSession(id).then(
         (response) => {
+          setSessions([...sessions.filter((s) => s.id != id)]);
           console.log(response.data);
         }).catch( (error) => {
       console.log(`There was an error ${error}`);
+      alertService.alert({severity: alertSeverity.error, message: error});
     });
-    setSessions([...sessions.filter((s) => s.id != id)]);
   };
 
   return (

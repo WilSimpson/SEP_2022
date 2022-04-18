@@ -13,20 +13,19 @@ import {
 } from '@mui/material';
 import AuthService from '../../services/auth';
 import validator from 'validator';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
-// import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import {useNavigate} from 'react-router-dom';
 
 const theme = createTheme();
 
 export default function Register() {
   const userRef = useRef();
   const errRef = useRef();
+  const navigate = useNavigate();
 
   // State elements
   const [email, setEmail] = useState('');
@@ -52,11 +51,11 @@ export default function Register() {
     AuthService.register(email, password, first, last, role).then(
         (response) => {
           if (response.status === 201) {
-            window.location.href = '/admin-dashboard';
+            navigate('/admin-dashboard');
           } else {
             setErrMsg(
-                `There was an issue handling your account registration.
-                    Please try again later.`,
+                `There was an issue handling your account registration. ` +
+                `Please try again later.`,
             );
           }
         },
@@ -91,7 +90,6 @@ export default function Register() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
             sx={{mt: 3}}
           >
             {errMsg && (
@@ -177,6 +175,7 @@ export default function Register() {
               sx={{mt: 3, mb: 2}}
               disabled={disableSubmit}
               data-testid="submit-button"
+              onClick={handleSubmit}
             >
               Register Account
             </Button>

@@ -1,5 +1,4 @@
 import React from 'react';
-import './app.css';
 import Home from './pages/public/home';
 import StartingSurvey from './pages/game/startingSurvey';
 import GameSession from './components/game/gameSession';

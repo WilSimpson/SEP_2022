@@ -193,6 +193,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
             {props.selectable ?
               <TableCell>
                 <Checkbox
+                  id='main-checkbox'
                   onChange={handleMainCheckboxChange}
                   checked={shownSessions.every((s: GameSession) => selectedSet.has(s.id))}
                 />
@@ -214,6 +215,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               {props.selectable ?
                 <TableCell>
                   <Checkbox
+                    id={`checkbox${row.id}`}
                     onChange={() => handleCheckboxChange(row.id)}
                     checked={selectedSet.has(row.id)}
                   />
@@ -236,6 +238,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               {props.reportButtons ?
                 <TableCell>
                   <Button
+                    id='report-button'
                     variant="outlined"
                     onClick={() => props.onReportButtonClicked(row.id)}
                   >

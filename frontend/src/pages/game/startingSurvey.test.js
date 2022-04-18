@@ -1,46 +1,55 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-import StartingSurvey from './startingSurvey';
 import '../../setupTests';
+import {mount} from 'enzyme';
+import StartingSurvey from './startingSurvey';
 import '@testing-library/jest-dom/extend-expect';
-import {fireEvent, getByTestId} from '@testing-library/react';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {render, unmountComponentAtNode} from 'react-dom';
+import {BrowserRouter} from 'react-router-dom';
 import {act} from 'react-dom/test-utils';
 import {inProgressGame} from '../../helpers/dummyData';
+import MockGamePlayService from '../../services/gameplay';
+import {Alert} from '@mui/material';
 
 let container = null;
+
+const mockedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({
     state: {
       code: '123456',
-      game: {},
+      game: {
+        questions: [{
+          id: 1,
+          value: 'Question 1',
+          passcode: '123456',
+          chance: false,
+          chance_game: 'NO_GAME',
+          game: '1',
+          help: [],
+        },],
+        options: [{
+          id: 1,
+          value: 'Option 1',
+          dest_question: 2,
+          source_question: 1,
+          weight: 1,
+        },],
+      },
     },
   }),
+  useNavigate: () => mockedNavigate,
 }));
+
+jest.mock('../../services/gameplay');
 
 beforeEach(() => {
   container = document.createElement('div');
   document.body.appendChild(container);
   localStorage.setItem('inProgress', JSON.stringify(inProgressGame));
-  act(() => {
-    render(
-        <BrowserRouter>
-          <Routes>
-            <Route path="*" element={<StartingSurvey />} />
-          </Routes>
-        </BrowserRouter>,
-        container,
-    );
-  });
 });
 
 afterEach(() => {
-  unmountComponentAtNode(container);
-  container.remove();
-  container = null;
   localStorage.removeItem('inProgress');
 });
 
@@ -48,62 +57,94 @@ afterEach(() => {
 describe('<StartingSurvey />', () => {
 
   it('should render the StartingSurvey component', () => {
-    expect(
-        shallow(
-            <BrowserRouter>
-              <Routes>
-                <Route path="*" element={<StartingSurvey />} />
-              </Routes>
-            </BrowserRouter>,
-        ),
-    );
+    let wrapper = mount(<BrowserRouter><StartingSurvey /></BrowserRouter>);
+    expect (wrapper);
   });
-
-  it('should route towards the game session', () => {
-    const submit = getByTestId(container, 'submit');
-    expect(submit).toBeInTheDocument();
-    fireEvent.click(submit);
-    expect(submit).toBeInTheDocument();
-  });
-
-  it('should display alert text about in progress game when game in localStorage', () => {
-    expect(container.textContent).toContain(
-      'You have a game currently in progress. Would you like to join this game?',
-    );
-  });
-
-  it('should NOT display alert text about in progress game when it is for a different game session', () => {
-    inProgressGame.state.code = '654321';
-    localStorage.setItem('inProgress', JSON.stringify(inProgressGame));
-    act(() => {
-      render(
-          <BrowserRouter>
-            <Routes>
-              <Route path="*" element={<StartingSurvey />} />
-            </Routes>
-          </BrowserRouter>,
-          container,
-      );
+  
+  describe('handleSubmit()', () => {
+    describe('on success', () => {
+      it('should call sendTeamInit in GamePlayService', async () => {
+        const event = { preventDefault: () => {} };
+        jest.spyOn(event, 'preventDefault');
+        let wrapper = mount(<BrowserRouter><StartingSurvey /></BrowserRouter>);
+        const promise = Promise.resolve();
+        MockGamePlayService.sendTeamInit.mockResolvedValue({});
+        act(() => {wrapper.find('form').simulate('submit', event)});
+        await act(() => promise);
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(MockGamePlayService.sendTeamInit).toHaveBeenCalled();
+      });
+      it('should call setInProgressGame in GamePlayService', async () => {
+        const event = { preventDefault: () => {} };
+        jest.spyOn(event, 'preventDefault');
+        let wrapper = mount(<BrowserRouter><StartingSurvey /></BrowserRouter>);
+        const promise = Promise.resolve();
+        MockGamePlayService.sendTeamInit.mockResolvedValue({});
+        act(() => {wrapper.find('form').simulate('submit', event)});
+        await act(() => promise);
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(MockGamePlayService.setInProgressGame).toHaveBeenCalled();
+      });
+      it('should navigate to /gameSession', async () => {
+        const event = { preventDefault: () => {} };
+        jest.spyOn(event, 'preventDefault');
+        let wrapper = mount(<BrowserRouter><StartingSurvey /></BrowserRouter>);
+        const promise = Promise.resolve();
+        MockGamePlayService.sendTeamInit.mockResolvedValue({});
+        act(() => {wrapper.find('form').simulate('submit', event)});
+        await act(() => promise);
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(mockedNavigate).toHaveBeenCalled();
+      });  
     });
-    expect(container.textContent).not.toContain(
-      'You have a game currently in progress. Would you like to join this game?',
-    );
-  });
-
-  it('should NOT display alert text about in progress game when game not in localStorage', () => {
-    localStorage.removeItem('inProgress');
-    act(() => {
-      render(
-          <BrowserRouter>
-            <Routes>
-              <Route path="*" element={<StartingSurvey />} />
-            </Routes>
-          </BrowserRouter>,
-          container,
-      );
+    describe('on fail', () => {
+      let wrapper;
+      let event;
+      let promise;
+      beforeEach(() => {
+        wrapper = mount(<BrowserRouter><StartingSurvey /></BrowserRouter>);
+        event = { preventDefault: () => {} };
+        promise = Promise.resolve();
+      });
+      it ('should display error message on status 404', async () => {
+        MockGamePlayService.sendTeamInit.mockRejectedValue({response: {status: 404}});
+        act(() => {wrapper.find('form').simulate('submit', event)});
+        await act(() => promise);
+        wrapper.update();
+        expect(wrapper.find(Alert).prop('children')).toEqual(
+          'There was an unexpected error reaching the server. ' +
+          'Please try again later.'
+        );
+      });
+      it ('should display error message on status 500', async () => {
+        MockGamePlayService.sendTeamInit.mockRejectedValue({response: {status: 500, data: 'test-error'}});
+        act(() => {wrapper.find('form').simulate('submit', event)});
+        await act(() => promise);
+        wrapper.update();
+        expect(wrapper.find(Alert).prop('children')).toEqual('test-error');
+      });
+      it ('should display error message on unknown error', async () => {
+        MockGamePlayService.sendTeamInit.mockRejectedValue({response: {status: 700}});
+        act(() => {wrapper.find('form').simulate('submit', event)});
+        await act(() => promise);
+        wrapper.update();
+        expect(wrapper.find(Alert).prop('children')).toEqual(
+          'The server is unreachable at this time. ' +
+          'Please try again later.'
+        );
+      });
     });
-    expect(container.textContent).not.toContain(
-      'You have a game currently in progress. Would you like to join this game?',
-    );
+  });
+  describe('handleOnChange()', () => {
+    it('should loop through form Values', () => {
+      const event = {
+        preventDefault() {},
+        target: { value: 'the-value' }
+      };
+      let mapSpy = jest.spyOn(Object, 'entries');
+      let wrapper = mount(<BrowserRouter><StartingSurvey /></BrowserRouter>);
+      act(() => {wrapper.find('#team-size').hostNodes().simulate('change', event)});
+      expect(mapSpy).toHaveBeenCalled();
+    });
   });
 });
