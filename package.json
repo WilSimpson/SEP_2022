@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "winwheeljs": "^2.7.0"
+    "gsap": "^3.10.3"
   }
 }
