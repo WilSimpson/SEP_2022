@@ -90,7 +90,7 @@ class Wheel extends React.Component {
       result: null, // INDEX
       spinning: false,
       win: parseInt(props.data.selected) + 1,
-      // callBack: props.data.callback
+      callBack: props.data.callback
     };
   } 
   
@@ -110,8 +110,6 @@ class Wheel extends React.Component {
       angle: arcSize
     });
 
-    // get index of starting position of selector
-    // this.topPosition(numOptions, arcSize);
 
     // dynamically generate sectors from state list
     let angle = 0;
@@ -122,33 +120,7 @@ class Wheel extends React.Component {
     }
   }
 
-  /*topPosition = (num, angle) => {
-    // set starting index and angle offset based on list length
-    // works upto 9 options
-    let topSpot = null;
-    let degreesOff = null;
-    if (num === 9) {
-      topSpot = 7;
-      degreesOff = Math.PI / 2 - angle * 2;
-    } else if (num === 8) {
-      topSpot = 6;
-      degreesOff = 0;
-    } else if (num <= 7 && num > 4) {
-      topSpot = num - 1;
-      degreesOff = Math.PI / 2 - angle;
-    } else if (num === 4) {
-      topSpot = num - 1;
-      degreesOff = 0;
-    } else if (num <= 3) {
-      topSpot = num;
-      degreesOff = Math.PI / 2;
-    }
 
-    this.setState({
-      top: topSpot - 1,
-      offset: degreesOff
-    });
-  }; */
 
   renderSector(index, text, start, arc, color) {
     // create canvas arc for each list element
@@ -206,32 +178,22 @@ class Wheel extends React.Component {
     // calcalute result after wheel stops spinning
     setTimeout(() => {
       this.getResult(randomSpin);
+      this.props.data.callBack()
     }, 2000);
   };
 
   getResult = spin => {
-    // find net rotation and add to offset angle
-    // repeat substraction of inner angle amount from total distance traversed
-    // use count as an index to find value of result from state list
-    const { angle, top, offset, list } = this.state;
-    let netRotation = ((spin % 360) * Math.PI) / 180; // RADIANS
-    let travel = netRotation + offset;
-    let count = top + 1;
-    while (travel > 0) {
-      travel = travel - angle;
-      count--;
-    }
+   // set the result to the prechosen value
     let result;
     result = this.state.win
 
     // set state variable to display result
     this.setState({
-      net: netRotation,
       result: this.state.win
     });
   };
 
-  reset = () => {
+ /* reset = () => {
     // reset wheel and result
     this.setState({
       rotate: 0,
@@ -239,12 +201,12 @@ class Wheel extends React.Component {
       result: null,
       spinning: false
     });
-  };
+  }; */
 
   render() {
     return (
-      <div className="App">
-        <span id="selector" style={{position: 'absolute', left:'50%', top:90, margin: 'auto', transform: 'translate(-50%,0)', padding: 0}}>&#9660;</span>
+      <div className="Wheel">
+        <span id="selector" style={{position: 'relative', left:258, top:-395, margin: 'auto', transform: 'translate(-50%,0)', padding: 0, zIndex: 2}}>&#9660;</span>
         <canvas
           id="wheel"
           width="500"
@@ -258,11 +220,11 @@ class Wheel extends React.Component {
           }}
         />
         {this.state.spinning ? (
-          <button type="button" id="spin" disabled={true} onClick={this.spin} style= {{position: 'absolute', left: '50%', transform: 'translate(-50%,0)'}}>
+          <button type="button" id="spin" disabled={true} onClick={this.spin} style= {{position: 'relative', left: 53, transform: 'translate(-50%,0)'}}>
           Spin The Wheel
           </button>
         ) : (
-          <button type="button" id="spin" onClick={this.spin} style= {{position: 'absolute', left: '50%', transform: 'translate(-50%,0)'}}>
+          <button type="button" id="spin" onClick={this.spin} style= {{position: 'relative', left: 53, transform: 'translate(-50%,0)'}}>
             Spin The Wheel
           </button>
         )}
