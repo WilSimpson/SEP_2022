@@ -89,7 +89,7 @@ class Wheel extends React.Component {
       net: null, // RADIANS
       result: null, // INDEX
       spinning: false,
-      win: parseInt(props.data.selected) + 1,
+      win: props.data.selected + 1,
       callBack: props.data.callback
     };
   } 
@@ -178,7 +178,7 @@ class Wheel extends React.Component {
     // calcalute result after wheel stops spinning
     setTimeout(() => {
       this.getResult(randomSpin);
-      this.props.data.callBack()
+      this.props.data.callBack(this.state.win - 1);
     }, 2000);
   };
 
