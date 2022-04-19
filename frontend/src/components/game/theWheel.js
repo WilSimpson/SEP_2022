@@ -1,85 +1,10 @@
 import * as React from 'react';
-import {useEffect} from 'react';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-//import {TweenMax} from 'gsap';
-// import './wheelStyle.scss';
-// const anime = require('animejs');
-/*const Wheel = () => {
-  let options = [1, 1, 2, 3, 4, 4];
-  options = noAdj(options);
-  const slices = [];
-  const win = 3;
-  const winSlice = options.indexOf(win);
-  const stopAt = ((360/options.length) * (1-winSlice) + Math.floor(Math.random() * ((360/options.length)-2)));
-  for (const option of options) {
-    let color;
-    let text;
-    if (option === 1) {
-      color = 'red';
-      text = 'A';
-    } else if (option === 2) {
-      color = 'blue';
-      text = 'B';
-    } else if (option === 3) {
-      color = 'green';
-      text = 'C';
-    } else if (option === 4) {
-      color = 'yellow';
-      text = 'D';
-    } else if (option === 5) {
-      color = 'coral';
-      text = 'E';
-    } else if (option === 6) {
-      color = 'cornsilk';
-      text = 'F';
-    } else if (option === 7) {
-      color = 'deepPink';
-      text = 'G';
-    } else if (option === 8) {
-      color = 'orange';
-      text = 'H';
-    } else if (option === 9) {
-      color = 'plum';
-      text = 'I';
-    } else {
-      color = 'aquamarine';
-      text = 'J';
-    }
-    slices.push({'fillStyle': color, 'text': text});
-  }
-  useEffect(() => {
-    window.winwheel = new Winwheel({
-      canvasId: 'myCanvas',
-      numSegments: options.length,
-      segments: slices,
-      animation: {
-        type: 'spinToStop',
-        duration: 5,
-        spins: 8,
-        stopAngle: stopAt,
-      },
-    });
-  }, []);
-  const onClick = (event) => {
-    event.preventDefault();
-    window.winwheel.startAnimation();
-  };
-  drawTriangle;
-  return (
-    <>
-      <canvas id='myCanvas' width='880' height='300' ></canvas>
-      <button onClick={onClick}>Spin the Wheel</button>
-    </>
-  );
-}; */
+
 class Wheel extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      list: Object.keys(props.data.weight).map(num => parseInt(num) + 1),
-      // list: ["$100", "$500", "$9,999", "$1", "$60", "$1,000", "$4.44"],
-      // list: ["$100","$500","$9,999","$1","$60"],
+      list: Object.keys(props.data.weight).map((num) => parseInt(num) + 1),
       radius: 75, // PIXELS
       rotate: 0, // DEGREES
       easeOut: 0, // SECONDS
@@ -90,13 +15,9 @@ class Wheel extends React.Component {
       result: null, // INDEX
       spinning: false,
       win: props.data.selected + 1,
-      callBack: props.data.callback
+      callBack: props.data.callback,
     };
-  } 
-  
-  //win = "2";
-  //winSlice = this.state.list.indexOf(this.win);
-  //stopAt = (360/this.state.list.length) * (this.state.list.length-this.winSlice-1) + Math.floor(Math.random() * ((360/this.state.list.length)-2));
+  }
   componentDidMount() {
     // generate canvas wheel on load
     this.renderWheel();
@@ -104,50 +25,48 @@ class Wheel extends React.Component {
 
   renderWheel() {
     // determine number/size of sectors that need to created
-    let numOptions = this.state.list.length;
-    let arcSize = (2 * Math.PI) / numOptions;
+    const numOptions = this.state.list.length;
+    const arcSize = (2 * Math.PI) / numOptions;
     this.setState({
-      angle: arcSize
+      angle: arcSize,
     });
 
 
     // dynamically generate sectors from state list
     let angle = 0;
     for (let i = 0; i < numOptions; i++) {
-      let text = this.state.list[i];
+      const text = this.state.list[i];
       this.renderSector(i + 1, text, angle, arcSize, this.getColor());
       angle += arcSize;
     }
   }
 
-
-
   renderSector(index, text, start, arc, color) {
     // create canvas arc for each list element
-    let canvas = document.getElementById("wheel");
-    let ctx = canvas.getContext("2d");
-    let x = canvas.width / 2;
-    let y = canvas.height / 2;
-    let radius = this.state.radius;
-    let startAngle = start;
-    let endAngle = start + arc;
-    let angle = index * arc;
-    let baseSize = radius * 3.33;
-    let textRadius = baseSize - 150;
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+    const radius = this.state.radius;
+    const startAngle = start;
+    const endAngle = start + arc;
+    const angle = index * arc;
+    const baseSize = radius * 3.33;
+    const textRadius = baseSize - 150;
 
     ctx.beginPath();
     ctx.arc(x, y, radius, startAngle, endAngle, false);
     ctx.lineWidth = radius * 2;
     ctx.strokeStyle = color;
 
-    ctx.font = "17px Arial";
-    ctx.fillStyle = "black";
+    ctx.font = '17px Arial';
+    ctx.fillStyle = 'black';
     ctx.stroke();
 
     ctx.save();
     ctx.translate(
-      baseSize + Math.cos(angle - arc / 2) * textRadius,
-      baseSize + Math.sin(angle - arc / 2) * textRadius
+        baseSize + Math.cos(angle - arc / 2) * textRadius,
+        baseSize + Math.sin(angle - arc / 2) * textRadius,
     );
     ctx.rotate(angle - arc / 2 + Math.PI / 2);
     ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
@@ -156,9 +75,9 @@ class Wheel extends React.Component {
 
   getColor() {
     // randomly generate rbg values for wheel sectors
-    let r = Math.floor(Math.random() * 255);
-    let g = Math.floor(Math.random() * 255);
-    let b = Math.floor(Math.random() * 255);
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
     return `rgba(${r},${g},${b},0.4)`;
   }
 
@@ -166,13 +85,13 @@ class Wheel extends React.Component {
     // set random spin degree and ease out time
     // set state variables to initiate animation
     // let randomSpin = Math.floor(Math.random() * 900) + 500;
-    let winSlice = this.state.list.indexOf(this.state.win);
-    let stopAt = (360/this.state.list.length) * (this.state.list.length-winSlice-1) + Math.floor(Math.random() * ((360/this.state.list.length)-2)+270)
-    let randomSpin = stopAt + (360*(Math.floor(Math.random() * 10))+3);
+    const winSlice = this.state.list.indexOf(this.state.win);
+    const stopAt = (360/this.state.list.length) * (this.state.list.length-winSlice-1) + Math.floor(Math.random() * ((360/this.state.list.length)-2)+270);
+    const randomSpin = stopAt + (360*(Math.floor(Math.random() * 10))+3);
     this.setState({
       rotate: randomSpin,
       easeOut: 2,
-      spinning: true
+      spinning: true,
     });
 
     // calcalute result after wheel stops spinning
@@ -182,18 +101,14 @@ class Wheel extends React.Component {
     }, 2000);
   };
 
-  getResult = spin => {
-   // set the result to the prechosen value
-    let result;
-    result = this.state.win
-
+  getResult = (spin) => {
     // set state variable to display result
     this.setState({
-      result: this.state.win
+      result: this.state.win,
     });
   };
 
- /* reset = () => {
+  /* reset = () => {
     // reset wheel and result
     this.setState({
       rotate: 0,
@@ -206,7 +121,7 @@ class Wheel extends React.Component {
   render() {
     return (
       <div className="Wheel">
-        <span id="selector" style={{position: 'relative', left:258, top:-395, margin: 'auto', transform: 'translate(-50%,0)', padding: 0, zIndex: 2}}>&#9660;</span>
+        <span id="selector" style={{position: 'relative', left: 258, top: -395, margin: 'auto', transform: 'translate(-50%,0)', padding: 0, zIndex: 2}}>&#9660;</span>
         <canvas
           id="wheel"
           width="500"
@@ -216,7 +131,7 @@ class Wheel extends React.Component {
             WebkitTransform: `rotate(${this.state.rotate}deg)`,
             WebkitTransition: `-webkit-transform ${
               this.state.easeOut
-            }s ease-out`
+            }s ease-out`,
           }}
         />
         {this.state.spinning ? (
@@ -230,7 +145,7 @@ class Wheel extends React.Component {
         )}
         <div className="display">
           <span id="readout">
-            Selected Option:  {"  "}
+            Selected Option:  {'  '}
             <span id="result">{this.state.result}</span>
           </span>
         </div>
@@ -239,9 +154,9 @@ class Wheel extends React.Component {
   }
 }
 
-export default Wheel
+export default Wheel;
 
-
+/*
 function noAdj(arr) {
   const map = new Map();
   const visited = new Map();
@@ -284,3 +199,4 @@ function noAdj(arr) {
   }
   return (result);
 }
+*/

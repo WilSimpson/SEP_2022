@@ -83,12 +83,9 @@ export default function GameSession() {
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
   const [hints, setHints] = useState(currentQuestion.help);
-  //const [weights, setWeights] = useState(findWeights(currentOptions));
-  let weights = findWeights(currentOptions)
-  //const [randomChoice, setRandomChoice] = useState(random);
+  let weights = findWeights(currentOptions);
   let randomChoice = random();
- // const [data, setData] = useState({weight:weights, selected: randomChoice, callBack: chanceCallback});
-  let data = {weight:weights, selected: randomChoice, callBack: chanceCallback}
+  let data = {weight: weights, selected: randomChoice, callBack: chanceCallback};
   const [key, setKey] = useState(0);
 
   const handleClickOpen = () => {
@@ -108,12 +105,9 @@ export default function GameSession() {
 
   React.useEffect(() => {
     setEndGame(currentOptions.length == 0);
-    //setWeights(findWeights(currentOptions));
-    weights = findWeights(currentOptions)
-    //setRandomChoice(random);
+    weights = findWeights(currentOptions);
     randomChoice = random();
-    //setData({weight:weights, selected: randomChoice, callBack: chanceCallback});
-    data = {weight:weights, selected: randomChoice, callBack: chanceCallback};
+    data = {weight: weights, selected: randomChoice, callBack: chanceCallback};
     setKey(key+1);
   }, [currentOptions]);
 
@@ -178,7 +172,7 @@ export default function GameSession() {
     );
   };
   function findWeights(cO) {
-    let opts = {};
+    const opts = {};
     let index = 0;
     let i;
     for (i in cO) {
@@ -189,19 +183,14 @@ export default function GameSession() {
     }
     return opts;
   }
-  function random(){
-    const rChoice = GamePlayService.random(weights)
+  function random() {
+    const rChoice = GamePlayService.random(weights);
     return parseInt(rChoice);
   }
-  /*function choiceClick() {
-    const choice = GamePlayService.random(weights);
-    return choice;
-  }
-  */
 
-  function chanceCallback (win) {
+  function chanceCallback(win) {
     setSelectedOption(currentOptions[win]);
-  } 
+  }
 
   function returnHome() {
     GamePlayService.clearInProgressGame();
@@ -273,9 +262,9 @@ export default function GameSession() {
           onClose={handleClose}
           hints={hints}
         />
-        { currentQuestion.chance_game == "SPIN_WHEEL" || currentQuestion.chance_game == "DRAW_CARD_SUIT" ?
+        { currentQuestion.chance_game == 'SPIN_WHEEL' || currentQuestion.chance_game == 'DRAW_CARD_SUIT' ?
              <Wheel data={data} key={key}/> : null
-          }
+        }
         <ButtonGroup
           variant="contained"
           align="center"
