@@ -7,12 +7,9 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-    runs-on: self-hosted
-    strategy:
-      max-parallel: 4
-      matrix:
-        node-version: [14.x, 16.x]
+  build-test:
+    # runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -28,14 +25,8 @@ jobs:
         path: "frontend/node_modules"
         key: node-modules-${{ hashFiles('frontend/package.json') }}
 
-    - run: npm ci
-      working-directory: ./frontend
-
-    - name: Run Tests
-      run: make test-frontend
-
-    - name: Generate Coverage
-      working-directory: ./frontend
-      run: |
-        npm install
-        npm run test -- --coverage --watchAll=false
+    - name: Test & Upload Results
+      uses: artiomtr/jest-coverage-report-action@v2
+      if: github.event_name == 'pull_request'
+      with:
+        working-directory: ./frontend

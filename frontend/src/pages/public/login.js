@@ -15,10 +15,12 @@ import validator from 'validator';
 import DefaultLayout from '../../components/layout/default.layout';
 import authService from '../../services/auth';
 import {FE_URL} from '../../store/store';
+import {useNavigate} from 'react-router-dom';
 
 export default function Login() {
   const userRef = useRef();
   const errRef = useRef();
+  const navigate = useNavigate();
 
   // State elements
   const [email, setEmail] = useState('');
@@ -46,9 +48,9 @@ export default function Login() {
         (response) => {
           if (response.status === 200) {
             if (authService.currentUser().isAdmin()) {
-              window.location.href = '/admin-dashboard';
+              navigate('/admin-dashboard');
             } else {
-              window.location.href = '/faculty-dashboard';
+              navigate('/faculty-dashboard');
             }
           } else {
             setErrMsg(

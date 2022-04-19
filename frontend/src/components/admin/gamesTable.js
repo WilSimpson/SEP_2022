@@ -53,26 +53,30 @@ export default function GamesTable(props) {
 
   return (
     <Grid container justifyContent="center" spacing={2}>
-      <Dialog open={confirmationDeleteID != null}>
-        <DialogTitle id="alert-dialog-title">
-          {'Are you sure you want to delete this game?'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Deletion is permanent and this game can no longer be used or viewed.
-            A hidden copy will be kept kept in the database for logging and
-            compilation of reports that used this game.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onPermanentDelete}>
-            Delete Permanently
-          </Button>
-          <Button onClick={handleCloseConfirmation} autoFocus>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {props.editable ?
+        <Dialog id='confirm-dialog' open={(confirmationDeleteID != null) || false}>
+          <DialogTitle id="alert-dialog-title">
+            {'Are you sure you want to delete this game?'}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Deletion is permanent and this game can no longer be used or viewed.
+              A hidden copy will be kept kept in the database for logging and
+              compilation of reports that used this game.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button id='permanentDelete' onClick={onPermanentDelete}>
+              Delete Permanently
+            </Button>
+            <Button id='close-dialog' onClick={handleCloseConfirmation} autoFocus>
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog> :
+        null
+      }
+
       <Grid item xs={2}>
         <h2>All Games</h2>
       </Grid>
@@ -81,10 +85,13 @@ export default function GamesTable(props) {
           disablePortal
           freeSolo
           id="game-search"
-          options={games.map((game) => game.title)}
+          options={games}
+          getOptionLabel={(option) => option.title}
           renderInput={(params) => <TextField {...params} label="Find Game" />}
           onChange={(event, selected) => {
-            window.location.href = `/admin-dashboard/games/${selected.id}`;
+            if (selected) {
+              props.onGameSelected(selected.id);
+            }
           }}
         />
       </Grid>
@@ -97,7 +104,7 @@ export default function GamesTable(props) {
                 <TableCell>Title</TableCell>
                 <TableCell>Created</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell></TableCell>
+                {props.editable ? <TableCell></TableCell> : null}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -105,7 +112,11 @@ export default function GamesTable(props) {
                 games.slice(page * pageSize, page * pageSize + pageSize) :
                 games
               ).map((game) => (
-                <TableRow key={game.id} className="game-row">
+                <TableRow
+                  key={game.id}
+                  className="game-row"
+                  onClick={() => props.onGameSelected(game.id)}
+                >
                   <TableCell component="th" scope="row">
                     {game.id}
                   </TableCell>
@@ -118,29 +129,34 @@ export default function GamesTable(props) {
                       size="small"
                     />
                   </TableCell>
-                  <TableCell>
-                    <ButtonGroup
-                      variant="outlined"
-                      aria-label="edit delete game button group"
-                    >
-                      <IconButton
-                        aria-label="edit"
-                        onClick={() => {
-                          props.onEdit(game.id);
-                        }}
+                  {props.editable ?
+                    <TableCell>
+                      <ButtonGroup
+                        variant="outlined"
+                        aria-label="edit delete game button group"
                       >
-                        <Edit />
-                      </IconButton>
-                      <IconButton
-                        aria-label="delete"
-                        onClick={() => {
-                          setConfirmationDeleteID(game.id);
-                        }}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </ButtonGroup>
-                  </TableCell>
+                        <IconButton
+                          id={`edit${game.id}`}
+                          aria-label="edit"
+                          onClick={() => {
+                            props.onEdit(game.id);
+                          }}
+                        >
+                          <Edit />
+                        </IconButton>
+                        <IconButton
+                          id={`delete${game.id}`}
+                          aria-label="delete"
+                          onClick={() => {
+                            setConfirmationDeleteID(game.id);
+                          }}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </ButtonGroup>
+                    </TableCell> :
+                    null
+                  }
                 </TableRow>
               ))}
 

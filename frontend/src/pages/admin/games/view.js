@@ -6,7 +6,7 @@ import AuthenticatedLayout
   from '../../../components/layout/authenticated.layout';
 import {alertService, alertSeverity} from '../../../services/alert';
 import Loading from '../../../components/layout/loading';
-import {useNavigate} from 'react-router';
+import {useNavigate} from 'react-router-dom';
 
 export default function ViewGamesPage() {
   const [games, setGames] = useState([]);
@@ -32,14 +32,21 @@ export default function ViewGamesPage() {
     );
   };
 
+  const handleGameSelected = (id) => {
+    navigate('/admin-dashboard/games/'+id);
+  };
+
   useEffect(() => {
     async function getGames() {
-      const resp = await gameService.getGames().catch((error) => {
+      const resp = await gameService.getGames().then(
+        (resp) => {
+          const games = [...resp.data];
+          setGames(games);
+          setLoading(false);
+        })
+      .catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
       });
-      const games = [...resp.data];
-      setGames(games);
-      setLoading(false);
     }
     getGames();
   }, []);
@@ -51,9 +58,11 @@ export default function ViewGamesPage() {
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12} component={Paper}>
               <GamesTable
+                editable
                 data={games}
                 onConfirmDelete={handleAcceptConfirmDelete}
                 onEdit={(id) => navigate(`/admin-dashboard/games/${id}`)}
+                onGameSelected={handleGameSelected}
               />
             </Grid>
           </Grid>

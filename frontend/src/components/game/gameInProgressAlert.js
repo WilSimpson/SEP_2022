@@ -1,5 +1,6 @@
-import {Alert, Button} from '@mui/material';
 import React from 'react';
+import '../../setupTests';
+import {Alert, Button} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import GamePlayService from '../../services/gameplay';
 
@@ -27,6 +28,7 @@ export default function GameInProgressAlert(props) {
       variant="outlined"
       action={
         <Button
+          id='joinGame'
           color="success"
           variant="contained"
           size="large"

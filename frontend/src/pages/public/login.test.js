@@ -1,13 +1,20 @@
 import React from 'react';
+import '../../setupTests';
 import {shallow} from 'enzyme';
 import Login from './login';
-import '../../setupTests';
 import '@testing-library/jest-dom/extend-expect';
-import {render, fireEvent, act} from '@testing-library/react';
+import {render, fireEvent, act, getByTestId} from '@testing-library/react';
 import AuthService from '../../services/auth';
 import ForgotPassword from '../faculty/forgotPassword';
+import {User} from '../../models/user';
+const mockedNavigate = jest.fn();
 
 jest.mock('../../services/auth');
+
+jest.mock("react-router-dom", () => ({
+  ...(jest.requireActual("react-router-dom")), 
+  useNavigate: () => mockedNavigate,
+}));
 
 describe('<Login />', () => {
   let emailField;
@@ -101,6 +108,54 @@ describe('<Login />', () => {
 
       expect(AuthService.login).toHaveBeenCalled();
       await act(() => promise);
+    });
+
+    it ('should redirect to admin dashboard when admin', async () => {
+      AuthService.login.mockResolvedValue({status:200});
+      const user = new User('email@email.com', 'Test', 'Test', 'ADMIN', null, 1);
+      let spy = jest.spyOn(user, 'isAdmin').mockImplementation(() => true);
+      AuthService.currentUser.mockImplementation(() => user);
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'morethan6'}});
+      fireEvent.click(submitButton);
+      expect(AuthService.login).toHaveBeenCalledWith('valid@email.com', 'morethan6');
+      await act(() => Promise.resolve());
+      expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard');
+      spy.mockRestore();
+    });
+
+    it ('should redirect to faculty dashboard when faculty', async () => {
+      AuthService.login.mockResolvedValue({status:200});
+      const user = new User('email@email.com', 'Test', 'Test', 'ADMIN', null, 1);
+      let spy = jest.spyOn(user, 'isAdmin').mockImplementation(() => false);
+      AuthService.currentUser.mockImplementation(() => user);
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'morethan6'}});
+      fireEvent.click(submitButton);
+      expect(AuthService.login).toHaveBeenCalledWith('valid@email.com', 'morethan6');
+      await act(() => Promise.resolve());
+      expect(mockedNavigate).toHaveBeenCalledWith('/faculty-dashboard');
+      spy.mockRestore();
+    });
+    it ('should display error message when incorrect login', async () => {
+      const {getByTestId} = render(<Login />);
+      AuthService.login.mockRejectedValue({response: {status:401, data: {detail: 'error'}}});
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
+      fireEvent.click(submitButton);
+      await act(() => Promise.resolve());
+      let errMsg = getByTestId("err-msg");
+      expect(errMsg).toBeInTheDocument();
+    });
+    it ('should display error message when an unknown error occured', async () => {
+      const {getByTestId} = render(<Login />);
+      AuthService.login.mockRejectedValue({response: {status:500, data: {detail: 'error'}}});
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
+      fireEvent.click(submitButton);
+      await act(() => Promise.resolve());
+      let errMsg = getByTestId("err-msg");
+      expect(errMsg).toBeInTheDocument();
     });
   });
   describe('Forgot password', () => {

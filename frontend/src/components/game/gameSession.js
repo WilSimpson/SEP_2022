@@ -79,7 +79,7 @@ export default function GameSession() {
       state.game.options.filter(
           (option) => option.source_question == currentQuestion.id,
       ));
-  const [selectedOption, setSelectedOption] = useState();
+  const [selectedOption, setSelectedOption] = useState(null);
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
   const [hints, setHints] = useState(currentQuestion.help);
@@ -125,7 +125,6 @@ export default function GameSession() {
     let errMessage = '';
     if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
       setTimeoutOpen(true);
-      handleTimeoutOpen();
       GamePlayService.clearInProgressGame();
     } else {
       if (error.response && error.response.data) {
@@ -255,7 +254,7 @@ export default function GameSession() {
       <Container maxWidth="sm">
         <GamePlayTimeout id='timeout-dialog' open={timeoutOpen} returnHome={returnHome} newGame={newGame}/>
         <Typography>
-          {currentQuestion ? <div>{currentQuestion.value} <HelpIcon onClick={handleClickOpen} data-testid='helpButton' /></div> : 'Game not found'}
+          {currentQuestion ? <>{currentQuestion.value} <HelpIcon onClick={handleClickOpen} data-testid='helpButton' /></> : 'Game not found'}
         </Typography>
         <SimpleDialog
           open={open}
@@ -280,7 +279,7 @@ export default function GameSession() {
               sx={{marginTop: 5}}
               data-testid={'option'+ String(option.id)}
               onClick={() => setSelectedOption(option)}
-              disabled={currentQuestion.chance}>
+              disabled={currentQuestion.chance ? true : false}>
               {option.value}
             </Button>
           ))}
@@ -302,7 +301,7 @@ export default function GameSession() {
                   sx={{marginTop: 5}}
                   onClick={nextQuestion}
                   data-testid='continue'
-                  disabled={!selectedOption}
+                  disabled={selectedOption ? false : true}
                 >
                   Continue
                 </Button>
@@ -321,7 +320,7 @@ export default function GameSession() {
         <main>
           <Container maxWidth='xl'>
             {showPasscode ?
-              <Passcode data={{question: '/#', location: 'SC123'}} submitPasscode={submitPasscode}/> :
+              <Passcode id='passcode-screen' data={{question: '/#', location: 'SC123'}} submitPasscode={submitPasscode}/> :
               GamePlay
             }
           </Container>

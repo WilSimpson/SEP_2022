@@ -1,7 +1,7 @@
 import {Button, Typography} from '@mui/material';
 import React from 'react';
 import DefaultLayout from '../layout/default.layout';
-import logoLarge from '../../images/logoLarge.png';
+
 export default function EndGamePlay(props) {
   return (
     <DefaultLayout>
@@ -9,7 +9,7 @@ export default function EndGamePlay(props) {
           Thank you for playing
       </Typography>
       <img
-        src={logoLarge}
+        src='/images/logoLarge.png'
         alt="Ethics Adventure"
         style={{flex: 1, width: '100%', height: undefined}}
       />

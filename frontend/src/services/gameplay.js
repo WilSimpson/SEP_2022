@@ -103,19 +103,6 @@ class GameService {
     localStorage.removeItem(IN_PROGRESS);
   }
 
-  checkPasscode(pcd) {
-    // need axios once a backend exists
-    if (pcd === 'correct') {
-      return {response: {status: 200}};
-    } else {
-      return {
-        error: {
-          response: {status: 401, data: {detail: 'wrong passcode'}},
-        },
-      };
-    }
-  }
-
   setLastAnswerId(answerId) {
     localStorage.setItem(ANSWER_ID, answerId);
   }

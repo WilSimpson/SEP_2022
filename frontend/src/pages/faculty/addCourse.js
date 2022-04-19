@@ -54,7 +54,6 @@ export default function AddCourse() {
         AuthService.currentUser().id,
     ).then(
         (response) => {
-          console.log(response);
           const path = `../faculty-dashboard`;
           navigate(path);
         },

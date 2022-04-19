@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.game-row:hover {
+  background-color: rgba(0,0,0,0.1);
+}
+
+.game-row:active {
+  background-color: rgba(0,0,0,0.2);
+}

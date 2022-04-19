@@ -1,7 +1,6 @@
 import React from 'react';
-import './app.css';
 import Home from './pages/public/home';
-import StartingSurvey from './components/game/startingSurvey';
+import StartingSurvey from './pages/game/startingSurvey';
 import GameSession from './components/game/gameSession';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import EditPassword from './pages/faculty/editPassword';
@@ -25,7 +24,10 @@ import Register from './pages/admin/register';
 import AddCourse from './pages/faculty/addCourse';
 import EndGame from './pages/game/endGame';
 import GenerateQRPage from './pages/faculty/generateQR';
+import ReportsPage from './pages/faculty/reports/reports';
 import EditCourse from './pages/faculty/editCourse';
+import ReportPage from './pages/faculty/reports/report';
+import ViewReportPage from './pages/faculty/reports/view.tsx';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -155,6 +157,33 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <GenerateQRPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/reports"
+                element={
+                  <ProtectedRoute>
+                    <ReportsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/reports/:id"
+                element={
+                  <ProtectedRoute>
+                    <ReportPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path="/reports/:id/view"
+                element={
+                  <ProtectedRoute>
+                    <ViewReportPage />
                   </ProtectedRoute>
                 }
               />

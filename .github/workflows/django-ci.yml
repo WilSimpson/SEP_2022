@@ -8,11 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.8, 3.9]
+    runs-on: ubuntu-latest
     env:
       EA_BACKEND_SECRET: 'ci-secret-Qn0fWgYDE1c0J0suhr7rLqfQe7nMC5aG'
       EA_MODE: 'dev'
@@ -23,7 +19,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8
 
     - name: Install dependencies
       run: |
