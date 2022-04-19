@@ -83,10 +83,13 @@ export default function GameSession() {
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
   const [hints, setHints] = useState(currentQuestion.help);
-  const [weights, setWeights] = useState(findWeights);
-  const [randomChoice, setRandomChoice] = useState(random);
-  const [data, setData] = useState({weight:weights, selected: randomChoice, callBack: chanceCallback});
-  
+  //const [weights, setWeights] = useState(findWeights(currentOptions));
+  let weights = findWeights(currentOptions)
+  //const [randomChoice, setRandomChoice] = useState(random);
+  let randomChoice = random();
+ // const [data, setData] = useState({weight:weights, selected: randomChoice, callBack: chanceCallback});
+  let data = {weight:weights, selected: randomChoice, callBack: chanceCallback}
+  const [key, setKey] = useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -105,6 +108,13 @@ export default function GameSession() {
 
   React.useEffect(() => {
     setEndGame(currentOptions.length == 0);
+    //setWeights(findWeights(currentOptions));
+    weights = findWeights(currentOptions)
+    //setRandomChoice(random);
+    randomChoice = random();
+    //setData({weight:weights, selected: randomChoice, callBack: chanceCallback});
+    data = {weight:weights, selected: randomChoice, callBack: chanceCallback};
+    setKey(key+1);
   }, [currentOptions]);
 
   const setNextQuestion = () => {
@@ -115,9 +125,6 @@ export default function GameSession() {
     setQuestion(question);
     setSelectedOption(null);
     setHints(currentQuestion.help);
-    setWeights(findWeights);
-    setRandomChoice(random);
-    setData({weight:weights, selected: randomChoice, callBack: chanceCallback});
   };
 
   const setError = (error) => {
@@ -170,13 +177,13 @@ export default function GameSession() {
         (error) => setError(error),
     );
   };
-  function findWeights() {
+  function findWeights(cO) {
     let opts = {};
     let index = 0;
     let i;
-    for (i in currentOptions) {
-      if (currentOptions.hasOwnProperty(i)) {
-        opts[index] = currentOptions[i].weight;
+    for (i in cO) {
+      if (cO.hasOwnProperty(i)) {
+        opts[index] = cO[i].weight;
         index = index + 1;
       }
     }
@@ -184,7 +191,7 @@ export default function GameSession() {
   }
   function random(){
     const rChoice = GamePlayService.random(weights)
-    return rChoice;
+    return parseInt(rChoice);
   }
   /*function choiceClick() {
     const choice = GamePlayService.random(weights);
@@ -192,8 +199,8 @@ export default function GameSession() {
   }
   */
 
-  function chanceCallback () {
-    setSelectedOption(currentOptions[randomChoice]);
+  function chanceCallback (win) {
+    setSelectedOption(currentOptions[win]);
   } 
 
   function returnHome() {
@@ -267,7 +274,7 @@ export default function GameSession() {
           hints={hints}
         />
         { currentQuestion.chance_game == "SPIN_WHEEL" || currentQuestion.chance_game == "DRAW_CARD_SUIT" ?
-            <Wheel data={data}/> : null
+             <Wheel data={data} key={key}/> : null
           }
         <ButtonGroup
           variant="contained"
