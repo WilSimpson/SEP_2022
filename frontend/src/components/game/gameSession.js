@@ -20,6 +20,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
+import Wheel from './theWheel';
 
 function SimpleDialog(props) {
   const {onClose, open, hints} = props;
@@ -82,6 +83,10 @@ export default function GameSession() {
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
   const [hints, setHints] = useState(currentQuestion.help);
+  const [weights, setWeights] = useState(findWeights);
+  const [randomChoice, setRandomChoice] = useState(random);
+  const [data, setData] = useState({weight:weights, selected: randomChoice, callBack: chanceCallback});
+  
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -110,6 +115,9 @@ export default function GameSession() {
     setQuestion(question);
     setSelectedOption(null);
     setHints(currentQuestion.help);
+    setWeights(findWeights);
+    setRandomChoice(random);
+    setData({weight:weights, selected: randomChoice, callBack: chanceCallback});
   };
 
   const setError = (error) => {
@@ -162,19 +170,31 @@ export default function GameSession() {
         (error) => setError(error),
     );
   };
-  const weights = {};
-  let index = 0;
-  let i;
-  for (i in currentOptions) {
-    if (currentOptions.hasOwnProperty(i)) {
-      weights[index] = currentOptions[i].weight;
-      index = index + 1;
+  function findWeights() {
+    let opts = {};
+    let index = 0;
+    let i;
+    for (i in currentOptions) {
+      if (currentOptions.hasOwnProperty(i)) {
+        opts[index] = currentOptions[i].weight;
+        index = index + 1;
+      }
     }
+    return opts;
   }
-  function choiceClick() {
+  function random(){
+    const rChoice = GamePlayService.random(weights)
+    return rChoice;
+  }
+  /*function choiceClick() {
     const choice = GamePlayService.random(weights);
     return choice;
   }
+  */
+
+  function chanceCallback () {
+    setSelectedOption(currentOptions[randomChoice]);
+  } 
 
   function returnHome() {
     GamePlayService.clearInProgressGame();
@@ -246,6 +266,9 @@ export default function GameSession() {
           onClose={handleClose}
           hints={hints}
         />
+        { currentQuestion.chance_game == "SPIN_WHEEL" || currentQuestion.chance_game == "DRAW_CARD_SUIT" ?
+            <Wheel data={data}/> : null
+          }
         <ButtonGroup
           variant="contained"
           align="center"
@@ -265,19 +288,6 @@ export default function GameSession() {
               {option.value}
             </Button>
           ))}
-          { currentQuestion.chance ?
-            <Button
-              color='secondary'
-              sx={{marginTop: 5}}
-              data-testid='chance'
-              onClick={() =>
-                setSelectedOption(currentOptions[choiceClick()])
-              }
-              disabled={selectedOption}
-            >
-            Chance
-            </Button> : null
-          }
           {
             endGame ?
               (
