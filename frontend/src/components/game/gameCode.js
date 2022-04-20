@@ -34,7 +34,7 @@ class GameCode extends React.Component {
   componentDidMount() {
     if (this.props.joinCode && this.props.joinCode.length == 6) {
       this.submitCode();
-    }else {
+    } else {
       this.setState({
         errMsg:
           'This Gamecode is not valid. Gamecodes must be six digits long.',

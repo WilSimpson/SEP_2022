@@ -32,9 +32,9 @@ export default function AdminDash() {
         setGames(games);
         getSessions(games);
       })
-      .catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      });
+          .catch((error) => {
+            alertService.alert({severity: alertSeverity.error, message: error});
+          });
     }
 
     async function getSessions(games) {
@@ -42,9 +42,9 @@ export default function AdminDash() {
         gameSessionService.getSessions(game.id).then((resp) => {
           setSessions((oldSessions) => [...oldSessions, ...resp.data]);
         })
-        .catch((error) => {
-          alertService.alert({severity: alertSeverity.error, message: error});
-        });
+            .catch((error) => {
+              alertService.alert({severity: alertSeverity.error, message: error});
+            });
       }
 
       setLoading(false);
