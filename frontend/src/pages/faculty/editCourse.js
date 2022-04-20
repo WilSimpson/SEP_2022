@@ -273,7 +273,9 @@ export default function EditCourse() {
               <Box sx={{pb: 2}}>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  style={{
+                    backgroundColor: '#FF0000',
+                  }}
                   data-testid="delete"
                   onClick={handleDelete}
                 >
