@@ -84,27 +84,6 @@ describe('AuthService', () => {
       expect(localStorage.getItem('user')).toBeNull();
     });
   });
-  describe('handleLogin(response)', () => {
-    beforeEach(() => {
-      localStorage.removeItem('user');
-    });
-    it ('create add a user to localStorage', () => {
-      // localStorage.setItem = jest.fn();
-      jwtDecode.mockReturnValue({
-        email: 'test@email.com',
-        role: 'ADMIN'
-      });
-      let response = {
-        status: 200,
-        data: {
-          access: 'access-token',
-        }
-      };
-      AuthService.handleLogin(response);
-      // expect(localStorage.setItem).toHaveBeenCalled();
-      expect(localStorage.getItem('user')).not.toBeNull();
-    });
-  });
   describe('login', () => {
     it('should return the post response on success', () => {
       const response = {
@@ -136,15 +115,28 @@ describe('AuthService', () => {
       expect(result).toEqual(Promise.resolve(response));
     });
 
-    it('should call handleLogin helper function', async () => {
-      AuthService.handleLogin = jest.fn();
-      axios.post.mockResolvedValue({status: 200});
-      await AuthService.login('valid@email.com', 'morethan6');
-      expect(axios.post).toHaveBeenCalledWith(
-        API_URL + '/token/', 
-        {email: 'valid@email.com', password: 'morethan6'}
-      );
-      expect(AuthService.handleLogin).toHaveBeenCalled();
+    describe('on success', () => {
+      beforeEach(() => {
+        localStorage.removeItem('user');
+      });
+      it('should add a user to localStorage and call jwtDecode', async () => {
+        let promise = Promise.resolve();
+        jwtDecode.mockReturnValue({
+          email: 'test@email.com',
+          role: 'ADMIN'
+        });
+        let response = {
+          status: 200,
+          data: {
+            access: 'access-token',
+          }
+        };
+        axios.post.mockResolvedValue(response);
+        AuthService.login('test-email', 'test-password');
+        await promise;
+        expect(jwtDecode).toHaveBeenCalled();
+        expect(localStorage.getItem('user')).not.toBeNull();
+      });
     });
   });
 });
