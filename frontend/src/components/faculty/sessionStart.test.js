@@ -21,6 +21,7 @@ beforeEach(() => {
 
 afterEach(() => {
   localStorage.clear();
+  jest.clearAllMocks();
 });
 
 describe('<SessionStart />', () => {
