@@ -170,6 +170,7 @@ class Course(models.Model):
     department    = models.CharField(max_length=32)
     number      = models.IntegerField()
     semester    = models.CharField(max_length=32, default="No Semester Set")
+    active = models.BooleanField(default=True)
     userId = models.IntegerField()
 
 class ContextHelp(models.Model):

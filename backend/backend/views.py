@@ -679,7 +679,7 @@ def start_session(request):
         return HttpResponseServerError('There was a problem creating this session.')
 
 class CourseViewSet(ModelViewSet):
-    '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String}
+    '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String, (opt)active: bool}
     It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
     create returns -- 201 on success and 400 on failure
     read returns -- 200 on success and 404 on failure
@@ -695,7 +695,7 @@ def get_courses_by_creator(request, creator_id):
         returns 400 error with appropriate message if the user does not exist or there is another failure'''
     try:
         creator_id = int(creator_id)
-        courses = Course.objects.filter(userId=int(creator_id))
+        courses = Course.objects.filter(userId=int(creator_id)).filter(active=True)
         serializer = CourseSerializer(courses, many=True)
         print(serializer.data)
         return Response(data=serializer.data)

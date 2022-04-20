@@ -37,7 +37,7 @@ class CourseService {
   }
 
   editCourse(id, name, department, courseNumber, sectionNumber,
-      semester, userId) {
+      semester, active, userId) {
     // Sends a post request to api/courses/editCourse/
     // Content is keys: id, name, department, courseNumber,
     // sectionNumber, semester, and userId
@@ -49,7 +49,8 @@ class CourseService {
       number: courseNumber,
       section: sectionNumber,
       semester: semester,
-      userId: userId,
+      userId: parseInt(userId),
+      active: Boolean(active),
     });
   }
 }
