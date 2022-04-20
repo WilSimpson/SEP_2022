@@ -46,9 +46,7 @@ class Wheel extends React.Component {
     // create canvas arc for each list element
     // const canvas = document.getElementById('wheel');
     const canvas = this.canvasRef.current;
-    console.log(canvas);
     const ctx = canvas.getContext('2d');
-    console.log(ctx);
     const x = canvas.width / 2;
     const y = canvas.height / 2;
     const radius = this.state.radius;
