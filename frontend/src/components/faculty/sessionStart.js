@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   TextField,
@@ -8,6 +8,7 @@ import {
   Autocomplete,
 } from '@mui/material';
 import AuthService from '../../services/auth';
+import courseService from '../../services/courses';
 
 export default function SessionStart(props) {
   const creatorId = AuthService.currentUser().id;
@@ -16,7 +17,20 @@ export default function SessionStart(props) {
   const [gameId, setGameId] = React.useState(null);
   const [isGuest, setIsGuest] = React.useState(false);
   const [courseID, setCourseID] = React.useState(null);
-  const courses = sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))) : [];
+  const [courses, setCourses] = React.useState(sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))) : []);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('courses')) {
+      courseService.getMyCourses(AuthService.currentUser().id).then(
+          (response) => {
+            sessionStorage.setItem('courses', JSON.stringify(response.data));
+            setCourses(response.data.map((course) => ({label: course.name, id: course.id})));
+          }).catch((error) => {
+        console.log(`There was an error ${error}`);
+        setCourses([]);
+      });
+    }
+  }, []);
 
   return (
     <Grid container spacing={3}>
