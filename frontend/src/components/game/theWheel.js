@@ -17,6 +17,7 @@ class Wheel extends React.Component {
       win: props.data.selected + 1,
       callBack: props.data.callback,
     };
+    this.canvasRef = React.createRef();
   }
   componentDidMount() {
     // generate canvas wheel on load
@@ -43,8 +44,11 @@ class Wheel extends React.Component {
 
   renderSector(index, text, start, arc, color) {
     // create canvas arc for each list element
-    const canvas = document.getElementById('wheel');
+    // const canvas = document.getElementById('wheel');
+    const canvas = this.canvasRef.current;
+    console.log(canvas);
     const ctx = canvas.getContext('2d');
+    console.log(ctx);
     const x = canvas.width / 2;
     const y = canvas.height / 2;
     const radius = this.state.radius;
@@ -124,6 +128,7 @@ class Wheel extends React.Component {
         <span id="selector" style={{position: 'relative', left: 258, top: -395, margin: 'auto', transform: 'translate(-50%,0)', padding: 0, zIndex: 2}}>&#9660;</span>
         <canvas
           id="wheel"
+          ref={this.canvasRef}
           width="500"
           height="500"
           style={{
