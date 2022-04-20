@@ -2,14 +2,14 @@ import React from 'react';
 import '../../setupTests';
 import {shallow, mount} from 'enzyme';
 import EditCourse from './editCourse';
-import '@testing-library/jest-dom/extend-expect';
+
 import {render, fireEvent} from '@testing-library/react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {User} from '../../models/user';
 import MockCourseService from '../../services/courses';
 import {act} from 'react-dom/test-utils';
 import {Alert} from '@mui/material';
-import {expect} from '@jest/globals';
+
 
 const user = new User(
   'email@example.com',

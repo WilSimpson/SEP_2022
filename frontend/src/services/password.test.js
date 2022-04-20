@@ -2,7 +2,7 @@ import React from 'react';
 import '../setupTests';
 import PasswordService from './password';
 import axios from 'axios';
-import {expect} from '@jest/globals';
+
 
 jest.mock('axios');
 

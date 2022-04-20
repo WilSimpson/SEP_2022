@@ -8,7 +8,7 @@ import { act } from 'react-dom/test-utils';
 import axios from 'axios';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
-import {expect} from '@jest/globals';
+
 
 const user = new User(
   'email@example.com',

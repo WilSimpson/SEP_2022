@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../setupTests';
 import {Alert, Button} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import GamePlayService from '../../services/gameplay';

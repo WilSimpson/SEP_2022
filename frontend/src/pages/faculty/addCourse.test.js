@@ -2,14 +2,14 @@ import React from 'react';
 import '../../setupTests';
 import {shallow, mount} from 'enzyme';
 import AddCourse from './addCourse';
-import '@testing-library/jest-dom/extend-expect';
+
 import {render, fireEvent} from '@testing-library/react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import MockCourseService from '../../services/courses';
 import {User} from '../../models/user';
 import {act} from 'react-dom/test-utils';
 import {Alert} from '@mui/material';
-import {expect} from '@jest/globals';
+
 
 const mockedNavigate = jest.fn();
 

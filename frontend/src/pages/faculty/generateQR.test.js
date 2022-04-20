@@ -7,7 +7,7 @@ import GenerateQRPage from './generateQR'
 import QRCode from 'react-qr-code';
 import {Button, TextField} from '@mui/material';
 import { alertService } from '../../services/alert';
-import {expect} from '@jest/globals';
+
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
 

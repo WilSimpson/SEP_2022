@@ -2,12 +2,12 @@ import React from 'react';
 import '../../setupTests';
 import {shallow, mount} from 'enzyme';
 import GameCode from './gameCode';
-import '@testing-library/jest-dom/extend-expect';
+
 import {BrowserRouter} from 'react-router-dom';
 import {act} from 'react-dom/test-utils';
 import MockGamePlayService from '../../services/gameplay';
 import {Alert} from '@mui/material';
-import {expect} from '@jest/globals';
+
 
 const mockedNavigate = jest.fn();
 

@@ -2,7 +2,6 @@ import React from 'react';
 import '../../setupTests';
 import GameFields from './gameFields';
 import {shallow} from 'enzyme';
-import {afterEach, beforeEach, expect, jest} from '@jest/globals';
 import {User} from '../../models/user';
 import {Button, TextField} from '@mui/material';
 

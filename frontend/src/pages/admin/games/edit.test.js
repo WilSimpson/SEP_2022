@@ -7,7 +7,7 @@ import MockGameService from '../../../services/game';
 import {act} from 'react-dom/test-utils';
 import {alertService} from '../../../services/alert';
 import '../../../setupTests';
-import {expect} from '@jest/globals';
+
 
 const mockedNavigate = jest.fn();
 

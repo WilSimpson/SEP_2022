@@ -1,10 +1,9 @@
 import React from 'react';
 import '../../setupTests';
 import {mount} from 'enzyme';
-import '@testing-library/jest-dom/extend-expect';
+
 import AdminDash from './dashboard';
 import {User} from '../../models/user';
-import {afterEach, beforeEach} from '@jest/globals';
 import GamesTable from '../../components/admin/gamesTable';
 import {BrowserRouter} from 'react-router-dom';
 import {act} from 'react-dom/test-utils';
@@ -14,7 +13,7 @@ import Loading from '../../components/layout/loading';
 import MockGameSessionService from '../../services/gameSession';
 import MockGameService from '../../services/game';
 import { alertService } from '../../services/alert';
-import {expect} from '@jest/globals';
+
 
 const user = new User('test@test.com', '', '', 'ADMIN', 'jwt-token', 1);
 const mockedNavigate = jest.fn();

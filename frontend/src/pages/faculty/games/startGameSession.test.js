@@ -8,7 +8,7 @@ import {act} from 'react-dom/test-utils';
 import {BrowserRouter} from 'react-router-dom';
 import {alertService} from '../../../services/alert';
 import MockGameSessionService from '../../../services/gameSession';
-import {expect} from '@jest/globals';
+
 
 
 const mockedNavigate = jest.fn();

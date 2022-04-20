@@ -3,7 +3,7 @@ import '../../setupTests';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 import StickyFooter from './footer';
-import {expect} from '@jest/globals';
+
 
 
 let container = null;

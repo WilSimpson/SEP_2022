@@ -7,7 +7,7 @@ import {getByTestId} from '@testing-library/react';
 import GameInProgressAlert from './gameInProgressAlert';
 import {mount} from 'enzyme';
 import MockGamePlayService from '../../services/gameplay';
-import {expect} from '@jest/globals';
+
 
 let container = null;
 

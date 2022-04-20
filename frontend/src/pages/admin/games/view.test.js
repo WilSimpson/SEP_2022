@@ -9,7 +9,7 @@ import {User} from '../../../models/user';
 import MockGameService from '../../../services/game';
 import Loading from '../../../components/layout/loading';
 import { alertService } from '../../../services/alert';
-import {expect} from '@jest/globals';
+
 
 const mockedNavigate = jest.fn();
 

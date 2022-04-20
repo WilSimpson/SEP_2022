@@ -9,7 +9,7 @@ import {act} from 'react-dom/test-utils';
 import MockGameSessionService from '../../../services/gameSession';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import {alertService} from '../../../services/alert';
-import {expect} from '@jest/globals';
+
 
 const user = new User(
   'email@example.com',

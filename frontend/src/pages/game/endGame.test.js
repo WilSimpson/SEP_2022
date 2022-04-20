@@ -3,7 +3,7 @@ import '../../setupTests';
 import { mount } from "enzyme";
 import EndGamePlay from "../../components/game/endGamePlay";
 import EndGame from "./endGame";
-import {expect} from '@jest/globals';
+
 
 const mockedNavigate = jest.fn();
 
