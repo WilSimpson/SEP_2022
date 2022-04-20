@@ -14,7 +14,7 @@ class CourseService {
     // Expects a response of an array of objects where each object
     // has the required row information (see faculty dashboard - must)
     // Include ID
-    return axios.get(`${API_URL}/courses/`);
+    return axios.get(`${API_URL}/courses/${facultyId}/by_creator`);
     // const courses = {
     //   data: Courses,
     // };

@@ -688,6 +688,22 @@ class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+@api_view(['GET'])
+def get_courses_by_creator(request, creator_id):
+    '''Get all the courses created by a specific user. Expects {creator_id: int}.
+        returns 200 on success with list of courses created by the specified user
+        returns 400 error with appropriate message if the user does not exist or there is another failure'''
+    try:
+        creator_id = int(creator_id)
+        courses = Course.objects.filter(userId=int(creator_id))
+        serializer = CourseSerializer(courses, many=True)
+        print(serializer.data)
+        return Response(data=serializer.data)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Must provide a valid user ID")
+
+
 class ContextHelpViewSet(ModelViewSet):
     '''A view set for the context_help object. It expects {title: string, body: string, question_id: int[]}
     It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
