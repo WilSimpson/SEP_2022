@@ -141,21 +141,6 @@ describe('<GameCode />', () => {
         'Gamecodes must contain only number values.'
       );
     });
-    it ('should display error message if code is less than 6 digits', async () => {
-      let wrapper;
-      let joinCode = '12345';
-      await act(async () => {
-        wrapper = mount(
-          <BrowserRouter>
-            <GameCode joinCode={joinCode} />
-          </BrowserRouter>
-        );
-      });
-      wrapper.update();
-      expect(wrapper.find(Alert).prop('children')).toEqual(
-        'This Gamecode is not valid. Gamecodes must be six digits long.'
-      );
-    });
   });
   describe('onChange', () => {
     it('should change value of text prop', async () => {
