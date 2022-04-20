@@ -1,6 +1,6 @@
 import React from 'react';
-import Home from './pages/public/home';
 import './app.css';
+import Home from './pages/public/home';
 import StartingSurvey from './pages/game/startingSurvey';
 import GameSession from './components/game/gameSession';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
