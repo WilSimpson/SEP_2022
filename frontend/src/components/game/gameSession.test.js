@@ -16,6 +16,8 @@ const TEAM_ID = 1;
 const mockedNavigate = jest.fn();
 
 jest.mock('../../services/gameplay');
+jest.mock('./theWheel');
+
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -54,7 +56,7 @@ jest.mock('react-router-dom', () => ({
               value: "Question 2",
               passcode: "123456",
               chance: true,
-              chance_game: "NO_GAME",
+              chance_game: "SPIN_WHEEL",
               game: '1',
               help: []
             },
@@ -141,7 +143,7 @@ describe('<GameSession />', () => {
     it('should call createAnswer when "Continue" button clicked', async () => {
       const promise = Promise.resolve();
       GamePlayService.createAnswer.mockResolvedValue({});
-      wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click');
+      wrapper.find({'data-testid': 'option2'}).hostNodes().simulate('click');
       wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
       await act(() => promise);
       expect(GamePlayService.createAnswer).toHaveBeenCalled();
@@ -159,7 +161,7 @@ describe('<GameSession />', () => {
       const promise = Promise.resolve();
       GamePlayService.createAnswer.mockResolvedValue({});
       GamePlayService.updateCurrentQuestion.mockResolvedValue({});
-      wrapper.find({'data-testid': 'option1'}).hostNodes().simulate('click');
+      wrapper.find({'data-testid': 'option2'}).hostNodes().simulate('click');
       wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
       await act(() => promise);
       expect(GamePlayService.updateCurrentQuestion).toHaveBeenCalled();
@@ -240,10 +242,10 @@ describe('<GameSession />', () => {
       wrapper.find({'data-testid': 'continue'}).hostNodes().simulate('click');
       await act(() => promise);
     });
-    it('should call random when chance is clicked', () => {
+    it('display the wheel for the chance game', () => {
       wrapper.update();
-      wrapper.find({'data-testid': 'chance'}).hostNodes().simulate('click');
-      expect(GamePlayService.random).toHaveBeenCalled();
+      const wheel = require('./theWheel');
+      expect(wheel).not.toBeNull();
     });
   });
   describe('Timeout Dialog functionality', () => {
