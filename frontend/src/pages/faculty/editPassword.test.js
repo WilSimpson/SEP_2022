@@ -1,13 +1,19 @@
 import React from 'react';
 import '../../setupTests';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 import EditPassword from './editPassword';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent, act} from '@testing-library/react';
 import PasswordService from '../../services/password';
+import { alertService } from '../../services/alert';
+import { BrowserRouter } from 'react-router-dom';
 
 
 jest.mock('../../services/password');
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('<EditPassword />', () => {
   let passwordField;
@@ -61,6 +67,38 @@ describe('<EditPassword />', () => {
       fireEvent.click(submitButton)
       expect(PasswordService.changePassword).toHaveBeenCalled();
       await act(() => promise);
+    });
+
+    it('on status 200 it should call alert Service', async () => {
+      const promise = Promise.resolve();
+      let alertSpy = jest.spyOn(alertService, 'alert');
+      PasswordService.changePassword.mockResolvedValue({status: 200});
+      fireEvent.change(passwordField, {target: {value: 'correct'}});
+      fireEvent.click(submitButton)
+      await act(() => promise);
+      expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('on status 400 it should display error message', async () => {
+      const promise = Promise.resolve();
+      const event = { preventDefault: () => {} };
+      PasswordService.changePassword.mockRejectedValue({response: {status: 400, data: {password: ['error']}}});
+      let wrapper = mount(<BrowserRouter><EditPassword /></BrowserRouter>)
+      wrapper.find('#submit-box').hostNodes().simulate('submit', event);
+      await act(() => promise);
+      wrapper.update();
+      expect(wrapper.find({'data-testid': 'err-msg'}).exists()).toBe(true);
+    });
+
+    it('on status unknown status it should display error message', async () => {
+      const promise = Promise.resolve();
+      const event = { preventDefault: () => {} };
+      PasswordService.changePassword.mockRejectedValue({response: {status: 700, data: {password: ['error']}}});
+      let wrapper = mount(<BrowserRouter><EditPassword /></BrowserRouter>)
+      wrapper.find('#submit-box').hostNodes().simulate('submit', event);
+      await act(() => promise);
+      wrapper.update();
+      expect(wrapper.find({'data-testid': 'err-msg'}).exists()).toBe(true);
     });
   });
 });
