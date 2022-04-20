@@ -9,7 +9,6 @@ import {getByTestId} from '@testing-library/react';
 describe('<Wheel />', () => {
     let wrapper;
     const mockCall = jest.fn();
-    HTMLCanvasElement.prototype.getContext = jest.fn();
     beforeEach(async () => { 
         await act( async () => {
             wrapper = mount(
@@ -19,13 +18,22 @@ describe('<Wheel />', () => {
       });
 
     it('should render', () => {
-        expect(shallow(
+        expect(mount(
               <Wheel data={{weight:{1: .5, 1:.5}, selected: 0, callBack: mockCall}}/>
         ));
         });
     it('button should call spin', () => {
-        console.log(wrapper.debug());
-        wrapper.find('spin').hostNodes().simulate('click');
-        expect(Wheel.click).toHaveBeenCalled();
+        jest.useFakeTimers();
+        const stateSpy = jest.spyOn(wrapper.instance(), 'setState');
+        const resultSpy = jest.spyOn(wrapper.instance(), 'getResult');
+        wrapper.instance().spin();
+        //wrapper.find({'id': 'spin'}).hostNodes().simulate('click');
+        expect(stateSpy).toHaveBeenCalledWith({
+            rotate: expect.any(Number),
+            easeOut: 2,
+            spinning: true,
+          });
+        jest.advanceTimersByTime(3000);
+        expect(resultSpy).toHaveBeenCalled()
         });
 });
