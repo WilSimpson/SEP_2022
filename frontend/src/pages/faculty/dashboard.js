@@ -180,7 +180,7 @@ export default function FacultyDash() {
                   Total Courses
                 </Typography>
                 <Typography component="p" variant="h4">
-                  1
+                  {sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).length : 0}
                 </Typography>
                 <div>
                   <Button color="secondary" variant="contained"
