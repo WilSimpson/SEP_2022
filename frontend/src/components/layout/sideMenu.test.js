@@ -5,7 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent} from '@testing-library/react';
 import {SideMenu} from './sideMenu';
 import {User} from '../../models/user';
-import {afterEach, beforeEach} from '@jest/globals';
+import {afterEach, beforeEach, expect} from '@jest/globals';
 
 const user = new User('test@test.com', '', '', 'ADMIN', 'jwt-token');
 const fuser = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');

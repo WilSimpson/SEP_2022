@@ -2,6 +2,7 @@ import React from 'react';
 import '../setupTests';
 import { Game, GameOption, GameQuestion } from "./game";
 import * as dateFormatter from '../helpers/dateFormatter';
+import {expect} from '@jest/globals';
 
 
 describe('Game model', () => {

@@ -1,5 +1,6 @@
 import './setupTests';
 import ReactDOM from 'react-dom';
+import {expect} from '@jest/globals';
 
 
 jest.mock('react-dom');

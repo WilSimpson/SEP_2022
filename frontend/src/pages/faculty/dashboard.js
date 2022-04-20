@@ -108,7 +108,7 @@ function CoursesTable() {
                   <div onClick={() => editThisCourse(row.id, row.name,
                       row.department,
                       row.number, row.section, row.semester)}
-                      id={`row${row.id}`}>
+                  id={`row${row.id}`}>
                     <IconButton>
                       <EditIcon />
                     </IconButton>
@@ -142,23 +142,22 @@ export default function FacultyDash() {
         const games = [...resp.data];
         getSessions(games);
       })
-      .catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      });
+          .catch((error) => {
+            alertService.alert({severity: alertSeverity.error, message: error});
+          });
     }
 
     async function getSessions(games) {
       for (const game of games) {
         gameSessionService.getSessions(game.id)
-        .then((resp) => {
-          setSessions((oldSessions) => [...oldSessions, ...resp.data]);
-        })
-        .catch((error) => {
-          alertService.alert({severity: alertSeverity.error, message: error});
-        });
+            .then((resp) => {
+              setSessions((oldSessions) => [...oldSessions, ...resp.data]);
+            })
+            .catch((error) => {
+              alertService.alert({severity: alertSeverity.error, message: error});
+            });
       }
     }
-    
     getGames();
   }, []);
 

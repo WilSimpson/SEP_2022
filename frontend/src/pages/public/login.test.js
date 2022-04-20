@@ -7,6 +7,7 @@ import {render, fireEvent, act, getByTestId} from '@testing-library/react';
 import AuthService from '../../services/auth';
 import ForgotPassword from '../faculty/forgotPassword';
 import {User} from '../../models/user';
+import {expect} from '@jest/globals';
 const mockedNavigate = jest.fn();
 
 jest.mock('../../services/auth');

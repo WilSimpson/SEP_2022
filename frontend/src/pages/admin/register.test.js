@@ -7,6 +7,7 @@ import {render, fireEvent, act} from '@testing-library/react';
 import AuthService from '../../services/auth';
 import { BrowserRouter } from 'react-router-dom';
 import { Alert } from '@mui/material';
+import {expect} from '@jest/globals';
 
 const mockedNavigate = jest.fn();
 

@@ -9,6 +9,7 @@ import {User} from '../../models/user';
 import MockCourseService from '../../services/courses';
 import {act} from 'react-dom/test-utils';
 import {Alert} from '@mui/material';
+import {expect} from '@jest/globals';
 
 const user = new User(
   'email@example.com',

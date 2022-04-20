@@ -1,6 +1,7 @@
 import React from 'react';
 import '../setupTests';
 import { User } from "./user";
+import {expect} from '@jest/globals';
 
 describe('User model', () => {
   let adminUser;

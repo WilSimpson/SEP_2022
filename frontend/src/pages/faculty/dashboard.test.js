@@ -14,6 +14,7 @@ import { act } from 'react-dom/test-utils';
 import { LinearProgress } from '@mui/material';
 import {alertService} from '../../services/alert';
 import GameSessionsTable from '../../components/faculty/gameSessionsTable';
+import {expect} from '@jest/globals';
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
 const res = [{id: 1, department: 'There was a problem',

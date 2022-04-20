@@ -7,6 +7,7 @@ import {BrowserRouter} from 'react-router-dom';
 import {act} from 'react-dom/test-utils';
 import MockGamePlayService from '../../services/gameplay';
 import {Alert} from '@mui/material';
+import {expect} from '@jest/globals';
 
 const mockedNavigate = jest.fn();
 

@@ -4,6 +4,7 @@ import UserService from './user';
 import axios from 'axios';
 import {API_URL} from '../store/store';
 import {authHeader} from './auth';
+import {expect} from '@jest/globals';
 
 jest.mock('axios');
 

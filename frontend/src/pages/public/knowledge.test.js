@@ -2,6 +2,7 @@ import React from 'react';
 import '../../setupTests';
 import Knowledge from "./knowledge";
 import {render} from 'enzyme';
+import {expect} from '@jest/globals';
 
 
 describe('<Knowledge />', () => {

@@ -17,20 +17,18 @@ export default function EditGamePage(props) {
   useEffect(() => {
     function getGame() {
       gameService.getGame(id)
-      .then(
-        (resp) => {
-          const game = resp.data;
-          if (game === null) {
+          .then(
+              (resp) => {
+                const game = resp.data;
+                if (game === null) {
+                  notFound();
+                }
+                setGame(game);
+                setLoading(false);
+              },
+          ).catch(() => {
             notFound();
-          }
-          setGame(game);
-          setLoading(false);
-        }
-      )
-      .catch(() => {
-        notFound();
-      });
-     
+          });
     }
     getGame();
   }, []);

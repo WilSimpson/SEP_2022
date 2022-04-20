@@ -3,6 +3,7 @@ import '../setupTests';
 import GameService from './game';
 import axios from 'axios';
 import {API_URL} from '../store/store';
+import {expect} from '@jest/globals';
 
 jest.mock('axios');
 

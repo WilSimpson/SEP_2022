@@ -4,6 +4,7 @@ import {shallow} from 'enzyme';
 import {CircularProgress} from '@mui/material';
 import Loading from './loading';
 import AdminDash from '../../pages/admin/dashboard';
+import {expect} from '@jest/globals';
 
 describe('<Loading />', () => {
   it ('should display Circular Progress when loading true', () => {

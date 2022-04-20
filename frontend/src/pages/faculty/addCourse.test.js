@@ -9,6 +9,7 @@ import MockCourseService from '../../services/courses';
 import {User} from '../../models/user';
 import {act} from 'react-dom/test-utils';
 import {Alert} from '@mui/material';
+import {expect} from '@jest/globals';
 
 const mockedNavigate = jest.fn();
 

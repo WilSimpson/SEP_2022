@@ -3,6 +3,7 @@ import '../../setupTests';
 import authService from '../../services/auth';
 import Logout from './logout';
 import {render} from 'enzyme';
+import {expect} from '@jest/globals';
 
 jest.mock('../../services/auth')
 

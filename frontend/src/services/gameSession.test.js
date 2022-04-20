@@ -4,6 +4,7 @@ import GameSessionService from './gameSession';
 import axios from 'axios';
 import {API_URL} from '../store/store';
 import {gameSessions} from '../helpers/dummyData';
+import {expect} from '@jest/globals';
 
 jest.mock('axios');
 

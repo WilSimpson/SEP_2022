@@ -8,6 +8,7 @@ import {act} from 'react-dom/test-utils';
 import {inProgressGame} from '../../helpers/dummyData';
 import MockGamePlayService from '../../services/gameplay';
 import {Alert} from '@mui/material';
+import {expect} from '@jest/globals';
 
 let container = null;
 

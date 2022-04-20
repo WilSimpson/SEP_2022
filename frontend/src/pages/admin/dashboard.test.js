@@ -14,6 +14,7 @@ import Loading from '../../components/layout/loading';
 import MockGameSessionService from '../../services/gameSession';
 import MockGameService from '../../services/game';
 import { alertService } from '../../services/alert';
+import {expect} from '@jest/globals';
 
 const user = new User('test@test.com', '', '', 'ADMIN', 'jwt-token', 1);
 const mockedNavigate = jest.fn();

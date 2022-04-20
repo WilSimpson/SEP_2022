@@ -10,6 +10,7 @@ import GamePlayService from '../../services/gameplay';
 import GamePlayTimeout from './gamePlayTimeout';
 import {alertService} from '../../services/alert';
 import Passcode from '../../pages/game/passcode';
+import {expect} from '@jest/globals';
 
 const TEAM_ID = 1;
 

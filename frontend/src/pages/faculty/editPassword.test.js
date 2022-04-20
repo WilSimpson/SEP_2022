@@ -7,6 +7,7 @@ import {render, fireEvent, act} from '@testing-library/react';
 import PasswordService from '../../services/password';
 import { alertService } from '../../services/alert';
 import { BrowserRouter } from 'react-router-dom';
+import {expect} from '@jest/globals';
 
 
 jest.mock('../../services/password');

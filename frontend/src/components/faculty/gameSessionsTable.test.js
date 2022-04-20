@@ -6,6 +6,7 @@ import {User} from '../../models/user';
 import {act} from 'react-dom/test-utils';
 import {BrowserRouter} from 'react-router-dom';
 import { TablePagination } from '@mui/material';
+import {expect} from '@jest/globals';
 
 const user = new User(
     'email@example.com',

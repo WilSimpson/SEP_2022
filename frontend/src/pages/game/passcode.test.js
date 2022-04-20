@@ -5,6 +5,7 @@ import Passcode from './passcode';
 import '@testing-library/jest-dom/extend-expect';
 import {render, fireEvent} from '@testing-library/react';
 import {Button} from '@mui/material';
+import {expect} from '@jest/globals';
 
 
 jest.mock('../../services/gameplay');

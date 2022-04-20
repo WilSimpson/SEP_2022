@@ -2,6 +2,7 @@ import React from 'react';
 import '../setupTests';
 import {Subject} from 'rxjs';
 import {alertService, alertSeverity} from './alert';
+import {expect} from '@jest/globals';
 
 jest.mock('rxjs');
 
