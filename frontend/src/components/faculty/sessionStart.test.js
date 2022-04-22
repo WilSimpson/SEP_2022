@@ -4,6 +4,7 @@ import SessionStart from './sessionStart';
 import {shallow} from 'enzyme';
 import {User} from '../../models/user';
 import {Button, TextField} from '@mui/material';
+import { act } from 'react-dom/test-utils';
 
 const user = new User(
     'email@example.com',
@@ -27,7 +28,7 @@ describe('<SessionStart />', () => {
   let comp = null;
 
   describe('starting a game session', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       comp = shallow(<SessionStart />);
       await act(async () => {
           await Promise.resolve(comp);
