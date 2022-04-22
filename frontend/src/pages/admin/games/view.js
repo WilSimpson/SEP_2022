@@ -6,7 +6,7 @@ import AuthenticatedLayout
   from '../../../components/layout/authenticated.layout';
 import {alertService, alertSeverity} from '../../../services/alert';
 import Loading from '../../../components/layout/loading';
-import {useNavigate} from 'react-router';
+import {useNavigate} from 'react-router-dom';
 
 export default function ViewGamesPage() {
   const [games, setGames] = useState([]);
@@ -38,12 +38,15 @@ export default function ViewGamesPage() {
 
   useEffect(() => {
     async function getGames() {
-      const resp = await gameService.getGames().catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      });
-      const games = [...resp.data];
-      setGames(games);
-      setLoading(false);
+      await gameService.getGames().then(
+          (resp) => {
+            const games = [...resp.data];
+            setGames(games);
+            setLoading(false);
+          })
+          .catch((error) => {
+            alertService.alert({severity: alertSeverity.error, message: error});
+          });
     }
     getGames();
   }, []);

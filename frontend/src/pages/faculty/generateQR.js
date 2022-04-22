@@ -32,10 +32,12 @@ export default function GenerateQRPage(props) {
               required
               id="outlined-required"
               label="QR URL"
+              value={url}
               defaultValue={url}
               onChange={(e) => setURL(e.target.value)}
             />
             <Button
+              id='submit-button'
               onClick={() => {
                 if (url == '') {
                   alertService.error('No URL set');

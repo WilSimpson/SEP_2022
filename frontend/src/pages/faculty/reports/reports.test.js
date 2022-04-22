@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../../setupTests';
 import {mount} from 'enzyme';
 import ReportsPage from './reports';
 import {User} from '../../../models/user';
@@ -7,7 +8,8 @@ import {BrowserRouter} from 'react-router-dom';
 import axios from 'axios';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import {alertService} from '../../../services/alert';
-import '../../../setupTests';
+import GamesTable from '../../../components/admin/gamesTable';
+
 
 
 const user = new User(
@@ -19,8 +21,13 @@ const user = new User(
   1,
 );
 
-jest.mock('axios');
+const mockedNavigate = jest.fn();
 
+jest.mock('axios');
+jest.mock("react-router-dom", () => ({
+  ...(jest.requireActual("react-router-dom")), 
+  useNavigate: () => mockedNavigate,
+}));
 
 beforeEach(() => {
   localStorage.setItem('user', JSON.stringify(user));
@@ -30,6 +37,7 @@ beforeEach(() => {
 
 afterEach(() => {
   localStorage.clear();
+  jest.restoreAllMocks();
 });
 
 describe('<ReportsPage />', () => {
@@ -83,5 +91,23 @@ describe('<ReportsPage />', () => {
 
       expect(spy).toBeCalledTimes(1);
     });
-  })
+  });
+
+  describe('handleGameSelected', () => {
+    it('should navigate to reports page', async () => {
+      let wrapper;
+      const promise = Promise.resolve();
+      await act(async () => {
+        wrapper = mount(
+          <BrowserRouter>
+            <ReportsPage />
+          </BrowserRouter>,
+        );
+      });
+      await act(() => promise);
+      wrapper.update();
+      act(() => wrapper.find(GamesTable).props().onGameSelected(1));
+      expect(mockedNavigate).toHaveBeenCalledWith('/reports/1');
+    });
+  });
 });

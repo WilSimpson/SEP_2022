@@ -9,7 +9,7 @@ const {store} = configureStore();
 
 export function authHeader() {
   const user = JSON.parse(localStorage.getItem('user'));
-  if (user && user.accessToken) {
+  if (user && user.token.access) {
     return {Authorization: 'Bearer ' + user.token.access};
   } else {
     return {};
