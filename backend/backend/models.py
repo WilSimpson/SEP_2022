@@ -135,6 +135,8 @@ class GameSession(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(blank=True, null=True)
     notes = models.TextField()
+    is_guest = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, on_delete= models.CASCADE, null=True, default=None)
     timeout = models.IntegerField()
     code = models.IntegerField(validators=[MinValueValidator(0),
                                 MaxValueValidator(999999)], default=0)

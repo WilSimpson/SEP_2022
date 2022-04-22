@@ -12,7 +12,7 @@ import GamesTable from '../../components/admin/gamesTable';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 import Loading from '../../components/layout/loading';
 import {alertService, alertSeverity} from '../../services/alert';
-import {useNavigate} from 'react-router';
+import {useNavigate} from 'react-router-dom';
 import GameSessionsTable from '../../components/faculty/gameSessionsTable.tsx';
 
 export default function AdminDash() {
@@ -27,22 +27,24 @@ export default function AdminDash() {
 
   React.useEffect(() => {
     async function getGames() {
-      gameService.getGames().catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      }).then((resp) => {
+      gameService.getGames().then((resp) => {
         const games = [...resp.data];
         setGames(games);
         getSessions(games);
-      });
+      })
+          .catch((error) => {
+            alertService.alert({severity: alertSeverity.error, message: error});
+          });
     }
 
     async function getSessions(games) {
       for (const game of games) {
-        gameSessionService.getSessions(game.id).catch((error) => {
-          alertService.alert({severity: alertSeverity.error, message: error});
-        }).then((resp) => {
+        gameSessionService.getSessions(game.id).then((resp) => {
           setSessions((oldSessions) => [...oldSessions, ...resp.data]);
-        });
+        })
+            .catch((error) => {
+              alertService.alert({severity: alertSeverity.error, message: error});
+            });
       }
 
       setLoading(false);

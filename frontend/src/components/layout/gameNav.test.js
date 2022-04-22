@@ -1,9 +1,10 @@
 import React from 'react';
+import '../../setupTests';
 import {render, unmountComponentAtNode} from 'react-dom';
 import {act} from 'react-dom/test-utils';
 import {getByTestId} from '@testing-library/react';
 import GameNav from './gameNav';
-import '../../setupTests';
+
 
 let container = null;
 

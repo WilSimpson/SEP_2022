@@ -118,6 +118,7 @@ const ResponsiveAppBar = () => {
                     onClick={handleOpenUserMenu}
                     sx={{p: 0}}
                     size="large"
+                    data-testid="user-menu"
                   >
                     <Avatar src='/images/accountIcon.png' alt="User" />
                   </IconButton>
@@ -126,6 +127,7 @@ const ResponsiveAppBar = () => {
                   sx={{mt: '45px'}}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
+                  data-testid='auth-menu'
                   anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
@@ -141,6 +143,7 @@ const ResponsiveAppBar = () => {
                   {Object.entries(settings).map(([name, link]) => (
                     <MenuItem
                       key={name}
+                      data-testid={name+'-test'}
                       onClick={(e) => handleChooseUserOption(e, link)}
                     >
                       <Typography

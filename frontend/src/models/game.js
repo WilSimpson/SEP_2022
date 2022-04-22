@@ -1,4 +1,4 @@
-import {formatDate} from '../helpers/DateFormatter';
+import {formatDate} from '../helpers/dateFormatter';
 
 class GameQuestion {
   constructor(id, value, passcode, chance, game_id) {
@@ -28,6 +28,7 @@ class Game {
     this.active = active;
     this.questions = questions;
     this.options = options;
+    this.createdAt = this.formatCreatedAt(createdAt);
   }
 
   status() {

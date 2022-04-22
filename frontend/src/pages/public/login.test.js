@@ -1,13 +1,17 @@
 import React from 'react';
+import '../../setupTests';
 import {shallow} from 'enzyme';
 import Login from './login';
-import '../../setupTests';
-import '@testing-library/jest-dom/extend-expect';
-import {render, fireEvent, act} from '@testing-library/react';
+
+import {render, fireEvent, act, getByTestId} from '@testing-library/react';
 import AuthService from '../../services/auth';
 import ForgotPassword from '../faculty/forgotPassword';
+import {User} from '../../models/user';
+
 
 jest.mock('../../services/auth');
+
+afterEach(() => jest.clearAllMocks());
 
 describe('<Login />', () => {
   let emailField;
@@ -101,6 +105,26 @@ describe('<Login />', () => {
 
       expect(AuthService.login).toHaveBeenCalled();
       await act(() => promise);
+    });
+    it ('should display error message when incorrect login', async () => {
+      const {getByTestId} = render(<Login />);
+      AuthService.login.mockRejectedValue({response: {status:401, data: {detail: 'error'}}});
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
+      fireEvent.click(submitButton);
+      await act(() => Promise.resolve());
+      let errMsg = getByTestId("err-msg");
+      expect(errMsg).toBeInTheDocument();
+    });
+    it ('should display error message when an unknown error occured', async () => {
+      const {getByTestId} = render(<Login />);
+      AuthService.login.mockRejectedValue({response: {status:500, data: {detail: 'error'}}});
+      fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
+      fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
+      fireEvent.click(submitButton);
+      await act(() => Promise.resolve());
+      let errMsg = getByTestId("err-msg");
+      expect(errMsg).toBeInTheDocument();
     });
   });
   describe('Forgot password', () => {
