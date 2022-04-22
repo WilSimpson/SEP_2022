@@ -1,7 +1,7 @@
 import React from 'react';
 import './setupTests';
 import {shallow} from 'enzyme';
-import {expect} from '@jest/globals';
+
 import {BrowserRouter as BrowserRouter} from 'react-router-dom';
 import App from './app';
 

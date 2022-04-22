@@ -9,6 +9,7 @@ import axios from 'axios';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
 import MobileDatePicker from '@mui/lab/MobileDatePicker';
 
+
 const user = new User(
   'email@example.com',
   'FirstName',
@@ -24,6 +25,7 @@ beforeEach(() => {
 
 afterEach(() => {
   localStorage.clear();
+  jest.clearAllMocks();
 });
 
 jest.mock('axios');

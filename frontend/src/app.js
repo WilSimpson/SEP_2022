@@ -1,4 +1,5 @@
 import React from 'react';
+import './app.css';
 import Home from './pages/public/home';
 import StartingSurvey from './pages/game/startingSurvey';
 import GameSession from './components/game/gameSession';
@@ -9,6 +10,7 @@ import Login from './pages/public/login';
 import Knowledge from './pages/public/knowledge';
 import AdminDash from './pages/admin/dashboard';
 import ProtectedRoute from './protectedRoute';
+import {isAdmin} from './protectedRoute';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import configureStore from './store/store';
@@ -61,7 +63,7 @@ function App() {
                 path="/admin-dashboard"
                 element={
                   <ProtectedRoute>
-                    <AdminDash />
+                    {isAdmin() ? <AdminDash /> : <FacultyDash />};
                   </ProtectedRoute>
                 }
               />
@@ -71,7 +73,7 @@ function App() {
                 path="/faculty-dashboard"
                 element={
                   <ProtectedRoute>
-                    <FacultyDash />
+                    {isAdmin() ? <AdminDash /> : <FacultyDash />};
                   </ProtectedRoute>
                 }
               />
@@ -81,7 +83,7 @@ function App() {
                 path="/faculty-dashboard/addCourse"
                 element={
                   <ProtectedRoute>
-                    <AddCourse />
+                    {isAdmin() ? <AdminDash /> : <AddCourse />};
                   </ProtectedRoute>
                 }
               />
@@ -91,7 +93,7 @@ function App() {
                 path="/faculty-dashboard/editCourse"
                 element={
                   <ProtectedRoute>
-                    <EditCourse />
+                    {isAdmin() ? <AdminDash /> : <EditCourse />};
                   </ProtectedRoute>
                 }
               />
@@ -101,7 +103,7 @@ function App() {
                 path="/admin-dashboard/register"
                 element={
                   <ProtectedRoute>
-                    <Register />
+                    {isAdmin() ? <Register /> : <FacultyDash />};
                   </ProtectedRoute>
                 }
               />
@@ -111,7 +113,7 @@ function App() {
                 path="/admin-dashboard/games"
                 element={
                   <ProtectedRoute>
-                    <ViewGamesPage />
+                    {isAdmin() ? <ViewGamesPage /> : <FacultyDash />};
                   </ProtectedRoute>
                 }
               />
@@ -121,7 +123,7 @@ function App() {
                 path="/admin-dashboard/games/new"
                 element={
                   <ProtectedRoute>
-                    <CreateGamePage />
+                    {isAdmin() ? <CreateGamePage /> : <FacultyDash />};
                   </ProtectedRoute>
                 }
               />
@@ -129,7 +131,7 @@ function App() {
                 path="/admin-dashboard/games/:id"
                 element={
                   <ProtectedRoute>
-                    <EditGamePage />
+                    {isAdmin() ? <EditGamePage /> : <FacultyDash />};
                   </ProtectedRoute>
                 }
               />

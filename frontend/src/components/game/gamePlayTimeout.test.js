@@ -2,7 +2,6 @@ import React from 'react';
 import '../../setupTests';
 import GamePlayTimeout from './gamePlayTimeout';
 import {shallow} from 'enzyme';
-import {expect, jest} from '@jest/globals';
 import {unmountComponentAtNode} from 'react-dom';
 import {Button} from '@mui/material';
 

@@ -10,6 +10,7 @@ import MockGameService from '../../../services/game';
 import Loading from '../../../components/layout/loading';
 import { alertService } from '../../../services/alert';
 
+
 const mockedNavigate = jest.fn();
 
 let game = {

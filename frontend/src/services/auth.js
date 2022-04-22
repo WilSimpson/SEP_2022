@@ -25,7 +25,20 @@ class AuthService {
         })
         .then((response) => {
           if (response.status === 200) {
-            this.handleLogin();
+            const token = response.data;
+            const decoded = jwtDecode(token.access);
+            const user = new User(
+                decoded.email,
+                '',
+                '',
+                decoded.role,
+                response.data,
+                decoded.id,
+            );
+            localStorage.setItem('user', JSON.stringify(user));
+            store.dispatch({
+              type: LOGIN_USER,
+            });
           }
           return response;
         });
@@ -41,7 +54,9 @@ class AuthService {
 
   currentUser() {
     const user = JSON.parse(localStorage.getItem('user'));
-    user.__proto__ = User.prototype;
+    if (user) {
+      user.__proto__ = User.prototype;
+    }
     return user;
   }
 
@@ -58,25 +73,6 @@ class AuthService {
 
   isLoggedIn() {
     return localStorage.getItem('user') !== null;
-  }
-
-  handleLogin(response) {
-    console.log(response);
-    const token = response.data;
-    const decoded = jwtDecode(token.access);
-    console.log(decoded);
-    const user = new User(
-        decoded.email,
-        '',
-        '',
-        decoded.role,
-        response.data,
-        decoded.id,
-    );
-    localStorage.setItem('user', JSON.stringify(user));
-    store.dispatch({
-      type: LOGIN_USER,
-    });
   }
 }
 

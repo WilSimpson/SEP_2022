@@ -4,6 +4,7 @@ import Knowledge from "./knowledge";
 import {render} from 'enzyme';
 
 
+
 describe('<Knowledge />', () => {
   let comp = null;
   beforeEach(() => {

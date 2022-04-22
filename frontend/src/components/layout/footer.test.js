@@ -5,6 +5,7 @@ import {act} from 'react-dom/test-utils';
 import StickyFooter from './footer';
 
 
+
 let container = null;
 
 beforeEach(() => {

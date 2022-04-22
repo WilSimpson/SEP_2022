@@ -7,6 +7,7 @@ import {act} from 'react-dom/test-utils';
 import {BrowserRouter} from 'react-router-dom';
 import { TablePagination } from '@mui/material';
 
+
 const user = new User(
     'email@example.com',
     'FirstName',

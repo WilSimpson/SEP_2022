@@ -2,9 +2,10 @@ import React from 'react';
 import '../../setupTests';
 import {shallow} from 'enzyme';
 import Passcode from './passcode';
-import '@testing-library/jest-dom/extend-expect';
+
 import {render, fireEvent} from '@testing-library/react';
 import {Button} from '@mui/material';
+
 
 
 jest.mock('../../services/gameplay');

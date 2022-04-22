@@ -38,15 +38,15 @@ export default function ViewGamesPage() {
 
   useEffect(() => {
     async function getGames() {
-      const resp = await gameService.getGames().then(
-        (resp) => {
-          const games = [...resp.data];
-          setGames(games);
-          setLoading(false);
-        })
-      .catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      });
+      await gameService.getGames().then(
+          (resp) => {
+            const games = [...resp.data];
+            setGames(games);
+            setLoading(false);
+          })
+          .catch((error) => {
+            alertService.alert({severity: alertSeverity.error, message: error});
+          });
     }
     getGames();
   }, []);

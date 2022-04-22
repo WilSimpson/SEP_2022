@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../setupTests';
 import {mount} from 'enzyme';
-import '@testing-library/jest-dom/extend-expect';
+
 import {User} from '../../models/user';
 import FacultyDash from './dashboard';
 import {BrowserRouter} from 'react-router-dom';
@@ -14,6 +14,7 @@ import { act } from 'react-dom/test-utils';
 import { LinearProgress } from '@mui/material';
 import {alertService} from '../../services/alert';
 import GameSessionsTable from '../../components/faculty/gameSessionsTable';
+
 
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
 const res = [{id: 1, department: 'There was a problem',

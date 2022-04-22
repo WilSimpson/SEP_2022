@@ -8,6 +8,7 @@ import {act} from 'react-dom/test-utils';
 import {alertService} from '../../../services/alert';
 import '../../../setupTests';
 
+
 const mockedNavigate = jest.fn();
 
 const user = new User(
