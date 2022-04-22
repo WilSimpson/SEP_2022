@@ -40,7 +40,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Title');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual('');
+      expect(input.props().value).toEqual('');
     });
 
     it('should have an empty code field', () => {
@@ -48,7 +48,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Code');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(null);
+      expect(input.props().value).toEqual('');
     });
 
     it('should have an empty questions field', () => {
@@ -56,7 +56,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Questions JSON');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual('[]');
+      expect(input.props().value).toEqual('[]');
     });
 
     it('should have an empty options field', () => {
@@ -64,7 +64,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Options JSON');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual('[]');
+      expect(input.props().value).toEqual('[]');
     });
 
     it('should have a cancel button', () => {
@@ -107,7 +107,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Title');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(game.title);
+      expect(input.props().value).toEqual(game.title);
     });
 
     it('should have an empty code field', () => {
@@ -115,7 +115,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Code');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(game.code);
+      expect(input.props().value).toEqual(game.code);
     });
 
     it('should have an empty questions field', () => {
@@ -123,7 +123,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Questions JSON');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(
+      expect(input.props().value).toEqual(
           JSON.stringify(game.questions),
       );
     });
@@ -133,7 +133,7 @@ describe('<GameFields />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Options JSON');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(JSON.stringify(game.options));
+      expect(input.props().value).toEqual(JSON.stringify(game.options));
     });
 
     it('should have a cancel button', () => {
@@ -177,7 +177,7 @@ describe('<GameFields />', () => {
 
   describe('importing a file', () => {
     it('should work on valid files', () => {
-      
+
     });
   });
 });
