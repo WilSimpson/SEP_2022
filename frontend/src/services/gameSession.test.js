@@ -26,8 +26,10 @@ describe('GameSessionService', () => {
   describe('createGameSession', () => {
     it ('should make POST request', () => {
       let gameSessionJSON = { 
+        courseID: NaN,
         creator_id: 1,
         id: 1,
+        isGuest: undefined,
         notes: 'this is a note',
         timeout: 19
       };
