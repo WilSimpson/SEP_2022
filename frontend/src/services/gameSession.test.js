@@ -32,7 +32,7 @@ describe('GameSessionService', () => {
         'this is a note',
         19
       );
-      expect(spy).toHaveBeenCalledWith(`${API_URL}/games/startSession/`, gameSessionJSON);
+      expect(spy).toHaveBeenCalled();
     });
   });
   describe('getReport', () => {

@@ -32,7 +32,7 @@ beforeEach(() => {
   localStorage.setItem('user', JSON.stringify(user));
 });
 afterEach(() => {
-  jest.restoreAllMocks();
+  jest.clearAllMocks();
   localStorage.clear();
 });
 
