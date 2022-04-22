@@ -25,6 +25,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import {useNavigate} from 'react-router-dom';
 import GameSessionsTable from '../../components/faculty/gameSessionsTable.tsx';
 import gameSessionService from '../../services/gameSession';
+import {alertService, alertSeverity} from '../../services/alert';
 
 function CoursesTable() {
   const [filteredRows, setFilteredRows] = useState([]);
@@ -39,7 +40,6 @@ function CoursesTable() {
           setFilteredRows(response.data);
           setLoading(false);
         }).catch((error) => {
-      console.log(`There was an error ${error}`);
       setRows([{
         department: 'There was a problem',
         name: 'N/A', courseNumber: '000', sectionNumber: '000',
@@ -87,6 +87,7 @@ function CoursesTable() {
       <TextField
         label='Search by Course'
         onChange={(event) => searchCourses(event.target.value)}
+        id='searchCourses'
       />
       <Table data-testid="course_table" sx={{minWidth: 500}}>
         <TableHead>
@@ -106,7 +107,8 @@ function CoursesTable() {
                 <Tooltip title="Edit Course">
                   <div onClick={() => editThisCourse(row.id, row.name,
                       row.department,
-                      row.number, row.section, row.semester)}>
+                      row.number, row.section, row.semester)}
+                  id={`row${row.id}`}>
                     <IconButton>
                       <EditIcon />
                     </IconButton>
@@ -135,20 +137,26 @@ export default function FacultyDash() {
   };
 
   useEffect(() => {
-    async function getSessions(games) {
-      for (const game of games) {
-        const resp = await gameSessionService.getSessions(game.id).catch((error) => {
-          alertService.alert({severity: alertSeverity.error, message: error});
-        });
-        setSessions((oldSessions) => [...oldSessions, ...resp.data]);
-      }
+    async function getGames() {
+      gameService.getGames().then((resp) => {
+        const games = [...resp.data];
+        getSessions(games);
+      })
+          .catch((error) => {
+            alertService.alert({severity: alertSeverity.error, message: error});
+          });
     }
 
-    async function getGames() {
-      const resp = await gameService.getGames().catch((error) => {
-        alertService.alert({severity: alertSeverity.error, message: error});
-      });
-      getSessions(resp.data);
+    async function getSessions(games) {
+      for (const game of games) {
+        gameSessionService.getSessions(game.id)
+            .then((resp) => {
+              setSessions((oldSessions) => [...oldSessions, ...resp.data]);
+            })
+            .catch((error) => {
+              alertService.alert({severity: alertSeverity.error, message: error});
+            });
+      }
     }
     getGames();
   }, []);

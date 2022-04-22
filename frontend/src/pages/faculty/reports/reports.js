@@ -4,7 +4,7 @@ import AuthenticatedLayout from '../../../components/layout/authenticated.layout
 import Loading from '../../../components/layout/loading';
 import gameService from '../../../services/game';
 import GamesTable from '../../../components/admin/gamesTable';
-import {useNavigate} from 'react-router';
+import {useNavigate} from 'react-router-dom';
 import {alertService, alertSeverity} from '../../../services/alert';
 
 export default function ReportsPage() {

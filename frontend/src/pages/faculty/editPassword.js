@@ -54,7 +54,7 @@ export default function EditPassword() {
         <Typography component="h1" variant="h5">
           Enter your new password
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
+        <Box component="form" id='submit-box' onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
           {errMsg && (
             <Alert severity="error" ref={errRef} data-testid="err-msg">
               {errMsg}

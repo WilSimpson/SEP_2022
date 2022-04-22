@@ -116,7 +116,6 @@ export default function GameSession() {
     let errMessage = '';
     if (error.response.status === 400 && error.response.data == TIMEOUT_ERR_MSG) {
       setTimeoutOpen(true);
-      handleTimeoutOpen();
       GamePlayService.clearInProgressGame();
     } else {
       if (error.response && error.response.data) {
@@ -315,7 +314,7 @@ export default function GameSession() {
         <main>
           <Container maxWidth='xl'>
             {showPasscode ?
-              <Passcode data={{question: '/#', location: 'SC123'}} submitPasscode={submitPasscode}/> :
+              <Passcode id='passcode-screen' data={{question: '/#', location: 'SC123'}} submitPasscode={submitPasscode}/> :
               GamePlay
             }
           </Container>

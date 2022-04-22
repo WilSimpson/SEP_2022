@@ -95,6 +95,7 @@ export default function GameFields(props) {
           id="outlined-required"
           label="Title"
           defaultValue={title}
+          data-testid='title'
           onChange={(e) => setTitle(e.target.value)}
           sx={{width: '100%'}}
         />
@@ -105,6 +106,7 @@ export default function GameFields(props) {
         <Switch
           label="Active"
           checked={active}
+          data-testid='active'
           onChange={() => setActive(!active)}
         />
       </Grid>
@@ -115,6 +117,7 @@ export default function GameFields(props) {
           id="outlined-required"
           label="Code"
           defaultValue={code}
+          data-testid='code'
           inputProps={{maxLength: 6}}
           onChange={(e) => setCode(e.target.value)}
           sx={{width: '100%'}}
@@ -127,6 +130,7 @@ export default function GameFields(props) {
           required
           id="outlined-multiline-flexible"
           label="Questions JSON"
+          data-testid='questionJSON'
           defaultValue={questionsJSON}
           onChange={(e) => setQuestonsJSON(e.target.value)}
           sx={{width: '100%'}}
@@ -140,6 +144,7 @@ export default function GameFields(props) {
           required
           id="outlined-multiline-flexible"
           label="Options JSON"
+          data-testid='optionsJSON'
           defaultValue={optionsJSON}
           onChange={(e) => setOptionsJSON(e.target.value)}
           sx={{width: '100%'}}

@@ -107,6 +107,7 @@ export const inProgressGamePasscodeRequired = {
       chance: false,
       chance_game: 'NO_GAME',
       game: '1',
+      help: [],
     },
     team_id: 1,
     game: {
@@ -118,6 +119,7 @@ export const inProgressGamePasscodeRequired = {
           chance: false,
           chance_game: 'NO_GAME',
           game: '1',
+          help: [],
         },
         {
           id: 2,
@@ -126,6 +128,7 @@ export const inProgressGamePasscodeRequired = {
           chance: true,
           chance_game: 'NO_GAME',
           game: '1',
+          help: [],
         },
       ],
     },
