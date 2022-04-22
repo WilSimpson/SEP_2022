@@ -30,4 +30,4 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         working-directory: ./frontend
-        test-script: npm test -- --coverage --outputFile=report.json --watchAll=false
+        # test-script: npm test -- --coverage --outputFile=report.json --watchAll=false
