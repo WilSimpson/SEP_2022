@@ -33,7 +33,7 @@ describe('GameSessionService', () => {
         courseID: 1,
         isGuest: false,
       };
-      let spy = jest.spyOn(axios, 'post');
+      let spy = jest.spyOn(axios, 'post').mockImplementation();
       GameSessionService.createGameSession(
         1,
         1,
@@ -47,7 +47,7 @@ describe('GameSessionService', () => {
   });
   describe('getReport', () => {
     it ('should make GET request', () => {
-      let spy = jest.spyOn(axios, 'get');
+      let spy = jest.spyOn(axios, 'get').mockImplementation();
       GameSessionService.getReport(1, 1, true);
       expect(spy).toHaveBeenCalledWith(
         `${API_URL}/games/1/sessions/1/report/`,

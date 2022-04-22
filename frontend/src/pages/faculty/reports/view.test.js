@@ -78,12 +78,14 @@ describe('<ViewReportPage />', () => {
       const err = new Error('test error');
       MockGameSessionService.getSessions.mockRejectedValue(err);
       const spy = jest.spyOn(alertService, 'alert');
+      wrapper = mount(
+        <BrowserRouter>
+          <ViewReportPage />
+        </BrowserRouter>,
+      );
       await act(async () => {
-          wrapper = mount(
-            <BrowserRouter>
-              <ViewReportPage />
-            </BrowserRouter>,
-          );
+          await Promise.resolve(wrapper)
+          wrapper.update();
       });
 
       expect(spy).toBeCalledTimes(1);
@@ -91,34 +93,35 @@ describe('<ViewReportPage />', () => {
   });
 
   describe('getReport', () => {
-    let promise;
     beforeEach(async () => {
       MockGameSessionService.getSessions.mockResolvedValue(respWids);
-      MockGameSessionService.getReport.mockResolvedValue(respWids);
-      await act(async () => {
-        wrapper = mount(
-          <BrowserRouter>
-            <ViewReportPage />
-          </BrowserRouter>,
-        );
-      });
-      promise = Promise.resolve();
+      // MockGameSessionService.getReport.mockResolvedValue(respWids);
     });
+    
     it('should initially call gameSessionService getReport', async () => {
-      await act(() => promise);
+      wrapper = mount(
+        <BrowserRouter>
+          <ViewReportPage />
+        </BrowserRouter>,
+      );
+      await act(async () => {
+          await Promise.resolve(wrapper)
+          wrapper.update();
+      });
       expect(MockGameSessionService.getReport).toHaveBeenCalled();
     });
     it('should call alert service on invalid getReport call', async () => {
       MockGameSessionService.getReport.mockRejectedValue({message: 'error happend'});
       let alertSpy = jest.spyOn(alertService, 'alert');
+      wrapper = mount(
+        <BrowserRouter>
+          <ViewReportPage />
+        </BrowserRouter>,
+      );
       await act(async () => {
-        wrapper = mount(
-          <BrowserRouter>
-            <ViewReportPage />
-          </BrowserRouter>,
-        );
+          await Promise.resolve(wrapper)
+          wrapper.update();
       });
-      await act(() => promise);
       expect(alertSpy).toHaveBeenCalled();
     });
   });
