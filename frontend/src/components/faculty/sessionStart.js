@@ -12,11 +12,11 @@ import courseService from '../../services/courses';
 
 export default function SessionStart(props) {
   const creatorId = AuthService.currentUser().id;
-  const [notes, setNotes] = React.useState(null);
-  const [timeout, setTimeout] = React.useState(null);
-  const [gameId, setGameId] = React.useState(null);
-  const [isGuest, setIsGuest] = React.useState(false);
-  const [courseID, setCourseID] = React.useState(null);
+  const [notes, setNotes] = React.useState('');
+  const [timeout, setTimeout] = React.useState('');
+  const [gameId, setGameId] = React.useState('');
+  const [isGuest, setIsGuest] = React.useState('');
+  const [courseID, setCourseID] = React.useState('');
   const [courses, setCourses] = React.useState(sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))) : []);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function SessionStart(props) {
           required
           id="outlined-required"
           label="Game ID"
-          defaultValue={gameId}
+          value={gameId}
           onChange={(e) => setGameId(e.target.value)}
         />
       </Grid>
@@ -51,7 +51,7 @@ export default function SessionStart(props) {
           required
           id="outlined-required"
           label="Timeout (minutes)"
-          defaultValue={timeout}
+          value={timeout}
           onChange={(e) => setTimeout(e.target.value)}
         />
       </Grid>
@@ -69,7 +69,7 @@ export default function SessionStart(props) {
           required
           id="outlined-multiline-flexible"
           label="Additional Notes"
-          defaultValue={notes}
+          value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={10}
         />

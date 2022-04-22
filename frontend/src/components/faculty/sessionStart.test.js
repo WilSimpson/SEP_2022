@@ -40,7 +40,7 @@ describe('<SessionStart />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Game ID');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(null);
+      expect(input.props().value).toEqual('');
     });
 
     it('should have an empty timeout field', () => {
@@ -48,7 +48,7 @@ describe('<SessionStart />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Timeout (minutes)');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(null);
+      expect(input.props().value).toEqual('');
     });
 
     it('should have an empty additional notes field', () => {
@@ -56,7 +56,7 @@ describe('<SessionStart />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Additional Notes');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(null);
+      expect(input.props().value).toEqual('');
     });
 
     it('should have a cancel button', () => {

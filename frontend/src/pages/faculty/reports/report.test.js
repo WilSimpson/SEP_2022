@@ -34,10 +34,10 @@ describe('<ReportPage />', () => {
   let wrapper;
   const gameId = 1;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const resp = {data: []};
     axios.get.mockResolvedValue(resp);
-    await act(async () => {
+    act(async () => {
         wrapper = mount(
           <MemoryRouter initialEntries={[`/report/${gameId}`]}>
             <Routes>
