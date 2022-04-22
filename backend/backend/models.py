@@ -129,6 +129,15 @@ class Option(models.Model):
     created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
 
+class Course(models.Model):        
+    name       = models.TextField()
+    section        = models.CharField(max_length=32)
+    department    = models.CharField(max_length=32)
+    number      = models.IntegerField()
+    semester    = models.CharField(max_length=32, default="No Semester Set")
+    active = models.BooleanField(default=True)
+    userId = models.IntegerField()
+
 class GameSession(models.Model):
     creator_id = models.IntegerField()
     game = models.ForeignKey(Game, on_delete= models.CASCADE)
@@ -165,15 +174,6 @@ class GameSessionAnswer(models.Model):
     passcode_entered = models.BooleanField(default=False)
     created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
-    
-class Course(models.Model):        
-    name       = models.TextField()
-    section        = models.CharField(max_length=32)
-    department    = models.CharField(max_length=32)
-    number      = models.IntegerField()
-    semester    = models.CharField(max_length=32, default="No Semester Set")
-    active = models.BooleanField(default=True)
-    userId = models.IntegerField()
 
 class ContextHelp(models.Model):
     title = models.CharField(max_length=255)
