@@ -10,10 +10,12 @@ export default function GameFields(props) {
   const [active, setActive] = React.useState(
     isEditing ? props.game.active : true,
   );
-  const [code, setCode] = React.useState(isEditing ? props.game.code : null);
+
+  const [code, setCode] = React.useState(isEditing ? props.game.code : '');
   const [questionsJSON, setQuestonsJSON] = React.useState(
     isEditing ? JSON.stringify(props.game.questions) : '[]',
   );
+
   const [optionsJSON, setOptionsJSON] = React.useState(
     isEditing ? JSON.stringify(props.game.options) : '[]',
   );
@@ -24,64 +26,41 @@ export default function GameFields(props) {
 
   const editDisplay = isEditing ? {} : {display: 'none'};
 
-
   const handleFileUpload = async (event) => {
-    const promise = new Promise((resolve, reject) => {
-      console.log('promise');
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const content = JSON.parse(e.target.result);
-          resolve(content);
-        } catch (error) {
-          reject(new Error('Invalid file format'));
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = JSON.parse(e.target.result);
+        if (content['title'] == null) {
+          alertService.error('No title');
+          return;
         }
-      };
 
-      reader.onerror = reject;
-      console.log('loading file:', event.target.files[0]);
-      reader.readAsText(event.target.files[0]);
-    });
+        if (content['code'] == null) {
+          alertService.error('No code');
+          return;
+        }
 
-    await promise.then((content) => {
-      if (content['title'] == null) {
-        alertService.error('No title');
-        console.log('no title');
-        return;
+        if (content['options'] == null) {
+          alertService.error('No options');
+          return;
+        }
+
+        if (content['questions'] == null) {
+          alertService.error('No questions');
+          return;
+        }
+
+        setTitle(content['title']);
+        setCode(content['code']);
+        setQuestonsJSON(JSON.stringify(content['questions']));
+        setOptionsJSON(JSON.stringify(content['options']));
+      } catch (error) {
+        alertService.error('Invalid file format');
       }
+    };
 
-      if (content['code'] == null) {
-        alertService.error('No code');
-        console.log('no code');
-        return;
-      }
-
-      if (content['options'] == null) {
-        alertService.error('No options');
-        console.log('no options');
-        return;
-      }
-
-      if (content['questions'] == null) {
-        alertService.error('No questions');
-        console.log('no questions');
-        return;
-      }
-
-      updateFromFile(content);
-    }, (error) => {
-      alertService.error(error.message);
-      console.log('error:', error);
-    });
-  };
-
-  const updateFromFile = (content) => {
-    setTitle(content['title']);
-    setCode(content['code']);
-    setQuestonsJSON(content['questions']);
-    setOptionsJSON(content['options']);
-    setTitle('testing');
-    console.log('set states');
+    reader.readAsText(event.target.files[0]);
   };
 
   return (
@@ -94,7 +73,7 @@ export default function GameFields(props) {
           required
           id="outlined-required"
           label="Title"
-          defaultValue={title}
+          value={title}
           data-testid='title'
           onChange={(e) => setTitle(e.target.value)}
           sx={{width: '100%'}}
@@ -116,7 +95,7 @@ export default function GameFields(props) {
           required
           id="outlined-required"
           label="Code"
-          defaultValue={code}
+          value={code}
           data-testid='code'
           inputProps={{maxLength: 6}}
           onChange={(e) => setCode(e.target.value)}
@@ -131,7 +110,7 @@ export default function GameFields(props) {
           id="outlined-multiline-flexible"
           label="Questions JSON"
           data-testid='questionJSON'
-          defaultValue={questionsJSON}
+          value={questionsJSON}
           onChange={(e) => setQuestonsJSON(e.target.value)}
           sx={{width: '100%'}}
           rows={10}
@@ -145,7 +124,7 @@ export default function GameFields(props) {
           id="outlined-multiline-flexible"
           label="Options JSON"
           data-testid='optionsJSON'
-          defaultValue={optionsJSON}
+          value={optionsJSON}
           onChange={(e) => setOptionsJSON(e.target.value)}
           sx={{width: '100%'}}
           rows={10}

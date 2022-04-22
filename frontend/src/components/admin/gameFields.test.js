@@ -174,4 +174,10 @@ describe('<GameFields />', () => {
     input.simulate('click');
     expect(myFunc).toHaveBeenCalled();
   });
+
+  describe('importing a file', () => {
+    it('should work on valid files', () => {
+      
+    });
+  });
 });
