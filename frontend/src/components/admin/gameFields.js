@@ -12,7 +12,7 @@ export default function GameFields(props) {
   );
 
   const [code, setCode] = React.useState(isEditing ? props.game.code : '');
-  const [questionsJSON, setQuestonsJSON] = React.useState(
+  const [questionsJSON, setQuestionsJSON] = React.useState(
     isEditing ? JSON.stringify(props.game.questions) : '[]',
   );
 
@@ -53,7 +53,7 @@ export default function GameFields(props) {
 
         setTitle(content['title']);
         setCode(content['code']);
-        setQuestonsJSON(JSON.stringify(content['questions']));
+        setQuestionsJSON(JSON.stringify(content['questions']));
         setOptionsJSON(JSON.stringify(content['options']));
       } catch (error) {
         alertService.error('Invalid file format');
@@ -111,7 +111,7 @@ export default function GameFields(props) {
           label="Questions JSON"
           data-testid='questionJSON'
           value={questionsJSON}
-          onChange={(e) => setQuestonsJSON(e.target.value)}
+          onChange={(e) => setQuestionsJSON(e.target.value)}
           sx={{width: '100%'}}
           rows={10}
         />
@@ -139,6 +139,7 @@ export default function GameFields(props) {
         >
           Import from File
           <input
+            data-testid='file-upload'
             type='file'
             onChange={handleFileUpload}
             hidden
