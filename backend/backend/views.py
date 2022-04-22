@@ -218,10 +218,11 @@ def create_team(request):
         new_team = Team.objects.create(
                 game_session = session, 
                 game_mode = mode,
-                guest = True if request.data['first_time'] == "yes" else False,
+                guest = session.is_guest,
                 size = request.data['size'],
                 first_time = True if request.data['first_time'] == "yes" else False,
                 completed = False)
+        print(new_team.guest)
         return Response({'id':new_team.id}, status=200)
     except Exception as e:
         return HttpResponseServerError('A team could not be created. Please try again later.')
@@ -635,7 +636,9 @@ def start_session(request):
             "id": (game id),
             "creator_id": (id),
             "notes": "",
-            "timeout": (integer minutes)
+            "timeout": (integer minutes),
+            "isGuest": boolean,
+            "courseID": course_id or NULL,
         }
         
     **Example response**:
@@ -664,6 +667,8 @@ def start_session(request):
         req_creator_id = request.data['creator_id']
         req_notes = request.data['notes']
         req_timeout = int(request.data['timeout'])
+        req_is_guest = bool(request.data['isGuest'])
+        req_course_id = int(request.data['courseID']) if request.data['courseID'] else request.data['courseID']
         sessions = GameSession.objects.all()
         new_session = GameSession.objects.create(
             creator_id  = req_creator_id,
@@ -672,10 +677,13 @@ def start_session(request):
             end_time = None,
             notes = req_notes,
             timeout = req_timeout,
+            is_guest = req_is_guest,
+            course = Course.objects.get(id=req_course_id) if req_course_id else None,
             code = unique_random(0, 999999, [session.code for session in sessions])
         )
         return Response(data={'id':new_session.id, 'code':new_session.code}, status=200)
-    except Exception:
+    except Exception as e:
+        print(e)
         return HttpResponseServerError('There was a problem creating this session.')
 
 class CourseViewSet(ModelViewSet):

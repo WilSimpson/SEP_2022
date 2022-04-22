@@ -11,8 +11,6 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
 import {Typography} from '@mui/material';
@@ -24,10 +22,9 @@ import GameLayout from '../../components/layout/game.layout';
 export default function StartingSurvey() {
   const defaultValues = {
     name: '',
-    size: 1,
+    size: '',
     first: '',
     type: '',
-    guest: '',
   };
 
   // a null gamecode will not allow page to load
@@ -43,15 +40,18 @@ export default function StartingSurvey() {
       ...formValues,
       [name]: value,
     });
+  };
+
+  React.useEffect(() => {
     let disableSubmit = false;
     Object.entries(formValues).map(([key, value]) => {
-      if (value === defaultValues[key] && key !== 'size') {
+      if (value === defaultValues[key]) {
         disableSubmit = true;
       }
       setSubmitDisabled(disableSubmit);
       return true;
     });
-  };
+  }, [formValues]);
 
   const initialQuestion = (game) => {
     const destinationQuestions = game.options.map(
@@ -199,53 +199,36 @@ export default function StartingSurvey() {
                   <Grid item>
                     <Box sx={{pb: 2}}>
                       <FormControl>
-                        <FormLabel>Are you a guest in this building?</FormLabel>
+                        <FormLabel>
+                          Which version of the game would you like to play?
+                        </FormLabel>
                         <RadioGroup
-                          name="guest"
-                          defaultValue="yes"
-                          value={formValues.guest}
+                          name="type"
+                          defaultValue="Walking"
+                          value={formValues.type}
                           onChange={handleInputChange}
                           row
                         >
                           <FormControlLabel
-                            key="yes"
-                            value="yes"
+                            key="Walking"
+                            value="Walking"
                             control={<Radio size="small" />}
-                            label="Yes"
+                            label="Walking"
                             selected
                           />
                           <FormControlLabel
-                            key="no"
-                            value="no"
+                            key="Limited Walking"
+                            value="Limited Walking"
                             control={<Radio size="small" />}
-                            label="No"
+                            label="Limited Walking"
+                          />
+                          <FormControlLabel
+                            key="No Walking"
+                            value="No Walking"
+                            control={<Radio size="small" />}
+                            label="No Walking"
                           />
                         </RadioGroup>
-                      </FormControl>
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Box sx={{pb: 2}}>
-                      <FormControl>
-                        <FormLabel>
-                          Which version of the game would you like to play?
-                        </FormLabel>
-                        <Select
-                          name="type"
-                          value={formValues.type}
-                          onChange={handleInputChange}
-                          required
-                        >
-                          <MenuItem key="Walking" value="Walking">
-                            Walking
-                          </MenuItem>
-                          <MenuItem key="Limited Walking" value="Limited Walking">
-                            Limited Walking
-                          </MenuItem>
-                          <MenuItem key="No Walking" value="No Walking">
-                            No Walking
-                          </MenuItem>
-                        </Select>
                       </FormControl>
                     </Box>
                   </Grid>
