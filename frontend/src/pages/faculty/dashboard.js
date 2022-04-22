@@ -37,6 +37,7 @@ function CoursesTable() {
         (response) => {
           setRows(response.data);
           setFilteredRows(response.data);
+          sessionStorage.setItem('courses', JSON.stringify(response.data));
           setLoading(false);
         }).catch((error) => {
       console.log(`There was an error ${error}`);
@@ -179,7 +180,7 @@ export default function FacultyDash() {
                   Total Courses
                 </Typography>
                 <Typography component="p" variant="h4">
-                  1
+                  {sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).length : 0}
                 </Typography>
                 <div>
                   <Button color="secondary" variant="contained"

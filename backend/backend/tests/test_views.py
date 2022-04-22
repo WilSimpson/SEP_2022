@@ -597,13 +597,16 @@ class SessionViewTestCase(TestCase):
     def setUp(self):
         self.game = Game.objects.create(title='test', creator_id=999, code=999999, active=True)
         self.inactive_game = Game.objects.create(title='testInactive', creator_id=999, code=999998, active=False)
+        self.course = Course.objects.create(name = 'test', section = '4550', department = 'ECE', number = 1, semester = 'Spring 2022', userId =1)
 
     def test_valid_session_start(self):
         data = {
             'creator_id': 1,
             'id': self.game.id,
             'notes': "This is a test note",
-            'timeout': 5
+            'timeout': 5,
+            'courseID': self.course.id,
+            'isGuest': False
         }
 
         resp = self.client.post('/api/games/startSession/', data=data)
