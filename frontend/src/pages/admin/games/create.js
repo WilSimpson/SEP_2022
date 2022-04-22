@@ -49,7 +49,7 @@ export default function CreateGamePage() {
     <AuthenticatedLayout>
       <Container maxWidth="lg">
         <Grid container spacing={3}>
-          <Grid item xs={12} md={12} lg={12} component={Paper}>
+          <Grid item xs={12} component={Paper} sx={{p: '1.5rem'}}>
             <GameFields onCancel={handleCancel} onSubmit={handleSubmit} />
           </Grid>
         </Grid>

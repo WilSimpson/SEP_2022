@@ -31,14 +31,18 @@ describe('GameSessionService', () => {
         id: 1,
         isGuest: undefined,
         notes: 'this is a note',
-        timeout: 19
+        timeout: 19,
+        courseID: 1,
+        isGuest: false,
       };
       let spy = jest.spyOn(axios, 'post');
       GameSessionService.createGameSession(
         1,
         1,
         'this is a note',
-        19
+        19,
+        1,
+        false,
       );
       expect(spy).toHaveBeenCalled();
     });

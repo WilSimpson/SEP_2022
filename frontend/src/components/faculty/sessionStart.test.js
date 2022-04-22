@@ -4,6 +4,7 @@ import SessionStart from './sessionStart';
 import {shallow} from 'enzyme';
 import {User} from '../../models/user';
 import {Button, TextField} from '@mui/material';
+import { act } from 'react-dom/test-utils';
 
 const user = new User(
     'email@example.com',
@@ -27,8 +28,12 @@ describe('<SessionStart />', () => {
   let comp = null;
 
   describe('starting a game session', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       comp = shallow(<SessionStart />);
+      await act(async () => {
+          await Promise.resolve(comp);
+          comp.update();
+      });
     });
 
     it('Should have correct page title', () => {
@@ -40,7 +45,7 @@ describe('<SessionStart />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Game ID');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(null);
+      expect(input.props().value).toEqual('');
     });
 
     it('should have an empty timeout field', () => {
@@ -48,7 +53,7 @@ describe('<SessionStart />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Timeout (minutes)');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(null);
+      expect(input.props().value).toEqual('');
     });
 
     it('should have an empty additional notes field', () => {
@@ -56,7 +61,7 @@ describe('<SessionStart />', () => {
           .find(TextField)
           .filterWhere((i) => i.props().label == 'Additional Notes');
       expect(input.getElement()).not.toBeNull();
-      expect(input.props().defaultValue).toEqual(null);
+      expect(input.props().value).toEqual('');
     });
 
     it('should have a cancel button', () => {
