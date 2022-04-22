@@ -54,7 +54,9 @@ class AuthService {
 
   currentUser() {
     const user = JSON.parse(localStorage.getItem('user'));
-    user.__proto__ = User.prototype;
+    if (user) {
+      user.__proto__ = User.prototype;
+    }
     return user;
   }
 
