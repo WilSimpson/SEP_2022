@@ -8,6 +8,7 @@ import {
   Autocomplete,
 } from '@mui/material';
 import AuthService from '../../services/auth';
+import alertService from '../../services/alert';
 import courseService from '../../services/courses';
 
 export default function SessionStart(props) {
@@ -17,7 +18,7 @@ export default function SessionStart(props) {
   const [gameId, setGameId] = React.useState('');
   const [isGuest, setIsGuest] = React.useState('');
   const [courseID, setCourseID] = React.useState('');
-  const [courses, setCourses] = React.useState(sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))) : []);
+  const [courses, setCourses] = React.useState([]);
 
   useEffect(() => {
     if (!sessionStorage.getItem('courses')) {
@@ -26,9 +27,10 @@ export default function SessionStart(props) {
             sessionStorage.setItem('courses', JSON.stringify(response.data));
             setCourses(response.data.map((course) => ({label: course.name, id: course.id})));
           }).catch((error) => {
-        console.log(`There was an error ${error}`);
-        setCourses([]);
-      });
+            alertService.error(error.message);
+          });
+    } else {
+      setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))))
     }
   }, []);
 

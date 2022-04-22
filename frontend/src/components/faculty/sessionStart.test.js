@@ -29,6 +29,10 @@ describe('<SessionStart />', () => {
   describe('starting a game session', () => {
     beforeEach(() => {
       comp = shallow(<SessionStart />);
+      await act(async () => {
+          await Promise.resolve(comp);
+          comp.update();
+      });
     });
 
     it('Should have correct page title', () => {
