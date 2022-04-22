@@ -17,12 +17,14 @@ class GameSessionService {
     return axios.get(`${API_URL}/games/${id}/sessions/`);
   }
 
-  createGameSession(creatorId, gameId, notes, timeout) {
+  createGameSession(creatorId, gameId, notes, timeout, courseID, isGuest) {
     return axios.post(API_URL + '/games/startSession/', {
       creator_id: parseInt(creatorId),
       id: parseInt(gameId),
       notes: notes,
       timeout: parseInt(timeout),
+      courseID: parseInt(courseID),
+      isGuest: isGuest,
     });
   }
 

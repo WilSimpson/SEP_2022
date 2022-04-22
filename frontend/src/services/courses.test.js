@@ -4,6 +4,7 @@ import CourseService from './courses';
 import axios from 'axios';
 import {API_URL} from '../store/store';
 
+
 jest.mock('axios');
 
 describe('Course Service', () => {

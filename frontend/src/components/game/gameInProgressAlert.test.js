@@ -8,6 +8,7 @@ import GameInProgressAlert from './gameInProgressAlert';
 import {mount} from 'enzyme';
 import MockGamePlayService from '../../services/gameplay';
 
+
 let container = null;
 
 const mockedNavigate = jest.fn();

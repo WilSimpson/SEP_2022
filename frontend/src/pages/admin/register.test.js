@@ -2,11 +2,12 @@ import React from 'react';
 import '../../setupTests';
 import {shallow, mount} from 'enzyme';
 import Register from './register';
-import '@testing-library/jest-dom/extend-expect';
+
 import {render, fireEvent, act} from '@testing-library/react';
 import AuthService from '../../services/auth';
 import { BrowserRouter } from 'react-router-dom';
 import { Alert } from '@mui/material';
+
 
 const mockedNavigate = jest.fn();
 

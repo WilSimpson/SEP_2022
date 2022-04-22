@@ -26,8 +26,7 @@ export default function EditGamePage(props) {
                 setGame(game);
                 setLoading(false);
               },
-          )
-          .catch(() => {
+          ).catch(() => {
             notFound();
           });
     }

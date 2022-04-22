@@ -11,6 +11,7 @@ import GamePlayTimeout from './gamePlayTimeout';
 import {alertService} from '../../services/alert';
 import Passcode from '../../pages/game/passcode';
 
+
 const TEAM_ID = 1;
 
 const mockedNavigate = jest.fn();

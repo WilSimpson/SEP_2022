@@ -4,6 +4,7 @@ import authService from '../../services/auth';
 import Logout from './logout';
 import {render} from 'enzyme';
 
+
 jest.mock('../../services/auth')
 
 describe('<Logout />', () => {

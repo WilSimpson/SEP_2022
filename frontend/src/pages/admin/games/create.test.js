@@ -9,6 +9,7 @@ import {act} from 'react-dom/test-utils';
 import { alertService } from '../../../services/alert';
 import '../../../setupTests';
 
+
 const mockedNavigate = jest.fn();
 jest.mock('../../../services/auth');
 jest.mock('../../../models/user');

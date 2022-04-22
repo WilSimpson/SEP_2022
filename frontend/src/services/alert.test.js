@@ -3,6 +3,7 @@ import '../setupTests';
 import {Subject} from 'rxjs';
 import {alertService, alertSeverity} from './alert';
 
+
 jest.mock('rxjs');
 
 describe('Alert Service', () => {

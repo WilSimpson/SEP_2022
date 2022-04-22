@@ -49,7 +49,7 @@ export default function ForgotPassword() {
         <Typography component="h1" variant="h5">
           Enter your email to send a reset link
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
+        <Box component="form" id='submit-box' onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
           {errMsg && (
             <Alert severity="error" ref={errRef} data-testid="err-msg">
               {errMsg}

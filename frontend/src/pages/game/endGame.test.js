@@ -4,6 +4,7 @@ import { mount } from "enzyme";
 import EndGamePlay from "../../components/game/endGamePlay";
 import EndGame from "./endGame";
 
+
 const mockedNavigate = jest.fn();
 
 jest.mock("react-router-dom", () => ({

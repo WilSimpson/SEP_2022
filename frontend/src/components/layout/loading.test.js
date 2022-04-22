@@ -5,6 +5,7 @@ import {CircularProgress} from '@mui/material';
 import Loading from './loading';
 import AdminDash from '../../pages/admin/dashboard';
 
+
 describe('<Loading />', () => {
   it ('should display Circular Progress when loading true', () => {
     const wrapper = shallow(<Loading loading={true} />);

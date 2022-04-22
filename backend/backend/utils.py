@@ -49,9 +49,8 @@ def unique_random(low, high, exclude):
     '''Low -- lower bound
     High -- upper bound
     Exclude -- A list of numbers which should not be returned'''
-    exclude = set(exclude)
     rand_int = randint(low,high)
-    return unique_random() if rand_int in exclude else rand_int
+    return unique_random(low, high, exclude) if rand_int in exclude else rand_int
 
  
 def get_chance_game(question):
