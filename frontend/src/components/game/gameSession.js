@@ -279,7 +279,7 @@ export default function GameSession() {
               sx={{marginTop: 5}}
               data-testid={'option'+ String(option.id)}
               onClick={() => setSelectedOption(option)}
-              disabled={currentQuestion.chance ? true : false}>
+              disabled={currentQuestion.chance_game != 'NO_GAME' ? true : false}>
               {option.value}
             </Button>
           ))}
