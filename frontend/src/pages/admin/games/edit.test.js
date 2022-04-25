@@ -37,6 +37,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  jest.clearAllMocks();
   localStorage.clear();
 });
 

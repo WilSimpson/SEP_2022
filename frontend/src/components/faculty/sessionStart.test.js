@@ -88,7 +88,9 @@ describe('<SessionStart />', () => {
         .find(Button)
         .filterWhere((i) => i.prop('children') == 'Submit');
     expect(input.getElement()).not.toBeNull();
-    input.simulate('click');
+    act(() => {
+      input.simulate('click');
+    })
     expect(myFunc).toHaveBeenCalled();
   });
 
@@ -99,7 +101,9 @@ describe('<SessionStart />', () => {
         .find(Button)
         .filterWhere((i) => i.prop('children') == 'Cancel');
     expect(input.getElement()).not.toBeNull();
-    input.simulate('click');
+    act(() => {
+      input.simulate('click');
+    })
     expect(myFunc).toHaveBeenCalled();
   });
 });

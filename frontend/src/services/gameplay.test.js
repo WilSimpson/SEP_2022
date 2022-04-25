@@ -322,7 +322,7 @@ describe('Game Play Service', () => {
     });
     describe('getQuestionContext', () => {
       it ('should make GET request', () => {
-        let spy = jest.spyOn(axios, 'get');
+        let spy = jest.spyOn(axios, 'get').mockImplementation();
         gamePlayService.getQuestionContext(1);
         expect(spy).toHaveBeenCalledWith(`${API_URL}/contextHelp/1/by_question`); 
       });

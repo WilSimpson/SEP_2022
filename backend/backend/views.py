@@ -290,7 +290,7 @@ class GameViewSet(ViewSet):
             return Response(data=response_data)
         except Exception as e:
             return HttpResponse(status=501)
-    
+
     def create(self, request):
         '''
         Creates a ```Game``` and all of the ```Question``` and ```Option``` objects that correspond with it. It uses "labels" to associate a ```Question``` with an ```Option```.
@@ -483,6 +483,52 @@ class GameViewSet(ViewSet):
         except Exception as e:
             return HttpResponse(status=501)
 
+class SessionViewSet(ViewSet):
+    def list(self, request):
+        '''
+        Responds with all of the active and inactive ``GameSession`` objects.
+
+        **Example request**:
+
+        .. code-block:: http
+
+            GET  /api/gameSession/
+
+        **Example response**:
+
+        .. code-block:: json
+
+            [
+                {
+                    "creator_id": 1,
+                    "game": 1,
+                    "start_time": "2022-05-01",
+                    "end_time": "2022-05-01",
+                    "notes": "Hey Vsauce, Michael here...Where are your fingers?",
+                    "timeout": 45,
+                    "code": 123456,
+                    "active": true,
+                }
+            ]
+
+        **Response Codes**:
+
+        .. code-block:: http
+
+            200 : Success
+            501 : Fail
+        '''
+        try:
+            all_sessions = GameSession.objects.all()
+            response_data = []
+            for session in all_sessions:
+                session_data = get_session_data(session.id)
+                response_data.append(session_data)
+            return Response(data=response_data)
+        except Exception as e:
+            return HttpResponse(status=501)
+
+
 class GameSessionAnswerViewSet(ViewSet):
     def create(self, request):
         '''
@@ -582,7 +628,13 @@ class GameSessionAnswerViewSet(ViewSet):
             return Response()
         except Exception as e:
             return HttpResponse(status=500)
-        
+
+@api_view(['GET'])
+def get_all_game_sessions(request):
+    sessions = GameSession.objects.all()
+    serializer = GameSessionSerializer(sessions, many=True)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 def toggle_active(request):
     '''
@@ -685,6 +737,57 @@ def start_session(request):
     except Exception as e:
         print(e)
         return HttpResponseServerError('There was a problem creating this session.')
+
+
+
+@api_view(['PUT'])
+def end_session(request, id):
+    '''
+    Ends a ```GameSession``` so a game can no longer be played by users.
+
+    **Example request**:
+
+    .. code-block:: http
+
+        POST  /api/games/endSession/${id}/
+
+    .. code-block:: json
+
+        {
+            "id": (game session id)
+        }
+
+    **Response Codes**:
+
+    .. code-block:: http
+
+            200 : Success
+            500 : Fail
+    '''
+    try:
+        try:
+            session = GameSession.objects.get(id=id)
+        except Exception as e:
+            return HttpResponseServerError('This game session does not exist.')
+        session.active = not session.active
+        session.save()
+        return HttpResponse(status=200)
+    except Exception as e:
+        return HttpResponseServerError('Could not end Game Session')
+
+
+@api_view(['GET'])
+def get_user_sessions(request, creator_id):
+    '''
+    Gets all active game sessions using a creator_id
+    '''
+    try:
+        sessions = GameSession.objects.filter(creator_id=int(creator_id)).filter(active=bool(True))
+    except Exception:
+        return HttpResponseBadRequest(creator_id)
+
+    serializer = GameSessionSerializer(sessions, many=True)
+    return Response(serializer.data)
 
 class CourseViewSet(ModelViewSet):
     '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String, (opt)active: bool}
@@ -871,3 +974,4 @@ def get_game_session_team_report(request, game_id, session_id, team_id):
     answers = GameSessionAnswer.objects.filter(team_id=team.id)
     serializer = AnswersReportSerializer(answers, many=True)
     return Response(serializer.data)
+
