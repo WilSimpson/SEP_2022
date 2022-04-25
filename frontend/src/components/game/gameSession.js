@@ -261,7 +261,7 @@ export default function GameSession() {
           onClose={handleClose}
           hints={hints}
         />
-        { currentQuestion.chance_game == 'SPIN_WHEEL' || currentQuestion.chance_game == 'DRAW_CARD_SUIT' ?
+        { currentQuestion.chance_game == 'SPIN_WHEEL' ?
              <Wheel data={data} key={key}/> : null
         }
         <ButtonGroup
