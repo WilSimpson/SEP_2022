@@ -142,10 +142,9 @@ export default function FacultyDash() {
       gameService.getGames().then((resp) => {
         const games = [...resp.data];
         getSessions(games);
-      })
-          .catch((error) => {
-            alertService.alert({severity: alertSeverity.error, message: error});
-          });
+      }, (error) => {
+        alertService.alert({severity: alertSeverity.error, message: error});
+      });
     }
 
     async function getSessions(games) {
@@ -153,8 +152,7 @@ export default function FacultyDash() {
         gameSessionService.getSessions(game.id)
             .then((resp) => {
               setSessions((oldSessions) => [...oldSessions, ...resp.data]);
-            })
-            .catch((error) => {
+            }, (error) => {
               alertService.alert({severity: alertSeverity.error, message: error});
             });
       }

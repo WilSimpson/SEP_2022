@@ -21,14 +21,14 @@ describe('Game Service', () => {
   });
   describe('getGames()', () => {
     it ('should make GET request', () => {
-      let spy = jest.spyOn(axios, 'get');
+      let spy = jest.spyOn(axios, 'get').mockImplementation();
       GameService.getGames();
       expect(spy).toHaveBeenCalledWith(`${API_URL}/games/`); 
     });
   });
   describe('getGame()', () => {
     it ('should make GET request', () => {
-      let spy = jest.spyOn(axios, 'get');
+      let spy = jest.spyOn(axios, 'get').mockImplementation();
       GameService.getGame(1);
       expect(spy).toHaveBeenCalledWith(`${API_URL}/games/1/`); 
     });

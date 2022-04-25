@@ -89,4 +89,6 @@ describe('<ResponsiveAppBar />', () => {
     let menu = component.find(Menu).filterWhere((i) => i.prop('open') == false).first();
     expect(menu.getElement()).not.toBeNull();
   });
+
+  
 });
