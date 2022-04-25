@@ -74,7 +74,7 @@ export default function ViewReportPage(props: ViewReportPageProps) {
         if (resp && resp.data.length > 0) {
           setReports([...reports, ...resp.data]);
         }
-      }).catch((error) => {
+      }, (error) => {
         alertService.alert({severity: alertSeverity.error, message: error.message});
       }).finally(() => setLoading(lastReport));
     }
@@ -96,7 +96,7 @@ export default function ViewReportPage(props: ViewReportPageProps) {
     } else {
       gameSessionService.getSessions(parseInt(id)).then((resp) => {
         addSessionReports(resp.data.map((s: GameSession) => s.id));
-      }).catch((error) => {
+      }, (error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
       });
     }
