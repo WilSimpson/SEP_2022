@@ -8,7 +8,7 @@ import {
   Autocomplete,
 } from '@mui/material';
 import AuthService from '../../services/auth';
-import alertService from '../../services/alert';
+import {alertService} from '../../services/alert';
 import courseService from '../../services/courses';
 
 export default function SessionStart(props) {
@@ -30,7 +30,7 @@ export default function SessionStart(props) {
             alertService.error(error);
           });
     } else {
-      setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))))
+      setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))));
     }
   }, []);
 
@@ -45,7 +45,11 @@ export default function SessionStart(props) {
           id="outlined-required"
           label="Game ID"
           value={gameId}
-          onChange={(e) => {if (e) { setGameId(e.target.value)}}}
+          onChange={(e) => {
+            if (e) {
+              setGameId(e.target.value);
+            }
+          }}
         />
       </Grid>
       <Grid item xs={12}>
