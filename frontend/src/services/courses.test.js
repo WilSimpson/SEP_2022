@@ -30,14 +30,14 @@ describe('Course Service', () => {
   });
   describe('getCourses()', () => {
     it('should make a GET request', () => {
-      let spy = jest.spyOn(axios, 'get');
+      let spy = jest.spyOn(axios, 'get').mockImplementation();
       CourseService.getCourses();
       expect(spy).toHaveBeenCalledWith(`${API_URL}/courses/`); 
     });
   });
   describe('getMyCourses()', () => {
     it('should make a GET request', () => {
-      let spy = jest.spyOn(axios, 'get');
+      let spy = jest.spyOn(axios, 'get').mockImplementation();
       CourseService.getMyCourses(1);
       expect(spy).toHaveBeenCalledWith(`${API_URL}/courses/`); 
     });

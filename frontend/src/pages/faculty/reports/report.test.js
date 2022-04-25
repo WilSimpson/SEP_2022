@@ -34,19 +34,20 @@ describe('<ReportPage />', () => {
   let wrapper;
   const gameId = 1;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const resp = {data: []};
     axios.get.mockResolvedValue(resp);
-    await act(async () => {
-        wrapper = mount(
-          <MemoryRouter initialEntries={[`/report/${gameId}`]}>
-            <Routes>
-              <Route path='/report/:id' element={<ReportPage />}>
-              </Route>
-            </Routes>
-          </MemoryRouter>
-          ,
-        );
+    wrapper = mount(
+      <MemoryRouter initialEntries={[`/report/${gameId}`]}>
+        <Routes>
+          <Route path='/report/:id' element={<ReportPage />}>
+          </Route>
+        </Routes>
+      </MemoryRouter>);
+
+    act(async () => {
+      await Promise.resolve(wrapper);
+      wrapper.update();
     });
   });
 

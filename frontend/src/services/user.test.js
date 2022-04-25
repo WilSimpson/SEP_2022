@@ -11,7 +11,7 @@ jest.mock('axios');
 describe('User Service', () => {
   describe('getUser()', () => {
     it ('should make a GET request', () => {
-      let spy = jest.spyOn(axios, 'get');
+      let spy = jest.spyOn(axios, 'get').mockImplementation();
       UserService.getUser();
       expect(spy).toHaveBeenCalledWith(`${API_URL}/users/`, {headers: authHeader()})
     });

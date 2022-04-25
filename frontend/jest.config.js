@@ -12,6 +12,7 @@ module.exports = async () => {
     testEnvironment: 'jsdom',
     moduleNameMapper: {
       '\\.(css|less)$': '<rootDir>/src/styleMock.js',
-    }
+    },
+    coverageReporters: ["json", "lcov", "text"]
   };
 };

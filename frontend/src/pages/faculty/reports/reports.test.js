@@ -54,12 +54,14 @@ describe('<ReportsPage />', () => {
     beforeEach(async () => {
       const resp = {data: []};
       axios.get.mockResolvedValue(resp);
+      wrapper = mount(
+        <BrowserRouter>
+          <ReportsPage />
+        </BrowserRouter>,
+      );
       await act(async () => {
-          wrapper = mount(
-            <BrowserRouter>
-              <ReportsPage />
-            </BrowserRouter>,
-          );
+          await Promise.resolve(wrapper);
+          wrapper.update();
       });
     });
   
@@ -81,12 +83,14 @@ describe('<ReportsPage />', () => {
       const err = new Error('test error');
       axios.get.mockRejectedValue(err);
       const spy = jest.spyOn(alertService, 'alert');
+      wrapper = mount(
+        <BrowserRouter>
+          <ReportsPage />
+        </BrowserRouter>,
+      );
       await act(async () => {
-          wrapper = mount(
-            <BrowserRouter>
-              <ReportsPage />
-            </BrowserRouter>,
-          );
+          await Promise.resolve(wrapper);
+          wrapper.update();
       });
 
       expect(spy).toBeCalledTimes(1);
@@ -96,16 +100,15 @@ describe('<ReportsPage />', () => {
   describe('handleGameSelected', () => {
     it('should navigate to reports page', async () => {
       let wrapper;
-      const promise = Promise.resolve();
+      wrapper = mount(
+        <BrowserRouter>
+          <ReportsPage />
+        </BrowserRouter>,
+      );
       await act(async () => {
-        wrapper = mount(
-          <BrowserRouter>
-            <ReportsPage />
-          </BrowserRouter>,
-        );
+          await Promise.resolve(wrapper);
+          wrapper.update();
       });
-      await act(() => promise);
-      wrapper.update();
       act(() => wrapper.find(GamesTable).props().onGameSelected(1));
       expect(mockedNavigate).toHaveBeenCalledWith('/reports/1');
     });
