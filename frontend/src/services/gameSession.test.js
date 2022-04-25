@@ -23,21 +23,25 @@ describe('GameSessionService', () => {
         creator_id: 1,
         id: 1,
         notes: 'this is a note',
-        timeout: 19
+        timeout: 19,
+        courseID: 1,
+        isGuest: false,
       };
-      let spy = jest.spyOn(axios, 'post');
+      let spy = jest.spyOn(axios, 'post').mockImplementation();
       GameSessionService.createGameSession(
         1,
         1,
         'this is a note',
-        19
+        19,
+        1,
+        false,
       );
       expect(spy).toHaveBeenCalled();
     });
   });
   describe('getReport', () => {
     it ('should make GET request', () => {
-      let spy = jest.spyOn(axios, 'get');
+      let spy = jest.spyOn(axios, 'get').mockImplementation();
       GameSessionService.getReport(1, 1, true);
       expect(spy).toHaveBeenCalledWith(
         `${API_URL}/games/1/sessions/1/report/`,

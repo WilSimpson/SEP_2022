@@ -22,6 +22,10 @@ const user = new User(
 
 const mockedNavigate = jest.fn();
 
+const assignMock = jest.fn();
+delete window.location;
+window.location = { assign: assignMock };
+
 jest.mock('../../services/courses');
 jest.mock("react-router-dom", () => ({
   ...(jest.requireActual("react-router-dom")), 
@@ -32,7 +36,8 @@ beforeEach(() => {
   localStorage.setItem('user', JSON.stringify(user));
 });
 afterEach(() => {
-  jest.clearAllMocks();
+  assignMock.mockClear();
+  jest.restoreAllMocks();
   localStorage.clear();
 });
 

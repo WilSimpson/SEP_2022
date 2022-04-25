@@ -21,12 +21,12 @@ const res = [{id: 1, department: 'There was a problem',
   name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
   semester: 'N/A'}];
 
-let game = {
+let game = [{
     id: 1,
     title: "",
     created_at: new Date(),
     active: true,
-  }
+  }]
 let sessions = [
   {
     id:4,
