@@ -31,3 +31,5 @@ jobs:
       with:
         working-directory: ./frontend
         test-script: npm test
+        coverage-file: ./report.json
+        base-coverage-file: ./report.json
