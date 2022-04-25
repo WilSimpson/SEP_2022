@@ -1,11 +1,24 @@
 import axios from 'axios';
-import {gameSessions} from '../helpers/dummyData';
 import {API_URL} from '../store/store';
+// import {gameSessions} from '../helpers/dummyData';
 
 class GameSessionService {
-  getGameSessions() {
+  getGameSessions(gameID) {
     // @TODO: Replace with api calls
-    return gameSessions;
+    return axios.get(API_URL + `/game/${gameID}/gameSessions/`);
+    // return gameSessions;
+  }
+
+  getActiveGameSessions() {
+    return axios.get(API_URL + `/gameSession/`);
+  }
+
+  getMyActiveSessions(facultyId) {
+    return axios.get(`${API_URL}/gameSession/${facultyId}/`);
+  }
+
+  getGameSession(gameID, sessionID) {
+    return axios.get(`${API_URL}/game/${gameID}/gameSessions/${sessionID}/`);
   }
 
   /**
@@ -25,6 +38,12 @@ class GameSessionService {
       timeout: parseInt(timeout),
       courseID: parseInt(courseID),
       isGuest: isGuest,
+    });
+  }
+
+
+  endSession(id) {
+    return axios.put(`${API_URL}/games/endSession/${id}/`, {
     });
   }
 
