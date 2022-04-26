@@ -26,8 +26,7 @@ export default function ForgotPassword() {
                 'There was an error sending the email.',
             );
           }
-        },
-        (error) => {
+        }).catch((error) => {
           if (error.response.status === 401) {
             setErrMsg(error.response.data.detail);
           } else {

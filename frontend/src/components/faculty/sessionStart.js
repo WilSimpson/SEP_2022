@@ -28,7 +28,7 @@ export default function SessionStart(props) {
             setCourses(response.data.map((course) => ({label: course.name, id: course.id})));
           }, (error) => {
             alertService.error(error);
-          });
+          }).catch((error) => alertService.error(error));
     } else {
       setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))))
     }

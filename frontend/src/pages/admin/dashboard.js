@@ -31,10 +31,9 @@ export default function AdminDash() {
         const games = [...resp.data];
         setGames(games);
         getSessions(games);
-      })
-          .catch((error) => {
-            alertService.alert({severity: alertSeverity.error, message: error});
-          });
+      }).catch((error) => {
+        alertService.alert({severity: alertSeverity.error, message: error});
+      });
     }
 
     async function getSessions(games) {
@@ -45,9 +44,9 @@ export default function AdminDash() {
           });
           setSessions((oldSessions) => [...oldSessions, ...filteredSessions]);
         })
-            .catch((error) => {
-              alertService.alert({severity: alertSeverity.error, message: error});
-            });
+        .catch((error) => {
+          alertService.alert({severity: alertSeverity.error, message: error});
+        });
       }
 
       setLoading(false);
@@ -61,10 +60,9 @@ export default function AdminDash() {
         (response) => {
           setSessions([...sessions.filter((s) => s.id != id)]);
           console.log(response.data);
-        }).catch( (error) => {
-      console.log(`There was an error ${error}`);
-      alertService.alert({severity: alertSeverity.error, message: error});
-    });
+        }).catch((error) => {
+          alertService.alert({severity: alertSeverity.error, message: error});
+        });
   };
 
   return (

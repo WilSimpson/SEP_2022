@@ -56,8 +56,7 @@ export default function AddCourse() {
         (response) => {
           const path = `../faculty-dashboard`;
           navigate(path);
-        },
-        (error) => {
+        }).catch((error) => {
           if (error.response && error.response.status === 404) {
             setErr(
                 'There was an unexpected error reaching the server. ' +

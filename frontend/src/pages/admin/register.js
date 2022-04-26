@@ -58,8 +58,7 @@ export default function Register() {
                 `Please try again later.`,
             );
           }
-        },
-        (error) => {
+        }).catch((error) => {
           if (error.response.status === 401) {
             setErrMsg(error.response.data.detail);
           } else {

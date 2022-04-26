@@ -26,8 +26,7 @@ export default function EditPassword() {
                 'There was an error changing the password.',
             );
           }
-        },
-        (error) => {
+        }).catch((error) => {
           if (error.response.status === 400) {
             let message = '';
             error.response.data.password.forEach(function cat(e) {
