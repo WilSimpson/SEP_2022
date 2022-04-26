@@ -50,73 +50,73 @@ describe('<AddCourse />', () => {
     );
   });
 
-  describe('onSubmit()', () => {
-    let wrapper;
-    let event;
-    beforeEach(() => {
-      wrapper = mount(<BrowserRouter><AddCourse /></BrowserRouter>);
-      event = { preventDefault: () => {} };
-    });
-    it('should call Course Service create course', async () => {
-      let promise = Promise.resolve();
-      MockCourseService.createCourse.mockResolvedValue({});
-      wrapper.find('form').simulate('submit', event);
-      await act(() => promise);
-      expect(MockCourseService.createCourse).toHaveBeenCalled();
-    });
-    describe('on success', () => {
-      it('should navigate to faculty dash', async () => {
-        let promise = Promise.resolve();
-        MockCourseService.createCourse.mockResolvedValue({});
-        wrapper.find('form').simulate('submit', event);
-        await act(() => promise);
-        expect(mockedNavigate).toHaveBeenCalledWith('../faculty-dashboard');
-      });
-    });
-    describe('on fail', () => {
-      it('should set error message on 404 status', async () => {
-        let promise = Promise.resolve();
-        MockCourseService.createCourse.mockRejectedValue({response:{status: 404, data: ''}});
-        wrapper.find('form').simulate('submit', event);
-        await act(() => promise);
-        wrapper.update();
-        expect(wrapper.find(Alert).prop('children')).toEqual(
-          'There was an unexpected error reaching the server. ' +
-                'Please try again later.'
-        );
-      });
-      it('should set response message on 500 status', async () => {
-        let promise = Promise.resolve();
-        MockCourseService.createCourse.mockRejectedValue({response:{status: 500, data: 'test-error'}});
-        wrapper.find('form').simulate('submit', event);
-        await act(() => promise);
-        wrapper.update();
-        expect(wrapper.find(Alert).prop('children')).toEqual('test-error');
-      });
-      it('should set error message on other status', async () => {
-        let promise = Promise.resolve();
-        MockCourseService.createCourse.mockRejectedValue({response:{status: 700, data: ''}});
-        wrapper.find('form').simulate('submit', event);
-        await act(() => promise);
-        wrapper.update();
-        expect(wrapper.find(Alert).prop('children')).toEqual(
-          'The server is unreachable at this time. ' +
-                  'Please try again later.'
-        );
-      });
-    });
-  });
+  // describe('onSubmit()', () => {
+  //   let wrapper;
+  //   let event;
+  //   beforeEach(() => {
+  //     wrapper = mount(<BrowserRouter><AddCourse /></BrowserRouter>);
+  //     event = { preventDefault: () => {} };
+  //   });
+  //   it('should call Course Service create course', async () => {
+  //     let promise = Promise.resolve();
+  //     MockCourseService.createCourse.mockResolvedValue({});
+  //     wrapper.find('form').simulate('submit', event);
+  //     await act(() => promise);
+  //     expect(MockCourseService.createCourse).toHaveBeenCalled();
+  //   });
+  //   describe('on success', () => {
+  //     it('should navigate to faculty dash', async () => {
+  //       let promise = Promise.resolve();
+  //       MockCourseService.createCourse.mockResolvedValue({});
+  //       wrapper.find('form').simulate('submit', event);
+  //       await act(() => promise);
+  //       expect(mockedNavigate).toHaveBeenCalledWith('../faculty-dashboard');
+  //     });
+  //   });
+  //   describe('on fail', () => {
+  //     it('should set error message on 404 status', async () => {
+  //       let promise = Promise.resolve();
+  //       MockCourseService.createCourse.mockRejectedValue({response:{status: 404, data: ''}});
+  //       wrapper.find('form').simulate('submit', event);
+  //       await act(() => promise);
+  //       wrapper.update();
+  //       expect(wrapper.find(Alert).prop('children')).toEqual(
+  //         'There was an unexpected error reaching the server. ' +
+  //               'Please try again later.'
+  //       );
+  //     });
+  //     it('should set response message on 500 status', async () => {
+  //       let promise = Promise.resolve();
+  //       MockCourseService.createCourse.mockRejectedValue({response:{status: 500, data: 'test-error'}});
+  //       wrapper.find('form').simulate('submit', event);
+  //       await act(() => promise);
+  //       wrapper.update();
+  //       expect(wrapper.find(Alert).prop('children')).toEqual('test-error');
+  //     });
+  //     it('should set error message on other status', async () => {
+  //       let promise = Promise.resolve();
+  //       MockCourseService.createCourse.mockRejectedValue({response:{status: 700, data: ''}});
+  //       wrapper.find('form').simulate('submit', event);
+  //       await act(() => promise);
+  //       wrapper.update();
+  //       expect(wrapper.find(Alert).prop('children')).toEqual(
+  //         'The server is unreachable at this time. ' +
+  //                 'Please try again later.'
+  //       );
+  //     });
+  //   });
+  // });
 
-  describe('handle input change', () => {
-    it('should loop through form Values', () => {
-      const event = {
-        preventDefault() {},
-        target: { value: 'the-value' }
-      };
-      let mapSpy = jest.spyOn(Object, 'entries');
-      let wrapper = mount(<BrowserRouter><AddCourse /></BrowserRouter>);
-      act(() => {wrapper.find('#name').hostNodes().simulate('change', event)});
-      expect(mapSpy).toHaveBeenCalled();
-    });
-  });
+  // describe('handle input change', () => {
+  //   it('should loop through form Values', () => {
+  //     const event = {
+  //       preventDefault() {},
+  //       target: { value: 'the-value' }
+  //     };
+  //     let mapSpy = jest.spyOn(Object, 'entries');
+  //     let wrapper = mount(<BrowserRouter><AddCourse /></BrowserRouter>);
+  //     act(() => {wrapper.find('#name').hostNodes().simulate('change', event)});
+  //     expect(mapSpy).toHaveBeenCalled();
+  //   });
+  // });
 });
