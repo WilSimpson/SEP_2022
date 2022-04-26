@@ -38,19 +38,37 @@ afterEach(() => {
 });
 
 describe('<StartGameSessionPage />', () => {
-  it("pass", () => {
-    expect(true).toBe(true);
+  let wrapper;
+
+  beforeEach(async () => {
+    wrapper = mount(
+      <BrowserRouter>
+        <StartGameSessionPage />
+      </BrowserRouter>
+    );
+
+    await act(async () => {
+      await Promise.resolve(wrapper);
+      wrappper.update();
+    })
   })
+
+  it ('should render Session Start component', () => {
+    const sessionStart = wrapper.Find(SessionStart).first();
+    expect(sessionStart.exists()).toBe(true);
+  })
+
   // it ('should render Session Start component', () => {
-  //   const wrapper = mount(
+  //   wrapper = mount(
   //     <BrowserRouter>
   //       <StartGameSessionPage />
   //     </BrowserRouter>
   //   );
+
   //   const sessionStart = wrapper.find(SessionStart).first();
   //   expect (sessionStart.exists()).toBe(true);
   // });
-  // describe('SessionStart prop functions', () => {
+  // // describe('SessionStart prop functions', () => {
   //   let wrapper;
   //   beforeEach(() => {
   //     wrapper = mount(
