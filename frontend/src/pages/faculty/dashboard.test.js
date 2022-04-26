@@ -224,6 +224,9 @@ describe('<FacultyDash />', () => {
         await act(() => promise);
         expect(MockGameService.getGames).toHaveBeenCalled();
       });
+      //
+      // These are commented out because getMyActiveSessions is never called
+      //
       // describe('game service getGames on success', () => {
       //   it('should call gameSessionService.getMyActiveSessions', async() => {
       //     await act(() => promise);
