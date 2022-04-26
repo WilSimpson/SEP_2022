@@ -6,6 +6,7 @@ import {mount} from 'enzyme';
 import ResponsiveAppBar from './nav';
 import authService from '../../services/auth';
 import { Backdrop, Menu } from '@mui/material';
+import {BrowserRouter} from 'react-router-dom';
 
 
 jest.mock('../../services/auth');
@@ -26,7 +27,7 @@ afterEach(() => {
 describe('<ResponsiveAppBar />', () => {
   it('Should have links', () => {
     act(() => {
-      render(<ResponsiveAppBar />, container);
+      render(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>, container);
     });
     expect(container.textContent).toContain('Get Started');
     expect(container.textContent).toContain('About');
@@ -36,14 +37,14 @@ describe('<ResponsiveAppBar />', () => {
 
   it('Should have some children nodes', () => {
     act(() => {
-      render(<ResponsiveAppBar />, container);
+      render(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>, container);
     });
     expect(container.childNodes).not.toBeNull();
   });
 
   it('Should have a clickable avatar button', () => {
     act(() => {
-      render(<ResponsiveAppBar />, container);
+      render(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>, container);
     });
     const profileButton = document.querySelector('[data-testid=profileButton]');
     act(() => {
@@ -56,26 +57,22 @@ describe('<ResponsiveAppBar />', () => {
   });
   it('should have all menu items when logged in', () => {
     authService.isLoggedIn.mockResolvedValue(true);
-    const component = mount(<ResponsiveAppBar/>);
+    const component = mount(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>);
     component.find({ "data-testid": "Dashboard-test" }).last().simulate("click");
-    component.find({ "data-testid": "Games-test" }).last().simulate("click");
-    component.find({ "data-testid": "Account Settings-test" }).last().simulate("click");
     component.find({ "data-testid": "Logout-test" }).last().simulate("click");
     expect(component.find({ "data-testid": "Dashboard-test" })).not.toBeNull;
-    expect(component.find({ "data-testid": "Games-test" })).not.toBeNull;
-    expect(component.find({ "data-testid": "Account Settings-test" })).not.toBeNull;
     expect(component.find({ "data-testid": "Logout-test" })).not.toBeNull;
   });
   it('should have a clickable menu button when user logged in', () => {
     authService.isLoggedIn.mockResolvedValue(true);
-    const component = mount(<ResponsiveAppBar/>);
+    const component = mount(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>);
     component.find({"data-testid": "user-menu"}).last().simulate("click");
     let menu = component.find(Menu).filterWhere((i) => i.prop('open') == true);
     expect(menu.getElement()).not.toBeNull();
   });
   it('should close logged in menu when clicked', () => {
     authService.isLoggedIn.mockResolvedValue(true);
-    const component = mount(<ResponsiveAppBar/>);
+    const component = mount(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>);
     component.find({"data-testid": "user-menu"}).last().simulate("click");
     component.find(Backdrop).last().simulate("click");
     let menu = component.find(Menu).filterWhere((i) => i.prop('open') == false).first();
@@ -83,7 +80,7 @@ describe('<ResponsiveAppBar />', () => {
   });
 
   it('should have closable nav menu', () => {
-    const component = mount(<ResponsiveAppBar/>);
+    const component = mount(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>);
     component.find({"data-testid": "profileButton"}).last().simulate("click");
     component.find(Backdrop).last().simulate("click");
     let menu = component.find(Menu).filterWhere((i) => i.prop('open') == false).first();

@@ -13,15 +13,13 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import {ButtonGroup} from '@mui/material';
 import authService from '../../services/auth';
-
+import {Link} from 'react-router-dom';
 // const pages = ['Get Started', 'About', 'Help'];
 
 const pages = {'Get Started': 'started', 'About': '####', 'Help': '####'};
 
 const settings = {
-  'Dashboard': '/admin-dashboard',
-  'Games': '/admin-dashboard/games',
-  'Account Settings': '#',
+  'Dashboard': '/dashboard',
   'Logout': '/logout',
 };
 
@@ -144,14 +142,11 @@ const ResponsiveAppBar = () => {
                     <MenuItem
                       key={name}
                       data-testid={name+'-test'}
+                      component={Link}
+                      to={link}
                       onClick={(e) => handleChooseUserOption(e, link)}
                     >
-                      <Typography
-                        textAlign="center"
-                        variant='h1'
-                      >
-                        {name}
-                      </Typography>
+                      {name}
                     </MenuItem>
                   ))}
                 </Menu>
