@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 describe('<StartGameSessionPage />', () => {
-  It("pass", () => {
+  it("pass", () => {
     expect(true).toBe(true);
   })
   // it ('should render Session Start component', () => {
