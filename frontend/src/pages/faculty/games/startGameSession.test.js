@@ -49,13 +49,38 @@ describe('<StartGameSessionPage />', () => {
 
     await act(async () => {
       await Promise.resolve(wrapper);
-      wrappper.update();
+      wrapper.update();
     })
   })
 
+  it ('should render', () => {
+    expect(wrapper);
+  })
+
   it ('should render Session Start component', () => {
-    const sessionStart = wrapper.Find(SessionStart).first();
+    const sessionStart = wrapper.find(SessionStart).first();
     expect(sessionStart.exists()).toBe(true);
+  })
+
+  describe('SessionStart prop functions', () => {
+    describe('onCancel functionality', () => {
+      it ('should navigate to adminDash onCancel when user is Admin', () => {
+        act(() => {wrapper.find(SessionStart).first().props().onCancel()});
+        expect(mockedNavigate).toHaveBeenCalled();
+      });
+      it ('should navigate to facultyDash onCancel when user is Faculty', () => {
+        let tempUser = JSON.parse(localStorage.getItem('user'));
+        tempUser.role = 'FACULTY';
+        localStorage.setItem('user', JSON.stringify(tempUser));
+        act(() => {wrapper.find(SessionStart).first().props().onCancel()});
+        expect(mockedNavigate).toHaveBeenCalledWith('/faculty-dashboard');
+      });
+      it ('should call alert Service onCancel', () => {
+        let alertSpy = jest.spyOn(alertService, 'alert');
+        act(() => {wrapper.find(SessionStart).first().props().onCancel()});
+        expect(alertSpy).toHaveBeenCalled();
+      });
+    });
   })
 
   // it ('should render Session Start component', () => {
