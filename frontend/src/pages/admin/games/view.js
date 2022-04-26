@@ -22,8 +22,7 @@ export default function ViewGamesPage() {
           });
           setGames(games.filter((game) => game.id != id));
           navigate('/admin-dashboard/games');
-        },
-        (error) => {
+        }).catch((error) => {
           alertService.alert({
             severity: alertSeverity.error,
             message: error.message,

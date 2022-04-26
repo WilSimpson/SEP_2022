@@ -23,24 +23,18 @@ export default function StartGameSession(props) {
   function handleSubmit(creatorId, gameId, notes, timeout, courseID, isGuest) {
     gameSessionService
         .createGameSession(creatorId, gameId, notes, timeout, courseID, isGuest)
-        .then(
-            (success) => {
-              alertService.alert({
-                severity: alertSeverity.success,
-                message: `Game Session Started,
-                        Join Code: ${success.data.code}`,
-              });
-              AuthService.currentUser().isAdmin() ?
-              navigate('/admin-dashboard') :
-              navigate('/faculty-dashboard');
-            },
-            (error) => {
-              alertService.alert({
-                severity: alertSeverity.error,
-                message: error.message,
-              });
-            },
-        );
+        .then( (success) => {
+          alertService.alert({
+            severity: alertSeverity.success,
+            message: `Game Session Started,
+                    Join Code: ${success.data.code}`,
+          });
+          AuthService.currentUser().isAdmin() ?
+          navigate('/admin-dashboard') :
+          navigate('/faculty-dashboard');
+        }).catch(() => {
+          alertService.error('error creating session');
+        })
   }
 
   return (

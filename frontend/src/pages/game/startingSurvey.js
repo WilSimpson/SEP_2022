@@ -95,8 +95,7 @@ export default function StartingSurvey() {
           };
           GamePlayService.setInProgressGame(gameSessionState);
           navigate(path, gameSessionState);
-        },
-        (error) => {
+        }).catch((error) => {
           if (error.response && error.response.status === 404) {
             setErr(
                 'There was an unexpected error reaching the server. ' +

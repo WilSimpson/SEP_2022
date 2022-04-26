@@ -75,9 +75,7 @@ export default function EditCourse() {
         (response) => {
           const path = `../faculty-dashboard`;
           navigate(path);
-        },
-        (error) => {
-          console.log(error.response);
+        }).catch((error) => {
           if (error.response && error.response.status === 404) {
             setErr(
                 'There was an unexpected error reaching the server. ' +
