@@ -22,13 +22,16 @@ export default function SessionStart(props) {
 
   useEffect(() => {
     if (!sessionStorage.getItem('courses')) {
-      courseService.getMyCourses(AuthService.currentUser().id).then(
+      try {
+        courseService.getMyCourses(AuthService.currentUser().id).then(
           (response) => {
             sessionStorage.setItem('courses', JSON.stringify(response.data));
             setCourses(response.data.map((course) => ({label: course.name, id: course.id})));
-          }, (error) => {
-            alertService.error(error);
           }).catch((error) => alertService.error(error));
+      } catch (err) {
+        console.log('error:', err);
+      }
+      
     } else {
       setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))))
     }

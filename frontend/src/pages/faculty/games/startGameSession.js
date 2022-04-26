@@ -32,11 +32,8 @@ export default function StartGameSession(props) {
           AuthService.currentUser().isAdmin() ?
           navigate('/admin-dashboard') :
           navigate('/faculty-dashboard');
-        }).catch((error) => {
-          alertService.alert({
-            severity: alertSeverity.error,
-            message: error.message,
-          });
+        }).catch(() => {
+          alertService.error('error creating session');
         })
   }
 
