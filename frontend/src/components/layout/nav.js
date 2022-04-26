@@ -154,10 +154,11 @@ const ResponsiveAppBar = () => {
             ) : (
               <MenuItem
                 key='Login'
+                component={Link}
+                to={'/login'}
               >
                 <Button
                   key="Login"
-                  href="/login"
                   sx={{my: 2, color: 'common.white', display: 'block'}}
                 >
                   Login
