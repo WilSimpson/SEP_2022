@@ -27,12 +27,12 @@ export default function ForgotPassword() {
             );
           }
         }).catch((error) => {
-          if (error.response.status === 401) {
-            setErrMsg(error.response.data.detail);
-          } else {
-            setErrMsg('There was an unexpected error. Please try again later.');
-          }
-        },
+      if (error.response.status === 401) {
+        setErrMsg(error.response.data.detail);
+      } else {
+        setErrMsg('There was an unexpected error. Please try again later.');
+      }
+    },
     );
   };
   return (
