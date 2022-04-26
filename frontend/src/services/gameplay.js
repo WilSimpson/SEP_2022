@@ -29,7 +29,7 @@ class GameService {
         })
         .then((response) => {
           return response.data;
-        });
+        }).catch(() => {});
   }
 
   teamCompleteGame(teamId) {
@@ -37,7 +37,7 @@ class GameService {
         .post(API_URL + '/teams/complete/', {
           team: teamId,
         })
-        .then((response) => {});
+        .then((response) => {}).catch(() => {});
   }
 
   getQuestionContext(questionId) {
@@ -59,7 +59,7 @@ class GameService {
               }
               return response;
             },
-        );
+        ).catch(() => {});
   }
 
   updateOption(optionId) {
@@ -67,7 +67,7 @@ class GameService {
         .put(API_URL + `/gameSession/updateAnswer/${this.getLastAnswerId()}/`, {
           option_id: optionId,
         })
-        .then();
+        .then().catch(() => {});
   }
 
   setInProgressGame(state) {

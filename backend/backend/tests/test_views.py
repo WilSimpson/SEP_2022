@@ -828,7 +828,19 @@ class GameSessionTests(TestCase):
         resp = self.client.get('/api/games/{}/sessions/'.format(0))
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_session_end_active_game(self):
+        data = {
+            'id': self.session.id,
+        }
+        resp = self.client.put('/api/games/endSession/'+str(self.session.id)+'/', data=data)
+        self.assertEqual(resp.status_code, 200)
 
+    def test_session_end_no_game(self):
+        data = {
+            'id': 9999999,
+        }
+        resp = self.client.put('/api/games/endSession/9999999/', data=data)
+        self.assertEqual(resp.status_code, 500)
 
 
     def test_get_games_session(self):
@@ -940,6 +952,9 @@ class GameSessionTests(TestCase):
         resp = self.client.get('/api/games/{}/sessions/{}/teams/{}/report/'.format(self.game.id, self.session2.id, self.team.id))
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_get_user_active_sessions(self):
+        resp = self.client.get('/api/gameSession/{}/'.format(self.session.creator_id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
 class ContextHelpViewSetTestCase(TestCase):
     def setUp(self):
@@ -1002,4 +1017,4 @@ class ContextHelpViewSetTestCase(TestCase):
     def test_update_invalid_context(self):
         resp = self.client.put('/api/contextHelp/'+str(0)+'/', self.data, content_type='application/json')
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-    
+

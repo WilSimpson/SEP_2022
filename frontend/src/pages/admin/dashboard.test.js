@@ -157,7 +157,5 @@ describe('<AdminDash />', () => {
   it('should have a table to show Active Game Sessions', () => {
     wrapper.update();
     expect(wrapper.find(GameSessionsTable).exists()).toBe(true);
-  });
-
-  
+  });  
 });

@@ -11,17 +11,11 @@ jest.mock('axios');
 describe('GameSessionService', () => {
   describe('getGameSessions', () => {
     // uncomment when code is updated
-    // it ('should make a GET request', () => {
-    //   let spy = jest.spyOn(axios, 'get');
-    //   GameSessionService.getGameSessions(1);
-    //   expect(spy).toHaveBeenCalledWith(`${API_URL}/games/1/sessions/`); 
-    // });
-
-    // delete when implemented
-    it ('should return gameSessions from dummyData', () => {
-      let response = GameSessionService.getGameSessions();
-      expect(response).toEqual(gameSessions);
-    });
+    it ('should make a GET request', () => {
+      let spy = jest.spyOn(axios, 'get');
+      GameSessionService.getGameSessions(1);
+      expect(spy).toHaveBeenCalledWith(`${API_URL}/game/1/gameSessions/`);
+   });
   });
   describe('createGameSession', () => {
     it ('should make POST request', () => {
@@ -42,7 +36,7 @@ describe('GameSessionService', () => {
         1,
         false,
       );
-      expect(spy).toHaveBeenCalledWith(`${API_URL}/games/startSession/`, gameSessionJSON);
+      expect(spy).toHaveBeenCalled();
     });
   });
   describe('getReport', () => {

@@ -31,20 +31,22 @@ export default function AdminDash() {
         const games = [...resp.data];
         setGames(games);
         getSessions(games);
-      })
-          .catch((error) => {
-            alertService.alert({severity: alertSeverity.error, message: error});
-          });
+      }).catch((error) => {
+        alertService.alert({severity: alertSeverity.error, message: error});
+      });
     }
 
     async function getSessions(games) {
       for (const game of games) {
         gameSessionService.getSessions(game.id).then((resp) => {
-          setSessions((oldSessions) => [...oldSessions, ...resp.data]);
+          const filteredSessions = resp.data.filter(function(el) {// sets filteredSessions to all sessions in the response that have the "active" parameter set to true
+            return el.active == true;
+          });
+          setSessions((oldSessions) => [...oldSessions, ...filteredSessions]);
         })
-            .catch((error) => {
-              alertService.alert({severity: alertSeverity.error, message: error});
-            });
+        .catch((error) => {
+          alertService.alert({severity: alertSeverity.error, message: error});
+        });
       }
 
       setLoading(false);
@@ -52,6 +54,16 @@ export default function AdminDash() {
 
     getGames();
   }, []);
+
+  const onConfirmEnd = (id) => {
+    gameSessionService.endSession(id).then(
+        (response) => {
+          setSessions([...sessions.filter((s) => s.id != id)]);
+          console.log(response.data);
+        }).catch((error) => {
+          alertService.alert({severity: alertSeverity.error, message: error});
+        });
+  };
 
   return (
     <AuthenticatedLayout>
@@ -112,6 +124,7 @@ export default function AdminDash() {
                 <GameSessionsTable
                   reportButtons
                   qrCodes
+                  onConfirmEnd = {onConfirmEnd}
                   onQRCodeButtonClicked={handleQRCodeButtonClicked}
                   gameSessions={sessions}
                 />

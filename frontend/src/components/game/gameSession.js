@@ -152,7 +152,7 @@ export default function GameSession() {
           (error) => {
             setError(error);
           },
-      );
+      ).catch((error) => setError(error));
     } else {
       GamePlayService.createAnswer(selectedOption.id, currentQuestion.id, state.team_id, null).then(
           (response) => setNextQuestion(),
@@ -168,7 +168,7 @@ export default function GameSession() {
           GamePlayService.clearInProgressGame();
         },
         (error) => setError(error),
-    );
+    ).catch((error) => setError(error));
   };
   function findWeights(cO) {
     const opts = {};
@@ -226,7 +226,7 @@ export default function GameSession() {
             message: errMessage,
           });
         },
-    );
+    ).catch((error) => setError(error));
   }
 
   const submitPasscode = (pcd) => {
@@ -236,7 +236,7 @@ export default function GameSession() {
           GamePlayService.setEnteredPasscode(true);
         },
         (error) => setError(error),
-    );
+    ).catch((error) => setError(error));
   };
 
   const GamePlay = (

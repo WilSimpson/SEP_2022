@@ -41,7 +41,7 @@ class AuthService {
             });
           }
           return response;
-        });
+        }).catch((error) => {});
   }
 
   logout() {

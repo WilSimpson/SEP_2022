@@ -90,7 +90,7 @@ class GameCode extends React.Component {
               }
             }
           },
-      );
+      ).catch((error) => this.setState({errMsg: 'unknown error'}));
     } else {
       // previous error message was unreachable
       this.setState({
