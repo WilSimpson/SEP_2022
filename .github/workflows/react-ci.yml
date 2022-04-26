@@ -26,6 +26,7 @@ jobs:
         key: node-modules-${{ hashFiles('frontend/package.json') }}
 
     - name: Test
+      working-directory: ./frontend
       run: npm test -- --coverage --watchAll=false
 
     # - name: Test & Upload Results
