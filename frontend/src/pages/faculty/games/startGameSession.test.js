@@ -14,6 +14,7 @@ import MockGameSessionService from '../../../services/gameSession';
 const mockedNavigate = jest.fn();
 
 jest.mock('../../../services/gameSession');
+jest.mock('../../../services/courses');
 
 const user = new User(
   'email@example.com',

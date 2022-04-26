@@ -42,11 +42,13 @@ function CoursesTable() {
           setLoading(false);
         }).catch((error) => {
       setRows([{
+        id: '1',
         department: 'There was a problem',
         name: 'N/A', courseNumber: '000', sectionNumber: '000',
         semester: 'N/A',
       }]);
       setFilteredRows([{
+        id: '1',
         department: 'There was a problem',
         name: 'N/A', courseNumber: '000', sectionNumber: '000',
         semester: 'N/A',
@@ -142,7 +144,7 @@ export default function FacultyDash() {
       gameService.getGames().then((resp) => {
         const games = [...resp.data];
         getSessions(games);
-      }, (error) => {
+      }).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
       });
     }

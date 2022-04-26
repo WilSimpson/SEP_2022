@@ -25,11 +25,17 @@ jobs:
         path: "frontend/node_modules"
         key: node-modules-${{ hashFiles('frontend/package.json') }}
 
+    # - name: Install
+    #   working-directory: ./frontend
+    #   run: npm ci
+
+    # - name: Test
+    #   working-directory: ./frontend
+    #   run: npm test -- --coverage --watchAll=false
+
     - name: Test & Upload Results
       uses: artiomtr/jest-coverage-report-action@v2
       if: github.event_name == 'pull_request'
       with:
         working-directory: ./frontend
         test-script: npm test
-        coverage-file: ./report.json
-        base-coverage-file: ./report.json

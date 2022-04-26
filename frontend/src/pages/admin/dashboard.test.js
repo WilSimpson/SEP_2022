@@ -41,7 +41,6 @@ describe('<AdminDash />', () => {
       const resp = {data: [game]};
       MockGameService.getGames.mockResolvedValue(resp);
       MockGameSessionService.getSessions.mockResolvedValue(resp);
-      MockGameSessionService.endSession.mockResolvedValue(resp);
       wrapper = mount(
         <BrowserRouter>
           <AdminDash />
@@ -158,43 +157,5 @@ describe('<AdminDash />', () => {
   it('should have a table to show Active Game Sessions', () => {
     wrapper.update();
     expect(wrapper.find(GameSessionsTable).exists()).toBe(true);
-  });
-
-  describe('onConfirmEnd', () => {
-    it('should call endSession in gameSessionService', async () => {
-      let wrapper;
-      let promise = Promise.resolve();
-      await act(async() => {
-        wrapper = mount(
-          <BrowserRouter>
-            <AdminDash />
-          </BrowserRouter>,
-        );
-      });
-      await act(() => promise);
-      wrapper.update();
-      wrapper.find(GameSessionsTable).props().onConfirmEnd();
-      expect(MockGameSessionService.endSession).toHaveBeenCalled();
-    });
-
-    it('should call endSession in gameSessionService', async () => {
-      MockGameSessionService.endSession.mockRejectedValue({});
-      let alertSpy = jest.spyOn(alertService, "alert");
-      let wrapper;
-      let promise = Promise.resolve();
-      await act(async() => {
-        wrapper = mount(
-          <BrowserRouter>
-            <AdminDash />
-          </BrowserRouter>,
-        );
-      });
-      await act(() => promise);
-      wrapper.update();
-      wrapper.find(GameSessionsTable).props().onConfirmEnd();
-      await act(() => promise);
-      expect(alertSpy).toHaveBeenCalled();
-  });
-  });
-  
+  });  
 });

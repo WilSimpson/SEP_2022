@@ -33,7 +33,6 @@ export default function GenerateQRPage(props) {
               id="outlined-required"
               label="QR URL"
               value={url}
-              defaultValue={url}
               onChange={(e) => setURL(e.target.value)}
             />
             <Button

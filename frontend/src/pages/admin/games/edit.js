@@ -75,8 +75,7 @@ export default function EditGamePage(props) {
                 message: 'Changes saved',
               });
               navigate('/admin-dashboard/games');
-            },
-            (error) => {
+            }).catch((error) => {
               alertService.alert({
                 severity: alertSeverity.error,
                 message: error.message,
