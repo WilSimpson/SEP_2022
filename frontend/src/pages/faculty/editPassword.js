@@ -27,16 +27,16 @@ export default function EditPassword() {
             );
           }
         }).catch((error) => {
-          if (error.response.status === 400) {
-            let message = '';
-            error.response.data.password.forEach(function cat(e) {
-              message += ' ' + e;
-            });
-            setErrMsg(message);
-          } else {
-            setErrMsg('There was an unexpected error. Please try again later.');
-          }
-        },
+      if (error.response.status === 400) {
+        let message = '';
+        error.response.data.password.forEach(function cat(e) {
+          message += ' ' + e;
+        });
+        setErrMsg(message);
+      } else {
+        setErrMsg('There was an unexpected error. Please try again later.');
+      }
+    },
     );
   };
   const hashToken = (window.location.hash.substr(1)); // substr(1) to remove the `#`

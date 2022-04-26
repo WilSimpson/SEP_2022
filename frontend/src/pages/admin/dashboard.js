@@ -44,9 +44,9 @@ export default function AdminDash() {
           });
           setSessions((oldSessions) => [...oldSessions, ...filteredSessions]);
         })
-        .catch((error) => {
-          alertService.alert({severity: alertSeverity.error, message: error});
-        });
+            .catch((error) => {
+              alertService.alert({severity: alertSeverity.error, message: error});
+            });
       }
 
       setLoading(false);
@@ -61,8 +61,8 @@ export default function AdminDash() {
           setSessions([...sessions.filter((s) => s.id != id)]);
           console.log(response.data);
         }).catch((error) => {
-          alertService.alert({severity: alertSeverity.error, message: error});
-        });
+      alertService.alert({severity: alertSeverity.error, message: error});
+    });
   };
 
   return (
