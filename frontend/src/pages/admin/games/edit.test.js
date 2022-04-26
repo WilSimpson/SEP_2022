@@ -70,7 +70,7 @@ describe('<EditGame />', () => {
     it ('onCancel method passed as prop should call navigate()', () => {
       wrapper.update();
       wrapper.find(GameFields).props().onCancel();
-      expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+      expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
     });
     it('handleSubmit method passed as prop calls updateGame', async () => {
       wrapper.update();
@@ -101,7 +101,7 @@ describe('<EditGame />', () => {
       });
       act(() => {wrapper.find(GameFields).props().onSubmit()});
       await act(() => promise);
-      expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+      expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
     });
     it ('handleSubmit method passed as prop calls alert on error', async () => {
       wrapper.update();
@@ -123,7 +123,7 @@ describe('<EditGame />', () => {
             <EditGame />
           );
       });
-      expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+      expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -140,7 +140,7 @@ describe('<EditGame />', () => {
         });
         expect(spy).toHaveBeenCalled();
       });
-      it('should navigate to /admin-dashboard/games', async () => {
+      it('should navigate to /dashboard/games', async () => {
         let wrapper;
         MockGameService.getGame.mockResolvedValue({data: null});
         const spy = jest.spyOn(alertService, 'alert');
@@ -149,7 +149,7 @@ describe('<EditGame />', () => {
               <EditGame />
             );
         });
-        expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+        expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
       });
     });
   });

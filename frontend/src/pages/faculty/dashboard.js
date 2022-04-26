@@ -192,7 +192,7 @@ export default function FacultyDash() {
                 </Typography>
                 <div>
                   <Button color="secondary" variant="contained"
-                    href="faculty-dashboard/addCourse"
+                    href="dashboard/addCourse"
                     data-testid="courses-button">
                     Add a Course
                   </Button>

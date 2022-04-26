@@ -60,7 +60,7 @@ function App() {
               />
               <Route
                 exact
-                path="/admin-dashboard"
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <AdminDash /> : <FacultyDash />};
@@ -68,19 +68,19 @@ function App() {
                 }
               />
 
-              <Route
+              {/* <Route
                 exact
-                path="/faculty-dashboard"
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <AdminDash /> : <FacultyDash />};
                   </ProtectedRoute>
                 }
-              />
+              /> */}
 
               <Route
                 exact
-                path="/faculty-dashboard/addCourse"
+                path="/dashboard/addCourse"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <AdminDash /> : <AddCourse />};
@@ -90,7 +90,7 @@ function App() {
 
               <Route
                 exact
-                path="/faculty-dashboard/editCourse"
+                path="/dashboard/editCourse"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <AdminDash /> : <EditCourse />};
@@ -100,7 +100,7 @@ function App() {
 
               <Route
                 exact
-                path="/admin-dashboard/register"
+                path="/dashboard/register"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <Register /> : <FacultyDash />};
@@ -110,7 +110,7 @@ function App() {
 
               <Route
                 exact
-                path="/admin-dashboard/games"
+                path="/dashboard/games"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <ViewGamesPage /> : <FacultyDash />};
@@ -120,7 +120,7 @@ function App() {
 
               <Route
                 exact
-                path="/admin-dashboard/games/new"
+                path="/dashboard/games/new"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <CreateGamePage /> : <FacultyDash />};
@@ -128,7 +128,7 @@ function App() {
                 }
               />
               <Route
-                path="/admin-dashboard/games/:id"
+                path="/dashboard/games/:id"
                 element={
                   <ProtectedRoute>
                     {isAdmin() ? <EditGamePage /> : <FacultyDash />};
@@ -137,7 +137,7 @@ function App() {
               />
               <Route
                 exact
-                path="/faculty-dashboard/startSession"
+                path="/dashboard/startSession"
                 element={
                   <ProtectedRoute>
                     <StartGameSession />
@@ -146,7 +146,7 @@ function App() {
               />
               <Route
                 exact
-                path="/admin-dashboard/startSession"
+                path="/dashboard/startSession"
                 element={
                   <ProtectedRoute>
                     <StartGameSession />

@@ -173,13 +173,13 @@ describe('<Register />', () => {
         expect(AuthService.register).toHaveBeenCalled();
       });
       describe('register on success', () => {
-        it('should navigate to admin-dashboard when status 201', async () => {
+        it('should navigate to dashboard when status 201', async () => {
           AuthService.register.mockResolvedValue({status: 201});
           wrapper.update();
           const promise = Promise.resolve();
           wrapper.find({'data-testid': 'submit-button'}).hostNodes().simulate('click', {target:{value:'hi'}});
           await act(() => promise);
-          expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard');
+          expect(mockedNavigate).toHaveBeenCalledWith('/dashboard');
         }); 
         it ('should display error message when other status', async () => {
           AuthService.register.mockResolvedValue({status: 700});

@@ -15,7 +15,7 @@ export default function CreateGamePage() {
       severity: alertSeverity.info,
       message: 'Game not created',
     });
-    navigate('/admin-dashboard/games');
+    navigate('/dashboard/games');
   }
 
   function handleSubmit(
@@ -34,7 +34,7 @@ export default function CreateGamePage() {
                 severity: alertSeverity.success,
                 message: 'Game created',
               });
-              navigate('/admin-dashboard/games');
+              navigate('/dashboard/games');
             },
             (error) => {
               alertService.alert({

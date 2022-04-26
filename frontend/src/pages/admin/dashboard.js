@@ -81,7 +81,7 @@ export default function AdminDash() {
               >
                 <GamesTable
                   data={games}
-                  onEdit={(id) => navigate(`/admin-dashboard/games/${id}`)}
+                  onEdit={(id) => navigate(`/dashboard/games/${id}`)}
                 />
               </Paper>
             </Grid>

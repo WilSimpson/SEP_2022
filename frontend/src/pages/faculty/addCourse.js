@@ -54,7 +54,7 @@ export default function AddCourse() {
         AuthService.currentUser().id,
     ).then(
         (response) => {
-          const path = `../faculty-dashboard`;
+          const path = `../dashboard`;
           navigate(path);
         }).catch((error) => {
       if (error.response && error.response.status === 404) {
@@ -195,7 +195,7 @@ export default function AddCourse() {
                   variant="outlined"
                   color="secondary"
                   data-testid="back"
-                  href="../faculty-dashboard"
+                  href="../dashboard"
                 >
                   Go Back
                 </Button>

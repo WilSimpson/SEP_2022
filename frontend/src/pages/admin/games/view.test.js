@@ -96,7 +96,7 @@ describe('<ViewGamesPage />', () => {
       await act(() => promise);
       wrapper.update();
       wrapper.find(GamesTable).props().onGameSelected(1);
-      expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games/1');
+      expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games/1');
     });
   });
   
@@ -122,13 +122,13 @@ describe('<ViewGamesPage />', () => {
         await act(() => promise);
         expect(alertSpy).toHaveBeenCalled();
       });
-      it('should navigate to /admin-dashboard/games', async () => {
+      it('should navigate to /dashboard/games', async () => {
         let id = 1;
         await act(() => promise);
         wrapper.update();
         await act(async () => {wrapper.find(GamesTable).props().onConfirmDelete(id)});
         await act(() => promise);
-        expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+        expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
       });
     });
     describe('on fail', () => {

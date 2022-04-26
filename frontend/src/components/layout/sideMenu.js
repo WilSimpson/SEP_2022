@@ -87,7 +87,7 @@ export function SideMenu(props) {
       component={Link}
       data-testid="dashboard-item"
       href={AuthService.currentUser().isAdmin() ?
-         '/admin-dashboard' : '/faculty-dashboard'}
+         '/dashboard' : '/dashboard'}
     >
       <ListItemIcon>
         <DashboardIcon />
@@ -115,7 +115,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="session-start-item"
             component={Link}
-            href="/faculty-dashboard/startSession"
+            href="/dashboard/startSession"
           >
             <ListItemText primary="Start Game Session" />
           </ListItemButton>
@@ -143,7 +143,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="game-develop-item"
             component={Link}
-            href="/admin-dashboard/games/new"
+            href="/dashboard/games/new"
           >
             <ListItemText primary="Create Game" />
           </ListItemButton>
@@ -151,7 +151,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="game-view-item"
             component={Link}
-            href="/admin-dashboard/games"
+            href="/dashboard/games"
           >
             <ListItemText primary="View Games" />
           </ListItemButton>
@@ -159,7 +159,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="session-start-item"
             component={Link}
-            href="/admin-dashboard/startSession"
+            href="/dashboard/startSession"
           >
             <ListItemText primary="Start Game Session" />
           </ListItemButton>
@@ -188,7 +188,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="user-create-item"
             component={Link}
-            href="/admin-dashboard/register"
+            href="/dashboard/register"
           >
             <ListItemText primary="Create Users" />
           </ListItemButton>

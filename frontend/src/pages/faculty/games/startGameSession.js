@@ -16,8 +16,8 @@ export default function StartGameSession(props) {
       message: 'Game Session not Started',
     });
     AuthService.currentUser().isAdmin() ?
-      navigate('/admin-dashboard') :
-      navigate('/faculty-dashboard');
+      navigate('/dashboard') :
+      navigate('/dashboard');
   }
 
   function handleSubmit(creatorId, gameId, notes, timeout, courseID, isGuest) {
@@ -30,8 +30,8 @@ export default function StartGameSession(props) {
                     Join Code: ${success.data.code}`,
           });
           AuthService.currentUser().isAdmin() ?
-          navigate('/admin-dashboard') :
-          navigate('/faculty-dashboard');
+          navigate('/dashboard') :
+          navigate('/dashboard');
         }).catch(() => {
           alertService.error('error creating session');
         });

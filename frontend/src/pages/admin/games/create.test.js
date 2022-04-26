@@ -38,7 +38,7 @@ describe('<CreateGame />', () => {
     it ('onCancel method passed as prop should call navigate()', () => {
       const wrapper = mount(<CreateGame />);
       wrapper.find(GameFields).props().onCancel();
-      expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+      expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
     });
     it('handleSubmit method passed as prop calls createGame', async () => {
       const wrapper = mount(<CreateGame />);
@@ -69,7 +69,7 @@ describe('<CreateGame />', () => {
       });
       wrapper.find(GameFields).props().onSubmit();
       await act(() => promise);
-      expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+      expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
     });
     it ('handleSubmit method passed as prop calls alert on error', async () => {
       let alertSpy = jest.spyOn(alertService, 'alert');

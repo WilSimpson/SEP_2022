@@ -51,7 +51,7 @@ export default function Register() {
     AuthService.register(email, password, first, last, role).then(
         (response) => {
           if (response.status === 201) {
-            navigate('/admin-dashboard');
+            navigate('/dashboard');
           } else {
             setErrMsg(
                 `There was an issue handling your account registration. ` +

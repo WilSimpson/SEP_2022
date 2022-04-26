@@ -61,7 +61,7 @@ export default function EditCourse() {
         AuthService.currentUser().id,
     ).then(
         (response) => {
-          const path = `../faculty-dashboard`;
+          const path = `../dashboard`;
           navigate(path);
         }).catch((error) => {
       if (error.response && error.response.status === 404) {
@@ -199,7 +199,7 @@ export default function EditCourse() {
                 variant="outlined"
                 color="secondary"
                 data-testid="back"
-                href="../faculty-dashboard"
+                href="../dashboard"
               >
                 Go Back
               </Button>

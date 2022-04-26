@@ -87,7 +87,7 @@ describe('<EditCourse />', () => {
         MockCourseService.editCourse.mockResolvedValue({});
         wrapper.find('form').simulate('submit', event);
         await act(() => promise);
-        expect(mockedNavigate).toHaveBeenCalledWith('../faculty-dashboard');
+        expect(mockedNavigate).toHaveBeenCalledWith('../dashboard');
       });
     });
     describe('on fail', () => {
