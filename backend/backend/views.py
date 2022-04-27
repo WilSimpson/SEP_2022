@@ -5,8 +5,8 @@ from rest_framework import permissions
 import rest_framework.generics
 from rest_framework.mixins import ListModelMixin
 
-from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
-from rest_framework.decorators import api_view, renderer_classes
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse, HttpResponseServerError
+from rest_framework.decorators import api_view, renderer_classes, action
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
@@ -15,20 +15,11 @@ from .models import Game, Option, Question
 
 from .utils import *
 
-from django.http import JsonResponse, HttpResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
-
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
 from backend.serializers import CourseSerializer
 
 from .models import Game
-
-from django.http import HttpResponse, HttpResponseServerError
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 import json
 from datetime import datetime
@@ -41,6 +32,8 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 import traceback
 
+import csv
+import io
 
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
@@ -960,47 +953,81 @@ def get_game_session_team_report(request, game_id, session_id, team_id):
     serializer = AnswersReportSerializer(answers, many=True)
     # return Response(serializer.data)
     data = generate_report(team)
-    print(data)
+
+    if request.META['HTTP_ACCEPT'] == 'text/csv':
+        return HttpResponse(content_type="text/csv", content=report_to_csv([data]))
+
     return Response(data)
 
+class ReportView (APIView):
+    renderer_classes = [CSVRenderer]
+
+    def get_renderer_context(self):
+        context = super().get_renderer_context()
+        context['header'] = (
+            self.request.GET['fields'].split(',')
+            if 'fields' in self.request.GET else None)
+        return context
+
+    
+
 def generate_report(team):
-    data = []
     fields = {}
     if team.game_session.is_guest:
         fields['SEMESTER/YEAR'] = 'N/A'
     else:
-        fields['SEMESTER/YEAR'] = str(team.game_session.course.semester)
+        fields['SEMESTER/YEAR'] = team.game_session.course.semester
 
     if team.game_session.is_guest:
         fields['CLASS NAME/GUEST'] = 'GUEST'
     else:
-        fields['CLASS NAME/GUEST'] = str(team.game_session.course.name)
+        fields['CLASS NAME/GUEST'] = team.game_session.course.name
 
     if team.game_session.is_guest:
         fields['SECTION'] = 'N/A'
     else:
-        fields['SECTION'] = str(team.game_session.course.section)
+        fields['SECTION'] = team.game_session.course.section
     
-    fields['TEAM ID'] = str(team.id)
-    fields['GAME SESSION ID'] = str(team.game_session.id)
-    fields['TEAM SIZE'] = str(team.size)
-    fields['1ST TIME PLAYING?'] = str(team.first_time)
-    fields['WALKING MODE'] = str(team.game_mode.name)
-    fields['GAME START'] = str(team.created_at)
+    fields['TEAM ID'] = team.id
+    fields['GAME SESSION ID'] = team.game_session.id
+    fields['TEAM SIZE'] = team.size
+    fields['1ST TIME PLAYING?'] = team.first_time
+    fields['WALKING MODE'] = team.game_mode.name
+    fields['GAME START DATE'] = team.created_at.strftime("%m/%d/%Y")
+    fields['GAME START TIME'] = team.created_at.strftime("%H:%M:%S")
 
     if team.completed:
-        fields['GAME END'] = str(GameSessionAnswer.objects.filter(team=team).order_by('-id').first().created_at)
+        dt = GameSessionAnswer.objects.filter(team=team).order_by('-id').first().created_at
+        fields['GAME END DATE'] = dt.strftime("%m/%d/%Y")
+        fields['GAME END TIME'] = dt.strftime("%H:%M:%S")
     else:
-        fields['GAME END'] = str('N/A')
+        fields['GAME END'] = 'N/A'
     
     answers = GameSessionAnswer.objects.filter(team=team).order_by('id')
     for index, answer in enumerate(answers[:len(answers)-1]):
-        fields["{i}.CARD START".format(i=index+1)] = str(answers[index-1].created_at) if index != 0 else str(answer.created_at)
-        fields["{i}.CARD".format(i=index+1)] = str(answer.id)
-        fields["{i}.TYPE".format(i=index+1)] = str(answer.question.chance_game) if answer.question.chance else 'Decision'
-        fields["{i}.CHOICE".format(i=index+1)] = str(answer.option_chosen.id)
-        fields["{i}.CHOICE TIME".format(i=index+1)] = str(answers[index+1].created_at)
-        fields["{i}.ROOM CODE".format(i=index+1)] = str(answer.question.passcode)
+        fields["{i}.CARD START".format(i=index+1)] = (answers[index-1].created_at if index != 0 else answer.created_at).strftime("%H:%M:%S")
+        fields["{i}.CARD".format(i=index+1)] = answer.id
+        fields["{i}.TYPE".format(i=index+1)] = answer.question.chance_game if answer.question.chance else 'Decision'
+        fields["{i}.CHOICE".format(i=index+1)] = answer.option_chosen.id
+        fields["{i}.CHOICE TIME".format(i=index+1)] = answers[index+1].created_at.strftime("%H:%M:%S")
+        fields["{i}.ROOM CODE".format(i=index+1)] = answer.question.passcode
 
-    data.append(fields)
-    return data
+    return fields
+
+def report_to_csv(data):
+    if type(data) is not list:
+        return ""
+
+    if len(data) == 0:
+        return ""
+
+    if type(data[0]) is not dict:
+        return ""
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(data[0].keys())
+    for row in data:
+        writer.writerow(row.values())
+    
+    return output.getvalue()
