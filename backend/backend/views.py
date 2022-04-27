@@ -993,7 +993,7 @@ def generate_report(team):
         fields["{i}.CARD START".format(i=index+1)] = (answers[index-1].created_at if index != 0 else answer.created_at).strftime("%H:%M:%S")
         fields["{i}.CARD".format(i=index+1)] = answer.id
         fields["{i}.TYPE".format(i=index+1)] = answer.question.chance_game if answer.question.chance else 'Decision'
-        fields["{i}.CHOICE".format(i=index+1)] = answer.option_chosen.id
+        fields["{i}.CHOICE".format(i=index+1)] = answer.option_chosen.id if answer.option_chosen else 'N/A'
         fields["{i}.CHOICE TIME".format(i=index+1)] = answers[index+1].created_at.strftime("%H:%M:%S")
         fields["{i}.ROOM CODE".format(i=index+1)] = answer.question.passcode
 

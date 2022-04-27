@@ -49,20 +49,16 @@ export default function ViewReportPage(props: ViewReportPageProps) {
         if (resp && resp.data.length > 0) {
           if (reportCols.length == 0) {
             const cols = [];
-            console.log('data', resp.data);
-            console.log('data[0]', resp.data[0]);
-            for (const [k] of resp.data[0].entries()) {
+            for (const k of Object.keys(resp.data[0])) {
               cols.push({
                 field: k,
                 headerName: k,
               });
             }
             setReportCols(cols);
-            console.log('Columns:', cols);
           }
 
           setReportRows([...reportRows, ...resp.data]);
-          console.log('New row:', ...resp.data);
         }
       }).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error.message});
