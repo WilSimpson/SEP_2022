@@ -712,6 +712,7 @@ def start_session(request):
     try:
         base_game = Game.objects.get(id=int(request.data['id']))
     except Exception:
+        print(traceback.format_exc())
         return HttpResponseServerError('You cannot create a session for a game that does not exist.')
     if not base_game.active:
         return HttpResponseServerError('You can only create sessions for active games.')
@@ -735,7 +736,7 @@ def start_session(request):
         )
         return Response(data={'id':new_session.id, 'code':new_session.code}, status=200)
     except Exception as e:
-        print(e)
+        print(traceback.format_exc())
         return HttpResponseServerError('There was a problem creating this session.')
 
 
@@ -957,5 +958,49 @@ def get_game_session_team_report(request, game_id, session_id, team_id):
 
     answers = GameSessionAnswer.objects.filter(team_id=team.id)
     serializer = AnswersReportSerializer(answers, many=True)
-    return Response(serializer.data)
+    # return Response(serializer.data)
+    data = generate_report(team)
+    print(data)
+    return Response(data)
 
+def generate_report(team):
+    data = []
+    fields = {}
+    if team.game_session.is_guest:
+        fields['SEMESTER/YEAR'] = 'N/A'
+    else:
+        fields['SEMESTER/YEAR'] = str(team.game_session.course.semester)
+
+    if team.game_session.is_guest:
+        fields['CLASS NAME/GUEST'] = 'GUEST'
+    else:
+        fields['CLASS NAME/GUEST'] = str(team.game_session.course.name)
+
+    if team.game_session.is_guest:
+        fields['SECTION'] = 'N/A'
+    else:
+        fields['SECTION'] = str(team.game_session.course.section)
+    
+    fields['TEAM ID'] = str(team.id)
+    fields['GAME SESSION ID'] = str(team.game_session.id)
+    fields['TEAM SIZE'] = str(team.size)
+    fields['1ST TIME PLAYING?'] = str(team.first_time)
+    fields['WALKING MODE'] = str(team.game_mode.name)
+    fields['GAME START'] = str(team.created_at)
+
+    if team.completed:
+        fields['GAME END'] = str(GameSessionAnswer.objects.filter(team=team).order_by('-id').first().created_at)
+    else:
+        fields['GAME END'] = str('N/A')
+    
+    answers = GameSessionAnswer.objects.filter(team=team).order_by('id')
+    for index, answer in enumerate(answers[:len(answers)-1]):
+        fields["{i}.CARD START".format(i=index+1)] = str(answers[index-1].created_at) if index != 0 else str(answer.created_at)
+        fields["{i}.CARD".format(i=index+1)] = str(answer.id)
+        fields["{i}.TYPE".format(i=index+1)] = str(answer.question.chance_game) if answer.question.chance else 'Decision'
+        fields["{i}.CHOICE".format(i=index+1)] = str(answer.option_chosen.id)
+        fields["{i}.CHOICE TIME".format(i=index+1)] = str(answers[index+1].created_at)
+        fields["{i}.ROOM CODE".format(i=index+1)] = str(answer.question.passcode)
+
+    data.append(fields)
+    return data
