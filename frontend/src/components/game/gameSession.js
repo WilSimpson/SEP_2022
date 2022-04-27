@@ -20,6 +20,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
+import Wheel from './theWheel';
 
 function SimpleDialog(props) {
   const {onClose, open, hints} = props;
@@ -82,6 +83,10 @@ export default function GameSession() {
   const [endGame, setEndGame] = useState(false);
   const [open, setOpen] = useState(false);
   const [hints, setHints] = useState(currentQuestion.help);
+  let weights = findWeights(currentOptions);
+  let randomChoice = random();
+  let data = {weight: weights, selected: randomChoice, callBack: chanceCallback};
+  const [key, setKey] = useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -100,6 +105,10 @@ export default function GameSession() {
 
   React.useEffect(() => {
     setEndGame(currentOptions.length == 0);
+    weights = findWeights(currentOptions);
+    randomChoice = random();
+    data = {weight: weights, selected: randomChoice, callBack: chanceCallback};
+    setKey(key+1);
   }, [currentOptions]);
 
   const setNextQuestion = () => {
@@ -161,18 +170,25 @@ export default function GameSession() {
         (error) => setError(error),
     ).catch((error) => setError(error));
   };
-  const weights = {};
-  let index = 0;
-  let i;
-  for (i in currentOptions) {
-    if (currentOptions.hasOwnProperty(i)) {
-      weights[index] = currentOptions[i].weight;
-      index = index + 1;
+  function findWeights(cO) {
+    const opts = {};
+    let index = 0;
+    let i;
+    for (i in cO) {
+      if (cO.hasOwnProperty(i)) {
+        opts[index] = cO[i].weight;
+        index = index + 1;
+      }
     }
+    return opts;
   }
-  function choiceClick() {
-    const choice = GamePlayService.random(weights);
-    return choice;
+  function random() {
+    const rChoice = GamePlayService.random(weights);
+    return parseInt(rChoice);
+  }
+
+  function chanceCallback(win) {
+    setSelectedOption(currentOptions[win]);
   }
 
   function returnHome() {
@@ -245,6 +261,9 @@ export default function GameSession() {
           onClose={handleClose}
           hints={hints}
         />
+        { currentQuestion.chance_game == 'SPIN_WHEEL' || currentQuestion.chance_game != 'NO_GAME'?
+             <Wheel data={data} key={key}/> : null
+        }
         <ButtonGroup
           variant="contained"
           align="center"
@@ -260,23 +279,10 @@ export default function GameSession() {
               sx={{marginTop: 5}}
               data-testid={'option'+ String(option.id)}
               onClick={() => setSelectedOption(option)}
-              disabled={currentQuestion.chance ? true : false}>
+              disabled={currentQuestion.chance_game != 'NO_GAME' ? true : false}>
               {option.value}
             </Button>
           ))}
-          { currentQuestion.chance ?
-            <Button
-              color='secondary'
-              sx={{marginTop: 5}}
-              data-testid='chance'
-              onClick={() =>
-                setSelectedOption(currentOptions[choiceClick()])
-              }
-              disabled={selectedOption ? true : false}
-            >
-            Chance
-            </Button> : null
-          }
           {
             endGame ?
               (
