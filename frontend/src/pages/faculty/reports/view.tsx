@@ -8,32 +8,6 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {useQuery} from '../../../helpers/query';
 
 /**
- * Columns for the reports
- */
-const columns = [
-  {
-    field: 'id',
-    headerName: 'ID',
-  },
-  {
-    field: 'team',
-    headerName: 'Team',
-  },
-  {
-    field: 'question',
-    headerName: 'Question',
-  },
-  {
-    field: 'option_chosen',
-    headerName: 'Option Chosen',
-  },
-  {
-    field: 'time',
-    headerName: 'Time',
-  },
-];
-
-/**
  * Properties for the view report page (ViewReportPage)
  */
 interface ViewReportPageProps {}
@@ -58,8 +32,9 @@ export default function ViewReportPage(props: ViewReportPageProps) {
   // Game session ids to be used in the report generation. If null, then
   // all sessions should be used.
   const ids: number[] | null = query.get('ids') ? query.get('ids').split(',').map((i) => parseInt(i)) : null;
-  const [reports, setReports] = React.useState([]);
-
+  // const [reports, setReports] = React.useState([]);
+  const [reportRows, setReportRows] = React.useState([]);
+  const [reportCols, setReportCols] = React.useState([]);
 
   React.useEffect(() => {
     /**
@@ -72,7 +47,22 @@ export default function ViewReportPage(props: ViewReportPageProps) {
     async function addSessionReport(sessionId: number, lastReport: boolean = true): Promise<void> {
       await gameSessionService.getReport(id, sessionId, false).then((resp) => {
         if (resp && resp.data.length > 0) {
-          setReports([...reports, ...resp.data]);
+          if (reportCols.length == 0) {
+            const cols = [];
+            console.log('data', resp.data);
+            console.log('data[0]', resp.data[0]);
+            for (const [k] of resp.data[0].entries()) {
+              cols.push({
+                field: k,
+                headerName: k,
+              });
+            }
+            setReportCols(cols);
+            console.log('Columns:', cols);
+          }
+
+          setReportRows([...reportRows, ...resp.data]);
+          console.log('New row:', ...resp.data);
         }
       }).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error.message});
@@ -122,7 +112,7 @@ export default function ViewReportPage(props: ViewReportPageProps) {
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <DataGrid getRowId={(row) => row.id} columns={columns} rows={reports} loading={loading} components={{Toolbar: GridToolbar}} sx={{height: '400px'}}/>
+                  <DataGrid getRowId={(row) => row['TEAM ID']} columns={reportCols} rows={reportRows} loading={loading} components={{Toolbar: GridToolbar}} sx={{height: '80vh'}}/>
                 </Grid>
               </Grid>
             </Paper>
