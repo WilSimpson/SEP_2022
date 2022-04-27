@@ -33,7 +33,7 @@ export default function SessionStart(props) {
       }
       
     } else {
-      setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))));
+      setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: `${course.semester}, ${course.name}, id: course.id}))));
     }
   }, []);
 
