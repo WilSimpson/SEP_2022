@@ -272,7 +272,7 @@ export function SideMenu(props) {
   );
 
   return (
-    <Box sx={{display: 'flex'}}>
+    <Box sx={{display: 'flex', height: '100vh'}}>
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{

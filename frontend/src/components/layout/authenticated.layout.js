@@ -15,11 +15,10 @@ export default function AuthenticatedLayout(props) {
                 theme.palette.grey[100] :
                 theme.palette.grey[900],
             flexGrow: 1,
-            height: '100vh',
             overflow: 'auto',
           }}
         >
-          <Grid container justifyContent="center" spacing={2}>
+          <Grid container justifyContent="center" spacing={2} sx={{pt: '1rem'}}>
             <Grid item xs={6}>
               <PageAlert />
             </Grid>
