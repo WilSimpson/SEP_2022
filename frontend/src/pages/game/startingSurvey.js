@@ -96,22 +96,22 @@ export default function StartingSurvey() {
           GamePlayService.setInProgressGame(gameSessionState);
           navigate(path, gameSessionState);
         }).catch((error) => {
-          if (error.response && error.response.status === 404) {
-            setErr(
-                'There was an unexpected error reaching the server. ' +
-                'Please try again later.',
-            );
-          } else {
-            if (error.response && error.response.status === 500) {
-              setErr(error.response.data);
-            } else {
-              setErr(
-                  'The server is unreachable at this time. ' +
-                  'Please try again later.',
-              );
-            }
-          }
-        },
+      if (error.response && error.response.status === 404) {
+        setErr(
+            'There was an unexpected error reaching the server. ' +
+            'Please try again later.',
+        );
+      } else {
+        if (error.response && error.response.status === 500) {
+          setErr(error.response.data);
+        } else {
+          setErr(
+              'The server is unreachable at this time. ' +
+              'Please try again later.',
+          );
+        }
+      }
+    },
     );
   };
 

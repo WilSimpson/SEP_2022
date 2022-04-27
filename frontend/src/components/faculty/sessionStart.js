@@ -24,14 +24,13 @@ export default function SessionStart(props) {
     if (!sessionStorage.getItem('courses')) {
       try {
         courseService.getMyCourses(AuthService.currentUser().id).then(
-          (response) => {
-            sessionStorage.setItem('courses', JSON.stringify(response.data));
-            setCourses(response.data.map((course) => ({label: course.name, id: course.id})));
-          }).catch((error) => alertService.error(error));
+            (response) => {
+              sessionStorage.setItem('courses', JSON.stringify(response.data));
+              setCourses(response.data.map((course) => ({label: course.name, id: course.id})));
+            }).catch((error) => alertService.error(error));
       } catch (err) {
         console.log('error:', err);
       }
-      
     } else {
       setCourses(JSON.parse(sessionStorage.getItem('courses')).map(((course) => ({label: course.name, id: course.id}))));
     }
@@ -48,12 +47,11 @@ export default function SessionStart(props) {
           id="outlined-required"
           label="Game ID"
           value={gameId}
-          onChange={
-            (e) => {
-              if (e) {
-                setGameId(e.target.value);
-              }
-            }}
+          onChange={(e) => {
+            if (e) {
+              setGameId(e.target.value);
+            }
+          }}
         />
       </Grid>
       <Grid item xs={12}>

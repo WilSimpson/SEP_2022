@@ -34,7 +34,7 @@ export default function StartGameSession(props) {
           navigate('/faculty-dashboard');
         }).catch(() => {
           alertService.error('error creating session');
-        })
+        });
   }
 
   return (
