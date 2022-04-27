@@ -871,10 +871,12 @@ def get_games_session_report(request, game_id, session_id):
     if session.game.id != game_id:
         return HttpResponseBadRequest('Session does not belong to that game')
     
-    teams = Team.objects.filter(game_session_id=session.id).values_list('id', flat=True)
-    answers = GameSessionAnswer.objects.filter(team__in=teams)
-    serializer = AnswersReportSerializer(answers, many=True)
-    return Response(serializer.data)
+    teams = Team.objects.filter(game_session_id=session.id)
+    # answers = GameSessionAnswer.objects.filter(team__in=teams)
+    # serializer = AnswersReportSerializer(answers, many=True)
+    # return Response(serializer.data)
+    
+    return determine_report_response(request, generate_reports(teams))
     
 @api_view(['GET'])
 def get_game_session_teams(request, game_id, session_id):
@@ -950,26 +952,9 @@ def get_game_session_team_report(request, game_id, session_id, team_id):
         return HttpResponseBadRequest('Team does not belong to this game session')
 
     answers = GameSessionAnswer.objects.filter(team_id=team.id)
-    serializer = AnswersReportSerializer(answers, many=True)
+    # serializer = AnswersReportSerializer(answers, many=True)
     # return Response(serializer.data)
-    data = generate_report(team)
-
-    if request.META['HTTP_ACCEPT'] == 'text/csv':
-        return HttpResponse(content_type="text/csv", content=report_to_csv([data]))
-
-    return Response(data)
-
-class ReportView (APIView):
-    renderer_classes = [CSVRenderer]
-
-    def get_renderer_context(self):
-        context = super().get_renderer_context()
-        context['header'] = (
-            self.request.GET['fields'].split(',')
-            if 'fields' in self.request.GET else None)
-        return context
-
-    
+    return determine_report_response(request, generate_report(team))
 
 def generate_report(team):
     fields = {}
@@ -1014,12 +999,15 @@ def generate_report(team):
 
     return fields
 
+def generate_reports(teams):
+    data = []
+    for team in teams:
+        data.append(generate_report(team))
+    return data
+
 def report_to_csv(data):
     if type(data) is not list:
-        return ""
-
-    if len(data) == 0:
-        return ""
+        data = [data]
 
     if type(data[0]) is not dict:
         return ""
@@ -1031,3 +1019,9 @@ def report_to_csv(data):
         writer.writerow(row.values())
     
     return output.getvalue()
+
+def determine_report_response(request, data):
+    if request.META['HTTP_ACCEPT'] == 'text/csv':
+        return HttpResponse(content_type="text/csv", content=report_to_csv(data))
+
+    return Response(data)
