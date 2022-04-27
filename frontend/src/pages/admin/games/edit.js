@@ -76,12 +76,12 @@ export default function EditGamePage(props) {
               });
               navigate('/admin-dashboard/games');
             }).catch((error) => {
-              alertService.alert({
-                severity: alertSeverity.error,
-                message: error.message,
-              });
-              setLoading(false);
-            },
+          alertService.alert({
+            severity: alertSeverity.error,
+            message: error.message,
+          });
+          setLoading(false);
+        },
         );
   }
 

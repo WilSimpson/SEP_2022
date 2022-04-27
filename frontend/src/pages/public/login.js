@@ -63,7 +63,7 @@ export default function Login() {
         setErrMsg('There was an unexpected error. Please try again later.');
       }
     },
-);
+    );
   };
 
   return (
