@@ -234,7 +234,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               <TableCell>{row.id}</TableCell>
               <TableCell>{formatDate(row.start_time)}</TableCell>
               <TableCell>{formatDate(row.end_time)}</TableCell>
-              <TableCell>{row.code}</TableCell>
+              <TableCell>{String(row.code).padStart(6, '0')}</TableCell>
               {props.reportButtons ?
                 <TableCell>
                   <Button

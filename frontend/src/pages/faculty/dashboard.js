@@ -154,6 +154,11 @@ export default function FacultyDash() {
         gameSessionService.getSessions(game.id)
             .then((resp) => {
               setSessions((oldSessions) => [...oldSessions, ...resp.data]);
+              // const tempSessions = sessions;
+              // tempSessions.forEach((session) => session);
+              // // const str = '3902';
+              // console.log(tempSessions);
+              // setSessions(tempSessions);
             }, (error) => {
               alertService.alert({severity: alertSeverity.error, message: error});
             });

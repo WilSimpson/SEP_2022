@@ -27,7 +27,7 @@ export default function StartGameSession(props) {
           alertService.alert({
             severity: alertSeverity.success,
             message: `Game Session Started,
-                    Join Code: ${success.data.code}`,
+                    Join Code: ${String(success.data.code).padStart(6, '0')}`,
           });
           AuthService.currentUser().isAdmin() ?
           navigate('/dashboard') :
