@@ -29,7 +29,7 @@ describe('<ForgotPassword />', () => {
   describe('Email Field', () => {
     beforeEach(() => {
       const {getByTestId} = render(
-        <ForgotPassword/>,
+        <BrowserRouter><ForgotPassword/></BrowserRouter>,
       );
       emailField = getByTestId('email-input');
     });
@@ -47,7 +47,7 @@ describe('<ForgotPassword />', () => {
   describe('Submit Button', () => {
     beforeEach(() => {
       const {getByTestId} = render(
-          <ForgotPassword/>,
+        <BrowserRouter><ForgotPassword/></BrowserRouter>,
       );
       submitButton = getByTestId('submit-button');
       emailField = getByTestId('email-input');

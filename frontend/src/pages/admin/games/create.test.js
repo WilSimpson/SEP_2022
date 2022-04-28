@@ -8,6 +8,7 @@ import MockGameService from '../../../services/game';
 import {act} from 'react-dom/test-utils';
 import { alertService } from '../../../services/alert';
 import '../../../setupTests';
+import { BrowserRouter } from 'react-router-dom';
 
 
 const mockedNavigate = jest.fn();
@@ -36,12 +37,12 @@ describe('<CreateGame />', () => {
       spy.mockRestore();
     });
     it ('onCancel method passed as prop should call navigate()', () => {
-      const wrapper = mount(<CreateGame />);
+      const wrapper = mount(<BrowserRouter><CreateGame /></BrowserRouter>);
       wrapper.find(GameFields).props().onCancel();
       expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
     });
     it('handleSubmit method passed as prop calls createGame', async () => {
-      const wrapper = mount(<CreateGame />);
+      const wrapper = mount(<BrowserRouter><CreateGame /></BrowserRouter>);
       const promise = Promise.resolve();
       MockGameService.createGame.mockResolvedValue({
         response: jest.fn(() => promise),
@@ -52,7 +53,7 @@ describe('<CreateGame />', () => {
     });
     it ('handleSubmit method passed as prop calls alert service on success', async () => {
       let alertSpy = jest.spyOn(alertService, 'alert');
-      const wrapper = mount(<CreateGame />);
+      const wrapper = mount(<BrowserRouter><CreateGame /></BrowserRouter>);
       const promise = Promise.resolve();
       MockGameService.createGame.mockResolvedValue({
         response: jest.fn(() => promise),
@@ -62,7 +63,7 @@ describe('<CreateGame />', () => {
       expect(alertSpy).toHaveBeenCalled();
     });
     it ('handleSubmit method passed as prop calls navigate on success', async () => {
-      const wrapper = mount(<CreateGame />);
+      const wrapper = mount(<BrowserRouter><CreateGame /></BrowserRouter>);
       const promise = Promise.resolve();
       MockGameService.createGame.mockResolvedValue({
         response: jest.fn(() => promise),
@@ -74,7 +75,7 @@ describe('<CreateGame />', () => {
     it ('handleSubmit method passed as prop calls alert on error', async () => {
       let alertSpy = jest.spyOn(alertService, 'alert');
       const err = new Error('test error');
-      const wrapper = mount(<CreateGame />);
+      const wrapper = mount(<BrowserRouter><CreateGame /></BrowserRouter>);
       MockGameService.createGame.mockRejectedValue(err);
       await wrapper.find(GameFields).props().onSubmit();
       expect(alertSpy).toHaveBeenCalled();

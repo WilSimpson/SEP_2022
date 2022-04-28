@@ -52,7 +52,7 @@ describe('<ViewGamesPage />', () => {
     MockGameService.getGames.mockResolvedValue({data: [game]});
     await act(async() => {
       wrapper = mount(
-          <ViewGamesPage />
+          <BrowserRouter><ViewGamesPage /></BrowserRouter>
       );
     });
   });
@@ -82,7 +82,7 @@ describe('<ViewGamesPage />', () => {
         let alertSpy = jest.spyOn(alertService, 'alert');
         await act(async() => {
           wrapper = mount(
-              <ViewGamesPage />
+            <BrowserRouter><ViewGamesPage /></BrowserRouter>
           );
         });
         await act(() => promise);

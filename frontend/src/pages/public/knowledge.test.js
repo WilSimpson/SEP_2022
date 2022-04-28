@@ -2,13 +2,14 @@ import React from 'react';
 import '../../setupTests';
 import Knowledge from "./knowledge";
 import {render} from 'enzyme';
+import { BrowserRouter } from 'react-router-dom';
 
 
 
 describe('<Knowledge />', () => {
   let comp = null;
   beforeEach(() => {
-    comp = render(<Knowledge />);
+    comp = render(<BrowserRouter><Knowledge /></BrowserRouter>);
   });
   it ('should have correct text content', () =>{
     expect(comp.text()).toContain('How to play a game:');

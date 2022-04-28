@@ -7,6 +7,7 @@ import MockGameService from '../../../services/game';
 import {act} from 'react-dom/test-utils';
 import {alertService} from '../../../services/alert';
 import '../../../setupTests';
+import { BrowserRouter } from 'react-router-dom';
 
 
 const mockedNavigate = jest.fn();
@@ -52,7 +53,7 @@ describe('<EditGame />', () => {
       const resp = {data: []};
       await act(async () => {
           wrapper = mount(
-              <EditGame />
+              <BrowserRouter><EditGame /></BrowserRouter>
           );
       });
     });
@@ -120,7 +121,7 @@ describe('<EditGame />', () => {
       const spy = jest.spyOn(alertService, 'alert');
       await act(async () => {
           wrapper = mount(
-            <EditGame />
+            <BrowserRouter><EditGame /></BrowserRouter>
           );
       });
       expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
@@ -135,7 +136,7 @@ describe('<EditGame />', () => {
         const spy = jest.spyOn(alertService, 'alert');
         await act(async () => {
             wrapper = mount(
-              <EditGame />
+              <BrowserRouter><EditGame /></BrowserRouter>
             );
         });
         expect(spy).toHaveBeenCalled();
@@ -146,7 +147,7 @@ describe('<EditGame />', () => {
         const spy = jest.spyOn(alertService, 'alert');
         await act(async () => {
             wrapper = mount(
-              <EditGame />
+              <BrowserRouter><EditGame /></BrowserRouter>
             );
         });
         expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
