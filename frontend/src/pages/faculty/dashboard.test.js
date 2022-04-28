@@ -1,25 +1,17 @@
 import React from 'react';
 import '../../setupTests';
 import {mount} from 'enzyme';
-
 import {User} from '../../models/user';
 import FacultyDash from './dashboard';
 import {BrowserRouter} from 'react-router-dom';
 import GamesTable from '../../components/admin/gamesTable';
 import {render, waitFor} from '@testing-library/react'
-import MockCourseService from '../../services/courses';
 import MockGameService from '../../services/game';
 import MockGameSessionService from '../../services/gameSession';
 import { act } from 'react-dom/test-utils';
-import { LinearProgress } from '@mui/material';
-import {alertService} from '../../services/alert';
 import GameSessionsTable from '../../components/faculty/gameSessionsTable';
 
-
 const result = new User('test@test.com', '', '', 'FACULTY', 'jwt-token');
-const res = [{id: 1, department: 'There was a problem',
-  name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
-  semester: 'N/A'}];
 
 let game = [{
     id: 1,
@@ -40,7 +32,6 @@ let sessions = [
 
 const mockedNavigate = jest.fn();
 
-jest.mock('../../services/courses');
 jest.mock('../../services/game');
 jest.mock('../../services/gameSession');
 jest.mock("react-router-dom", () => ({
@@ -49,20 +40,18 @@ jest.mock("react-router-dom", () => ({
 }));
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  jest.clearAllMocks();
 });
 
 describe('<FacultyDash />', () => {
   beforeEach(() => {
     localStorage.setItem('user', JSON.stringify(result));
-    const resp = {data: res};
-    MockCourseService.getMyCourses.mockResolvedValue(resp);
     MockGameService.getGames.mockResolvedValue({data: game});
     MockGameSessionService.getMyActiveSessions.mockResolvedValue({data: sessions});
     MockGameSessionService.getSessions.mockResolvedValue({data: sessions});
   });
   afterEach(() => {
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
     localStorage.clear();
   });
 
@@ -132,74 +121,6 @@ describe('<FacultyDash />', () => {
         </BrowserRouter>,
     );
     await waitFor(() => expect(getByTestId('courses-button')).toBeInTheDocument());
-  });
-
-  describe('Course Table', () => {
-    let wrapper;
-    let promise;
-    beforeEach(async () => {
-      promise = Promise.resolve();
-      await act(async () => {
-        wrapper = mount(
-          <BrowserRouter>
-            <FacultyDash />
-          </BrowserRouter>
-        )
-      });
-    });
-    describe('ON LOAD', () => {
-      it('should call courseService getMyCourses', async () => {
-        await act(() => promise);
-        expect(MockCourseService.getMyCourses).toHaveBeenCalled();
-      });
-      describe('on success', () => {
-        it('should no longer be loading', async () => {
-          await act(() => promise);
-          wrapper.update();
-          expect(wrapper.find(LinearProgress).exists()).toBe(false);
-        });
-      });
-      describe('on fail', () => {
-        it('should no longer be loading', async () => {
-          MockCourseService.getMyCourses.mockRejectedValue({})
-          let wrapper;
-          await act(async () => {
-            wrapper = mount(
-              <BrowserRouter>
-                <FacultyDash />
-              </BrowserRouter>
-            )
-          });
-          await act(() => promise);
-          wrapper.update();
-          expect(wrapper.find(LinearProgress).exists()).toBe(false);
-        });
-      });
-    });
-
-    describe('editThisCourse', () => {
-      it('should navigate', async () => {
-        await act(() => promise);
-        wrapper.update();
-        act(() => {wrapper.find('#row1').simulate('click')})
-        expect(mockedNavigate).toHaveBeenCalled();
-      });
-    });
-
-    describe('searchCourses', () => {
-      it('should use Object.values to find matching terms', async () => {
-        let spy = jest.spyOn(Object, 'values');
-        const event = {
-          preventDefault() {},
-          target: { value: 'the-value' }
-        };        
-        await act(() => promise);
-        wrapper.update();
-        
-        act(() => {wrapper.find('#searchCourses').hostNodes().simulate('change', event)})
-        expect(spy).toHaveBeenCalled();
-      });
-    });
   });
 
   describe('FacultyDash', () => {
