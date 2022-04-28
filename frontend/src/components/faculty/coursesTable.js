@@ -85,7 +85,7 @@ export default function CoursesTable(props) {
       <Table data-testid="course_table" sx={{minWidth: 500}}>
         <TableHead>
           <TableRow>
-            {props.editable ? (<TableCell>Edit</TableCell>) : <></>}
+            {props.editable ? (<TableCell></TableCell>) : null}
             <TableCell>Department</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Course Number</TableCell>

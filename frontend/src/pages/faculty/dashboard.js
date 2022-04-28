@@ -1,14 +1,12 @@
 import * as React from 'react';
 import {
-  Button,
   Container,
   Grid,
   Paper,
   Typography,
-  Link,
 } from '@mui/material';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
-import GamesTable from '../../components/admin/gamesTable';
+// import GamesTable from '../../components/admin/gamesTable';
 import gameService from '../../services/game';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
@@ -20,6 +18,7 @@ import CoursesTable from '../../components/faculty/coursesTable';
 
 export default function FacultyDash() {
   const [sessions, setSessions] = React.useState([]);
+  // const [games, setGames] = React.useState([]);
   const navigate = useNavigate();
 
   const handleQRCodeButtonClicked = (joinCode) => {
@@ -30,6 +29,7 @@ export default function FacultyDash() {
     async function getGames() {
       gameService.getGames().then((resp) => {
         const games = [...resp.data];
+        // setGames(games);
         getSessions(games);
       }).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
@@ -61,29 +61,30 @@ export default function FacultyDash() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 240,
+                height: 380,
                 overflowX: 'auto',
+                justifyContent: 'center',
               }}
             >
               <React.Fragment>
                 <Typography
                   component="h2"
-                  variant="h6"
+                  variant="h4"
                   color="primary"
                   gutterBottom
                 >
                   Total Courses
                 </Typography>
-                <Typography component="p" variant="h4">
+                <Typography component="p" variant="h2">
                   {sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).length : 0}
                 </Typography>
-                <div>
+                {/* <div>
                   <Button color="secondary" variant="contained"
                     href="dashboard/addCourse"
                     data-testid="courses-button">
                     Add a Course
                   </Button>
-                </div>
+                </div> */}
               </React.Fragment>
             </Paper>
           </Grid>
@@ -94,14 +95,14 @@ export default function FacultyDash() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 240,
+                height: 380,
                 overflowX: 'auto',
               }}
             >
               <CoursesTable />
             </Paper>
           </Grid>
-          <Grid item xs={12} md={8} lg={9}>
+          {/* <Grid item xs={12} md={8} lg={9}>
             <Paper
               elevation={7}
               sx={{
@@ -111,7 +112,7 @@ export default function FacultyDash() {
                 height: 240,
               }}
             >
-              <GamesTable games={gameService.getGames() || []} />
+              <GamesTable data={games} />
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={3}>
@@ -123,18 +124,19 @@ export default function FacultyDash() {
                 display: 'flex',
                 flexDirection: 'column',
                 height: 240,
+                justifyContent: 'center',
               }}
             >
               <React.Fragment>
                 <Typography
-                  component="h2"
-                  variant="h6"
+                  component="h1"
+                  variant="h4"
                   color="primary"
                   gutterBottom
                 >
                   Total Games
                 </Typography>
-                <Typography component="p" variant="h4">
+                <Typography component="p" variant="h2">
                   2
                 </Typography>
                 <div>
@@ -144,7 +146,7 @@ export default function FacultyDash() {
                 </div>
               </React.Fragment>
             </Paper>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <Paper
               elevation={7}
