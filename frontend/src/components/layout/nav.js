@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import {ButtonGroup} from '@mui/material';
+import {ButtonGroup, Chip} from '@mui/material';
 import authService from '../../services/auth';
 import {Link} from 'react-router-dom';
 // const pages = ['Get Started', 'About', 'Help'];
@@ -108,64 +108,70 @@ const ResponsiveAppBar = () => {
               ))}
             </ButtonGroup>
           </Box>
-          <Box sx={{flexGrow: 0}}>
-            {authService.isLoggedIn() ? (
-              <div>
-                <Tooltip title="Account Menu">
-                  <IconButton
-                    onClick={handleOpenUserMenu}
-                    sx={{p: 0}}
-                    size="large"
-                    data-testid="user-menu"
-                  >
-                    <Avatar src='/images/accountIcon.png' alt="User" />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{mt: '45px'}}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  data-testid='auth-menu'
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {Object.entries(settings).map(([name, link]) => (
-                    <MenuItem
-                      key={name}
-                      data-testid={name+'-test'}
-                      component={Link}
-                      to={link}
-                      onClick={(e) => handleChooseUserOption(e, link)}
+          {authService.isLoggedIn() ? (
+            <>
+              <Chip sx={{mr: 2}} label={authService.currentUser().isAdmin() ? 'ADMIN' : 'FACULTY'} color='secondary' size='small' />
+              <Typography sx={{mr: 5}}>{authService.currentUser().email}</Typography>
+              <Box sx={{flexGrow: 0}}>
+                <div>
+                  <Tooltip title="Account Menu">
+                    <IconButton
+                      onClick={handleOpenUserMenu}
+                      sx={{p: 0}}
+                      size="large"
+                      data-testid="user-menu"
                     >
-                      {name}
+                      <Avatar src='/images/accountIcon.png' alt="User" />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    sx={{mt: '45px'}}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    data-testid='auth-menu'
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    {Object.entries(settings).map(([name, link]) => (
+                      <MenuItem
+                        key={name}
+                        data-testid={name+'-test'}
+                        component={Link}
+                        to={link}
+                        onClick={(e) => handleChooseUserOption(e, link)}
+                      >
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </div>
+              </Box>
+            </>
+                ) : (
+                  <Box>
+                    <MenuItem
+                      key='Login'
+                      component={Link}
+                      to={'/login'}
+                    >
+                      <Button
+                        key="Login"
+                        sx={{my: 2, color: 'common.white', display: 'block'}}
+                      >
+                        Login
+                      </Button>
                     </MenuItem>
-                  ))}
-                </Menu>
-              </div>
-            ) : (
-              <MenuItem
-                key='Login'
-                component={Link}
-                to={'/login'}
-              >
-                <Button
-                  key="Login"
-                  sx={{my: 2, color: 'common.white', display: 'block'}}
-                >
-                  Login
-                </Button>
-              </MenuItem>
-            )}
-          </Box>
+                  </Box>
+                )}
         </Toolbar>
       </Container>
     </AppBar>
