@@ -9,14 +9,12 @@ export default function GameLayout(props) {
     <>
       <CssBaseline />
       <GameNav />
-      <main>
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={6}>
-            <PageAlert />
-          </Grid>
+      <Grid container justifyContent="center" spacing={2} xs={{overflow: 'auto'}}>
+        <Grid item xs={6}>
+          <PageAlert />
         </Grid>
-        {props.children}
-      </main>
+      </Grid>
+      {props.children}
       <StickyFooter />
     </>
   );

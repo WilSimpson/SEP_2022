@@ -802,10 +802,11 @@ class GameSessionTests(TestCase):
     def setUp(self):
         self.game = Game.objects.create(title='game', creator_id=999, code=999999, active=True)
         self.game2 = Game.objects.create(title='game2', creator_id=999, code=999998, active=True)
+        self.course = Course.objects.create(name='course', section='section', department='department', number=1, semester='semester 22', userId=1)
         self.session = GameSession.objects.create(creator_id=999, game=self.game, start_time=datetime.now(), end_time = None,
-            notes = "", timeout = 5, code = 999999)
+            notes = "", timeout = 5, code = 999999, course=self.course)
         self.session2 = GameSession.objects.create(creator_id=999, game=self.game2, start_time=datetime.now(), end_time = None,
-            notes = "", timeout = 5, code = 999998)
+            notes = "", timeout = 5, code = 999998, course=self.course)
         self.mode = GameMode.objects.create(name="Walking")
         self.team = Team.objects.create(game_session = self.session, game_mode = self.mode, guest = True, size = 2, first_time = False, completed = False)
         self.team2 = Team.objects.create(game_session = self.session2, game_mode = self.mode, guest = True, size = 2, first_time = False, completed = False)
