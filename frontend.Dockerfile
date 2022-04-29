@@ -1,7 +1,14 @@
 # Build
 FROM node as BUILD
-# RUN apk add --no-cache python3 py3-pip make g++ pkgconfig
-RUN apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+RUN apt-get update \
+&& apt-get -y install libcairo-dev \
+ pk-config \
+ cairo \
+ pango \
+ libpng \
+ jpeg \
+ giflib \
+ librsvg *
 WORKDIR /src
 
 ENV PATH /src/node_modules/.bin:$PATH
