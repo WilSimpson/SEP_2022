@@ -2,13 +2,9 @@
 FROM node as BUILD
 RUN apt-get update \
 && apt-get -y install libcairo-dev \
- pk-config \
- cairo \
- pango \
- libpng \
- jpeg \
- giflib \
- librsvg *
+ pkg-config \
+ libcairo2-dev \
+ libpango1.0-dev
 WORKDIR /src
 
 ENV PATH /src/node_modules/.bin:$PATH
