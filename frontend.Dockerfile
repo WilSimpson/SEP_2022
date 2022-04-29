@@ -1,6 +1,6 @@
 # Build
 FROM node:16.13.2-alpine as BUILD
-
+RUN apk add g++ make python
 WORKDIR /src
 
 ENV PATH /src/node_modules/.bin:$PATH
