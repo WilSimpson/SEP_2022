@@ -1021,7 +1021,7 @@ def report_to_csv(data):
     return output.getvalue()
 
 def determine_report_response(request, data):
-    if request.META['HTTP_ACCEPT'] == 'text/csv':
+    if 'HTTP_ACCEPT' in request.META and request.META['HTTP_ACCEPT'] == 'text/csv':
         return HttpResponse(content_type="text/csv", content=report_to_csv(data))
 
-    return Response(data)
+    return Response(data)   
