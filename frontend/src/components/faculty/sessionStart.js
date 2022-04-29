@@ -49,7 +49,7 @@ export default function SessionStart(props) {
     GameService.getGames().then(
         (response) => {
           setGamesMeta([...response.data]);
-        });
+        }).catch((error) => {});
   }, []);
 
   return (

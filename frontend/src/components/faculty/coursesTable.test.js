@@ -22,6 +22,12 @@ const res = [{id: 1, department: 'There was a problem',
   name: 'N/A', courseNumber: 'N/A', sectionNumber: 'N/A',
   semester: 'N/A'}];
 
+beforeEach(() => {
+  const resp = {data: res};
+  localStorage.setItem('user', JSON.stringify(user));
+  MockCourseService.getMyCourses.mockResolvedValue(resp);
+});
+
 afterEach(() => {
   localStorage.clear();
   jest.clearAllMocks();
@@ -31,9 +37,6 @@ describe('<CoursesTable />', () => {
   let wrapper;
   let promise;
   beforeEach(async () => {
-    const resp = {data: res};
-    localStorage.setItem('user', JSON.stringify(user));
-    MockCourseService.getMyCourses.mockResolvedValue(resp);
     promise = Promise.resolve();
     await act(async () => {
       wrapper = mount(

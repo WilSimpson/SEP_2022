@@ -114,27 +114,9 @@ describe('<SideMenu />', () => {
   describe('Help Button', () => {
     it('should have clickable help button', () => {
       const {getByTestId} = render(<SideMenu />);
-      const helpLink = getByTestId('help-item');
-      expect(helpLink).toBeInTheDocument();
-      expect(helpLink).not.toBeDisabled();
-    });
-
-    it('should reveal 2 new buttons when clicked', () => {
-      const {getByTestId} = render(<SideMenu />);
-      const helpLink = getByTestId('help-item');
-      try {
-        getByTestId('getting-started-item');
-        getByTestId('about-item');
-      } catch (error) {
-        expect(error);
-      }
-      fireEvent.click(helpLink);
-      const gettingStarted = getByTestId('getting-started-item');
-      const about = getByTestId('about-item');
-      expect(gettingStarted).toBeInTheDocument();
-      expect(gettingStarted).not.toBeDisabled();
-      expect(about).toBeInTheDocument();
-      expect(about).not.toBeDisabled();
+      const homeLink = getByTestId('home-item');
+      expect(homeLink).toBeInTheDocument();
+      expect(homeLink).not.toBeDisabled();
     });
   });
 });

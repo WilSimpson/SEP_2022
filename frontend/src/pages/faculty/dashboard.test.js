@@ -67,29 +67,6 @@ describe('<FacultyDash />', () => {
     expect(wrapper);
   });
 
-  it('should have an All Games table', async () => {
-    let wrapper;
-    await act(async () => {
-      wrapper = mount(
-        <BrowserRouter>
-          <FacultyDash />
-        </BrowserRouter>,
-      );
-    });
-    expect(wrapper.find(GamesTable).length).toEqual(1);
-  });
-
-  it('should have an indicator to Total Games', async () => {
-    const resp = {data: []};
-    // axios.get.mockResolvedValue(resp);
-    const {getByTestId} = render(
-        <BrowserRouter>
-          <FacultyDash />
-        </BrowserRouter>,
-    );
-    await waitFor(() => expect(getByTestId('total-games')).toBeInTheDocument());
-  });
-
   it('should have a table to show Active Game Sessions', async () => {
     const resp = {data: []};
     // axios.get.mockResolvedValue(resp);
@@ -110,17 +87,6 @@ describe('<FacultyDash />', () => {
       </BrowserRouter>,
     );
     await waitFor(() => expect(getByTestId('course_table')).toBeInTheDocument());
-  });
-
-  it('should have a button to add a new course', async () => {
-    const resp = {data: []};
-    // axios.get.mockResolvedValue(resp);
-    const {getByTestId} = render(
-        <BrowserRouter>
-          <FacultyDash />
-        </BrowserRouter>,
-    );
-    await waitFor(() => expect(getByTestId('courses-button')).toBeInTheDocument());
   });
 
   describe('FacultyDash', () => {
