@@ -6,10 +6,15 @@ import {
   FormControlLabel,
   Switch,
   Autocomplete,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 import AuthService from '../../services/auth';
 import {alertService} from '../../services/alert';
 import courseService from '../../services/courses';
+import GameService from '../../services/game';
 
 export default function SessionStart(props) {
   const creatorId = AuthService.currentUser().id;
@@ -19,6 +24,13 @@ export default function SessionStart(props) {
   const [isGuest, setIsGuest] = React.useState('');
   const [courseID, setCourseID] = React.useState('');
   const [courses, setCourses] = React.useState([]);
+  const [gamesMeta, setGamesMeta] = React.useState([]);
+  // const [selectedGame, setSelectedGame] = React.useState(null);
+  // const [age, setAge] = React.useState('');
+
+  const handleGameSelected = (event) => {
+    setGameId(event.target.value);
+  };
 
   useEffect(() => {
     if (!sessionStorage.getItem('courses')) {
@@ -36,12 +48,43 @@ export default function SessionStart(props) {
     }
   }, []);
 
+  useEffect(() => {
+    GameService.getGames().then(
+        (response) => {
+          setGamesMeta([...response.data]);
+        });
+  }, []);
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <h2>Start Game Session</h2>
       </Grid>
       <Grid item xs={12}>
+        <FormControl sx={{m: 1, minWidth: 120}}>
+          <InputLabel id="game-input-label">Game</InputLabel>
+          <Select
+            required
+            labelId="helper-label"
+            id="game-select"
+            value={gameId}
+            label="Game"
+            onChange={handleGameSelected}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {gamesMeta.map((gameItem) =>
+              (<MenuItem
+                key={gameItem.id}
+                value={gameItem.id}>
+                {gameItem.title}
+              </MenuItem>),
+            )}
+          </Select>
+        </FormControl>
+      </Grid>
+      {/* <Grid item xs={12}>
         <TextField
           required
           id="outlined-required"
@@ -53,7 +96,7 @@ export default function SessionStart(props) {
             }
           }}
         />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <TextField
           required
