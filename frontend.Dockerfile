@@ -1,6 +1,6 @@
 # Build
 FROM node:16.13.2-alpine as BUILD
-RUN apk add --no-cache python3 py3-pip make g++
+RUN apk add --no-cache python3 py3-pip make g++ pkgconfig
 WORKDIR /src
 
 ENV PATH /src/node_modules/.bin:$PATH
