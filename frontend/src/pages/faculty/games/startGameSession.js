@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Grid} from '@mui/material';
+import {Container, Grid, Paper} from '@mui/material';
 import gameSessionService from '../../../services/gameSession';
 import {useNavigate} from 'react-router-dom';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
@@ -40,8 +40,8 @@ export default function StartGameSession(props) {
   return (
     <AuthenticatedLayout>
       <Container maxWidth='lg'>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
+        <Grid container spacing={3} sx={{justifyContent: 'center'}}>
+          <Grid item xs={12} component={Paper} sx={{p: '1.5rem'}}>
             <SessionStart
               onCancel={handleCancel}
               onSubmit={handleSubmit}
