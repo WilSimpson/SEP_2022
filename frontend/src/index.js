@@ -3,34 +3,22 @@ import ReactDOM from 'react-dom';
 import App from './app';
 import reportWebVitals from './reportWebVitals';
 import {
-  ThemeProvider,
   StyledEngineProvider,
-  createTheme,
 } from '@mui/material/styles';
 
-const theme = createTheme({
-  palette: {
-    type: 'light',
-    primary: {
-      main: '#6A8EAE',
-    },
-    secondary: {
-      main: '#57A773',
-      contrastText: '#ffffff',
-    },
-    background: {
-      default: '#ECF8F8',
-      paper: '#fff',
-    },
-  },
-});
+// let [theme, setTheme] = useState(true);
+
+
+// const handleThemeChange = (colorTheme) => {
+//   theme = colorTheme;
+// };
 
 ReactDOM.render(
     <React.StrictMode>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
+        {/* <ThemeProvider theme={theme}> */}
+        <App />
+        {/* </ThemeProvider> */}
       </StyledEngineProvider>
     </React.StrictMode>,
     document.getElementById('root'),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './app.css';
 import Home from './pages/public/home';
 import StartingSurvey from './pages/game/startingSurvey';
@@ -30,170 +30,226 @@ import ReportsPage from './pages/faculty/reports/reports';
 import EditCourse from './pages/faculty/editCourse';
 import ReportPage from './pages/faculty/reports/report';
 import ViewReportPage from './pages/faculty/reports/view.tsx';
+import {Switch} from '@mui/material';
+import {
+  ThemeProvider,
+  createTheme,
+} from '@mui/material/styles';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
 
-function App() {
+const lightTheme = {
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#6A8EAE',
+    },
+    secondary: {
+      main: '#57A773',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#ECF8F8',
+      paper: '#fff',
+    },
+  },
+};
+const darkTheme = {
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#F3EFE0',
+    },
+    secondary: {
+      main: '#006DAA',
+    },
+  },
+};
+
+function App(props) {
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(createTheme(lightTheme));
+
+  useEffect(() => {
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', JSON.stringify(lightTheme));
+      setCurrentTheme(createTheme(lightTheme));
+    } else {
+      const theme = JSON.parse(localStorage.getItem('theme'));
+      setCurrentTheme(createTheme(theme));
+    }
+  }, []);
+
+  const handleThemeChange = () => {
+    const appliedTheme = createTheme(isDarkTheme ? lightTheme : darkTheme);
+    localStorage.setItem('theme', JSON.stringify(appliedTheme));
+    setCurrentTheme(createTheme(appliedTheme));
+    setIsDarkTheme(!isDarkTheme);
+  };
+
   return (
-    <div className="App">
-      <Router history={history}>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <Routes>
-              <Route exact path="/" element={<Home />} />
-              <Route exact path="startingSurvey" element={<StartingSurvey />} />
-              <Route exact path="gameSession" element={<GameSession />} />
-              <Route exact path="/login" element={<Login />} />
-              <Route exact path="/started" element={<Knowledge />} />
-              <Route exact path="/logout" element={<Logout />} />
-              <Route exact path="/register" element={<Register />} />
-              <Route exact path="/endGame" element={<EndGame />} />
-              <Route exact path="/forgot" element={<ForgotPassword />} />
-              <Route exact path="/changePassword" element={<EditPassword />} />
-              <Route
-                exact
-                path="/pass"
-                element={
-                  <Passcode data={{question: '/#', location: 'SC123'}} />
-                }
-              />
-              <Route
-                exact
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <AdminDash /> : <FacultyDash />};
-                  </ProtectedRoute>
-                }
-              />
+    <ThemeProvider theme={currentTheme}>
+      <div className="App">
+        <Switch defaultChecked onChange={() => handleThemeChange()}/>
+        <Router history={history}>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <Routes>
+                <Route exact path="/" element={<Home />} />
+                <Route exact path="startingSurvey" element={<StartingSurvey />} />
+                <Route exact path="gameSession" element={<GameSession />} />
+                <Route exact path="/login" element={<Login />} />
+                <Route exact path="/started" element={<Knowledge />} />
+                <Route exact path="/logout" element={<Logout />} />
+                <Route exact path="/register" element={<Register />} />
+                <Route exact path="/endGame" element={<EndGame />} />
+                <Route exact path="/forgot" element={<ForgotPassword />} />
+                <Route exact path="/changePassword" element={<EditPassword />} />
+                <Route
+                  exact
+                  path="/pass"
+                  element={
+                    <Passcode data={{question: '/#', location: 'SC123'}} />
+                  }
+                />
+                <Route
+                  exact
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <AdminDash /> : <FacultyDash />};
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* <Route
-                exact
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <AdminDash /> : <FacultyDash />};
-                  </ProtectedRoute>
-                }
-              /> */}
+                {/* <Route
+                  exact
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <AdminDash /> : <FacultyDash />};
+                    </ProtectedRoute>
+                  }
+                /> */}
 
-              <Route
-                exact
-                path="/dashboard/addCourse"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <AdminDash /> : <AddCourse />};
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  exact
+                  path="/dashboard/addCourse"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <AdminDash /> : <AddCourse />};
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                exact
-                path="/dashboard/editCourse"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <AdminDash /> : <EditCourse />};
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  exact
+                  path="/dashboard/editCourse"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <AdminDash /> : <EditCourse />};
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                exact
-                path="/dashboard/register"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <Register /> : <FacultyDash />};
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  exact
+                  path="/dashboard/register"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <Register /> : <FacultyDash />};
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                exact
-                path="/dashboard/games"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <ViewGamesPage /> : <FacultyDash />};
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  exact
+                  path="/dashboard/games"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <ViewGamesPage /> : <FacultyDash />};
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                exact
-                path="/dashboard/games/new"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <CreateGamePage /> : <FacultyDash />};
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/dashboard/games/:id"
-                element={
-                  <ProtectedRoute>
-                    {isAdmin() ? <EditGamePage /> : <FacultyDash />};
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                exact
-                path="/dashboard/startSession"
-                element={
-                  <ProtectedRoute>
-                    <StartGameSession />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                exact
-                path="/dashboard/startSession"
-                element={
-                  <ProtectedRoute>
-                    <StartGameSession />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                exact
-                path="/generate-qr"
-                element={
-                  <ProtectedRoute>
-                    <GenerateQRPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                exact
-                path="/reports"
-                element={
-                  <ProtectedRoute>
-                    <ReportsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                exact
-                path="/reports/:id"
-                element={
-                  <ProtectedRoute>
-                    <ReportPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                exact
-                path="/reports/:id/view"
-                element={
-                  <ProtectedRoute>
-                    <ViewReportPage />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </PersistGate>
-        </Provider>
-      </Router>
-    </div>
+                <Route
+                  exact
+                  path="/dashboard/games/new"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <CreateGamePage /> : <FacultyDash />};
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard/games/:id"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <EditGamePage /> : <FacultyDash />};
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/dashboard/startSession"
+                  element={
+                    <ProtectedRoute>
+                      <StartGameSession />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/dashboard/startSession"
+                  element={
+                    <ProtectedRoute>
+                      <StartGameSession />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/generate-qr"
+                  element={
+                    <ProtectedRoute>
+                      <GenerateQRPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/reports"
+                  element={
+                    <ProtectedRoute>
+                      <ReportsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/reports/:id"
+                  element={
+                    <ProtectedRoute>
+                      <ReportPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/reports/:id/view"
+                  element={
+                    <ProtectedRoute>
+                      <ViewReportPage />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </PersistGate>
+          </Provider>
+        </Router>
+      </div>
+    </ThemeProvider>
   );
 }
 

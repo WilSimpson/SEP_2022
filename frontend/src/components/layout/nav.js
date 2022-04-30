@@ -92,7 +92,7 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, pl: 3}}>
-            <ButtonGroup disableElevation variant="contained" color="primary">
+            <ButtonGroup disableElevation variant="contained">
               {Object.entries(pages).map(([key, value]) => (
                 <Button
                   key={key}
@@ -102,6 +102,7 @@ const ResponsiveAppBar = () => {
                     my: 2,
                     borderRadius: 0,
                   }}
+                  variant="text"
                 >
                   {key}
                 </Button>
