@@ -127,6 +127,7 @@ export default function AdminDash() {
                   onConfirmEnd = {onConfirmEnd}
                   onQRCodeButtonClicked={handleQRCodeButtonClicked}
                   gameSessions={sessions}
+                  onReportButtonClicked={(id) => navigate('/reports/8/view/?ids='+id)}
                 />
               </Paper>
             </Grid>

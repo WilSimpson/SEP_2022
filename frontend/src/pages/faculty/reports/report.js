@@ -14,13 +14,14 @@ export default function ReportPage(props) {
 
   const {id} = useParams();
   const [sessions, setSessions] = React.useState([]);
+  const [filteredSessions, setFilteredSessions] = React.useState([]);
 
-  const [startDate, setStartDate] = React.useState();
+  const [startDate, setStartDate] = React.useState(new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
   const [endDate, setEndDate] = React.useState();
 
-  const [, setGameCode] = React.useState();
+  const [gameCode, setGameCode] = React.useState();
 
-  const [, setCreatedBy] = React.useState();
+  const [createdBy, setCreatedBy] = React.useState();
 
   const [selectedIds, setSelectedIds] = React.useState([]);
 
@@ -29,11 +30,31 @@ export default function ReportPage(props) {
   };
 
   React.useEffect(() => {
+    if (startDate) {
+      setFilteredSessions(sessions.filter((s) => new Date(s.created_at) >= new Date(startDate)));
+    }
+
+    if (endDate) {
+      setFilteredSessions(sessions.filter((s) => new Date(s.created_at) <= new Date(endDate)));
+    }
+
+    if (gameCode) {
+      setFilteredSessions(sessions.filter((s) => s.code == gameCode.code));
+    }
+
+    if (createdBy) {
+      setFilteredSessions(sessions.filter((s) => createdBy.creator_id == s.creator_id));
+    }
+  }, [startDate, endDate, gameCode, createdBy]);
+
+  React.useEffect(() => {
     async function getSessions() {
       const resp = await gameSessionService.getSessions(id).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
       });
       setSessions(resp.data);
+      setFilteredSessions(resp.data);
+      console.log(resp.data);
     }
     getSessions();
   }, []);
@@ -111,7 +132,7 @@ export default function ReportPage(props) {
               </Grid>
               <GameSessionsTable
                 selectable
-                gameSessions={sessions}
+                gameSessions={filteredSessions}
                 onSessionSelectionChange={handleSessionSelectionChange}
               />
               <Button
