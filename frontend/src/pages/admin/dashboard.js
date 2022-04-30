@@ -109,7 +109,7 @@ export default function AdminDash() {
                     {games.length}
                   </Typography>
                   <div>
-                    <Link color="primary" href="#">
+                    <Link color="primary" href="/admin-dashboard/games">
                       View Games
                     </Link>
                   </div>
