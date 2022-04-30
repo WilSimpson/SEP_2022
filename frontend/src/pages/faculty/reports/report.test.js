@@ -67,7 +67,5 @@ describe('<ReportPage />', () => {
   it('should have correct content', () => {
     expect(wrapper.text()).toContain(`Generating Report for Game ${gameId}`);
     expect(wrapper.find(MobileDatePicker).length).toEqual(2);
-    expect(wrapper.find({name: 'start-time-reference'}).hostNodes().length).toEqual(2);
-    expect(wrapper.find({name: 'end-time-reference'}).hostNodes().length).toEqual(2);
   });
 });
