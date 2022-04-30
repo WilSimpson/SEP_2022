@@ -5,8 +5,8 @@ from rest_framework import permissions
 import rest_framework.generics
 from rest_framework.mixins import ListModelMixin
 
-from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
-from rest_framework.decorators import api_view, renderer_classes
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse, HttpResponseServerError
+from rest_framework.decorators import api_view, renderer_classes, action
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
@@ -15,20 +15,11 @@ from .models import Game, Option, Question
 
 from .utils import *
 
-from django.http import JsonResponse, HttpResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
-
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
 from backend.serializers import CourseSerializer
 
 from .models import Game
-
-from django.http import HttpResponse, HttpResponseServerError
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 import json
 from datetime import datetime
@@ -41,6 +32,8 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
 import traceback
 
+import csv
+import io
 
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
@@ -712,6 +705,7 @@ def start_session(request):
     try:
         base_game = Game.objects.get(id=int(request.data['id']))
     except Exception:
+        print(traceback.format_exc())
         return HttpResponseServerError('You cannot create a session for a game that does not exist.')
     if not base_game.active:
         return HttpResponseServerError('You can only create sessions for active games.')
@@ -735,7 +729,7 @@ def start_session(request):
         )
         return Response(data={'id':new_session.id, 'code':new_session.code}, status=200)
     except Exception as e:
-        print(e)
+        print(traceback.format_exc())
         return HttpResponseServerError('There was a problem creating this session.')
 
 
@@ -877,10 +871,12 @@ def get_games_session_report(request, game_id, session_id):
     if session.game.id != game_id:
         return HttpResponseBadRequest('Session does not belong to that game')
     
-    teams = Team.objects.filter(game_session_id=session.id).values_list('id', flat=True)
-    answers = GameSessionAnswer.objects.filter(team__in=teams)
-    serializer = AnswersReportSerializer(answers, many=True)
-    return Response(serializer.data)
+    teams = Team.objects.filter(game_session_id=session.id)
+    # answers = GameSessionAnswer.objects.filter(team__in=teams)
+    # serializer = AnswersReportSerializer(answers, many=True)
+    # return Response(serializer.data)
+    
+    return determine_report_response(request, generate_reports(teams))
     
 @api_view(['GET'])
 def get_game_session_teams(request, game_id, session_id):
@@ -956,6 +952,76 @@ def get_game_session_team_report(request, game_id, session_id, team_id):
         return HttpResponseBadRequest('Team does not belong to this game session')
 
     answers = GameSessionAnswer.objects.filter(team_id=team.id)
-    serializer = AnswersReportSerializer(answers, many=True)
-    return Response(serializer.data)
+    # serializer = AnswersReportSerializer(answers, many=True)
+    # return Response(serializer.data)
+    return determine_report_response(request, generate_report(team))
 
+def generate_report(team):
+    fields = {}
+    if team.game_session.is_guest:
+        fields['SEMESTER/YEAR'] = 'N/A'
+    else:
+        fields['SEMESTER/YEAR'] = team.game_session.course.semester
+
+    if team.game_session.is_guest:
+        fields['CLASS NAME/GUEST'] = 'GUEST'
+    else:
+        fields['CLASS NAME/GUEST'] = team.game_session.course.name
+
+    if team.game_session.is_guest:
+        fields['SECTION'] = 'N/A'
+    else:
+        fields['SECTION'] = team.game_session.course.section
+    
+    fields['TEAM ID'] = team.id
+    fields['GAME SESSION ID'] = team.game_session.id
+    fields['TEAM SIZE'] = team.size
+    fields['1ST TIME PLAYING?'] = team.first_time
+    fields['WALKING MODE'] = team.game_mode.name
+    fields['GAME START DATE'] = team.created_at.strftime("%m/%d/%Y")
+    fields['GAME START TIME'] = team.created_at.strftime("%H:%M:%S")
+
+    if team.completed:
+        dt = GameSessionAnswer.objects.filter(team=team).order_by('-id').first().created_at
+        fields['GAME END DATE'] = dt.strftime("%m/%d/%Y")
+        fields['GAME END TIME'] = dt.strftime("%H:%M:%S")
+    else:
+        fields['GAME END'] = 'N/A'
+    
+    answers = GameSessionAnswer.objects.filter(team=team).order_by('id')
+    for index, answer in enumerate(answers[:len(answers)-1]):
+        fields["{i}.CARD START".format(i=index+1)] = (answers[index-1].created_at if index != 0 else answer.created_at).strftime("%H:%M:%S")
+        fields["{i}.CARD".format(i=index+1)] = answer.id
+        fields["{i}.TYPE".format(i=index+1)] = answer.question.chance_game if answer.question.chance else 'Decision'
+        fields["{i}.CHOICE".format(i=index+1)] = answer.option_chosen.id if answer.option_chosen else 'N/A'
+        fields["{i}.CHOICE TIME".format(i=index+1)] = answers[index+1].created_at.strftime("%H:%M:%S")
+        fields["{i}.ROOM CODE".format(i=index+1)] = answer.question.passcode
+
+    return fields
+
+def generate_reports(teams):
+    data = []
+    for team in teams:
+        data.append(generate_report(team))
+    return data
+
+def report_to_csv(data):
+    if type(data) is not list:
+        data = [data]
+
+    if type(data[0]) is not dict:
+        return ""
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(data[0].keys())
+    for row in data:
+        writer.writerow(row.values())
+    
+    return output.getvalue()
+
+def determine_report_response(request, data):
+    if 'HTTP_ACCEPT' in request.META and request.META['HTTP_ACCEPT'] == 'text/csv':
+        return HttpResponse(content_type="text/csv", content=report_to_csv(data))
+
+    return Response(data)   

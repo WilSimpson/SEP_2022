@@ -9,7 +9,7 @@ export default function DefaultLayout(props) {
     <>
       <CssBaseline />
       <ResponsiveAppBar />
-      <main>
+      <main sx={{height: '100vh'}}>
         <Grid container justifyContent="center" spacing={2}>
           <Grid item xs={6}>
             <PageAlert />
