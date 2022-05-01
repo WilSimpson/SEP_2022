@@ -111,19 +111,27 @@ export default function SessionStart(props) {
           sx={{width: '100%'}}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
+        <Button
+          onClick={props.onCancel}
+          sx={{width: '100%'}}
+          color="tertiary"
+          variant="outlined"
+        >
+            Cancel
+        </Button>
+      </Grid>
+      <Grid item xs={6}>
         <Button
           variant="contained"
           onClick={() => {
             props.onSubmit(creatorId, gameId, notes, timeout, courseID, !isGuest);
           }}
           sx={{width: '100%'}}
+          color="secondary"
         >
           Submit
         </Button>
-      </Grid>
-      <Grid item xs={12} sx={{width: '100%'}}>
-        <Button onClick={props.onCancel}>Cancel</Button>
       </Grid>
     </Grid>
   );

@@ -59,10 +59,13 @@ const darkTheme = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#F3EFE0',    // off white
+      main: '#F3EFE0', // off white
     },
     secondary: {
-      main: '#006DAA',    // blue
+      main: '#006DAA', // blue
+    },
+    tertiary: {
+      main: '#FF1B1C', // red
     },
   },
 };

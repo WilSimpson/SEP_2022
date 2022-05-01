@@ -103,6 +103,25 @@ export default function GameFields(props) {
         />
       </Grid>
 
+      {isEditing ? null :
+        <Grid item xs={12} md={6} lg={3} container direction="row" alignItems="center" justifySelf="flex-end">
+          <Button
+            variant='contained'
+            component='label'
+            sx={{
+              width: '100%',
+            }}
+          >
+            Import from File
+            <input
+              data-testid='file-upload'
+              type='file'
+              onChange={handleFileUpload}
+              hidden
+            />
+          </Button>
+        </Grid>
+      }
       <Grid item xs={12}>
         <TextField
           multiline
@@ -130,29 +149,13 @@ export default function GameFields(props) {
           rows={10}
         />
       </Grid>
-
-      <Grid item xs={12}>
-        <Button
-          variant='contained'
-          component='label'
-          sx={{width: '100%'}}
-        >
-          Import from File
-          <input
-            data-testid='file-upload'
-            type='file'
-            onChange={handleFileUpload}
-            hidden
-          />
-        </Button>
-      </Grid>
-
       <Grid item xs={6}>
-        <Button variant='outlined' onClick={props.onCancel} sx={{width: '100%'}}>Cancel</Button>
+        <Button variant='outlined' onClick={props.onCancel} sx={{width: '100%'}} color="tertiary">Cancel</Button>
       </Grid>
       <Grid item xs={6}>
         <Button
           variant="contained"
+          color="secondary"
           onClick={() => {
             props.onSubmit(
                 title,
