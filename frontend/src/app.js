@@ -103,7 +103,7 @@ function App(props) {
                 <Route exact path="startingSurvey" element={<StartingSurvey />} />
                 <Route exact path="gameSession" element={<GameSession />} />
                 <Route exact path="/login" element={<Login />} />
-                <Route exact path="/started" element={<Knowledge />} />
+                <Route exact path="/help" element={<Knowledge />} />
                 <Route exact path="/logout" element={<Logout />} />
                 <Route exact path="/register" element={<Register />} />
                 <Route exact path="/endGame" element={<EndGame />} />

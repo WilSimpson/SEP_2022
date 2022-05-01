@@ -16,7 +16,7 @@ import authService from '../../services/auth';
 import {Link} from 'react-router-dom';
 // const pages = ['Get Started', 'About', 'Help'];
 
-const pages = {'Get Started': 'started', 'About': '####', 'Help': '####'};
+const pages = {'Help': 'help', 'Settings': 'settings'};
 
 const settings = {
   'Dashboard': '/dashboard',
@@ -113,7 +113,7 @@ const ResponsiveAppBar = () => {
             <>
               <Chip sx={{mr: 2}} label={authService.currentUser().isAdmin() ? 'ADMIN' : 'FACULTY'} color='secondary' size='small' />
               <Typography sx={{mr: 5}}>{authService.currentUser().email}</Typography>
-              <Box sx={{flexGrow: 0}}>
+              <Box sx={{ml: 3, flexGrow: 0}}>
                 <div>
                   <Tooltip title="Account Menu">
                     <IconButton
