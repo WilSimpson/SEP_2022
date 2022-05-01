@@ -7,6 +7,7 @@ import CoursesTable from './coursesTable';
 import { BrowserRouter } from 'react-router-dom';
 import {User} from '../../models/user';
 import { LinearProgress } from '@mui/material';
+import { alertService } from '../../services/alert';
 
 const mockedNavigate = jest.fn();
 
@@ -57,15 +58,15 @@ describe('<CoursesTable />', () => {
       });
     });
     describe('on fail', () => {
-      it('should no longer be loading', async () => {
-        MockCourseService.getMyCourses.mockRejectedValue({})
+      it('should call alert service', async () => {
+        MockCourseService.getMyCourses.mockRejectedValue({});
+        let alertSpy = jest.spyOn(alertService, 'alert');
         let wrapper;
         await act(async () => {
           wrapper = mount(<BrowserRouter><CoursesTable /></BrowserRouter>)
         });
         await act(() => promise);
-        wrapper.update();
-        expect(wrapper.find(LinearProgress).exists()).toBe(false);
+        expect(alertSpy).toHaveBeenCalled();
       });
     });
   });

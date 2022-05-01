@@ -28,9 +28,8 @@ describe('<ResponsiveAppBar />', () => {
     act(() => {
       render(<BrowserRouter><ResponsiveAppBar /></BrowserRouter>, container);
     });
-    expect(container.textContent).toContain('Get Started');
-    expect(container.textContent).toContain('About');
     expect(container.textContent).toContain('Help');
+    expect(container.textContent).toContain('Settings');
     expect(container.textContent).toContain('Login');
   });
 
@@ -49,9 +48,8 @@ describe('<ResponsiveAppBar />', () => {
     act(() => {
       profileButton.dispatchEvent(new MouseEvent('click', {bubbles: true}));
     });
-    expect(container.textContent).toContain('Get Started');
-    expect(container.textContent).toContain('About');
     expect(container.textContent).toContain('Help');
+    expect(container.textContent).toContain('Settings');
     expect(container.textContent).toContain('Login');
   });
   describe('logged in functionality', () => {

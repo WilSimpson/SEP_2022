@@ -78,17 +78,6 @@ describe('<FacultyDash />', () => {
     await waitFor(() => expect(getByTestId('active-game-sessions')).toBeInTheDocument());
   });
 
-  it('should have a courses table', async () => {
-    const resp = {data: []};
-    // axios.get.mockResolvedValue(resp);
-    const {getByTestId} = render(
-      <BrowserRouter>
-        <FacultyDash />
-      </BrowserRouter>,
-    );
-    await waitFor(() => expect(getByTestId('course_table')).toBeInTheDocument());
-  });
-
   describe('FacultyDash', () => {
     let wrapper;
     let promise;
@@ -104,6 +93,12 @@ describe('<FacultyDash />', () => {
           </BrowserRouter>,
         );
       });
+    });
+
+    it ('should have a courses table', async () => {
+      await act(() => promise);
+      wrapper.update();
+      expect(wrapper.find('CoursesTable')).not.toBeNull();
     });
 
     describe('ON LOAD', () =>{

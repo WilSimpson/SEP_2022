@@ -49,12 +49,6 @@ const lightTheme = {
       main: '#57A773', // green
       contrastText: '#ffffff',
     },
-    tertiary: {
-      main: '#FF1B1C', // red
-    },
-    white: {
-      main: '#FFFFFF', // white
-    },
   },
 };
 const darkTheme = {
@@ -65,12 +59,6 @@ const darkTheme = {
     },
     secondary: {
       main: '#006DAA', // blue
-    },
-    tertiary: {
-      main: '#FF1B1C', // red
-    },
-    white: {
-      main: '#FFFFFF', // white
     },
   },
 };

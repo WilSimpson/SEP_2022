@@ -103,7 +103,7 @@ const ResponsiveAppBar = () => {
                     borderRadius: 0,
                   }}
                   variant="text"
-                  color="white"
+                  style={{color: 'white'}}
                 >
                   {key}
                 </Button>

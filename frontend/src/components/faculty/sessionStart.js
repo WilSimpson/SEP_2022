@@ -115,7 +115,6 @@ export default function SessionStart(props) {
         <Button
           onClick={props.onCancel}
           sx={{width: '100%'}}
-          color="tertiary"
           variant="outlined"
         >
             Cancel

@@ -150,7 +150,7 @@ export default function GameFields(props) {
         />
       </Grid>
       <Grid item xs={6}>
-        <Button variant='outlined' onClick={props.onCancel} sx={{width: '100%'}} color="tertiary">Cancel</Button>
+        <Button variant='outlined' onClick={props.onCancel} sx={{width: '100%'}}>Cancel</Button>
       </Grid>
       <Grid item xs={6}>
         <Button

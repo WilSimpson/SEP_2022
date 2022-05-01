@@ -15,7 +15,7 @@ import AuthService from '../../services/auth';
 import EditIcon from '@mui/icons-material/Edit';
 import {useNavigate} from 'react-router-dom';
 import {useEffect} from 'react';
-
+import {alertService, alertSeverity} from '../../services/alert';
 
 export default function CoursesTable(props) {
   const [filteredRows, setFilteredRows] = useState([]);
@@ -31,19 +31,10 @@ export default function CoursesTable(props) {
           sessionStorage.setItem('courses', JSON.stringify(response.data));
           setLoading(false);
         }).catch((error) => {
-      setRows([{
-        id: '1',
-        department: 'There was a problem',
-        name: 'N/A', courseNumber: '000', sectionNumber: '000',
-        semester: 'N/A',
-      }]);
-      setFilteredRows([{
-        id: '1',
-        department: 'There was a problem',
-        name: 'N/A', courseNumber: '000', sectionNumber: '000',
-        semester: 'N/A',
-      }]);
-      setLoading(false);
+      alertService.alert({
+        severity: alertSeverity.error,
+        message: 'Unable to retrieve your courses.',
+      });
     });
   }, []);
 
@@ -82,22 +73,22 @@ export default function CoursesTable(props) {
         onChange={(event) => searchCourses(event.target.value)}
         id='searchCourses'
       />
-      <Table data-testid="course_table" sx={{minWidth: 500}}>
-        <TableHead>
-          <TableRow>
-            {props.editable ? (<TableCell></TableCell>) : null}
-            <TableCell>Department</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Course Number</TableCell>
-            <TableCell>Section Number</TableCell>
-            <TableCell>Semester</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {filteredRows.map((row) => (
-            <TableRow key={row.id}>
-              {props.editable ?
-                (<TableCell>
+      {!loading &&
+        <Table data-testid="course_table" sx={{minWidth: 500}}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Edit Course</TableCell>
+              <TableCell>Department</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Course Number</TableCell>
+              <TableCell>Section Number</TableCell>
+              <TableCell>Semester</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredRows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>
                   <Tooltip title="Edit Course">
                     <div onClick={() => editThisCourse(row.id, row.name,
                         row.department,
@@ -108,18 +99,17 @@ export default function CoursesTable(props) {
                       </IconButton>
                     </div>
                   </Tooltip>
-                </TableCell>) :
-                <></>
-              }
-              <TableCell>{row.department}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.number}</TableCell>
-              <TableCell>{row.section}</TableCell>
-              <TableCell>{row.semester}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                </TableCell>
+                <TableCell>{row.department}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.number}</TableCell>
+                <TableCell>{row.section}</TableCell>
+                <TableCell>{row.semester}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      }
     </React.Fragment>
   );
 }
