@@ -266,6 +266,7 @@ export default function ReportPage(props) {
                 }}
                 variant='contained'
                 onClick={() => navigate(`/reports/${id}/view${selectedIds.length == 0 ? '' : `?ids=${selectedIds.join(',')}`}`)}
+                color="secondary"
               >
                 Generate Report
               </Button>

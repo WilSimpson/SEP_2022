@@ -41,7 +41,7 @@ const {persistor, store} = configureStore();
 
 const lightTheme = {
   palette: {
-    type: 'light',
+    mode: 'light',
     primary: {
       main: '#6A8EAE',
     },
@@ -49,9 +49,11 @@ const lightTheme = {
       main: '#57A773',
       contrastText: '#ffffff',
     },
-    background: {
-      default: '#ECF8F8',
-      paper: '#fff',
+    tertiary: {
+      main: '#FF1B1C', // red
+    },
+    white: {
+      main: '#FFFFFF',
     },
   },
 };
@@ -66,6 +68,9 @@ const darkTheme = {
     },
     tertiary: {
       main: '#FF1B1C', // red
+    },
+    white: {
+      main: '#FFFFFF',
     },
   },
 };
