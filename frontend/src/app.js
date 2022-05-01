@@ -30,11 +30,11 @@ import ReportsPage from './pages/faculty/reports/reports';
 import EditCourse from './pages/faculty/editCourse';
 import ReportPage from './pages/faculty/reports/report';
 import ViewReportPage from './pages/faculty/reports/view.tsx';
-import {Switch} from '@mui/material';
 import {
   ThemeProvider,
   createTheme,
 } from '@mui/material/styles';
+import Settings from './pages/public/settings';
 
 const history = createBrowserHistory();
 const {persistor, store} = configureStore();
@@ -59,21 +59,21 @@ const darkTheme = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#F3EFE0',
+      main: '#F3EFE0',    // off white
     },
     secondary: {
-      main: '#006DAA',
+      main: '#006DAA',    // blue
     },
   },
 };
 
 function App(props) {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [currentTheme, setCurrentTheme] = useState(createTheme(lightTheme));
 
   useEffect(() => {
     if (!localStorage.getItem('theme')) {
       localStorage.setItem('theme', JSON.stringify(lightTheme));
+      localStorage.setItem('dark', false);
       setCurrentTheme(createTheme(lightTheme));
     } else {
       const theme = JSON.parse(localStorage.getItem('theme'));
@@ -81,17 +81,17 @@ function App(props) {
     }
   }, []);
 
-  const handleThemeChange = () => {
+  function handleThemeChange() {
+    const isDarkTheme = (localStorage.getItem('dark') === 'true');
     const appliedTheme = createTheme(isDarkTheme ? lightTheme : darkTheme);
     localStorage.setItem('theme', JSON.stringify(appliedTheme));
+    localStorage.setItem('dark', !isDarkTheme);
     setCurrentTheme(createTheme(appliedTheme));
-    setIsDarkTheme(!isDarkTheme);
   };
 
   return (
     <ThemeProvider theme={currentTheme}>
       <div className="App">
-        <Switch defaultChecked onChange={() => handleThemeChange()}/>
         <Router history={history}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
@@ -106,6 +106,7 @@ function App(props) {
                 <Route exact path="/endGame" element={<EndGame />} />
                 <Route exact path="/forgot" element={<ForgotPassword />} />
                 <Route exact path="/changePassword" element={<EditPassword />} />
+                <Route exact path="/settings" element={<Settings handleTheme={handleThemeChange}/>} />
                 <Route
                   exact
                   path="/pass"
@@ -122,16 +123,6 @@ function App(props) {
                     </ProtectedRoute>
                   }
                 />
-
-                {/* <Route
-                  exact
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      {isAdmin() ? <AdminDash /> : <FacultyDash />};
-                    </ProtectedRoute>
-                  }
-                /> */}
 
                 <Route
                   exact
