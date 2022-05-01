@@ -43,17 +43,17 @@ const lightTheme = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#6A8EAE',
+      main: '#6A8EAE', // lighter blue
     },
     secondary: {
-      main: '#57A773',
+      main: '#57A773', // green
       contrastText: '#ffffff',
     },
     tertiary: {
       main: '#FF1B1C', // red
     },
     white: {
-      main: '#FFFFFF',
+      main: '#FFFFFF', // white
     },
   },
 };
@@ -70,7 +70,7 @@ const darkTheme = {
       main: '#FF1B1C', // red
     },
     white: {
-      main: '#FFFFFF',
+      main: '#FFFFFF', // white
     },
   },
 };
