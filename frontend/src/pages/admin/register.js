@@ -1,13 +1,11 @@
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {
   Alert,
   Avatar,
   Box,
   Button,
   Container,
-  CssBaseline,
   TextField,
   Typography,
 } from '@mui/material';
@@ -19,8 +17,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {useNavigate} from 'react-router-dom';
-
-const theme = createTheme();
+import AuthenticatedLayout from '../../components/layout/authenticated.layout';
 
 export default function Register() {
   const userRef = useRef();
@@ -69,9 +66,8 @@ export default function Register() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <AuthenticatedLayout>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
@@ -175,12 +171,13 @@ export default function Register() {
               disabled={disableSubmit}
               data-testid="submit-button"
               onClick={handleSubmit}
+              color="secondary"
             >
               Register Account
             </Button>
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
+    </AuthenticatedLayout>
   );
 }

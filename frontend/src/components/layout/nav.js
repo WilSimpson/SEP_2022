@@ -13,8 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import {ButtonGroup, Chip} from '@mui/material';
 import authService from '../../services/auth';
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 // const pages = ['Get Started', 'About', 'Help'];
+import {Link} from '@mui/material';
 
 const pages = {'Help': 'help', 'Settings': 'settings'};
 
@@ -84,7 +85,7 @@ const ResponsiveAppBar = () => {
               }}
             >
               {Object.entries(pages).map(([key, value]) => (
-                <MenuItem key={key} href={value} onClick={handleCloseNavMenu}>
+                <MenuItem key={key} component={Link} href={value} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{key}</Typography>
                 </MenuItem>
               ))}
@@ -148,7 +149,7 @@ const ResponsiveAppBar = () => {
                         key={name}
                         data-testid={name+'-test'}
                         component={Link}
-                        to={link}
+                        href={link}
                         onClick={(e) => handleChooseUserOption(e, link)}
                       >
                         {name}
@@ -163,7 +164,7 @@ const ResponsiveAppBar = () => {
                     <MenuItem
                       key='Login'
                       component={Link}
-                      to={'/login'}
+                      href={'/login'}
                     >
                       <Button
                         key="Login"

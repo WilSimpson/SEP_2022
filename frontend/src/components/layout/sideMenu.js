@@ -195,12 +195,6 @@ export function SideMenu(props) {
           >
             <ListItemText primary="Create Users" />
           </ListItemButton>
-          <ListItemButton sx={{pl: 4}} data-testid="user-edit-item">
-            <ListItemText primary="Edit Users" />
-          </ListItemButton>
-          <ListItemButton sx={{pl: 4}} data-testid="user-view-item">
-            <ListItemText primary="View Users" />
-          </ListItemButton>
         </List>
       </Collapse>
     </div>
