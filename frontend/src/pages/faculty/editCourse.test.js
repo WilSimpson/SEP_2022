@@ -67,6 +67,21 @@ describe('<EditCourse />', () => {
     expect(back).toBeInTheDocument()
   });
 
+  it('should route towards the faculty dashboard', () => {
+    render(
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<EditCourse />} />
+          </Routes>
+        </BrowserRouter>,
+    );
+    const del = document.querySelector('[data-testid=delete]');
+
+    expect(del).toBeInTheDocument();
+    fireEvent.click(del);
+    expect(del).toBeInTheDocument()
+  });
+
   describe('onSubmit()', () => {
     let wrapper;
     let event;
