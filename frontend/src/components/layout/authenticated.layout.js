@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Grid, Toolbar} from '@mui/material';
+import {Box, Grid} from '@mui/material';
 import {PageAlert} from './alert';
 import {SideMenu} from './sideMenu';
 
@@ -15,17 +15,14 @@ export default function AuthenticatedLayout(props) {
                 theme.palette.grey[100] :
                 theme.palette.grey[900],
             flexGrow: 1,
-            height: '100vh',
             overflow: 'auto',
           }}
         >
-          <Toolbar />
-          <Grid container justifyContent="center" spacing={2}>
+          <Grid container justifyContent="center" spacing={2} sx={{pt: '1rem'}}>
             <Grid item xs={6}>
               <PageAlert />
             </Grid>
           </Grid>
-          <Toolbar />
           {props.children}
         </Box>
       </SideMenu>

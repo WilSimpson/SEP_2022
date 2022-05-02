@@ -1,4 +1,4 @@
-import {Autocomplete, Button, Checkbox, Container, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, Switch, TextField, Typography} from '@mui/material';
+import {Autocomplete, Button, Container, Grid, Paper, TextField} from '@mui/material';
 import React from 'react';
 import {useNavigate, useParams} from 'react-router';
 import GameSessionsTable from '../../../components/faculty/gameSessionsTable.tsx';
@@ -14,29 +14,14 @@ export default function ReportPage(props) {
 
   const {id} = useParams();
   const [sessions, setSessions] = React.useState([]);
+  const [filteredSessions, setFilteredSessions] = React.useState([]);
 
-  const startDateRefDefault = 'after';
-  const [, setStartDateRef] = React.useState();
-  const [startDate, setStartDate] = React.useState();
-
-  const endDateRefDefault = 'before';
-  const [, setEndDateRef] = React.useState();
+  const [startDate, setStartDate] = React.useState(new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
   const [endDate, setEndDate] = React.useState();
 
-  const [, setGameCode] = React.useState();
+  const [gameCode, setGameCode] = React.useState();
 
-  const [, setCreatedBy] = React.useState();
-
-  const reportFormatDefault = 'csv';
-  const [, setReportFormat] = React.useState(reportFormatDefault);
-
-  const [shouldIncludeSurvey, setShouldIncludeSurvey] = React.useState(true);
-  const [shouldCalculateTime, setShouldCalculateTime] = React.useState(true);
-  const [shouldIncludeTimestamps, setShouldIncludeTimestamps] = React.useState(false);
-
-  const [includeWalking, setIncludeWalking] = React.useState(true);
-  const [includeLimitedWalking, setIncludeLimitedWalking] = React.useState(true);
-  const [includeNonWalking, setIncludeNonWalking] = React.useState(true);
+  const [createdBy, setCreatedBy] = React.useState();
 
   const [selectedIds, setSelectedIds] = React.useState([]);
 
@@ -45,11 +30,31 @@ export default function ReportPage(props) {
   };
 
   React.useEffect(() => {
+    if (startDate) {
+      setFilteredSessions(sessions.filter((s) => new Date(s.created_at) >= new Date(startDate)));
+    }
+
+    if (endDate) {
+      setFilteredSessions(sessions.filter((s) => new Date(s.created_at) <= new Date(endDate)));
+    }
+
+    if (gameCode) {
+      setFilteredSessions(sessions.filter((s) => s.code == gameCode.code));
+    }
+
+    if (createdBy) {
+      setFilteredSessions(sessions.filter((s) => createdBy.creator_id == s.creator_id));
+    }
+  }, [startDate, endDate, gameCode, createdBy]);
+
+  React.useEffect(() => {
     async function getSessions() {
       const resp = await gameSessionService.getSessions(id).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
       });
       setSessions(resp.data);
+      setFilteredSessions(resp.data);
+      console.log(resp.data);
     }
     getSessions();
   }, []);
@@ -83,18 +88,6 @@ export default function ReportPage(props) {
                       renderInput={(params) => <TextField testid='start-date-textfield' {...params} />}
                     />
                   </LocalizationProvider>
-                  <RadioGroup
-                    row
-                    defaultValue={startDateRefDefault}
-                    name='start-time-reference'
-                    onChange={(event) => setStartDateRef(event.target.value)}
-                    sx={{
-                      'justifyContent': 'center',
-                    }}
-                  >
-                    <FormControlLabel value='before' control={<Radio />} label='Before' />
-                    <FormControlLabel value='after' control={<Radio />} label='After' />
-                  </RadioGroup>
                 </Grid>
 
 
@@ -107,19 +100,6 @@ export default function ReportPage(props) {
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </LocalizationProvider>
-                  <RadioGroup
-                    row
-                    defaultValue={endDateRefDefault}
-                    name='end-time-reference'
-                    onChange={(event) => setEndDateRef(event.target.value)}
-                    sx={{
-                      'justifyContent': 'center',
-                    }}
-                    id='end-date-ref'
-                  >
-                    <FormControlLabel value='before' control={<Radio />} label='Before' />
-                    <FormControlLabel value='after' control={<Radio />} label='After' />
-                  </RadioGroup>
                 </Grid>
 
 
@@ -152,113 +132,9 @@ export default function ReportPage(props) {
               </Grid>
               <GameSessionsTable
                 selectable
-                gameSessions={sessions}
+                gameSessions={filteredSessions}
                 onSessionSelectionChange={handleSessionSelectionChange}
               />
-              <Grid container spacing={2} sx={{pl: 2, pr: 2, pb: 2}}>
-                <Grid item xs={12}>
-                  <Typography variant="h6" sx={{pt: 2}}>
-                    Report Details
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormGroup
-                    sx={{
-                      'alignContent': 'center',
-                    }}
-                  >
-                    <FormLabel>
-                      Report Format
-                    </FormLabel>
-                    <RadioGroup
-                      row
-                      defaultValue={reportFormatDefault}
-                      name='report-format'
-                      onChange={(event) => setReportFormat(event.target.value)}
-                    >
-                      <FormControlLabel value='csv' control={<Radio />} label='CSV' />
-                      <FormControlLabel value='json' control={<Radio />} label='JSON' />
-                    </RadioGroup>
-                  </FormGroup>
-                </Grid>
-
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormGroup
-                    sx={{
-                      'alignContent': 'center',
-                    }}
-                  >
-                    <FormLabel>
-                      Include Survey
-                    </FormLabel>
-                    <Switch
-                      checked={shouldIncludeSurvey}
-                      onChange={(event) => setShouldIncludeSurvey(event.target.checked)}
-                      sx={{
-                        'alignSelf': 'center',
-                      }}
-                    />
-                  </FormGroup>
-                </Grid>
-
-
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormGroup>
-                    <FormLabel>
-                      Calculate Time Between Answers
-                    </FormLabel>
-                    <Switch
-                      checked={shouldCalculateTime}
-                      onChange={(event) => setShouldCalculateTime(event.target.checked)}
-                      sx={{
-                        'alignSelf': 'center',
-                      }}
-                    />
-                  </FormGroup>
-                </Grid>
-
-
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormGroup>
-                    <FormLabel>
-                      Include Timestamps
-                    </FormLabel>
-                    <Switch
-                      checked={shouldIncludeTimestamps}
-                      onChange={(event) => setShouldIncludeTimestamps(event.target.checked)}
-                      sx={{
-                        'alignSelf': 'center',
-                      }}
-                    />
-                  </FormGroup>
-                </Grid>
-
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormLabel>
-                    Include Walking Modes
-                  </FormLabel>
-                  <FormGroup
-                    row
-                    sx={{
-                      'alignContent': 'center',
-                    }}
-                  >
-                    <FormControlLabel
-                      label="Walking"
-                      control={<Checkbox checked={includeWalking} onChange={(event) => setIncludeWalking(event.target.checked)} />}
-                    />
-                    <FormControlLabel
-                      label="Limited Walking"
-                      control={<Checkbox checked={includeLimitedWalking} onChange={(event) => setIncludeLimitedWalking(event.target.checked)} />}
-                    />
-                    <FormControlLabel
-                      label="Non Walking"
-                      control={<Checkbox checked={includeNonWalking} onChange={(event) => setIncludeNonWalking(event.target.checked)} />}
-                    />
-                  </FormGroup>
-                </Grid>
-              </Grid>
               <Button
                 sx={{
                   'width': '100%',
