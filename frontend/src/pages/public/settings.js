@@ -36,6 +36,7 @@ export default function Settings(props) {
                 defaultChecked={checked}
                 onChange={() => changeTheme()}
                 inputProps={{'aria-label': 'controlled'}}
+                id='darkSwitch'
               />
               <NightlightRoundIcon />
             </ListItem>

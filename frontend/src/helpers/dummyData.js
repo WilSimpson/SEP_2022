@@ -138,3 +138,28 @@ export const inProgressGamePasscodeRequired = {
     enteredPasscode: false,
   },
 };
+
+export const lightTheme = {
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#6A8EAE', // lighter blue
+    },
+    secondary: {
+      main: '#57A773', // green
+      contrastText: '#ffffff',
+    },
+  },
+};
+
+export const darkTheme = {
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#F3EFE0', // off white
+    },
+    secondary: {
+      main: '#006DAA', // blue
+    },
+  },
+};

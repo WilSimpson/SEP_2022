@@ -102,7 +102,7 @@ function App(props) {
                 <Route exact path="/endGame" element={<EndGame />} />
                 <Route exact path="/forgot" element={<ForgotPassword />} />
                 <Route exact path="/changePassword" element={<EditPassword />} />
-                <Route exact path="/settings" element={<Settings handleTheme={handleThemeChange}/>} />
+                <Route exact path="/settings" element={<Settings id='settings' handleTheme={handleThemeChange}/>} />
                 <Route
                   exact
                   path="/pass"
