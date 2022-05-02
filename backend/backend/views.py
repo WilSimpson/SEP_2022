@@ -44,11 +44,13 @@ import traceback
 
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
+    '''A class to handle all the defualt user functionality'''
     model = get_user_model()
     permission_classes = [ permissions.AllowAny ]
     serializer_class = UserSerializer
 
 class RoleTokenObtainPairView(TokenObtainPairView):
+    '''A class for all of the login token functionalty'''
     serializer_class = RoleTokenObtainPairSerializer
 
 
@@ -631,6 +633,44 @@ class GameSessionAnswerViewSet(ViewSet):
 
 @api_view(['GET'])
 def get_all_game_sessions(request):
+    '''
+        Responds with all of the active and inactive ``GameSession`` objects.
+
+        **Example request**:
+
+        .. code-block:: http
+
+            GET  /api/gameSession/
+
+        **Example response**:
+
+        .. code-block:: json
+
+            [
+                    {
+                        "id": 1,
+                        "creator_id": 1,
+                        "start_time": "2022-03-20T21:28:56.757418Z",
+                        "end_time": null,
+                        "notes": "test",
+                        "is_guest": false,
+                        "timeout": 10,
+                        "code": 877198,
+                        "active": true,
+                        "created_at": "2022-03-20T21:28:56.760495Z",
+                        "updated_at": "2022-03-20T21:28:56.760511Z",
+                        "game": 1,
+                        "course": null
+                    }
+            ]
+
+        **Response Codes**:
+
+        .. code-block:: http
+
+            200 : Success
+            501 : Fail
+    '''
     sessions = GameSession.objects.all()
     serializer = GameSessionSerializer(sessions, many=True)
     return Response(serializer.data)
