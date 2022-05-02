@@ -4,16 +4,11 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import {useLocation} from 'react-router-dom';
 import {useState} from 'react';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import RadioGroup from '@mui/material/RadioGroup';
-import Radio from '@mui/material/Radio';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 import {useNavigate} from 'react-router-dom';
-import {Typography} from '@mui/material';
+import {List, ListItemText, ListItem, ToggleButton, ToggleButtonGroup, Typography} from '@mui/material';
 import GamePlayService from '../../services/gameplay';
 import Alert from '@mui/material/Alert';
 import GameInProgressAlert from '../../components/game/gameInProgressAlert';
@@ -120,145 +115,95 @@ export default function StartingSurvey() {
       <div className="container">
         <CssBaseline />
         <main>
-          {/* Hero unit */}
-          <Container maxWidth="xl">
-            <Box
-              sx={{
-                pt: 0,
-                pb: 6,
-                borderRadius: 4,
-                mt: 3,
-                mb: 3,
-              }}
-            >
+          <Container component="main" maxWidth="md" sx={{mb: 4}}>
+            <Paper variant="outlined" sx={{my: {xs: 3, md: 6}, p: {xs: 2, md: 3}}}>
               {(GamePlayService.gameInProgress() &&
               (GamePlayService.getInProgressGame().state.code == state.code)) ?
               <GameInProgressAlert /> :
               <div />
               }
-              <Typography>
+              <Typography component="h1" variant="h4" align="center">
                 {' '}
-                {`Game Title: ${state ? state.game.title : 'Game is NULL'}`}{' '}
+                {`Welcome to ${state ? state.game.title : 'Game is NULL'}`}{' '}
               </Typography>
               <Box sx={{pb: 2}}>
                 {err && <Alert severity="error">{err}</Alert>}
               </Box>
               <form onSubmit={handleSubmit}>
-                <Grid
-                  container
-                  alignItems="center"
-                  justifyContent="center"
-                  direction="column"
+                <List>
+                  <ListItem key='team-size' sx={{py: 1, px: 0}}>
+                    <ListItemText primary='Team Size' secondary={formValues.size} />
+                    <TextField
+                      id="team-size"
+                      name="size"
+                      label="size"
+                      type="number"
+                      InputProps={{inputProps: {min: 1}}}
+                      value={formValues.size}
+                      onChange={handleInputChange}
+                      data-testid="size"
+                      required
+                    />
+                  </ListItem>
+                  <ListItem key='first-time' sx={{py: 1, px: 0}}>
+                    <ListItemText
+                      primary='Is this your first time playing this game?'
+                      secondary={formValues.first.toUpperCase()} />
+                    <ToggleButtonGroup
+                      name="first"
+                      value={formValues.first}
+                      onChange={handleInputChange}
+                      color="secondary"
+                    >
+                      <ToggleButton name='first' value='yes'>Yes</ToggleButton>
+                      <ToggleButton name='first' value='no'>No</ToggleButton>
+                    </ToggleButtonGroup>
+                  </ListItem>
+                  <ListItem key='game-type' sx={{py: 1, px: 0}}>
+                    <ListItemText
+                      primary='Which version of the game would you like to play?'
+                      secondary={formValues.type.toUpperCase()} />
+                    <ToggleButtonGroup
+                      color='secondary'
+                      value={formValues.type}
+                      name='type'
+                      exclusive
+                      onChange={handleInputChange}
+                    >
+                      <ToggleButton name='type' value='Walking'>Walking</ToggleButton>
+                      <ToggleButton name='type' value='Limited Walking'>Limited Walking</ToggleButton>
+                      <ToggleButton name='type' value='No Walking'>No Walking</ToggleButton>
+                    </ToggleButtonGroup>
+                  </ListItem>
+                  <ListItem key='team-name' sx={{py: 1, px: 0}}>
+                    <ListItemText
+                      primary='Team Name'
+                      secondary={formValues.name} />
+                    <TextField
+                      id="team-name"
+                      name="name"
+                      label="Team Name"
+                      type="text"
+                      autoComplete="off"
+                      value={formValues.name}
+                      onChange={handleInputChange}
+                      data-testid="name"
+                      inputProps={{'data-testid': 'name'}}
+                      required
+                    />
+                  </ListItem>
+                </List>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  data-testid="submit"
+                  disabled={submitDisabled}
                 >
-                  <Grid item>
-                    <Box sx={{pb: 2}}>
-                      <TextField
-                        id="team-size"
-                        name="size"
-                        label="size"
-                        type="number"
-                        InputProps={{inputProps: {min: 1}}}
-                        value={formValues.size}
-                        onChange={handleInputChange}
-                        data-testid="size"
-                        required
-                      />
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Box sx={{pb: 2}}>
-                      <FormControl>
-                        <FormLabel>
-                          Is this your first time playing this game?
-                        </FormLabel>
-                        <RadioGroup
-                          name="first"
-                          defaultValue="yes"
-                          value={formValues.first}
-                          onChange={handleInputChange}
-                          row
-                        >
-                          <FormControlLabel
-                            key="yes"
-                            value="yes"
-                            control={<Radio size="small" />}
-                            label="Yes"
-                            selected
-                          />
-                          <FormControlLabel
-                            key="no"
-                            value="no"
-                            control={<Radio size="small" />}
-                            label="No"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Box sx={{pb: 2}}>
-                      <FormControl>
-                        <FormLabel>
-                          Which version of the game would you like to play?
-                        </FormLabel>
-                        <RadioGroup
-                          name="type"
-                          defaultValue="Walking"
-                          value={formValues.type}
-                          onChange={handleInputChange}
-                          row
-                        >
-                          <FormControlLabel
-                            key="Walking"
-                            value="Walking"
-                            control={<Radio size="small" />}
-                            label="Walking"
-                            selected
-                          />
-                          <FormControlLabel
-                            key="Limited Walking"
-                            value="Limited Walking"
-                            control={<Radio size="small" />}
-                            label="Limited Walking"
-                          />
-                          <FormControlLabel
-                            key="No Walking"
-                            value="No Walking"
-                            control={<Radio size="small" />}
-                            label="No Walking"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Box sx={{pb: 2}}>
-                      <TextField
-                        id="team-name"
-                        name="name"
-                        label="Team Name"
-                        type="text"
-                        autoComplete="off"
-                        value={formValues.name}
-                        onChange={handleInputChange}
-                        data-testid="name"
-                        inputProps={{'data-testid': 'name'}}
-                        required
-                      />
-                    </Box>
-                  </Grid>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    type="submit"
-                    data-testid="submit"
-                    disabled={submitDisabled}
-                  >
-                    Submit
-                  </Button>
-                </Grid>
+                  Submit
+                </Button>
               </form>
-            </Box>
+            </Paper>
           </Container>
         </main>
       </div>
