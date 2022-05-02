@@ -1,4 +1,4 @@
-# TEAM_002
+
 Welcome to the repository for Ethics Adventure! This code was compiled by Lucas Spain, Ella Nortan, Wil Simpson, Brendan Siek, and Joe Chapski for the University of Iowa class ECE:5830 Spring 2022.
 
 ## Information
@@ -15,3 +15,4 @@ All of the information necessary to understand and run this project is well docu
 * If you are confused by the folder structure it is explained in depth [here](https://github.com/UIOWAjohnsonhj/TEAM_002/wiki/folder-structure)
 * Terminology information can be found at [Terms](https://github.com/UIOWAjohnsonhj/TEAM_002/wiki/Terms)
 * Ideas for the next steps in develupment are located in [the idea workshop](https://github.com/UIOWAjohnsonhj/TEAM_002/wiki/Future-Features)
+
