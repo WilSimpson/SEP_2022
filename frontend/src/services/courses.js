@@ -14,7 +14,7 @@ class CourseService {
     // Expects a response of an array of objects where each object
     // has the required row information (see faculty dashboard - must)
     // Include ID
-    return axios.get(`${API_URL}/courses/`);
+    return axios.get(`${API_URL}/courses/${facultyId}/by_creator`);
     // const courses = {
     //   data: Courses,
     // };
@@ -37,7 +37,7 @@ class CourseService {
   }
 
   editCourse(id, name, department, courseNumber, sectionNumber,
-      semester, userId) {
+      semester, active, userId) {
     // Sends a post request to api/courses/editCourse/
     // Content is keys: id, name, department, courseNumber,
     // sectionNumber, semester, and userId
@@ -49,7 +49,8 @@ class CourseService {
       number: courseNumber,
       section: sectionNumber,
       semester: semester,
-      userId: userId,
+      userId: parseInt(userId),
+      active: Boolean(active),
     });
   }
 }

@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import CourseService from '../../services/courses';
 import AuthService from '../../services/auth';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
+import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
 
 export default function EditCourse() {
   let {state} = useLocation();
@@ -21,6 +22,7 @@ export default function EditCourse() {
     courseNumber: '0000',
     sectionNumber: '0000',
     semester: 'NO SEMESTER',
+    active: true,
   };
 
   const defaultValues = {
@@ -29,10 +31,19 @@ export default function EditCourse() {
     courseNumber: state.courseNumber,
     sectionNumber: state.sectionNumber,
     semester: state.semester,
+    active: state.active,
   };
 
   const [formValues, setFormValues] = useState(defaultValues);
   const [err, setErr] = useState('');
+  const [confirm, setConfirm] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  React.useEffect(() => {
+    if (open) {
+      handleDelete();
+    }
+  }, [confirm]);
 
   const handleInputChange = (e) => {
     const {name, value} = e.target;
@@ -58,6 +69,7 @@ export default function EditCourse() {
         formValues.courseNumber,
         formValues.sectionNumber,
         formValues.semester,
+        true,
         AuthService.currentUser().id,
     ).then(
         (response) => {
@@ -83,8 +95,69 @@ export default function EditCourse() {
     );
   };
 
+  const handleDelete = () => {
+    if (confirm) {
+      CourseService.editCourse(
+          state.id,
+          formValues.name,
+          formValues.department,
+          formValues.courseNumber,
+          formValues.sectionNumber,
+          formValues.semester,
+          false,
+          AuthService.currentUser().id,
+      ).then(() => {
+        const path = '../faculty-dashboard';
+        navigate(path);
+      },
+      ).catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setErr(
+              'There was an unexpected error reaching the server. ' +
+              'Please try again later.',
+          );
+        } else {
+          if (error.response && error.response.status === 500) {
+            setErr(error.response.data);
+          } else {
+            setErr(
+                'The server is unreachable at this time. ' +
+                'Please try again later.',
+            );
+          }
+        }
+      });
+    } else {
+      console.log('you must confirm');
+      setOpen(true);
+    }
+  };
+
   return (
     <AuthenticatedLayout>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {'Are you sure you want to end this course?'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            This action can only be reversed by an administrator. All reports related to this course will still
+            be visible. You will not be able to view or edit this course anymore. You will also no longer
+            be able to create game sessions related to this course.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Keep Course</Button>
+          <Button onClick={() => setConfirm(true)} autoFocus>
+            End Course
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* Hero unit */}
       <Container maxWidth="xl">
         <Box
@@ -193,6 +266,18 @@ export default function EditCourse() {
                   data-testid="submit"
                 >
                 Save Changes
+                </Button>
+              </Box>
+              <Box sx={{pb: 2}}>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: '#FF0000',
+                  }}
+                  data-testid="delete"
+                  onClick={handleDelete}
+                >
+                End Course
                 </Button>
               </Box>
               <Button

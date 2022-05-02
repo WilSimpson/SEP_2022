@@ -65,7 +65,7 @@ function CoursesTable() {
   };
 
   const editThisCourse = (id, name, department, courseNumber,
-      sectionNumber, semester) => {
+      sectionNumber, semester, active) => {
     const path = `editCourse`;
     navigate(path, {
       state: {
@@ -75,6 +75,7 @@ function CoursesTable() {
         courseNumber: courseNumber,
         sectionNumber: sectionNumber,
         semester: semester,
+        active: active,
       },
     });
   };
@@ -110,8 +111,7 @@ function CoursesTable() {
                 <Tooltip title="Edit Course">
                   <div onClick={() => editThisCourse(row.id, row.name,
                       row.department,
-                      row.number, row.section, row.semester)}
-                  id={`row${row.id}`}>
+                      row.number, row.section, row.semester, row.active)} id={`row${row.id}`}>
                     <IconButton>
                       <EditIcon />
                     </IconButton>
