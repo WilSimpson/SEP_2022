@@ -37,11 +37,13 @@ import io
 
 class UserViewSet(GenericViewSet,
                   CreateAPIView): # handles POSTs for creation
+    '''A class to handle all the defualt user functionality'''
     model = get_user_model()
     permission_classes = [ permissions.AllowAny ]
     serializer_class = UserSerializer
 
 class RoleTokenObtainPairView(TokenObtainPairView):
+    '''A class for all of the login token functionalty'''
     serializer_class = RoleTokenObtainPairSerializer
 
 
@@ -624,6 +626,44 @@ class GameSessionAnswerViewSet(ViewSet):
 
 @api_view(['GET'])
 def get_all_game_sessions(request):
+    '''
+        Responds with all of the active and inactive ``GameSession`` objects.
+
+        **Example request**:
+
+        .. code-block:: http
+
+            GET  /api/gameSession/
+
+        **Example response**:
+
+        .. code-block:: json
+
+            [
+                    {
+                        "id": 1,
+                        "creator_id": 1,
+                        "start_time": "2022-03-20T21:28:56.757418Z",
+                        "end_time": null,
+                        "notes": "test",
+                        "is_guest": false,
+                        "timeout": 10,
+                        "code": 877198,
+                        "active": true,
+                        "created_at": "2022-03-20T21:28:56.760495Z",
+                        "updated_at": "2022-03-20T21:28:56.760511Z",
+                        "game": 1,
+                        "course": null
+                    }
+            ]
+
+        **Response Codes**:
+
+        .. code-block:: http
+
+            200 : Success
+            501 : Fail
+    '''
     sessions = GameSession.objects.all()
     serializer = GameSessionSerializer(sessions, many=True)
     return Response(serializer.data)
@@ -784,7 +824,7 @@ def get_user_sessions(request, creator_id):
     return Response(serializer.data)
 
 class CourseViewSet(ModelViewSet):
-    '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String}
+    '''A view set for the course object. It expects {name: String, Department: String, Number: Int, Section: String, userId: String, (opt)active: bool}
     It supports create, read, update, and delete operations using POST, GET, PUT, and DELETE respectively
     create returns -- 201 on success and 400 on failure
     read returns -- 200 on success and 404 on failure
@@ -792,6 +832,22 @@ class CourseViewSet(ModelViewSet):
     delete returns -- 204 on success and 404 on failure'''
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+@api_view(['GET'])
+def get_courses_by_creator(request, creator_id):
+    '''Get all the courses created by a specific user. Expects {creator_id: int}.
+        returns 200 on success with list of courses created by the specified user
+        returns 400 error with appropriate message if the user does not exist or there is another failure'''
+    try:
+        creator_id = int(creator_id)
+        courses = Course.objects.filter(userId=int(creator_id)).filter(active=True)
+        serializer = CourseSerializer(courses, many=True)
+        print(serializer.data)
+        return Response(data=serializer.data)
+    except Exception as e:
+        print(e)
+        return HttpResponseBadRequest("Must provide a valid user ID")
+
 
 class ContextHelpViewSet(ModelViewSet):
     '''A view set for the context_help object. It expects {title: string, body: string, question_id: int[]}

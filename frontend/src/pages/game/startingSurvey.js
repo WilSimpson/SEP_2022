@@ -136,7 +136,7 @@ export default function StartingSurvey() {
                     <TextField
                       id="team-size"
                       name="size"
-                      label="size"
+                      label="Number of Players"
                       type="number"
                       InputProps={{inputProps: {min: 1}}}
                       value={formValues.size}

@@ -31,10 +31,6 @@ export default function ViewGamesPage() {
     );
   };
 
-  const handleGameSelected = (id) => {
-    navigate('/dashboard/games/'+id);
-  };
-
   useEffect(() => {
     async function getGames() {
       await gameService.getGames().then(
@@ -55,13 +51,13 @@ export default function ViewGamesPage() {
       <Loading loading={loading}>
         <Container maxWidth="lg">
           <Grid container spacing={3}>
-            <Grid item xs={12} md={12} lg={12} component={Paper}>
+            <Grid item xs={12} md={12} lg={12} component={Paper} sx={{m: '3rem 0 0 2rem'}}>
               <GamesTable
                 editable
                 data={games}
                 onConfirmDelete={handleAcceptConfirmDelete}
                 onEdit={(id) => navigate(`/dashboard/games/${id}`)}
-                onGameSelected={handleGameSelected}
+                onGameSelected={() => {}}
               />
             </Grid>
           </Grid>

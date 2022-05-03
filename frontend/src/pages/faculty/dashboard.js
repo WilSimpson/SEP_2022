@@ -15,7 +15,6 @@ import gameSessionService from '../../services/gameSession';
 import {alertService, alertSeverity} from '../../services/alert';
 import CoursesTable from '../../components/faculty/coursesTable';
 
-
 export default function FacultyDash() {
   const [sessions, setSessions] = React.useState([]);
   // const [games, setGames] = React.useState([]);

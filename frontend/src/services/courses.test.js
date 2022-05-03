@@ -12,6 +12,7 @@ describe('Course Service', () => {
   let courseCreateJSON;
   beforeEach(() => {
     courseEditJSON = {
+      active: true,
       name: 'Software Engineering Project', 
       department: 'CS', 
       number: '4500', 
@@ -39,7 +40,7 @@ describe('Course Service', () => {
     it('should make a GET request', () => {
       let spy = jest.spyOn(axios, 'get').mockImplementation();
       CourseService.getMyCourses(1);
-      expect(spy).toHaveBeenCalledWith(`${API_URL}/courses/`); 
+      expect(spy).toHaveBeenCalledWith(`${API_URL}/courses/1/by_creator`); 
     });
   });
   describe('createCourse()', () => {
@@ -65,7 +66,8 @@ describe('Course Service', () => {
         'CS', 
         '4500', 
         '1827',
-        'Spring', 
+        'Spring',
+        true, 
         1, 
       );
       expect(spy).toHaveBeenCalledWith(`${API_URL}/courses/1/`, courseEditJSON);

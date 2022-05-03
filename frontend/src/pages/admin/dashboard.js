@@ -109,7 +109,7 @@ export default function AdminDash() {
                     {games.length}
                   </Typography>
                   <div>
-                    <Link color="primary" href="#">
+                    <Link color="primary" href="/admin-dashboard/games">
                       View Games
                     </Link>
                   </div>
@@ -127,6 +127,7 @@ export default function AdminDash() {
                   onConfirmEnd = {onConfirmEnd}
                   onQRCodeButtonClicked={handleQRCodeButtonClicked}
                   gameSessions={sessions}
+                  onReportButtonClicked={(id) => navigate('/reports/8/view/?ids='+id)}
                 />
               </Paper>
             </Grid>

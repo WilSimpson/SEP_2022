@@ -92,11 +92,10 @@ describe('<ViewGamesPage />', () => {
   });
 
   describe('handleGameSelected', () => {
-    it('should navigate to that games page', async () => {
+    it('should do nothing', async () => {
       await act(() => promise);
       wrapper.update();
       wrapper.find(GamesTable).props().onGameSelected(1);
-      expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games/1');
     });
   });
   

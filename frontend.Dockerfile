@@ -1,6 +1,10 @@
 # Build
-FROM node:16.13.2-alpine as BUILD
-
+FROM node as BUILD
+RUN apt-get update \
+&& apt-get -y install libcairo-dev \
+ pkg-config \
+ libcairo2-dev \
+ libpango1.0-dev
 WORKDIR /src
 
 ENV PATH /src/node_modules/.bin:$PATH
