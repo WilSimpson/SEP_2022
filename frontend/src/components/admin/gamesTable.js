@@ -21,7 +21,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import {Edit} from '@material-ui/icons';
+import {Delete, Edit} from '@material-ui/icons';
 import {formatDate} from '../../helpers/dateFormatter';
 
 export default function GamesTable(props) {
@@ -117,7 +117,7 @@ export default function GamesTable(props) {
                 <TableRow
                   key={game.id}
                   className="game-row"
-                  onClick={() => props.onGameSelected(game.id)}
+                  onClick={() => props.gameSelect ? props.onGameSelected(game.id): null}
                 >
                   <TableCell component="th" scope="row">
                     {game.id}
@@ -146,7 +146,7 @@ export default function GamesTable(props) {
                         >
                           <Edit />
                         </IconButton>
-                        {/* <IconButton
+                        <IconButton
                           id={`delete${game.id}`}
                           aria-label="delete"
                           onClick={() => {
@@ -154,7 +154,7 @@ export default function GamesTable(props) {
                           }}
                         >
                           <Delete />
-                        </IconButton> */}
+                        </IconButton>
                       </ButtonGroup>
                     </TableCell> :
                     null
