@@ -13,11 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import {ButtonGroup, Chip} from '@mui/material';
 import authService from '../../services/auth';
-// import {Link} from 'react-router-dom';
-// const pages = ['Get Started', 'About', 'Help'];
 import {Link} from '@mui/material';
 
-const pages = {'Help': 'help', 'Settings': 'settings'};
+const pages = {'Help': '/help', 'Settings': '/settings'};
 
 const settings = {
   'Dashboard': '/dashboard',

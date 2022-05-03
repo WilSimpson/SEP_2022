@@ -1,10 +1,11 @@
 import React from 'react';
 import '../../setupTests';
 import GameFields from './gameFields';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 import {User} from '../../models/user';
 import {Button, Switch, TextField} from '@mui/material';
 import { act } from 'react-dom/test-utils';
+import { Backdrop } from '@mui/material';
 
 const user = new User(
     'email@example.com',
@@ -411,6 +412,24 @@ describe('<GameFields />', () => {
       const pauseFor = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
       await pauseFor(1000);
       expect(getTitle().props().value).toEqual('');
+    });
+  });
+
+  describe('Popup Help', () => {
+    let wrapper;
+    beforeEach(() => {
+      wrapper = mount(<GameFields />);
+    });
+    it('should open popup when question icon clicked', () => {
+      act(() => wrapper.find('#help').hostNodes().simulate('click'));
+      wrapper.update();
+      expect(wrapper.find('#gameFormatHelp').exists()).toBe(true);
+    });
+    it('should close popup when clicking anywhere on the screen', () => {
+      act(() => wrapper.find('#help').hostNodes().simulate('click'));
+      wrapper.update();
+      act(() => wrapper.find(Backdrop).last().simulate("click"));
+      expect(wrapper.find('#gameFormatHelp').hostNodes().props().open).toBe(undefined);
     });
   });
 });
