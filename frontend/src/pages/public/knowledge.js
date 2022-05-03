@@ -87,12 +87,6 @@ export default function Knowledge() {
             <Grid item xs={12} md={6} xl={6} sx={{alignSelf: 'center'}}>
               <h2>Continue this process until the Game is completed.</h2>
             </Grid>
-            {/* <Grid item xs={12} md={4} xl={4}>
-              <h2>Hello 12</h2>
-            </Grid>
-            <Grid item xs={12} md={4} xl={4}>
-              <h2>Hello 13</h2>
-            </Grid> */}
           </Grid>
         </Paper>
       </Container>
