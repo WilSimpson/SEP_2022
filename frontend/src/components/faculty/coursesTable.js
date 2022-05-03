@@ -46,7 +46,7 @@ export default function CoursesTable(props) {
   };
 
   const editThisCourse = (id, name, department, courseNumber,
-      sectionNumber, semester) => {
+      sectionNumber, semester, active) => {
     const path = `editCourse`;
     navigate(path, {
       state: {
@@ -56,6 +56,7 @@ export default function CoursesTable(props) {
         courseNumber: courseNumber,
         sectionNumber: sectionNumber,
         semester: semester,
+        active: active,
       },
     });
   };
@@ -73,43 +74,40 @@ export default function CoursesTable(props) {
         onChange={(event) => searchCourses(event.target.value)}
         id='searchCourses'
       />
-      {!loading &&
-        <Table data-testid="course_table" sx={{minWidth: 500}}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Edit Course</TableCell>
-              <TableCell>Department</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Course Number</TableCell>
-              <TableCell>Section Number</TableCell>
-              <TableCell>Semester</TableCell>
+      <Table data-testid="course_table" sx={{minWidth: 500}}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Edit Course</TableCell>
+            <TableCell>Department</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Course Number</TableCell>
+            <TableCell>Section Number</TableCell>
+            <TableCell>Semester</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {filteredRows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>
+                <Tooltip title="Edit Course">
+                  <div onClick={() => editThisCourse(row.id, row.name,
+                      row.department,
+                      row.number, row.section, row.semester, row.active)} id={`row${row.id}`}>
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </div>
+                </Tooltip>
+              </TableCell>
+              <TableCell>{row.department}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.number}</TableCell>
+              <TableCell>{row.section}</TableCell>
+              <TableCell>{row.semester}</TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredRows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>
-                  <Tooltip title="Edit Course">
-                    <div onClick={() => editThisCourse(row.id, row.name,
-                        row.department,
-                        row.number, row.section, row.semester)}
-                    id={`row${row.id}`}>
-                      <IconButton>
-                        <EditIcon />
-                      </IconButton>
-                    </div>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>{row.department}</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.number}</TableCell>
-                <TableCell>{row.section}</TableCell>
-                <TableCell>{row.semester}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      }
+          ))}
+        </TableBody>
+      </Table>
     </React.Fragment>
   );
 }

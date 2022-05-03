@@ -6,7 +6,6 @@ import {
   Typography,
 } from '@mui/material';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
-// import GamesTable from '../../components/admin/gamesTable';
 import gameService from '../../services/game';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
@@ -17,7 +16,6 @@ import CoursesTable from '../../components/faculty/coursesTable';
 
 export default function FacultyDash() {
   const [sessions, setSessions] = React.useState([]);
-  // const [games, setGames] = React.useState([]);
   const navigate = useNavigate();
 
   const handleQRCodeButtonClicked = (joinCode) => {
@@ -28,7 +26,6 @@ export default function FacultyDash() {
     async function getGames() {
       gameService.getGames().then((resp) => {
         const games = [...resp.data];
-        // setGames(games);
         getSessions(games);
       }).catch((error) => {
         alertService.alert({severity: alertSeverity.error, message: error});
@@ -77,13 +74,6 @@ export default function FacultyDash() {
                 <Typography component="p" variant="h2">
                   {sessionStorage.getItem('courses') ? JSON.parse(sessionStorage.getItem('courses')).length : 0}
                 </Typography>
-                {/* <div>
-                  <Button color="secondary" variant="contained"
-                    href="dashboard/addCourse"
-                    data-testid="courses-button">
-                    Add a Course
-                  </Button>
-                </div> */}
               </React.Fragment>
             </Paper>
           </Grid>
@@ -101,51 +91,6 @@ export default function FacultyDash() {
               <CoursesTable />
             </Paper>
           </Grid>
-          {/* <Grid item xs={12} md={8} lg={9}>
-            <Paper
-              elevation={7}
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                height: 240,
-              }}
-            >
-              <GamesTable data={games} />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} md={4} lg={3}>
-            <Paper
-              elevation={7}
-              data-testid="total-games"
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                height: 240,
-                justifyContent: 'center',
-              }}
-            >
-              <React.Fragment>
-                <Typography
-                  component="h1"
-                  variant="h4"
-                  color="primary"
-                  gutterBottom
-                >
-                  Total Games
-                </Typography>
-                <Typography component="p" variant="h2">
-                  2
-                </Typography>
-                <div>
-                  <Link color="primary" href="#">
-                    View Games
-                  </Link>
-                </div>
-              </React.Fragment>
-            </Paper>
-          </Grid> */}
           <Grid item xs={12}>
             <Paper
               elevation={7}

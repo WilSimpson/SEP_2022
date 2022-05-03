@@ -271,10 +271,20 @@ export function SideMenu(props) {
       </ListItemButton>
       <Collapse in={courseOpen && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{pl: 4}} data-testid="add-course-item">
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="add-course-item"
+            component={Link}
+            href="/dashboard/addCourse"
+          >
             <ListItemText primary="Add Course" />
           </ListItemButton>
-          <ListItemButton sx={{pl: 4}} data-testid="view-course-item">
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="view-course-item"
+            component={Link}
+            href="/dashboard/viewCourses"
+          >
             <ListItemText primary="View Courses" />
           </ListItemButton>
         </List>

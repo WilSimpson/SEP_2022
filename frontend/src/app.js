@@ -30,6 +30,7 @@ import ReportsPage from './pages/faculty/reports/reports';
 import EditCourse from './pages/faculty/editCourse';
 import ReportPage from './pages/faculty/reports/report';
 import ViewReportPage from './pages/faculty/reports/view.tsx';
+import ViewCoursePage from './pages/faculty/viewCourse';
 import {
   ThemeProvider,
   createTheme,
@@ -126,6 +127,16 @@ function App(props) {
                   element={
                     <ProtectedRoute>
                       {isAdmin() ? <AdminDash /> : <AddCourse />};
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  exact
+                  path="/dashboard/viewCourses"
+                  element={
+                    <ProtectedRoute>
+                      {isAdmin() ? <AdminDash /> : <ViewCoursePage />};
                     </ProtectedRoute>
                   }
                 />
