@@ -6,12 +6,12 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useNavigate, useLocation} from 'react-router-dom';
-import {Typography} from '@mui/material';
 import Alert from '@mui/material/Alert';
 import CourseService from '../../services/courses';
 import AuthService from '../../services/auth';
 import AuthenticatedLayout from '../../components/layout/authenticated.layout';
-import {Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
+import {Paper} from '@mui/material';
+import EndCourseDialog from '../../components/faculty/endCourseDialog';
 
 export default function EditCourse() {
   let {state} = useLocation();
@@ -107,7 +107,7 @@ export default function EditCourse() {
           false,
           AuthService.currentUser().id,
       ).then(() => {
-        const path = '../faculty-dashboard';
+        const path = '../dashboard';
         navigate(path);
       },
       ).catch((error) => {
@@ -128,169 +128,137 @@ export default function EditCourse() {
         }
       });
     } else {
-      console.log('you must confirm');
       setOpen(true);
     }
   };
 
   return (
     <AuthenticatedLayout>
-      <Dialog
+      <EndCourseDialog
         open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {'Are you sure you want to end this course?'}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            This action can only be reversed by an administrator. All reports related to this course will still
-            be visible. You will not be able to view or edit this course anymore. You will also no longer
-            be able to create game sessions related to this course.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Keep Course</Button>
-          <Button onClick={() => setConfirm(true)} autoFocus>
-            End Course
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* Hero unit */}
-      <Container maxWidth="xl">
-        <Box
-          sx={{
-            pt: 0,
-            pb: 6,
-            borderRadius: 4,
-            mt: 3,
-            mb: 3,
-          }}
-        >
-          <Typography>
-            Edit  {state.name}
-          </Typography>
-          <Box sx={{pb: 2}}>
-            {err && <Alert severity="error">{err}</Alert>}
-          </Box>
-          <form onSubmit={handleSubmit}>
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="center"
-              direction="column"
-            >
-              <Grid item>
-                <Box sx={{pb: 2}}>
-                  <TextField
-                    id="name"
-                    name="name"
-                    label="Course Name"
-                    type="text"
-                    autoComplete="off"
-                    value={formValues.name}
-                    onChange={handleInputChange}
-                    data-testid="name"
-                    required
-                  />
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box sx={{pb: 2}}>
-                  <TextField
-                    id="department"
-                    name="department"
-                    label="Department"
-                    type="text"
-                    autoComplete="off"
-                    value={formValues.department}
-                    onChange={handleInputChange}
-                    data-testid="department"
-                    required
-                  />
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box sx={{pb: 2}}>
-                  <TextField
-                    id="courseNumber"
-                    name="courseNumber"
-                    label="Course Number"
-                    type="number"
-                    InputProps={{inputProps: {min: 0}}}
-                    value={formValues.courseNumber}
-                    onChange={handleInputChange}
-                    data-testid="courseNumber"
-                    required
-                  />
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box sx={{pb: 2}}>
-                  <TextField
-                    id="sectionNumber"
-                    name="sectionNumber"
-                    label="Section Number"
-                    type="number"
-                    InputProps={{inputProps: {min: 0}}}
-                    value={formValues.sectionNumber}
-                    onChange={handleInputChange}
-                    data-testid="sectionNumber"
-                    required
-                  />
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box sx={{pb: 2}}>
-                  <TextField
-                    id="semester"
-                    name="semester"
-                    label="Semester"
-                    type="text"
-                    autoComplete="off"
-                    value={formValues.semester}
-                    onChange={handleInputChange}
-                    data-testid="semester"
-                    inputProps={{'data-testid': 'semester'}}
-                    required
-                  />
-                </Box>
+        close={() => setOpen(false)}
+        keepCourse={() => setOpen(false)}
+        endCourse={() => setConfirm(true)}
+      />
+      <Container maxWidth="lg">
+        <Grid container spacing={3}>
+          <Grid item xs={12} component={Paper} sx={{p: '1.5rem'}}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <h2>Edit {state.name}</h2>
               </Grid>
               <Box sx={{pb: 2}}>
+                {err && <Alert severity="error">{err}</Alert>}
+              </Box>
+              <Grid item xs={12}>
+                <TextField
+                  id="name"
+                  name="name"
+                  label="Course Name"
+                  type="text"
+                  autoComplete="off"
+                  value={formValues.name}
+                  onChange={handleInputChange}
+                  data-testid="name"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="department"
+                  name="department"
+                  label="Department"
+                  type="text"
+                  autoComplete="off"
+                  value={formValues.department}
+                  onChange={handleInputChange}
+                  data-testid="department"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="courseNumber"
+                  name="courseNumber"
+                  label="Course Number"
+                  type="number"
+                  InputProps={{inputProps: {min: 0}}}
+                  value={formValues.courseNumber}
+                  onChange={handleInputChange}
+                  data-testid="courseNumber"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="sectionNumber"
+                  name="sectionNumber"
+                  label="Section Number"
+                  type="number"
+                  InputProps={{inputProps: {min: 0}}}
+                  value={formValues.sectionNumber}
+                  onChange={handleInputChange}
+                  data-testid="sectionNumber"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="semester"
+                  name="semester"
+                  label="Semester"
+                  type="text"
+                  autoComplete="off"
+                  value={formValues.semester}
+                  onChange={handleInputChange}
+                  data-testid="semester"
+                  inputProps={{'data-testid': 'semester'}}
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={6}>
                 <Button
+                  id="delete"
+                  variant="outlined"
+                  data-testid="delete"
+                  sx={{width: '100%'}}
+                  onClick={handleDelete}
+                >
+                  End Course
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  id="edit-course"
                   variant="contained"
                   color="secondary"
                   type="submit"
                   data-testid="submit"
+                  sx={{width: '100%'}}
+                  onClick={handleSubmit}
                 >
-                Save Changes
+                  Save Changes
                 </Button>
-              </Box>
-              <Box sx={{pb: 2}}>
+              </Grid>
+              <Grid item xs={12}>
                 <Button
-                  variant="contained"
-                  style={{
-                    backgroundColor: '#FF0000',
-                  }}
-                  data-testid="delete"
-                  onClick={handleDelete}
+                  variant="outlined"
+                  color="primary"
+                  data-testid="back"
+                  sx={{width: '50%'}}
+                  href="../dashboard"
                 >
-                End Course
+                  Go Back
                 </Button>
-              </Box>
-              <Button
-                variant="outlined"
-                color="secondary"
-                data-testid="back"
-                href="../dashboard"
-              >
-                Go Back
-              </Button>
+              </Grid>
             </Grid>
-          </form>
-        </Box>
+          </Grid>
+        </Grid>
       </Container>
     </AuthenticatedLayout>
   );

@@ -47,7 +47,7 @@ export default function CoursesTable(props) {
 
   const editThisCourse = (id, name, department, courseNumber,
       sectionNumber, semester, active) => {
-    const path = `editCourse`;
+    const path = `/dashboard/editCourse`;
     navigate(path, {
       state: {
         id: id,
