@@ -209,7 +209,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
             {props.qrCodes ? <TableCell>QR Code</TableCell> : null}
             <TableCell>ID</TableCell>
             <TableCell>Start Time</TableCell>
-            <TableCell>End Time</TableCell>
+            <TableCell>Timeout (minutes)</TableCell>
             <TableCell>Game Code</TableCell>
             {props.reportButtons ? <TableCell>View Reports</TableCell> : null}
             {props.endGameSessionButtons ? <TableCell>End Session</TableCell> : null}
@@ -239,7 +239,7 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               }
               <TableCell>{row.id}</TableCell>
               <TableCell>{formatDate(row.start_time)}</TableCell>
-              <TableCell>{formatDate(row.end_time)}</TableCell>
+              <TableCell>{row.timeout}</TableCell>
               <TableCell>{String(row.code).padStart(6, '0')}</TableCell>
               {props.reportButtons ?
                 <TableCell>

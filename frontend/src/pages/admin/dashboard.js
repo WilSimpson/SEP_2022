@@ -122,8 +122,8 @@ export default function AdminDash() {
                 sx={{p: 2, display: 'flex', flexDirection: 'column'}}
               >
                 <GameSessionsTable
-                  reportButtons
                   qrCodes
+                  endGameSessionButtons
                   onConfirmEnd = {onConfirmEnd}
                   onQRCodeButtonClicked={handleQRCodeButtonClicked}
                   gameSessions={sessions}

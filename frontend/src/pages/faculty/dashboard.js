@@ -45,6 +45,16 @@ export default function FacultyDash() {
     getGames();
   }, []);
 
+  const onConfirmEnd = (id) => {
+    gameSessionService.endSession(id).then(
+        (response) => {
+          setSessions([...sessions.filter((s) => s.id != id)]);
+          console.log(response.data);
+        }).catch((error) => {
+      alertService.alert({severity: alertSeverity.error, message: error});
+    });
+  };
+
   return (
     <AuthenticatedLayout>
       <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
@@ -100,11 +110,12 @@ export default function FacultyDash() {
               }}
             >
               <GameSessionsTable
-                reportButtons
                 qrCodes
                 endGameSessionButtons
                 onQRCodeButtonClicked={handleQRCodeButtonClicked}
                 gameSessions={sessions}
+                onConfirmEnd = {onConfirmEnd}
+                onReportButtonClicked={(id) => navigate('/reports/8/view/?ids='+id)}
               />
             </Paper>
           </Grid>

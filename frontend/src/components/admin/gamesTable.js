@@ -21,7 +21,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import {Delete, Edit} from '@material-ui/icons';
+import {Edit} from '@material-ui/icons';
 import {formatDate} from '../../helpers/dateFormatter';
 
 export default function GamesTable(props) {
@@ -32,6 +32,8 @@ export default function GamesTable(props) {
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * pageSize - games.length) : 0;
+
+  const colSize = 4 + (props.editable ? 1 : 0);
 
   const handleChangePageSize = (event) => {
     setPageSize(event.target.value);
@@ -144,7 +146,7 @@ export default function GamesTable(props) {
                         >
                           <Edit />
                         </IconButton>
-                        <IconButton
+                        {/* <IconButton
                           id={`delete${game.id}`}
                           aria-label="delete"
                           onClick={() => {
@@ -152,7 +154,7 @@ export default function GamesTable(props) {
                           }}
                         >
                           <Delete />
-                        </IconButton>
+                        </IconButton> */}
                       </ButtonGroup>
                     </TableCell> :
                     null
@@ -162,7 +164,7 @@ export default function GamesTable(props) {
 
               {emptyRows > 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} />
+                  <TableCell colSpan={colSize} />
                 </TableRow>
               )}
             </TableBody>
@@ -170,7 +172,7 @@ export default function GamesTable(props) {
               <TableRow className="game-pagination">
                 <TablePagination
                   rowsPerPageOptions={[5, 15, 30, {label: 'All', value: -1}]}
-                  colSpan={3}
+                  colSpan={colSize}
                   count={games.length}
                   rowsPerPage={pageSize}
                   page={page}
