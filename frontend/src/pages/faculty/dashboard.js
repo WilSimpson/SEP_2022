@@ -102,6 +102,7 @@ export default function FacultyDash() {
               <GameSessionsTable
                 reportButtons
                 qrCodes
+                endGameSessionButtons
                 onQRCodeButtonClicked={handleQRCodeButtonClicked}
                 gameSessions={sessions}
               />
