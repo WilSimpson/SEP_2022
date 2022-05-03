@@ -16,7 +16,7 @@ export default function GenerateQRPage(props) {
 
   return (
     <AuthenticatedLayout>
-      <Grid container spacing={3} sx={{p: '3rem', width: '100%', pt: '3rem'}} >
+      <Grid container spacing={3} sx={{p: '3rem', width: '100%', pt: '3rem'}} justifyContent='center'>
         <Grid item xs={12} md={8} lg={9}>
           <Paper
             elevation={7}
