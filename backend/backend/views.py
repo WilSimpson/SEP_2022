@@ -84,7 +84,8 @@ def joinGame(request):
                     "game_id": 22,
                     "chance_game": "NO_GAME"
                     "help": [{"title": "Hint 1",
-                            "body": "This is some help for the question"}]
+                            "body": "This is some help for the question"}],
+                    "location": string,
                 }
             ],
             "options": [
