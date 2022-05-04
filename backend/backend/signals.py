@@ -10,9 +10,9 @@ import os
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
     if os.environ['EA_MODE'] == 'dev':
-        url = "localhost:3000"
+        url = os.environ['EA_DEV_MODE']
     else:
-        url = "sep22.forever.dev"
+        url = os.environ['EA_HOST']
 
     email_plaintext_message = url + "/changePassword#{}".format(reset_password_token.key)
 
