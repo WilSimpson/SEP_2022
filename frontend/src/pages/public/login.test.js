@@ -7,6 +7,7 @@ import {render, fireEvent, act, getByTestId} from '@testing-library/react';
 import AuthService from '../../services/auth';
 import ForgotPassword from '../faculty/forgotPassword';
 import {User} from '../../models/user';
+import { BrowserRouter } from 'react-router-dom';
 
 
 jest.mock('../../services/auth');
@@ -26,7 +27,7 @@ describe('<Login />', () => {
 
   describe('Email Field', () => {
     beforeEach(() => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<BrowserRouter><Login /></BrowserRouter>);
       emailField = getByTestId('email-input');
     });
 
@@ -42,7 +43,7 @@ describe('<Login />', () => {
 
   describe('Password Field', () => {
     beforeEach(() => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<BrowserRouter><Login /></BrowserRouter>);
       passwordField = getByTestId('pass-input');
     });
 
@@ -58,7 +59,7 @@ describe('<Login />', () => {
 
   describe('Submit Button', () => {
     beforeEach(() => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<BrowserRouter><Login /></BrowserRouter>);
       submitButton = getByTestId('submit-button');
       passwordField = getByTestId('pass-input');
       emailField = getByTestId('email-input');
@@ -107,7 +108,7 @@ describe('<Login />', () => {
       await act(() => promise);
     });
     it ('should display error message when incorrect login', async () => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<BrowserRouter><Login /></BrowserRouter>);
       AuthService.login.mockRejectedValue({response: {status:401, data: {detail: 'error'}}});
       fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
       fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
@@ -117,7 +118,7 @@ describe('<Login />', () => {
       expect(errMsg).toBeInTheDocument();
     });
     it ('should display error message when an unknown error occured', async () => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<BrowserRouter><Login /></BrowserRouter>);
       AuthService.login.mockRejectedValue({response: {status:500, data: {detail: 'error'}}});
       fireEvent.change(emailField, {target: {value: 'valid@email.com'}});
       fireEvent.change(passwordField, {target: {value: 'wrongpassword'}});
@@ -129,7 +130,7 @@ describe('<Login />', () => {
   });
   describe('Forgot password', () => {
     beforeEach(() => {
-      const {getByTestId} = render(<Login />);
+      const {getByTestId} = render(<BrowserRouter><Login /></BrowserRouter>);
       forgot = getByTestId('forgot-link');
     });
 
@@ -139,7 +140,7 @@ describe('<Login />', () => {
 
     it('go to forgot password page', () => {
       fireEvent.click(forgot);
-      const shallowWrapper = shallow(<ForgotPassword />);
+      const shallowWrapper = shallow(<BrowserRouter><Login /></BrowserRouter>);
       expect(shallowWrapper);
     });
   });

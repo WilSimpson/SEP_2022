@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Grid} from '@mui/material';
+import {Container, Grid, Paper} from '@mui/material';
 import gameSessionService from '../../../services/gameSession';
 import {useNavigate} from 'react-router-dom';
 import AuthenticatedLayout from '../../../components/layout/authenticated.layout';
@@ -16,8 +16,8 @@ export default function StartGameSession(props) {
       message: 'Game Session not Started',
     });
     AuthService.currentUser().isAdmin() ?
-      navigate('/admin-dashboard') :
-      navigate('/faculty-dashboard');
+      navigate('/dashboard') :
+      navigate('/dashboard');
   }
 
   function handleSubmit(creatorId, gameId, notes, timeout, courseID, isGuest) {
@@ -27,11 +27,11 @@ export default function StartGameSession(props) {
           alertService.alert({
             severity: alertSeverity.success,
             message: `Game Session Started,
-                    Join Code: ${success.data.code}`,
+                    Join Code: ${String(success.data.code).padStart(6, '0')}`,
           });
           AuthService.currentUser().isAdmin() ?
-          navigate('/admin-dashboard') :
-          navigate('/faculty-dashboard');
+          navigate('/dashboard') :
+          navigate('/dashboard');
         }).catch(() => {
           alertService.error('error creating session');
         });
@@ -40,8 +40,8 @@ export default function StartGameSession(props) {
   return (
     <AuthenticatedLayout>
       <Container maxWidth='lg'>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
+        <Grid container spacing={3} sx={{justifyContent: 'center'}}>
+          <Grid item xs={12} component={Paper} sx={{p: '1.5rem'}}>
             <SessionStart
               onCancel={handleCancel}
               onSubmit={handleSubmit}

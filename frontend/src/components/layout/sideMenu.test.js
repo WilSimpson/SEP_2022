@@ -68,26 +68,18 @@ describe('<SideMenu />', () => {
       localStorage.removeItem('user');
     });
 
-    it('should reveal 3 new buttons when clicked as an admin', () => {
+    it('should reveal 1 new button when clicked as an admin', () => {
       const {getByTestId} = render(<SideMenu />);
       const userManageLink = getByTestId('user-manage-item');
       try {
         getByTestId('user-create-item');
-        getByTestId('user-edit-item');
-        getByTestId('user-view-item');
       } catch (error) {
         expect(error);
       }
       fireEvent.click(userManageLink);
       const createUser = getByTestId('user-create-item');
-      const editUser = getByTestId('user-edit-item');
-      const viewUser = getByTestId('user-view-item');
       expect(createUser).toBeInTheDocument();
       expect(createUser).not.toBeDisabled();
-      expect(editUser).toBeInTheDocument();
-      expect(editUser).not.toBeDisabled();
-      expect(viewUser).toBeInTheDocument();
-      expect(viewUser).not.toBeDisabled();
       localStorage.removeItem('user');
     });
   });
@@ -114,27 +106,9 @@ describe('<SideMenu />', () => {
   describe('Help Button', () => {
     it('should have clickable help button', () => {
       const {getByTestId} = render(<SideMenu />);
-      const helpLink = getByTestId('help-item');
-      expect(helpLink).toBeInTheDocument();
-      expect(helpLink).not.toBeDisabled();
-    });
-
-    it('should reveal 2 new buttons when clicked', () => {
-      const {getByTestId} = render(<SideMenu />);
-      const helpLink = getByTestId('help-item');
-      try {
-        getByTestId('getting-started-item');
-        getByTestId('about-item');
-      } catch (error) {
-        expect(error);
-      }
-      fireEvent.click(helpLink);
-      const gettingStarted = getByTestId('getting-started-item');
-      const about = getByTestId('about-item');
-      expect(gettingStarted).toBeInTheDocument();
-      expect(gettingStarted).not.toBeDisabled();
-      expect(about).toBeInTheDocument();
-      expect(about).not.toBeDisabled();
+      const homeLink = getByTestId('home-item');
+      expect(homeLink).toBeInTheDocument();
+      expect(homeLink).not.toBeDisabled();
     });
   });
 });

@@ -46,9 +46,9 @@ export default function Login() {
         (response) => {
           if (response.status === 200) {
             if (authService.currentUser().isAdmin()) {
-              window.location.href = '/admin-dashboard';
+              window.location.href = '/dashboard';
             } else {
-              window.location.href = '/faculty-dashboard';
+              window.location.href = '/dashboard';
             }
           } else {
             setErrMsg(

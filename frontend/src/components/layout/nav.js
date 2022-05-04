@@ -11,17 +11,14 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import {ButtonGroup} from '@mui/material';
+import {ButtonGroup, Chip} from '@mui/material';
 import authService from '../../services/auth';
+import {Link} from '@mui/material';
 
-// const pages = ['Get Started', 'About', 'Help'];
-
-const pages = {'Get Started': 'started', 'About': '####', 'Help': '####'};
+const pages = {'Help': '/help', 'Settings': '/settings'};
 
 const settings = {
-  'Dashboard': '/admin-dashboard',
-  'Games': '/admin-dashboard/games',
-  'Account Settings': '#',
+  'Dashboard': '/dashboard',
   'Logout': '/logout',
 };
 
@@ -86,7 +83,7 @@ const ResponsiveAppBar = () => {
               }}
             >
               {Object.entries(pages).map(([key, value]) => (
-                <MenuItem key={key} href={value} onClick={handleCloseNavMenu}>
+                <MenuItem key={key} component={Link} href={value} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{key}</Typography>
                 </MenuItem>
               ))}
@@ -94,7 +91,7 @@ const ResponsiveAppBar = () => {
           </Box>
 
           <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, pl: 3}}>
-            <ButtonGroup disableElevation variant="contained" color="primary">
+            <ButtonGroup disableElevation variant="contained">
               {Object.entries(pages).map(([key, value]) => (
                 <Button
                   key={key}
@@ -104,72 +101,78 @@ const ResponsiveAppBar = () => {
                     my: 2,
                     borderRadius: 0,
                   }}
+                  variant="text"
+                  style={{color: 'white'}}
                 >
                   {key}
                 </Button>
               ))}
             </ButtonGroup>
           </Box>
-          <Box sx={{flexGrow: 0}}>
-            {authService.isLoggedIn() ? (
-              <div>
-                <Tooltip title="Account Menu">
-                  <IconButton
-                    onClick={handleOpenUserMenu}
-                    sx={{p: 0}}
-                    size="large"
-                    data-testid="user-menu"
-                  >
-                    <Avatar src='/images/accountIcon.png' alt="User" />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{mt: '45px'}}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  data-testid='auth-menu'
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {Object.entries(settings).map(([name, link]) => (
-                    <MenuItem
-                      key={name}
-                      data-testid={name+'-test'}
-                      onClick={(e) => handleChooseUserOption(e, link)}
+          {authService.isLoggedIn() ? (
+            <>
+              <Chip sx={{mr: 2}} label={authService.currentUser().isAdmin() ? 'ADMIN' : 'FACULTY'} color='secondary' size='small' />
+              <Typography sx={{mr: 5}}>{authService.currentUser().email}</Typography>
+              <Box sx={{ml: 3, flexGrow: 0}}>
+                <div>
+                  <Tooltip title="Account Menu">
+                    <IconButton
+                      onClick={handleOpenUserMenu}
+                      sx={{p: 0}}
+                      size="large"
+                      data-testid="user-menu"
                     >
-                      <Typography
-                        textAlign="center"
-                        variant='h1'
+                      <Avatar src='/images/accountIcon.png' alt="User" />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    sx={{mt: '45px'}}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    data-testid='auth-menu'
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                  >
+                    {Object.entries(settings).map(([name, link]) => (
+                      <MenuItem
+                        key={name}
+                        data-testid={name+'-test'}
+                        component={Link}
+                        href={link}
+                        onClick={(e) => handleChooseUserOption(e, link)}
                       >
                         {name}
-                      </Typography>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </div>
+              </Box>
+            </>
+                ) : (
+                  <Box>
+                    <MenuItem
+                      key='Login'
+                      component={Link}
+                      href={'/login'}
+                    >
+                      <Button
+                        key="Login"
+                        sx={{my: 2, color: 'common.white', display: 'block'}}
+                      >
+                        Login
+                      </Button>
                     </MenuItem>
-                  ))}
-                </Menu>
-              </div>
-            ) : (
-              <MenuItem
-                key='Login'
-              >
-                <Button
-                  key="Login"
-                  href="/login"
-                  sx={{my: 2, color: 'common.white', display: 'block'}}
-                >
-                  Login
-                </Button>
-              </MenuItem>
-            )}
-          </Box>
+                  </Box>
+                )}
         </Toolbar>
       </Container>
     </AppBar>

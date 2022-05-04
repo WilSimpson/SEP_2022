@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../setupTests';
-import {shallow, mount} from 'enzyme';
+import {shallow, mount, ReactWrapper} from 'enzyme';
 import EditCourse from './editCourse';
 
 import {render, fireEvent} from '@testing-library/react';
@@ -9,6 +9,7 @@ import {User} from '../../models/user';
 import MockCourseService from '../../services/courses';
 import {act} from 'react-dom/test-utils';
 import {Alert} from '@mui/material';
+import EndCourseDialog from '../../components/faculty/endCourseDialog';
 
 
 const user = new User(
@@ -100,16 +101,16 @@ describe('<EditCourse />', () => {
       it('should navigate to faculty dash', async () => {
         let promise = Promise.resolve();
         MockCourseService.editCourse.mockResolvedValue({});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#edit-course').hostNodes().props().onClick(event);
         await act(() => promise);
-        expect(mockedNavigate).toHaveBeenCalledWith('../faculty-dashboard');
+        expect(mockedNavigate).toHaveBeenCalledWith('../dashboard');
       });
     });
     describe('on fail', () => {
       it('should set error message on 404 status', async () => {
         let promise = Promise.resolve();
         MockCourseService.editCourse.mockRejectedValue({response:{status: 404, data: ''}});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#edit-course').hostNodes().props().onClick(event);
         await act(() => promise);
         wrapper.update();
         expect(wrapper.find(Alert).prop('children')).toEqual(
@@ -120,7 +121,7 @@ describe('<EditCourse />', () => {
       it('should set response message on 500 status', async () => {
         let promise = Promise.resolve();
         MockCourseService.editCourse.mockRejectedValue({response:{status: 500, data: 'test-error'}});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#edit-course').hostNodes().props().onClick(event);
         await act(() => promise);
         wrapper.update();
         expect(wrapper.find(Alert).prop('children')).toEqual('test-error');
@@ -128,7 +129,7 @@ describe('<EditCourse />', () => {
       it('should set error message on other status', async () => {
         let promise = Promise.resolve();
         MockCourseService.editCourse.mockRejectedValue({response:{status: 700, data: ''}});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#edit-course').hostNodes().props().onClick(event);
         await act(() => promise);
         wrapper.update();
         expect(wrapper.find(Alert).prop('children')).toEqual(
@@ -152,4 +153,67 @@ describe('<EditCourse />', () => {
     });
   });
 
+  describe('Delete confirm dialog', () => {
+    let wrapper;
+    beforeEach(() => {
+      wrapper = mount(<BrowserRouter><EditCourse /></BrowserRouter>);
+    });
+    it ('should open a dialog when clicked', () => {
+      act(() => wrapper.find('#delete').hostNodes().props().onClick());
+      wrapper.update();
+      let deleteDialog = wrapper.find(EndCourseDialog);
+      expect(deleteDialog.props().open).toBe(true);
+    });
+    describe('End Course button', () => {
+      let promise;
+      beforeEach(() => {
+        promise = Promise.resolve();
+        wrapper.find('#delete').hostNodes().props().onClick();
+        wrapper.update();
+      });
+      it ('should call courseService editCourse', async () => {
+        MockCourseService.editCourse.mockResolvedValue({});
+        act(() => wrapper.find(EndCourseDialog).props().endCourse());
+        await act(() => promise);
+        expect(MockCourseService.editCourse).toHaveBeenCalled();
+      });
+      describe('end course on success', () => {
+        it('should navigate', async () => {
+          MockCourseService.editCourse.mockResolvedValue({});
+          act(() => wrapper.find(EndCourseDialog).props().endCourse());
+          await act(() => promise);
+          expect(mockedNavigate).toHaveBeenCalledWith('../dashboard');
+        });
+      });
+      describe('end course on fail', () => {
+        it('should set Error on status 404', async () => {
+          MockCourseService.editCourse.mockRejectedValue({response:{status: 404}});
+          act(() => wrapper.find(EndCourseDialog).props().endCourse());
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find(Alert).prop('children')).toEqual(
+            'There was an unexpected error reaching the server. ' +
+              'Please try again later.',
+          );
+        });
+        it('should set Error on status 500', async () => {
+          MockCourseService.editCourse.mockRejectedValue({response:{status: 500, data: 'test-err'}});
+          act(() => wrapper.find(EndCourseDialog).props().endCourse());
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find(Alert).prop('children')).toEqual('test-err');
+        });
+        it('should set Error on status unknown', async () => {
+          MockCourseService.editCourse.mockRejectedValue({response:{status: 700}});
+          act(() => wrapper.find(EndCourseDialog).props().endCourse());
+          await act(() => promise);
+          wrapper.update();
+          expect(wrapper.find(Alert).prop('children')).toEqual(
+            'The server is unreachable at this time. ' +
+                'Please try again later.',
+          );
+        });
+      });
+    });
+  });
 });

@@ -1,10 +1,14 @@
 import React from 'react';
 import '../../setupTests';
 import SessionStart from './sessionStart';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 import {User} from '../../models/user';
 import {Button, TextField} from '@mui/material';
 import { act } from 'react-dom/test-utils';
+import MockCourseService from '../../services/courses';
+import MockGameService from '../../services/game';
+import { BrowserRouter } from 'react-router-dom';
+import { alertService } from '../../services/alert';
 
 const user = new User(
     'email@example.com',
@@ -15,8 +19,14 @@ const user = new User(
     1,
 );
 
+jest.mock('../../services/game');
+jest.mock('../../services/courses');
+
+
 beforeEach(() => {
   localStorage.setItem('user', JSON.stringify(user));
+  MockGameService.getGames.mockResolvedValue({data: []});
+  MockCourseService.getMyCourses.mockResolvedValue({data: []});
 });
 
 afterEach(() => {
@@ -38,14 +48,6 @@ describe('<SessionStart />', () => {
 
     it('Should have correct page title', () => {
       expect(comp.text()).toContain('Start Game Session');
-    });
-
-    it('should have an empty game ID field', () => {
-      const input = comp
-          .find(TextField)
-          .filterWhere((i) => i.props().label == 'Game ID');
-      expect(input.getElement()).not.toBeNull();
-      expect(input.props().value).toEqual('');
     });
 
     it('should have an empty timeout field', () => {

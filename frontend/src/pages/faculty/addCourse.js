@@ -1,16 +1,17 @@
 import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
+// import Container from '@mui/material/Container';
 import {useState} from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
-import {Typography} from '@mui/material';
+// import {Typography} from '@mui/material';
 import Alert from '@mui/material/Alert';
 import CourseService from '../../services/courses';
 import AuthService from '../../services/auth';
+import AuthenticatedLayout from '../../components/layout/authenticated.layout';
+import {Paper, Container} from '@mui/material';
 
 export default function AddCourse() {
   const defaultValues = {
@@ -54,7 +55,7 @@ export default function AddCourse() {
         AuthService.currentUser().id,
     ).then(
         (response) => {
-          const path = `../faculty-dashboard`;
+          const path = `../dashboard`;
           navigate(path);
         }).catch((error) => {
       if (error.response && error.response.status === 404) {
@@ -77,133 +78,117 @@ export default function AddCourse() {
   };
 
   return (
-    <div className="container">
-      <CssBaseline />
-      <main>
-        {/* Hero unit */}
-        <Container maxWidth="xl">
-          <Box
-            sx={{
-              pt: 0,
-              pb: 6,
-              borderRadius: 4,
-              mt: 3,
-              mb: 3,
-            }}
-          >
-            <Typography>
-              Add a New Course
-            </Typography>
-            <Box sx={{pb: 2}}>
-              {err && <Alert severity="error">{err}</Alert>}
-            </Box>
-            <form onSubmit={handleSubmit}>
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                direction="column"
-              >
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <TextField
-                      id="name"
-                      name="name"
-                      label="Course Name"
-                      type="text"
-                      autoComplete="off"
-                      value={formValues.name}
-                      onChange={handleInputChange}
-                      data-testid="name"
-                      required
-                    />
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <TextField
-                      id="department"
-                      name="department"
-                      label="Department"
-                      type="text"
-                      autoComplete="off"
-                      value={formValues.department}
-                      onChange={handleInputChange}
-                      data-testid="department"
-                      required
-                    />
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <TextField
-                      id="courseNumber"
-                      name="courseNumber"
-                      label="Course Number"
-                      type="number"
-                      InputProps={{inputProps: {min: 0}}}
-                      value={formValues.courseNumber}
-                      onChange={handleInputChange}
-                      data-testid="courseNumber"
-                      required
-                    />
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <TextField
-                      id="sectionNumber"
-                      name="sectionNumber"
-                      label="Section Number"
-                      type="number"
-                      InputProps={{inputProps: {min: 0}}}
-                      value={formValues.sectionNumber}
-                      onChange={handleInputChange}
-                      data-testid="sectionNumber"
-                      required
-                    />
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={{pb: 2}}>
-                    <TextField
-                      id="semester"
-                      name="semester"
-                      label="Semester"
-                      type="text"
-                      autoComplete="off"
-                      value={formValues.semester}
-                      onChange={handleInputChange}
-                      data-testid="semester"
-                      inputProps={{'data-testid': 'semester'}}
-                      required
-                    />
-                  </Box>
-                </Grid>
-                <Box sx={{pb: 2}}>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    type="submit"
-                    data-testid="submit"
-                    disabled={submitDisabled}
-                  >
-                  Create Course
-                  </Button>
-                </Box>
+    <AuthenticatedLayout>
+      <Container maxWidth="lg">
+        <Grid container spacing={3}>
+          <Grid item xs={12} component={Paper} sx={{p: '1.5rem'}}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <h2>Add a New Course</h2>
+              </Grid>
+              <Box sx={{pb: 2}}>
+                {err && <Alert severity="error">{err}</Alert>}
+              </Box>
+              <Grid item xs={12}>
+                <TextField
+                  id="name"
+                  name="name"
+                  label="Course Name"
+                  type="text"
+                  autoComplete="off"
+                  value={formValues.name}
+                  onChange={handleInputChange}
+                  data-testid="name"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="department"
+                  name="department"
+                  label="Department"
+                  type="text"
+                  autoComplete="off"
+                  value={formValues.department}
+                  onChange={handleInputChange}
+                  data-testid="department"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="courseNumber"
+                  name="courseNumber"
+                  label="Course Number"
+                  type="number"
+                  InputProps={{inputProps: {min: 0}}}
+                  value={formValues.courseNumber}
+                  onChange={handleInputChange}
+                  data-testid="courseNumber"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="sectionNumber"
+                  name="sectionNumber"
+                  label="Section Number"
+                  type="number"
+                  InputProps={{inputProps: {min: 0}}}
+                  value={formValues.sectionNumber}
+                  onChange={handleInputChange}
+                  data-testid="sectionNumber"
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="semester"
+                  name="semester"
+                  label="Semester"
+                  type="text"
+                  autoComplete="off"
+                  value={formValues.semester}
+                  onChange={handleInputChange}
+                  data-testid="semester"
+                  inputProps={{'data-testid': 'semester'}}
+                  sx={{width: '75%'}}
+                  required
+                />
+              </Grid>
+              <Grid item xs={6}>
                 <Button
                   variant="outlined"
-                  color="secondary"
+                  color="primary"
                   data-testid="back"
-                  href="../faculty-dashboard"
+                  href="../dashboard"
+                  sx={{width: '100%'}}
                 >
-                  Go Back
+                  Cancel
                 </Button>
               </Grid>
-            </form>
-          </Box>
-        </Container>
-      </main>
-    </div>
+              <Grid item xs={6}>
+                <Button
+                  id='create-course'
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  data-testid="submit"
+                  onClick={handleSubmit}
+                  disabled={submitDisabled}
+                  sx={{width: '100%'}}
+                >
+                  Create Course
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Container>
+    </AuthenticatedLayout>
   );
 }

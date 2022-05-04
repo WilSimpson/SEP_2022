@@ -45,6 +45,7 @@ export default function ReportsPage() {
               <p>Select a game to generate a reports from</p>
               <Loading loading={loading}>
                 <GamesTable
+                  gameSelect
                   data={games}
                   onGameSelected={handleGameSelected}
                 />

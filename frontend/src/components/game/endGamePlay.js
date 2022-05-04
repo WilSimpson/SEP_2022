@@ -1,10 +1,9 @@
 import {Button, Typography} from '@mui/material';
 import React from 'react';
-import DefaultLayout from '../layout/default.layout';
 
 export default function EndGamePlay(props) {
   return (
-    <DefaultLayout>
+    <>
       <Typography variant='h2' component='div' marginTop={5} gutterBottom>
           Thank you for playing
       </Typography>
@@ -23,6 +22,6 @@ export default function EndGamePlay(props) {
       >
           Return Home
       </Button>
-    </DefaultLayout>
+    </>
   );
 }

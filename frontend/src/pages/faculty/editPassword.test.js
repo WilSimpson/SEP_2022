@@ -30,7 +30,7 @@ describe('<EditPassword />', () => {
   describe('Password Field', () => {
     beforeEach(() => {
       const {getByTestId} = render(
-        <EditPassword/>,
+        <BrowserRouter><EditPassword/></BrowserRouter>,
       );
       passwordField = getByTestId('password-input');
     });
@@ -48,7 +48,7 @@ describe('<EditPassword />', () => {
   describe('Submit Button', () => {
     beforeEach(() => {
       const {getByTestId} = render(
-          <EditPassword/>,
+        <BrowserRouter><EditPassword/></BrowserRouter>,
       );
       submitButton = getByTestId('submit-button');
       passwordField = getByTestId('password-input');

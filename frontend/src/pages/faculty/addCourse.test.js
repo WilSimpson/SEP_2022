@@ -60,7 +60,7 @@ describe('<AddCourse />', () => {
     it('should call Course Service create course', async () => {
       let promise = Promise.resolve();
       MockCourseService.createCourse.mockResolvedValue({});
-      wrapper.find('form').simulate('submit', event);
+      wrapper.find('#create-course').hostNodes().props().onClick(event);
       await act(() => promise);
       expect(MockCourseService.createCourse).toHaveBeenCalled();
     });
@@ -68,16 +68,16 @@ describe('<AddCourse />', () => {
       it('should navigate to faculty dash', async () => {
         let promise = Promise.resolve();
         MockCourseService.createCourse.mockResolvedValue({});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#create-course').hostNodes().props().onClick(event);
         await act(() => promise);
-        expect(mockedNavigate).toHaveBeenCalledWith('../faculty-dashboard');
+        expect(mockedNavigate).toHaveBeenCalledWith('../dashboard');
       });
     });
     describe('on fail', () => {
       it('should set error message on 404 status', async () => {
         let promise = Promise.resolve();
         MockCourseService.createCourse.mockRejectedValue({response:{status: 404, data: ''}});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#create-course').hostNodes().props().onClick(event);
         await act(() => promise);
         wrapper.update();
         expect(wrapper.find(Alert).prop('children')).toEqual(
@@ -88,7 +88,7 @@ describe('<AddCourse />', () => {
       it('should set response message on 500 status', async () => {
         let promise = Promise.resolve();
         MockCourseService.createCourse.mockRejectedValue({response:{status: 500, data: 'test-error'}});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#create-course').hostNodes().props().onClick(event);
         await act(() => promise);
         wrapper.update();
         expect(wrapper.find(Alert).prop('children')).toEqual('test-error');
@@ -96,7 +96,7 @@ describe('<AddCourse />', () => {
       it('should set error message on other status', async () => {
         let promise = Promise.resolve();
         MockCourseService.createCourse.mockRejectedValue({response:{status: 700, data: ''}});
-        wrapper.find('form').simulate('submit', event);
+        wrapper.find('#create-course').hostNodes().props().onClick(event);
         await act(() => promise);
         wrapper.update();
         expect(wrapper.find(Alert).prop('children')).toEqual(

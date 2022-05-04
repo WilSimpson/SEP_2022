@@ -38,7 +38,7 @@ export default function EditGamePage(props) {
       severity: alertSeverity.warning,
       message: `Game ${id} not found`,
     });
-    navigate('/admin-dashboard/games');
+    navigate('/dashboard/games');
   }
 
   function handleCancel() {
@@ -46,7 +46,7 @@ export default function EditGamePage(props) {
       severity: alertSeverity.info,
       message: 'Changes not saved',
     });
-    navigate('/admin-dashboard/games');
+    navigate('/dashboard/games');
   }
 
   function handleSubmit(
@@ -74,7 +74,7 @@ export default function EditGamePage(props) {
                 severity: alertSeverity.success,
                 message: 'Changes saved',
               });
-              navigate('/admin-dashboard/games');
+              navigate('/dashboard/games');
             }).catch((error) => {
           alertService.alert({
             severity: alertSeverity.error,

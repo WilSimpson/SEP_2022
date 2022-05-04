@@ -44,6 +44,11 @@ interface GameSessionTableProps {
   reportButtons: boolean;
 
   /**
+   * Whether to have a column for end Game Session Button
+   */
+   endGameSessionButtons: boolean;
+
+  /**
    * Whether to have a column for downloading QR codes to join the sessions
    */
   qrCodes: boolean;
@@ -102,7 +107,8 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
   const colSize = 4 +
       (props.qrCodes ? 1 : 0) +
       (props.reportButtons ? 1 : 0) +
-      (props.selectable ? 1 : 0);
+      (props.selectable ? 1 : 0) +
+      (props.endGameSessionButtons ? 1 : 0);
 
   // The current sessions shown in the table
   const shownSessions = pageSize > 0 ?
@@ -203,10 +209,10 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
             {props.qrCodes ? <TableCell>QR Code</TableCell> : null}
             <TableCell>ID</TableCell>
             <TableCell>Start Time</TableCell>
-            <TableCell>End Time</TableCell>
+            <TableCell>Timeout (minutes)</TableCell>
             <TableCell>Game Code</TableCell>
             {props.reportButtons ? <TableCell>View Reports</TableCell> : null}
-            <TableCell>End Session</TableCell>
+            {props.endGameSessionButtons ? <TableCell>End Session</TableCell> : null}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -233,8 +239,8 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
               }
               <TableCell>{row.id}</TableCell>
               <TableCell>{formatDate(row.start_time)}</TableCell>
-              <TableCell>{formatDate(row.end_time)}</TableCell>
-              <TableCell>{row.code}</TableCell>
+              <TableCell>{row.timeout}</TableCell>
+              <TableCell>{String(row.code).padStart(6, '0')}</TableCell>
               {props.reportButtons ?
                 <TableCell>
                   <Button
@@ -247,18 +253,21 @@ export default function GameSessionsTable(props: GameSessionTableProps) {
                 </TableCell> :
                 null
               }
-              <TableCell>
-                <Tooltip title="End Game Session">
-                  <IconButton
-                    aria-label="end"
-                    onClick={() => {
-                      setConfirmationEndID(row.id);
-                    }}
-                  >
-                    <Cancel />
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
+              {props.endGameSessionButtons ?
+                <TableCell>
+                  <Tooltip title="End Game Session">
+                    <IconButton
+                      aria-label="end"
+                      onClick={() => {
+                        setConfirmationEndID(row.id);
+                      }}
+                    >
+                      <Cancel />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell> :
+                null
+              }
             </TableRow>
           ))}
 

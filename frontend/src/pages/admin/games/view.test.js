@@ -52,7 +52,7 @@ describe('<ViewGamesPage />', () => {
     MockGameService.getGames.mockResolvedValue({data: [game]});
     await act(async() => {
       wrapper = mount(
-          <ViewGamesPage />
+          <BrowserRouter><ViewGamesPage /></BrowserRouter>
       );
     });
   });
@@ -82,7 +82,7 @@ describe('<ViewGamesPage />', () => {
         let alertSpy = jest.spyOn(alertService, 'alert');
         await act(async() => {
           wrapper = mount(
-              <ViewGamesPage />
+            <BrowserRouter><ViewGamesPage /></BrowserRouter>
           );
         });
         await act(() => promise);
@@ -121,13 +121,13 @@ describe('<ViewGamesPage />', () => {
         await act(() => promise);
         expect(alertSpy).toHaveBeenCalled();
       });
-      it('should navigate to /admin-dashboard/games', async () => {
+      it('should navigate to /dashboard/games', async () => {
         let id = 1;
         await act(() => promise);
         wrapper.update();
         await act(async () => {wrapper.find(GamesTable).props().onConfirmDelete(id)});
         await act(() => promise);
-        expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard/games');
+        expect(mockedNavigate).toHaveBeenCalledWith('/dashboard/games');
       });
     });
     describe('on fail', () => {

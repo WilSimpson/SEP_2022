@@ -60,14 +60,14 @@ describe('<StartGameSessionPage />', () => {
     describe('onCancel functionality', () => {
       it ('should navigate to adminDash onCancel when user is Admin', () => {
         act(() => {wrapper.find(SessionStart).first().props().onCancel()});
-        expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard');
+        expect(mockedNavigate).toHaveBeenCalledWith('/dashboard');
       });
       it ('should navigate to facultyDash onCancel when user is Faculty', () => {
         let tempUser = JSON.parse(localStorage.getItem('user'));
         tempUser.role = 'FACULTY';
         localStorage.setItem('user', JSON.stringify(tempUser));
         act(() => {wrapper.find(SessionStart).first().props().onCancel()});
-        expect(mockedNavigate).toHaveBeenCalledWith('/faculty-dashboard');
+        expect(mockedNavigate).toHaveBeenCalledWith('/dashboard');
       });
       it ('should call alert Service onCancel', () => {
         let alertSpy = jest.spyOn(alertService, 'alert');
@@ -90,7 +90,7 @@ describe('<StartGameSessionPage />', () => {
           MockGameSessionService.createGameSession.mockResolvedValue({data: {code: 123456}});
           act(() => {wrapper.find(SessionStart).props().onSubmit()});
           await act(() => promise);
-          expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard');
+          expect(mockedNavigate).toHaveBeenCalledWith('/dashboard');
         });
         it ('should navigate to facultyDash onSubmit success and user faculty', async () => {
           let tempUser = JSON.parse(localStorage.getItem('user'));
@@ -100,7 +100,7 @@ describe('<StartGameSessionPage />', () => {
           MockGameSessionService.createGameSession.mockResolvedValue({data: {code: 123456}});
           act(() => {wrapper.find(SessionStart).props().onSubmit()});
           await act(() => promise);
-          expect(mockedNavigate).toHaveBeenCalledWith('/faculty-dashboard');
+          expect(mockedNavigate).toHaveBeenCalledWith('/dashboard');
         });
         it ('should call alert Service', async () => {
           let alertSpy = jest.spyOn(alertService, 'alert');

@@ -2,12 +2,20 @@ import React from 'react';
 import '../../setupTests';
 import {shallow, mount} from 'enzyme';
 import Register from './register';
-
+import {User} from '../../models/user';
 import {render, fireEvent, act} from '@testing-library/react';
 import AuthService from '../../services/auth';
 import { BrowserRouter } from 'react-router-dom';
 import { Alert } from '@mui/material';
 
+const user = new User(
+  'email@example.com',
+  'FirstName',
+  'LastName',
+  'ADMIN',
+  'token',
+  1,
+);
 
 const mockedNavigate = jest.fn();
 
@@ -16,6 +24,15 @@ jest.mock("react-router-dom", () => ({
   ...(jest.requireActual("react-router-dom")), 
   useNavigate: () => mockedNavigate,
 }));
+
+beforeEach(() => {
+  jest.spyOn(user, 'isAdmin').mockImplementation(() => true);
+  AuthService.currentUser.mockImplementation(() => user);
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('<Register />', () => {
   let emailField;
@@ -173,13 +190,13 @@ describe('<Register />', () => {
         expect(AuthService.register).toHaveBeenCalled();
       });
       describe('register on success', () => {
-        it('should navigate to admin-dashboard when status 201', async () => {
+        it('should navigate to dashboard when status 201', async () => {
           AuthService.register.mockResolvedValue({status: 201});
           wrapper.update();
           const promise = Promise.resolve();
           wrapper.find({'data-testid': 'submit-button'}).hostNodes().simulate('click', {target:{value:'hi'}});
           await act(() => promise);
-          expect(mockedNavigate).toHaveBeenCalledWith('/admin-dashboard');
+          expect(mockedNavigate).toHaveBeenCalledWith('/dashboard');
         }); 
         it ('should display error message when other status', async () => {
           AuthService.register.mockResolvedValue({status: 700});

@@ -21,7 +21,7 @@ export default function ViewGamesPage() {
             message: 'Game successfully deleted',
           });
           setGames(games.filter((game) => game.id != id));
-          navigate('/admin-dashboard/games');
+          navigate('/dashboard/games');
         }).catch((error) => {
       alertService.alert({
         severity: alertSeverity.error,
@@ -56,7 +56,7 @@ export default function ViewGamesPage() {
                 editable
                 data={games}
                 onConfirmDelete={handleAcceptConfirmDelete}
-                onEdit={(id) => navigate(`/admin-dashboard/games/${id}`)}
+                onEdit={(id) => navigate(`/dashboard/games/${id}`)}
                 onGameSelected={() => {}}
               />
             </Grid>

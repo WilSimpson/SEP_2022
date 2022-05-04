@@ -13,12 +13,15 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import {AccountBox, AccountTree, Help} from '@material-ui/icons';
+import {AccountTree, Home} from '@material-ui/icons';
 import List from '@mui/material/List';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import AuthService from '../../services/auth';
+import School from '@mui/icons-material/School';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
@@ -55,7 +58,7 @@ export function SideMenu(props) {
   const [gameSessionManageOpen, setGameSessionManageOpen] =
     React.useState(false);
   const [reportsOpen, setReportsOpen] = React.useState(false);
-  const [helpOpen, setHelpOpen] = React.useState(false);
+  const [courseOpen, setCourseOpen] = React.useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -77,8 +80,8 @@ export function SideMenu(props) {
     setReportsOpen(!reportsOpen);
   };
 
-  const handleHelp = () => {
-    setHelpOpen(!helpOpen);
+  const handleCourse = () => {
+    setCourseOpen(!courseOpen);
   };
 
   const dashboardItem = (
@@ -87,7 +90,7 @@ export function SideMenu(props) {
       component={Link}
       data-testid="dashboard-item"
       href={AuthService.currentUser().isAdmin() ?
-         '/admin-dashboard' : '/faculty-dashboard'}
+         '/dashboard' : '/dashboard'}
     >
       <ListItemIcon>
         <DashboardIcon />
@@ -104,7 +107,7 @@ export function SideMenu(props) {
         data-testid="game-session-manage-item"
       >
         <ListItemIcon>
-          <BarChartIcon />
+          <AccountTree />
         </ListItemIcon>
         <ListItemText primary="Game Sessions" />
         {gameSessionManageOpen ? <ExpandLess /> : <ExpandMore />}
@@ -115,7 +118,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="session-start-item"
             component={Link}
-            href="/faculty-dashboard/startSession"
+            href="/dashboard/startSession"
           >
             <ListItemText primary="Start Game Session" />
           </ListItemButton>
@@ -143,7 +146,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="game-develop-item"
             component={Link}
-            href="/admin-dashboard/games/new"
+            href="/dashboard/games/new"
           >
             <ListItemText primary="Create Game" />
           </ListItemButton>
@@ -151,7 +154,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="game-view-item"
             component={Link}
-            href="/admin-dashboard/games"
+            href="/dashboard/games"
           >
             <ListItemText primary="View Games" />
           </ListItemButton>
@@ -159,7 +162,7 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="session-start-item"
             component={Link}
-            href="/admin-dashboard/startSession"
+            href="/dashboard/startSession"
           >
             <ListItemText primary="Start Game Session" />
           </ListItemButton>
@@ -188,15 +191,9 @@ export function SideMenu(props) {
             sx={{pl: 4}}
             data-testid="user-create-item"
             component={Link}
-            href="/admin-dashboard/register"
+            href="/dashboard/register"
           >
             <ListItemText primary="Create Users" />
-          </ListItemButton>
-          <ListItemButton sx={{pl: 4}} data-testid="user-edit-item">
-            <ListItemText primary="Edit Users" />
-          </ListItemButton>
-          <ListItemButton sx={{pl: 4}} data-testid="user-view-item">
-            <ListItemText primary="View Users" />
           </ListItemButton>
         </List>
       </Collapse>
@@ -226,7 +223,7 @@ export function SideMenu(props) {
       data-testid="generate-qr-item"
     >
       <ListItemIcon>
-        <BarChartIcon />
+        <QrCodeIcon />
       </ListItemIcon>
       <ListItemText primary="Generate QR" />
     </ListItemButton>
@@ -239,37 +236,62 @@ export function SideMenu(props) {
       data-testid="logout-item"
     >
       <ListItemIcon>
-        <AccountBox />
+        <LogoutIcon />
       </ListItemIcon>
       <ListItemText primary="Logout" />
     </ListItemButton>
   );
 
-  const helpItem = (
+  const homeItem = (
+    <ListItemButton
+      disabled={!open}
+      data-testid="home-item"
+      component={Link}
+      href="/"
+    >
+      <ListItemIcon>
+        <Home />
+      </ListItemIcon>
+      <ListItemText primary="Home" />
+    </ListItemButton>
+  );
+
+  const coursesItem = (
     <div>
       <ListItemButton
-        onClick={handleHelp}
+        onClick={handleCourse}
         disabled={!open}
-        data-testid="help-item"
+        data-testid="course-item"
       >
         <ListItemIcon>
-          <Help />
+          <School />
         </ListItemIcon>
-        <ListItemText primary="Help" />
-        {helpOpen ? <ExpandLess /> : <ExpandMore />}
+        <ListItemText primary="Courses" />
+        {courseOpen ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={helpOpen && open} timeout="auto" unmountOnExit>
+      <Collapse in={courseOpen && open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{pl: 4}} data-testid="getting-started-item">
-            <ListItemText primary="Getting Started" />
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="add-course-item"
+            component={Link}
+            href="/dashboard/addCourse"
+          >
+            <ListItemText primary="Add Course" />
           </ListItemButton>
-          <ListItemButton sx={{pl: 4}} data-testid="about-item">
-            <ListItemText primary="About" />
+          <ListItemButton
+            sx={{pl: 4}}
+            data-testid="view-course-item"
+            component={Link}
+            href="/dashboard/viewCourses"
+          >
+            <ListItemText primary="View Courses" />
           </ListItemButton>
         </List>
       </Collapse>
     </div>
   );
+
 
   return (
     <Box sx={{display: 'flex', height: '100vh'}}>
@@ -302,12 +324,13 @@ export function SideMenu(props) {
               {gameSessionManagementItem}
               {reportsItem}
               {generateQR}
+              {coursesItem}
             </React.Fragment>
           )}
           <Divider sx={{my: 1}} />
           <div>
+            {homeItem}
             {logoutItem}
-            {helpItem}
           </div>
         </List>
       </Drawer>

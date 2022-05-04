@@ -1,11 +1,14 @@
 import React from 'react';
-import {Button, TextField, Grid, Switch, InputLabel} from '@mui/material';
+import {Button, TextField, Grid, Switch, InputLabel, Popover, Typography} from '@mui/material';
 import authService from '../../services/auth';
 import {alertService} from '../../services/alert';
+import HelpIcon from '@mui/icons-material/Help';
+import {CopyBlock, dracula, atomOneLight} from 'react-code-blocks';
 
 export default function GameFields(props) {
   const isEditing = props.game != null;
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [title, setTitle] = React.useState(isEditing ? props.game.title : '');
   const [active, setActive] = React.useState(
     isEditing ? props.game.active : true,
@@ -63,10 +66,89 @@ export default function GameFields(props) {
     reader.readAsText(event.target.files[0]);
   };
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const gameFormatHelpOpen = Boolean(anchorEl);
+  const id = gameFormatHelpOpen ? 'gameFormatHelp' : undefined;
+
+  const gameFormat = (
+    `{
+      "title": "",
+      "active": true,
+      "creator_id": 1,
+      "code": 123456,
+      "questions": [
+        {
+          "label": "A",
+          "value": "",
+          "passcode": "123456",
+          "chance": true,
+          "chance_game": "SPIN_WHEEL"
+        }
+      ],
+      "options": [
+        {
+          "value": "",
+          "source_label": "A",
+          "dest_label": "1A",
+          "weight": 1
+        }
+      ]
+    }`);
+
+  const gameFormatHelp = (
+    <Popover
+      id={id}
+      open={gameFormatHelpOpen}
+      anchorEl={anchorEl}
+      onClose={handleClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+    >
+      <Typography sx={{p: 2}}>
+        {isEditing ?
+        <div>
+          When editing a game, questions and options cannot be added or removed. <br/>
+          You may only change fields of existing questions and options.
+        </div> :
+        (<div>
+          A game is created in JSON format.<br/>
+          The following is the way an imported file should be formatted:<br/>
+          <CopyBlock
+            text={gameFormat}
+            language={'JSON'}
+            showLineNumbers={true}
+            theme={localStorage.getItem('dark') === 'false' ? atomOneLight : dracula}
+            codeBlock
+          />
+        </div>)
+        }
+      </Typography>
+    </Popover>
+  );
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <h2>{isEditing ? `Edit Game: ${props.game.title}` : 'Create Game'}</h2>
+        <h2>
+          {isEditing ? `Edit Game: ${props.game.title}` : 'Create Game'}
+          <Button id="help" aria-describedby={id} onClick={handleClick}>
+            <HelpIcon />
+          </Button>
+          {gameFormatHelp}
+        </h2>
       </Grid>
       <Grid item xs={12} md={6} lg={3}>
         <TextField
@@ -103,6 +185,25 @@ export default function GameFields(props) {
         />
       </Grid>
 
+      {isEditing ? null :
+        <Grid item xs={12} md={6} lg={3} container direction="row" alignItems="center" justifySelf="flex-end">
+          <Button
+            variant='contained'
+            component='label'
+            sx={{
+              width: '100%',
+            }}
+          >
+            Import from File
+            <input
+              data-testid='file-upload'
+              type='file'
+              onChange={handleFileUpload}
+              hidden
+            />
+          </Button>
+        </Grid>
+      }
       <Grid item xs={12}>
         <TextField
           multiline
@@ -130,29 +231,13 @@ export default function GameFields(props) {
           rows={10}
         />
       </Grid>
-
-      <Grid item xs={12}>
-        <Button
-          variant='contained'
-          component='label'
-          sx={{width: '100%'}}
-        >
-          Import from File
-          <input
-            data-testid='file-upload'
-            type='file'
-            onChange={handleFileUpload}
-            hidden
-          />
-        </Button>
-      </Grid>
-
       <Grid item xs={6}>
         <Button variant='outlined' onClick={props.onCancel} sx={{width: '100%'}}>Cancel</Button>
       </Grid>
       <Grid item xs={6}>
         <Button
           variant="contained"
+          color="secondary"
           onClick={() => {
             props.onSubmit(
                 title,

@@ -81,7 +81,7 @@ export default function AdminDash() {
               >
                 <GamesTable
                   data={games}
-                  onEdit={(id) => navigate(`/admin-dashboard/games/${id}`)}
+                  onEdit={(id) => navigate(`/dashboard/games/${id}`)}
                 />
               </Paper>
             </Grid>
@@ -93,23 +93,24 @@ export default function AdminDash() {
                   p: 2,
                   display: 'flex',
                   flexDirection: 'column',
-                  height: 240,
+                  height: 350,
+                  justifyContent: 'center',
                 }}
               >
                 <React.Fragment>
                   <Typography
                     component="h2"
-                    variant="h6"
+                    variant="h4"
                     color="primary"
                     gutterBottom
                   >
                     Total Games
                   </Typography>
-                  <Typography component="p" variant="h4">
+                  <Typography component="p" variant="h2">
                     {games.length}
                   </Typography>
                   <div>
-                    <Link color="primary" href="/admin-dashboard/games">
+                    <Link color="primary" href="/dashboard/games">
                       View Games
                     </Link>
                   </div>
@@ -122,8 +123,8 @@ export default function AdminDash() {
                 sx={{p: 2, display: 'flex', flexDirection: 'column'}}
               >
                 <GameSessionsTable
-                  reportButtons
                   qrCodes
+                  endGameSessionButtons
                   onConfirmEnd = {onConfirmEnd}
                   onQRCodeButtonClicked={handleQRCodeButtonClicked}
                   gameSessions={sessions}
