@@ -312,7 +312,8 @@ class GameViewSet(ViewSet):
                         "value" : "",
                         "passcode" : "",
                         "chance" : (boolean),
-                        "chance_game": ""
+                        "chance_game": "",
+                        "location": "",
                     }
                 ],
                 "options": [
@@ -355,6 +356,7 @@ class GameViewSet(ViewSet):
                     passcode    = question['passcode'],
                     chance      = question['chance'],
                     chance_game = chance_game,
+                    location    = question['location'],
                     game_id     = new_game.id
                 )
                 new_question.save()
