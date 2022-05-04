@@ -116,7 +116,7 @@ function App(props) {
                   path="/dashboard"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <AdminDash /> : <FacultyDash />};
+                      {isAdmin() ? <AdminDash /> : <FacultyDash />}
                     </ProtectedRoute>
                   }
                 />
@@ -126,7 +126,7 @@ function App(props) {
                   path="/dashboard/addCourse"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <AdminDash /> : <AddCourse />};
+                      {isAdmin() ? <AdminDash /> : <AddCourse />}
                     </ProtectedRoute>
                   }
                 />
@@ -136,7 +136,7 @@ function App(props) {
                   path="/dashboard/viewCourses"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <AdminDash /> : <ViewCoursePage />};
+                      {isAdmin() ? <AdminDash /> : <ViewCoursePage />}
                     </ProtectedRoute>
                   }
                 />
@@ -146,7 +146,7 @@ function App(props) {
                   path="/dashboard/editCourse"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <AdminDash /> : <EditCourse />};
+                      {isAdmin() ? <AdminDash /> : <EditCourse />}
                     </ProtectedRoute>
                   }
                 />
@@ -156,7 +156,7 @@ function App(props) {
                   path="/dashboard/register"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <Register /> : <FacultyDash />};
+                      {isAdmin() ? <Register /> : <FacultyDash />}
                     </ProtectedRoute>
                   }
                 />
@@ -166,7 +166,7 @@ function App(props) {
                   path="/dashboard/games"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <ViewGamesPage /> : <FacultyDash />};
+                      {isAdmin() ? <ViewGamesPage /> : <FacultyDash />}
                     </ProtectedRoute>
                   }
                 />
@@ -176,7 +176,7 @@ function App(props) {
                   path="/dashboard/games/new"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <CreateGamePage /> : <FacultyDash />};
+                      {isAdmin() ? <CreateGamePage /> : <FacultyDash />}
                     </ProtectedRoute>
                   }
                 />
@@ -184,7 +184,7 @@ function App(props) {
                   path="/dashboard/games/:id"
                   element={
                     <ProtectedRoute>
-                      {isAdmin() ? <EditGamePage /> : <FacultyDash />};
+                      {isAdmin() ? <EditGamePage /> : <FacultyDash />}
                     </ProtectedRoute>
                   }
                 />
