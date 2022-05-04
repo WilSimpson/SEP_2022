@@ -320,7 +320,7 @@ export default function GameSession() {
         <main>
           <Container maxWidth='xl'>
             {showPasscode ?
-              <Passcode id='passcode-screen' data={{question: '/#', location: 'SC123'}} submitPasscode={submitPasscode}/> :
+              <Passcode id='passcode-screen' data={{question: '/#', location: currentQuestion.location}} submitPasscode={submitPasscode}/> :
               GamePlay
             }
           </Container>
