@@ -457,6 +457,7 @@ class GameViewSet(ViewSet):
                     question_to_update.passcode     = question['passcode']
                     question_to_update.chance       = question['chance']
                     question_to_update.game_id      = question['game_id']
+                    question_to_update.location     = question['location']
                     question_to_update.chance_game  = chance_game
                     question_to_update.save()
                 for option in options:
