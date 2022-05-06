@@ -27,6 +27,7 @@ def get_game_data(id):
         q['game_id'] = question.game_id
         q['created_at'] = question.created_at
         q['updated_at'] = question.created_at
+        q['location'] = question.location
         
         questions.append(q)
         all_question_options = Option.objects.filter(source_question_id=question.id).all()
