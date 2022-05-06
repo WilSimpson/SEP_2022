@@ -84,7 +84,8 @@ def joinGame(request):
                     "game_id": 22,
                     "chance_game": "NO_GAME"
                     "help": [{"title": "Hint 1",
-                            "body": "This is some help for the question"}]
+                            "body": "This is some help for the question"}],
+                    "location": string,
                 }
             ],
             "options": [
@@ -311,7 +312,8 @@ class GameViewSet(ViewSet):
                         "value" : "",
                         "passcode" : "",
                         "chance" : (boolean),
-                        "chance_game": ""
+                        "chance_game": "",
+                        "location": "",
                     }
                 ],
                 "options": [
@@ -354,6 +356,7 @@ class GameViewSet(ViewSet):
                     passcode    = question['passcode'],
                     chance      = question['chance'],
                     chance_game = chance_game,
+                    location    = question['location'],
                     game_id     = new_game.id
                 )
                 new_question.save()
@@ -454,6 +457,7 @@ class GameViewSet(ViewSet):
                     question_to_update.passcode     = question['passcode']
                     question_to_update.chance       = question['chance']
                     question_to_update.game_id      = question['game_id']
+                    question_to_update.location     = question['location']
                     question_to_update.chance_game  = chance_game
                     question_to_update.save()
                 for option in options:

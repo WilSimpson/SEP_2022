@@ -89,7 +89,8 @@ export default function GameFields(props) {
           "value": "",
           "passcode": "123456",
           "chance": true,
-          "chance_game": "SPIN_WHEEL"
+          "chance_game": "SPIN_WHEEL",
+          "location": "SC122"
         }
       ],
       "options": [

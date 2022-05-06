@@ -117,6 +117,7 @@ class Question(models.Model):
     game        = models.ForeignKey(Game, on_delete= models.CASCADE)
     passcode    = models.CharField(max_length=255)
     chance      = models.BooleanField()
+    location    = models.CharField(max_length=50, default="SC122")
     chance_game = models.CharField(max_length=50, choices=ChanceGame.choices)
     created_at  = models.DateTimeField(default=timezone.now)
     updated_at  = AutoDateTimeField(default=timezone.now)
