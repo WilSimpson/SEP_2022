@@ -90,9 +90,7 @@ export default function GameFields(props) {
           "passcode": "123456",
           "chance": true,
           "chance_game": "SPIN_WHEEL",
-          "help": [{"title": "Hint 1",
-            "body": "This is some help for the question"}],
-          "location": "SC122",
+          "location": "SC122"
         }
       ],
       "options": [
